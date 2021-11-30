@@ -52,7 +52,7 @@ class RequestClient:
         else:
             host_configuration = copy(host_configuration)
 
-        if port is not None:
+        if port is not None and host_configuration.port is None:
             host_configuration.port = port
         if ssl is not None:
             host_configuration.ssl = ssl
@@ -106,7 +106,7 @@ class RequestClient:
                 params=params,
                 json=data,
                 verify_ssl=self._host.verify_ssl,
-                timeout=aiohttp.ClientTimeout(self._request_timeout),
+                timeout=aiohttp.ClientTimeout(30),
             )
 
             _result: dict = await request.json()
