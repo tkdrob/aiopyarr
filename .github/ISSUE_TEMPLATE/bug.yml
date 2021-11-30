@@ -1,0 +1,30 @@
+---
+name: "Bug report"
+description: You use this when something is not doing what it's supposed to do.
+body:
+- type: markdown
+  attributes:
+    value: Before you open a new issue, search through the existing issues to see if others have had the same problem.
+- type: checkboxes
+  attributes:
+    label: Checklist
+    options:
+      - label: I'm running the newest version <https://github.com/tkdrob/aiopyarr/releases/latest>
+        required: true
+      - label: I have filled out the issue template to the best of my ability.
+        required: true
+      - label: This issue only contains 1 issue (if you have multiple issues, open one issue for each issue).
+        required: true
+- type: textarea
+  attributes:
+    label: "Describe the issue"
+    description: "A clear and concise description of what the issue is."
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: "Logs"
+    description: "Paste your logs here"
+    render: text
+  validations:
+    required: true

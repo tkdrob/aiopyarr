@@ -1,0 +1,108 @@
+{
+  "seriesId": 1,
+  "episodeFileId": 0,
+  "seasonNumber": 1,
+  "episodeNumber": 1,
+  "title": "string",
+  "airDate": "2009-09-17",
+  "airDateUtc": "2009-09-18T02:00:00Z",
+  "overview": "string",
+  "episodeFile": {
+    "seriesId": 1,
+    "seasonNumber": 1,
+    "relativePath": "string",
+    "path": "string",
+    "size": 50,
+    "dateAdded": "2019-06-13T09:08:03.775081Z",
+    "sceneName": "string",
+    "releaseGroup": "string",
+    "language": {
+      "id": 1,
+      "name": "English"
+    },
+    "quality": {
+      "quality": {
+        "id": 4,
+        "name": "HDTV-720p",
+        "source": "television",
+        "resolution": 720
+      },
+      "revision": {
+        "version": 1,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "mediaInfo": {
+      "audioBitrate": 384000,
+      "audioChannels": 5.1,
+      "audioCodec": "AC3",
+      "audioLanguages": "English",
+      "audioStreamCount": 1,
+      "videoBitDepth": 8,
+      "videoBitrate": 3055382,
+      "videoCodec": "x264",
+      "videoFps": 23.976,
+      "resolution": "1280x714",
+      "runTime": "22:01",
+      "scanType": "Progressive",
+      "subtitles": "English"
+    },
+    "qualityCutoffNotMet": false,
+    "languageCutoffNotMet": false,
+    "id": 18429
+  },
+  "hasFile": true,
+  "monitored": true,
+  "absoluteEpisodeNumber": 3,
+  "unverifiedSceneNumbering": false,
+  "series": {
+    "title": "string",
+    "sortTitle": "string",
+    "status": "ended",
+    "ended": true,
+    "overview": "string",
+    "network": "string",
+    "airTime": "22:00",
+    "seasons": [
+      {
+        "seasonNumber": 0,
+        "monitored": false
+      }
+    ],
+    "year": 2017,
+    "path": "string",
+    "qualityProfileId": 6,
+    "languageProfileId": 1,
+    "seasonFolder": true,
+    "monitored": true,
+    "useSceneNumbering": false,
+    "runtime": 21,
+    "tvdbId": 0,
+    "tvRageId": 0,
+    "tvMazeId": 0,
+    "firstAired": "2017-04-05T00:00:00Z",
+    "seriesType": "standard",
+    "cleanTitle": "string",
+    "imdbId": "string",
+    "titleSlug": "string",
+    "certification": "TV-MA",
+    "genres": [
+      "Comedy"
+    ],
+    "tags": [],
+    "added": "2019-05-19T05:33:42.24392Z",
+    "ratings": {
+      "votes": 80,
+      "value": 8.7
+    },
+    "id": 15,
+    "images": [
+      {
+        "coverType": "banner",
+        "url": "string"
+      }
+    ]
+  },
+  "id": 1
+}

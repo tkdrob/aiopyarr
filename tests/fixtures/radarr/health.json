@@ -1,0 +1,8 @@
+[
+  {
+    "source": "ImportMechanismCheck",
+    "type": "warning",
+    "message": "Enable Completed Download Handling",
+    "wikiUrl": "https://wiki.servarr.com/radarr/system#completed-failed-download-handling"
+  }
+]

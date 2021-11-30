@@ -1,0 +1,31 @@
+{
+  "enabled": true,
+  "enableAuto": true,
+  "shouldMonitor": true,
+  "rootFolderPath": "string",
+  "qualityProfileId": 0,
+  "searchOnAdd": true,
+  "minimumAvailability": "string",
+  "listType": "string",
+  "listOrder": 0,
+  "name": "string",
+ "fields": [
+    {
+      "order": 0,
+      "name": "string",
+      "label": "string",
+      "helpText": "string",
+      "value": "string",
+      "type": "string",
+      "advanced": true
+    }
+  ],
+  "implementationName": "string",
+  "implementation": "string",
+  "configContract": "string",
+  "infoLink": "string",
+  "tags": [
+     0
+  ],
+  "id": 0
+}

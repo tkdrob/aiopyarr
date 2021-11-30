@@ -1,0 +1,69 @@
+{
+  "title": "string",
+  "alternateTitles": [{
+    "title": "string",
+    "seasonNumber": -1
+  }],
+  "sortTitle": "string",
+  "seasonCount": 2,
+  "totalEpisodeCount": 17,
+  "episodeCount": 8,
+  "episodeFileCount": 8,
+  "sizeOnDisk": 0,
+  "status": "continuing",
+  "overview": "string",
+  "previousAiring": "2019-04-29T01:00:00Z",
+  "network": "string",
+  "airTime": "21:00",
+  "images": [
+    {
+      "coverType": "fanart",
+      "url": "string"
+    }
+  ],
+  "seasons": [
+    {
+      "seasonNumber": 0,
+      "monitored": false,
+      "statistics": {
+        "previousAiring": "2019-04-29T01:00:00Z",
+        "episodeFileCount": 0,
+        "episodeCount": 0,
+        "totalEpisodeCount": 1,
+        "sizeOnDisk": 0,
+        "percentOfEpisodes": 0.0
+      }
+    }
+  ],
+  "year": 2017,
+  "path": "string",
+  "profileId": 6,
+  "seasonFolder": true,
+  "monitored": true,
+  "useSceneNumbering": false,
+  "runtime": 60,
+  "tvdbId": 0,
+  "tvRageId": 0,
+  "tvMazeId": 0,
+  "firstAired": "2019-04-29T23:00:00Z",
+  "lastInfoSync": "2019-12-01T17:35:41.103443Z",
+  "seriesType": "standard",
+  "cleanTitle": "string",
+  "imdbId": "string",
+  "titleSlug": "string",
+  "certification": "TV-MA",
+  "genres": [
+    "Action",
+    "Adventure",
+    "Fantasy",
+    "Suspense"
+  ],
+  "tags": [],
+  "added": "2019-09-13T15:50:29.325136Z",
+  "ratings": {
+    "votes": 0,
+    "value": 0.0
+  },
+  "qualityProfileId": 6,
+  "id": 3
+}

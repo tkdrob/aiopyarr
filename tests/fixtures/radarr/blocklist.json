@@ -1,0 +1,66 @@
+{
+  "page": 0,
+  "pageSize": 0,
+  "sortDirection": "string",
+  "sortKey": "string",
+  "totalRecords": 0,
+  "records": [
+    {
+      "movieId": 0,
+      "sourceTitle": "string",
+      "languages": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0,
+          "modifier": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": true
+        }
+      },
+      "customFormats": [
+        {
+          "id": 0,
+          "name": "string",
+          "includeCustomFormatWhenRenaming": true,
+          "specifications": [
+            {
+              "name": "string",
+              "implementation": "string",
+              "implementationName": "string",
+              "infoLink": "string",
+              "negate": true,
+              "required": true,
+              "fields": [
+                {
+                  "order": 0,
+                  "name": "string",
+                  "label": "string",
+                  "helpText": "string",
+                  "value": "string",
+                  "type": "string",
+                  "advanced": true
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "date": "string",
+      "protocol": "string",
+      "indexer": "string",
+      "message": "string",
+      "id": 0
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "title": "string",
+    "sortTitle": "string",
+    "seasonCount": 4,
+    "status": "continuing",
+    "overview": "string",
+    "network": "string",
+    "airTime": "21:00",
+    "images": [
+      {
+        "coverType": "fanart",
+        "url": "string"
+      }
+    ],
+    "remotePoster": "string",
+    "seasons": [
+      {
+        "seasonNumber": 0,
+        "monitored": false
+      }
+    ],
+    "year": 2013,
+    "profileId": 0,
+    "seasonFolder": false,
+    "monitored": false,
+    "useSceneNumbering": false,
+    "runtime": 45,
+    "tvdbId": 0,
+    "tvRageId": 0,
+    "tvMazeId": 0,
+    "firstAired": "2013-09-23T05:00:00Z",
+    "seriesType": "string",
+    "cleanTitle": "string",
+    "imdbId": "string",
+    "titleSlug": "string",
+    "certification": "TV-14",
+    "genres": [
+      "Action",
+      "Crime",
+      "Drama",
+      "Mystery"
+    ],
+    "tags": [],
+    "added": "0001-01-01T00:00:00Z",
+    "ratings": {
+      "votes": 182,
+      "value": 8.6
+    },
+    "qualityProfileId": 0
+  }
+]

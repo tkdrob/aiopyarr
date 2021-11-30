@@ -1,0 +1,17 @@
+{
+  "version": "3.0.0.3553",
+  "branch": "nightly",
+  "releaseDate": "2020-09-02T05:36:13.047313Z",
+  "fileName": "Radarr.nightly.3.0.0.3553.windows-core-x64.zip",
+  "url": "https://dev.azure.com/Radarr/Radarr/_apis/build/builds/1896/artifacts?artifactName=Packages&fileId=A710686A9CB6848E73C3DDCA5F2B0D83C6189546E66DD3EF2D0D30B20735F6E802&fileName=Radarr.aphrodite.3.0.0.3553.windows-core-x64.zip&api-version=5.1",
+  "installed": false,
+  "installable": false,
+  "latest": false,
+  "changes": {
+    "new": [],
+    "fixed": [
+      "Importing completed downloads from NZBGet with post processing script failing"
+    ]
+  },
+  "hash": "a95c855cbc3ee253fd0b74181e866106daffc7b71b4a9e2d57cfbeede4333aee"
+}

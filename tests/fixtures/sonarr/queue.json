@@ -1,0 +1,91 @@
+[
+  {
+    "series": {
+      "title": "Game of Thrones",
+      "sortTitle": "game thrones",
+      "seasonCount": 6,
+      "status": "continuing",
+      "overview": "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and the icy horrors beyond.",
+      "network": "HBO",
+      "airTime": "21:00",
+      "images": [
+        {
+          "coverType": "fanart",
+          "url": "http://thetvdb.com/banners/fanart/original/121361-83.jpg"
+        }
+      ],
+      "seasons": [
+        {
+          "seasonNumber": 0,
+          "monitored": false
+        }
+      ],
+      "year": 2011,
+      "path": "/Volumes/Media/Shows/Game of Thrones",
+      "profileId": 5,
+      "seasonFolder": true,
+      "monitored": true,
+      "useSceneNumbering": false,
+      "runtime": 60,
+      "tvdbId": 121361,
+      "tvRageId": 24493,
+      "tvMazeId": 82,
+      "firstAired": "2011-04-16T23:00:00Z",
+      "lastInfoSync": "2016-02-05T16:40:11.614176Z",
+      "seriesType": "standard",
+      "cleanTitle": "gamethrones",
+      "imdbId": "tt0944947",
+      "titleSlug": "game-of-thrones",
+      "certification": "TV-MA",
+      "genres": [
+        "Adventure",
+        "Drama",
+        "Fantasy"
+      ],
+      "tags": [],
+      "added": "2015-12-28T13:44:24.204583Z",
+      "ratings": {
+        "votes": 1128,
+        "value": 9.4
+      },
+      "qualityProfileId": 5,
+      "id": 17
+    },
+    "episode": {
+      "seriesId": 17,
+      "episodeFileId": 0,
+      "seasonNumber": 3,
+      "episodeNumber": 8,
+      "title": "Second Sons",
+      "airDate": "2013-05-19",
+      "airDateUtc": "2013-05-20T01:00:00Z",
+      "overview": "King’s Landing hosts a wedding, and Tyrion and Sansa spend the night together. Daenerys meets the Titan’s Bastard. Davos demands proof from Melisandre. Sam and Gilly meet an older gentleman.",
+      "hasFile": false,
+      "monitored": false,
+      "absoluteEpisodeNumber": 28,
+      "unverifiedSceneNumbering": false,
+      "id": 889
+    },
+    "quality": {
+      "quality": {
+        "id": 7,
+        "name": "Bluray-1080p"
+      },
+      "revision": {
+        "version": 1,
+        "real": 0
+      }
+    },
+    "size": 4472186820,
+    "title": "string",
+    "sizeleft": 0,
+    "timeleft": "00:00:00",
+    "estimatedCompletionTime": "2016-02-05T22:46:52.440104Z",
+    "status": "Downloading",
+    "trackedDownloadStatus": "Ok",
+    "statusMessages": [],
+    "downloadId": "string",
+    "protocol": "string",
+    "id": 1503378561
+  }
+]

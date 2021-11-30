@@ -1,0 +1,16 @@
+{
+  "seriesId": 1,
+  "seasonNumber": 1,
+  "path": "string",
+  "size": 0,
+  "dateAdded": "2013-05-29T10:42:05.1335301Z",
+  "sceneName": "",
+  "quality": {
+    "quality": {
+      "id": 1,
+      "name": "Bluray 720p"
+    },
+    "proper": false
+  },
+  "id": 1
+}

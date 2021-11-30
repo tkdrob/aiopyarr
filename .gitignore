@@ -1,0 +1,16 @@
+__pycache__
+.eggs
+include
+Lib
+Scripts
+venv
+pyvenv.cfg
+.pytest_cache
+*egg-info*
+RESPONSES
+.vscode/settings.json
+coverage.xml
+build
+dist
+.coverage
+.DS_Store

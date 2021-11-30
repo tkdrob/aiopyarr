@@ -1,0 +1,59 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "date",
+  "sortDirection": "descending",
+  "totalRecords": 8094,
+  "records": [
+    {
+      "episodeId": 75118,
+      "seriesId": 22,
+      "sourceTitle": "string",
+      "language": {
+        "id": 1,
+        "name": "English"
+      },
+      "quality": {
+        "quality": {
+          "id": 5,
+          "name": "WEBDL-720p",
+          "source": "web",
+          "resolution": 720
+        },
+        "revision": {
+          "version": 1,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "qualityCutoffNotMet": true,
+      "languageCutoffNotMet": false,
+      "date": "2019-11-01T09:09:34.288036Z",
+      "downloadId": "string",
+      "eventType": "downloadFolderImported",
+      "data": {
+        "indexer": "string",
+        "nzbInfoUrl": "string",
+        "releaseGroup": "string",
+        "age": "0",
+        "ageHours": "0.0",
+        "ageMinutes": "0.0",
+        "publishedDate": "string",
+        "fileId": "53153",
+        "droppedPath": "string",
+        "importedPath": "string",
+        "downloadClient": "string",
+        "downloadClientName": "string",
+        "preferredWordScore": "0.0",
+        "size": "184576954",
+        "downloadUrl": "string",
+        "guid": "string",
+        "tvdbId": "string",
+        "tvRageId": "string",
+        "protocol": "2",
+        "torrentInfoHash": "string"
+      },
+      "id": 76400
+    }
+  ]
+}

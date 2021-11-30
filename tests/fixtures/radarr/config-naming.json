@@ -1,0 +1,10 @@
+{
+  "renameMovies": true,
+  "replaceIllegalCharacters": true,
+  "colonReplacementFormat": "string",
+  "standardMovieFormat": "string",
+  "movieFolderFormat": "string",
+  "includeQuality": true,
+  "replaceSpaces": true,
+  "id": 0
+}

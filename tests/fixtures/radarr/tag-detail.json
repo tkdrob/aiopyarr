@@ -1,0 +1,19 @@
+{
+  "id": 0,
+  "label": "string",
+  "delayProfileIds": [
+    0
+  ],
+  "notificationIds": [
+    0
+  ],
+  "restrictionIds": [
+    0
+  ],
+  "netImportIds": [
+    0
+  ],
+  "movieIds": [
+    0
+  ]
+}

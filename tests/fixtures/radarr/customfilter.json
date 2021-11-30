@@ -1,0 +1,16 @@
+[
+  {
+    "type": "movieIndex",
+    "label": "Rated G",
+    "filters": [
+      {
+        "key": "certification",
+        "value": [
+          "G"
+        ],
+        "type": "equal"
+      }
+    ],
+    "id": 10
+  }
+]

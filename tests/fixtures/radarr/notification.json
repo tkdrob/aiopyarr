@@ -1,0 +1,39 @@
+{
+  "onGrab": true,
+  "onDownload": true,
+  "onUpgrade": true,
+  "onRename": true,
+  "onDelete": true,
+  "onHealthIssue": true,
+  "supportsOnGrab": true,
+  "supportsOnDownload": true,
+  "supportsOnUpgrade": true,
+  "supportsOnRename": true,
+  "supportsOnDelete": true,
+  "supportsOnHealthIssue": true,
+  "includeHealthWarnings": true,
+  "name": "string",
+  "fields": [
+    {
+      "order": 0,
+      "name": "string",
+      "label": "string",
+      "helpText": "string",
+      "value": "string",
+      "type": "string",
+      "advanced": true
+    }
+  ],
+  "implementationName": "string",
+  "implementation": "string",
+  "configContract": "string",
+  "infoLink": "string",
+  "message": {
+    "message": "string",
+    "type": "string"
+  },
+  "tags": [
+    0
+  ],
+  "id": 0
+}

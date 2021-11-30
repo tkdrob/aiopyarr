@@ -1,0 +1,47 @@
+{
+  "movieId": 0,
+  "relativePath": "string",
+  "path": "string",
+  "size": 0,
+  "dateAdded": "string",
+  "indexerFlags": 0,
+  "quality": {
+    "quality": {
+      "id": 0,
+      "name": "string",
+      "source": "string",
+      "resolution": 0,
+      "modifier": "string"
+    },
+    "revision": {
+      "version": 0,
+      "real": 0,
+      "isRepack": true
+    }
+  },
+  "mediaInfo": {
+    "audioAdditionalFeatures": "string",
+    "audioBitrate": 0,
+    "audioChannels": 0,
+    "audioCodec": "string",
+    "audioLanguages": "string",
+    "audioStreamCount": 0,
+    "videoBitDepth": 0,
+    "videoBitrate": 0,
+    "videoCodec": "string",
+    "videoFps": 0,
+    "resolution": "string",
+    "runTime": "string",
+    "scanType": "string",
+    "subtitles": "string"
+  },
+  "qualityCutoffNotMet": true,
+  "languages": [
+    {
+      "id": 0,
+      "name": "string"
+    }
+  ],
+  "releaseGroup": "string",
+  "id": 0
+}

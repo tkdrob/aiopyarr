@@ -1,0 +1,57 @@
+{
+  "id": 0,
+  "title": "Dark Phoenix",
+  "sortTitle": "dark phoenix",
+  "sizeOnDisk": 0,
+  "overview": "string",
+  "inCinemas": "string",
+  "physicalRelease": "string",
+  "images": [
+    {
+      "coverType": "poster",
+      "url": "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964",
+      "remoteUrl": "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
+    }
+  ],
+  "website": "http://darkphoenix.com",
+  "year": 0,
+  "hasFile": true,
+  "youTubeTrailerId": "string",
+  "studio": "string",
+  "path": "string",
+  "rootFolderPath": "string",
+  "qualityProfileId": 0,
+  "monitored": true,
+  "minimumAvailability": "announced",
+  "isAvailable": true,
+  "folderName": "string",
+  "runtime": 0,
+  "cleanTitle": "string",
+  "imdbId": "string",
+  "tmdbId": 0,
+  "titleSlug": "string",
+  "certification": "string",
+  "genres": [
+    "string"
+  ],
+  "tags": [
+    0
+  ],
+  "added": "string",
+  "ratings": {
+    "votes": 0,
+    "value": 0
+  },
+  "collection": {
+    "name": "string",
+    "tmdbId": 0,
+    "images": [
+      {
+        "coverType": "poster",
+        "url": "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964",
+        "remoteUrl": "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
+      }
+    ]
+  },
+  "status": "deleted"
+}

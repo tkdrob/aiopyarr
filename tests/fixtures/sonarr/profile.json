@@ -1,0 +1,19 @@
+[
+  {
+    "name": "SD",
+    "cutoff": {
+      "id": 1,
+      "name": "SDTV"
+    },
+    "items": [
+      {
+        "quality": {
+          "id": 1,
+          "name": "SDTV"
+        },
+        "allowed": true
+      }
+    ],
+    "id": 1
+  }
+]

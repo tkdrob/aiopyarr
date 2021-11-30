@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Any",
+    "upgradeAllowed": true,
+    "cutoff": 20,
+    "items": [
+      {
+        "quality": {
+          "id": 0,
+          "name": "Unknown",
+          "source": "unknown",
+          "resolution": 0,
+          "modifier": "none"
+        },
+        "items": [],
+        "allowed": false
+      },
+      {
+        "name": "WEB 480p",
+        "items": [
+          {
+            "quality": {
+              "id": 12,
+              "name": "WEBRip-480p",
+              "source": "webrip",
+              "resolution": 480,
+              "modifier": "none"
+            },
+            "items": [],
+            "allowed": true
+          }
+        ],
+        "allowed": true,
+        "id": 1000
+      }
+    ],
+    "minFormatScore": 0,
+    "cutoffFormatScore": 0,
+    "formatItems": [],
+    "language": {
+      "id": 1,
+      "name": "English"
+    },
+    "id": 1
+  }
+]

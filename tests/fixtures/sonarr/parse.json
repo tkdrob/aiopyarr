@@ -1,0 +1,38 @@
+
+{
+  "title": "Series.Title.S01E01.720p.HDTV-Sonarr",
+  "parsedEpisodeInfo": {
+    "releaseTitle": "Series.Title.S01E01.720p.HDTV-Sonarr",
+    "seriesTitle": "Series Title",
+    "seriesTitleInfo": {
+      "title": "Series Title",
+      "titleWithoutYear": "Series Title",
+      "year": 0
+    },
+    "quality": {
+      "quality": {
+        "id": 4,
+        "name": "HDTV-720p"
+      },
+      "revision": {
+        "version": 1,
+        "real": 0
+      }
+    },
+    "seasonNumber": 1,
+    "episodeNumbers": [
+      1
+    ],
+    "absoluteEpisodeNumbers": [],
+    "language": "english",
+    "fullSeason": false,
+    "special": false,
+    "releaseGroup": "Sonarr",
+    "releaseHash": "",
+    "isDaily": false,
+    "isAbsoluteNumbering": false,
+    "isPossibleSpecialEpisode": false
+  },
+  "series": {},
+  "episodes": []
+}
