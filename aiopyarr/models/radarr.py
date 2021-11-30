@@ -16,6 +16,7 @@ from .radarr_common import (  # isort:skip
     _RadarrMovieCollection,
     _RadarrMovieCustomFormats,
     _RadarrMovieFileCommon,
+    _RadarrMovieFileMediaInfo,
     _RadarrMovieHistoryBlocklistBase,
     _RadarrMovieHistoryData,
     _RadarrMovieImages,
@@ -450,13 +451,14 @@ class RadarrQualityProfile(_RadarrCommon4):
 
 
 @dataclass(init=False)
-class RadarrCalendar(RadarrMovie, _RadarrCommon2):
+class RadarrCalendar(RadarrMovie):
     """Radarr calendar attributes."""
 
     _responsetype = APIResponseType.LIST
 
     alternateTitles: list[str] | None = None
     digitalRelease: str | None = None
+    mediaInfo: _RadarrMovieFileMediaInfo | None = None
     minimumAvailability: str | None = None
     movieFile: _RadarrCalendarMovieFile | None = None
     originalTitle: str | None = None
@@ -466,6 +468,7 @@ class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
         if isinstance(self.images, list):
             self.movieFile = _RadarrCalendarMovieFile(self.movieFile) or {}
 

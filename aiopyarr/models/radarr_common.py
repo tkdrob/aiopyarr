@@ -139,8 +139,8 @@ class _RadarrCommon2(BaseModel):
     """Radarr common attributes."""
 
     id: int | None = None
-    minimumAvailability: str | None = None
-    qualityProfileId: int | None = None
+    #TODO minimumAvailability: str | None = None
+    #TODO qualityProfileId: int | None = None
 
 
 @dataclass(init=False)
