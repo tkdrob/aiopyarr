@@ -83,14 +83,14 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         movieid: int | None = None,
         raw: bool = False,
-    ) -> RadarrCalendar | list[RadarrCalendar]: #TODO fix name
+    ) -> RadarrMovie | list[RadarrMovie]:
         """Get information about movies.
 
         Include a TMDB id for a specific movie or leave black for all.
         """
         datatype = None
         if raw is False:
-            datatype = RadarrCalendar
+            datatype = RadarrMovie
         return await self._async_request(
             "movie",
             params={"tmdbId": movieid} if movieid is not None else None,

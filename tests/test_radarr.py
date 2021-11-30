@@ -375,9 +375,6 @@ async def test_async_get_ui_config(aresponses):
         assert data.timeFormat == "h(:mm)a"
 
 
-# TODO calendar
-
-
 @pytest.mark.asyncio
 async def test_async_get_custom_filters(aresponses):
     """Test getting blocklisted movie."""
@@ -430,7 +427,6 @@ async def test_async_get_diskspace(aresponses):
         assert data[0].totalSpace == 56009755148288
 
 
-# TODO assert request url, test list as well as single dict
 @pytest.mark.asyncio
 async def test_async_get_download_client(aresponses):
     """Test getting download client."""
@@ -1153,6 +1149,3 @@ async def test_async_get_software_update_info(aresponses):
             data.hash
             == "a95c855cbc3ee253fd0b74181e866106daffc7b71b4a9e2d57cfbeede4333aee"
         )
-
-
-# TODO logs

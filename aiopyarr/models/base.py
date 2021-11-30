@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any
 
 from ..const import LOGGER
-from .const import CONVERT_TO_BOOL
+from .const import CONVERT_TO_BOOL, CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -72,6 +72,12 @@ class BaseModel:
                     self.__setattr__("isNewMovie", False)
                 else:
                     LOGGER.debug("isNewMovie is now always included by API")
+        for key in CONVERT_TO_FLOAT:
+            if hasattr(self, key) and self.__getattribute__(key) is not None:
+                self.__setattr__(key, float(self.__getattribute__(key)))
+        for key in CONVERT_TO_INTEGER:
+            if hasattr(self, key) and self.__getattribute__(key) is not None:
+                self.__setattr__(key, int(self.__getattribute__(key)))
 
     @property
     def attributes(self) -> dict[str, Any]:

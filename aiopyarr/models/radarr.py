@@ -34,6 +34,8 @@ from .radarr_common import (  # isort:skip
 class RadarrMovie(_RadarrCommon2):
     """Movie attributes."""
 
+    _responsetype = APIResponseType.LIST
+
     added: str | None = None
     certification: str | None = None
     cleanTitle: str | None = None
