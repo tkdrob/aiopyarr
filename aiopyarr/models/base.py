@@ -86,7 +86,10 @@ class BaseModel:
     def attributes(self) -> dict[str, Any]:
         """Return the class attributes."""
         return {
-            key: json.dumps(self.__dict__[key], cls=ApiJSONEncoder)
+            key: json.dumps(
+                self.__dict__[key],  # pylint: disable=unnecessary-dict-index-lookup
+                cls=ApiJSONEncoder,
+            )
             for key, _ in self.__dict__.items()
             if not key.startswith("_")
         }
