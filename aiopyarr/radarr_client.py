@@ -87,8 +87,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Include a TMDB id for a specific movie or leave black for all.
         """
         return await self._async_request(
-            "movie",
-            params={"tmdbId": movieid} if movieid is not None else None,
+            f"movie{f'/{movieid}' if movieid is not None else ''}",
             datatype=RadarrMovie,
         )
 

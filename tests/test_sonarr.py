@@ -85,7 +85,6 @@ async def test_async_get_calendar(aresponses):
         assert data[0].id == 14402
 
 
-# TODO test list as well as dict
 @pytest.mark.asyncio
 async def test_async_get_commands(aresponses):
     """Test getting commands."""
@@ -266,12 +265,11 @@ async def test_async_get_episode_files(aresponses):
         assert data.sceneName == ""
         assert data.quality.quality.id == 1
         assert data.quality.quality.name == "Bluray 720p"
-        assert data.quality.quality.allowed == []  # TODO remove from model
+        assert data.quality.quality.allowed == []
         assert data.quality.proper == False
         assert data.id == 1
 
 
-# TODO convert to int, float
 @pytest.mark.asyncio
 async def test_async_get_history(aresponses):
     """Test getting history."""
@@ -301,7 +299,7 @@ async def test_async_get_history(aresponses):
         assert data.records[0].sourceTitle == "string"
         assert data.records[0].language.id == 1
         assert data.records[0].language.name == "English"
-        assert data.records[0].language.allowed == []  # TODO remove from model
+        assert data.records[0].language.allowed == []
         assert data.records[0].quality.quality.id == 5
         assert data.records[0].quality.quality.name == "WEBDL-720p"
         assert data.records[0].quality.quality.source == "web"
@@ -318,22 +316,22 @@ async def test_async_get_history(aresponses):
         assert data.records[0].data.indexer == "string"
         assert data.records[0].data.nzbInfoUrl == "string"
         assert data.records[0].data.releaseGroup == "string"
-        assert data.records[0].data.age == "0"  # TODO convert
-        assert data.records[0].data.ageHours == "0.0"  # TODO convert
-        assert data.records[0].data.ageMinutes == "0.0"  # TODO convert
+        assert data.records[0].data.age == 0
+        assert data.records[0].data.ageHours == 0.0
+        assert data.records[0].data.ageMinutes == 0.0
         assert data.records[0].data.publishedDate == "string"
-        assert data.records[0].data.fileId == "53153"  # TODO convert
+        assert data.records[0].data.fileId == 53153
         assert data.records[0].data.droppedPath == "string"
         assert data.records[0].data.importedPath == "string"
         assert data.records[0].data.downloadClient == "string"
         assert data.records[0].data.downloadClientName == "string"
-        assert data.records[0].data.preferredWordScore == "0.0"  # TODO convert
-        assert data.records[0].data.size == "184576954"  # TODO convert
+        assert data.records[0].data.preferredWordScore == 0
+        assert data.records[0].data.size == 184576954
         assert data.records[0].data.downloadUrl == "string"
         assert data.records[0].data.guid == "string"
-        assert data.records[0].data.tvdbId == "string"
-        assert data.records[0].data.tvRageId == "string"
-        assert data.records[0].data.protocol == "2"  # TODO convert
+        assert data.records[0].data.tvdbId == 0
+        assert data.records[0].data.tvRageId == 0
+        assert data.records[0].data.protocol == 2
         assert data.records[0].data.torrentInfoHash == "string"
         assert data.records[0].id == 76400
 

@@ -51,8 +51,7 @@ class RequestClient:
             )
         else:
             host_configuration = copy(host_configuration)
-
-        if port is not None:
+        if port is not None and host_configuration.port is None:
             host_configuration.port = port
         if ssl is not None:
             host_configuration.ssl = ssl
