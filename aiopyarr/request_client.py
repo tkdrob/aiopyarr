@@ -108,23 +108,23 @@ class RequestClient:
                 timeout=aiohttp.ClientTimeout(self._request_timeout),
             )
 
+            if request.status != 200:
+
+                if request.status == 401:
+                    raise ArrAuthenticationException(self, request)
+                if request.status == 404:
+                    raise ArrResourceNotFound(self, request)
+                raise ArrConnectionException(
+                    self,
+                    f"Request for '{url}' failed with status code '{request.status}'",
+                )
+
             _result: dict = await request.json()
 
             response = PyArrResponse(
                 data={ATTR_DATA: _result},
                 datatype=datatype,
             )
-
-            if request.status != 200:
-
-                if request.status == 401:
-                    raise ArrAuthenticationException(self, response.message)
-                if request.status == 404:
-                    raise ArrResourceNotFound(self, response.message)
-                raise ArrConnectionException(
-                    self,
-                    f"Request for '{url}' failed with status code '{request.status}'",
-                )
 
             LOGGER.debug("Requesting %s returned %s", self.redact_string(url), _result)
 
