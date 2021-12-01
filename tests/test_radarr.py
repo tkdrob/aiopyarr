@@ -675,7 +675,7 @@ async def test_async_get_movie(aresponses):
     """Test getting movie attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/movie",
+        "/api/v3/movie/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -728,17 +728,43 @@ async def test_async_get_movie(aresponses):
         assert data.added == "string"
         assert data.ratings.votes == 0
         assert data.ratings.value == 0
+        assert data.movieFile.movieId == 0
+        assert data.movieFile.relativePath == "string"
+        assert data.movieFile.path == "string"
+        assert data.movieFile.size == 916662234
+        assert data.movieFile.dateAdded == "2020-11-26T02:00:35Z"
+        assert data.movieFile.indexerFlags == 1
+        assert data.movieFile.quality.quality.id == 14
+        assert data.movieFile.quality.quality.name == "WEBRip-720p"
+        assert data.movieFile.quality.quality.source == "webrip"
+        assert data.movieFile.quality.quality.resolution == 720
+        assert data.movieFile.quality.quality.modifier == "none"
+        assert data.movieFile.quality.revision.version == 1
+        assert data.movieFile.quality.revision.real == 0
+        assert data.movieFile.quality.revision.isRepack == False
+        assert data.movieFile.mediaInfo.audioBitrate == 0
+        assert data.movieFile.mediaInfo.audioChannels == 2
+        assert data.movieFile.mediaInfo.audioCodec == "AAC"
+        assert data.movieFile.mediaInfo.audioLanguages == ""
+        assert data.movieFile.mediaInfo.audioStreamCount == 1
+        assert data.movieFile.mediaInfo.videoBitDepth == 8
+        assert data.movieFile.mediaInfo.videoBitrate == 1000000
+        assert data.movieFile.mediaInfo.videoCodec == "x264"
+        assert data.movieFile.mediaInfo.videoFps == 25.000
+        assert data.movieFile.mediaInfo.resolution == "1280x534"
+        assert data.movieFile.mediaInfo.runTime == "1:49:06"
+        assert data.movieFile.mediaInfo.scanType == "Progressive"
+        assert data.movieFile.originalFilePath == "string"
+        assert data.movieFile.qualityCutoffNotMet == True
+        assert data.movieFile.languages[0].id == 26
+        assert data.movieFile.languages[0].name == "Hindi"
+        assert data.movieFile.edition == ""
+        assert data.movieFile.id == 35361
         assert data.collection.name == "string"
         assert data.collection.tmdbId == 0
         assert data.collection.images[0].coverType == "poster"
-        assert (
-            data.collection.images[0].url
-            == "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964"
-        )
-        assert (
-            data.collection.images[0].remoteUrl
-            == "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
-        )
+        assert data.collection.images[0].url == "string"
+        assert data.collection.images[0].remoteUrl == "string"
         assert data.status == "deleted"
 
 

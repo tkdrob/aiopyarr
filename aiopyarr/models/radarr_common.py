@@ -48,7 +48,7 @@ class _RadarrMovieQuality(BaseModel):
 
 
 @dataclass(init=False)
-class _RadarrMovieFileMediaInfo(_CommonAttrs, BaseModel):
+class _RadarrMovieFileMediaInfo(_CommonAttrs):
     """Movie file media attributes."""
 
     audioAdditionalFeatures: str | None = None
@@ -139,14 +139,15 @@ class _RadarrCommon2(BaseModel):
     """Radarr common attributes."""
 
     id: int | None = None
-    #TODO minimumAvailability: str | None = None
-    #TODO qualityProfileId: int | None = None
+    minimumAvailability: str | None = None
+    qualityProfileId: int | None = None
 
 
 @dataclass(init=False)
 class _RadarrMovieCommon(BaseModel):
     """Movie common attributes."""
 
+    edition: str | None = None
     id: int | None = None
     languages: list[_RadarrCommon4] | None = None
     quality: _RadarrMovieQuality | None = None
@@ -222,6 +223,7 @@ class _RadarrMovieFileCommon(_RadarrMovieCommon):
     indexerFlags: int | None = None
     mediaInfo: _RadarrMovieFileMediaInfo | None = None
     movieId: int | None = None
+    originalFilePath: str | None = None
     path: str | None = None
     qualityCutoffNotMet: bool | None = None
     relativePath: str | None = None
@@ -282,3 +284,46 @@ class _RadarrMovieHistoryData(BaseModel):
     """Movie history data attributes."""
 
     reason: str | None = None
+
+
+@dataclass(init=False)
+class _RadarrMovie(_RadarrCommon2, BaseModel):
+    """Movie attributes."""
+
+    added: str | None = None
+    certification: str | None = None
+    cleanTitle: str | None = None
+    collection: _RadarrMovieCollection | None = None
+    folderName: str | None = None
+    genres: list[str] | None = None
+    hasFile: bool | None = None
+    imdbId: str | None = None
+    images: list[_RadarrMovieImages] | None = None
+    inCinemas: str | None = None
+    isAvailable: bool | None = None
+    monitored: bool | None = None
+    overview: str | None = None
+    path: str | None = None
+    physicalRelease: str | None = None
+    ratings: _RadarrMovieRatings | None = None
+    rootFolderPath: str | None = None
+    runtime: int | None = None
+    sizeOnDisk: int | None = None
+    sortTitle: str | None = None
+    status: str | None = None
+    studio: str | None = None
+    tags: list[int] | None = None
+    title: str | None = None
+    titleSlug: str | None = None
+    tmdbId: int | None = None
+    website: str | None = None
+    year: int | None = None
+    youTubeTrailerId: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.images = [_RadarrMovieImages(image) for image in self.images or []]
+        self.ratings = _RadarrMovieRatings(self.ratings) or {}
+        if isinstance(self.collection, dict):
+            self.collection = _RadarrMovieCollection(self.collection) or {}

@@ -77,7 +77,10 @@ class BaseModel:
                 self.__setattr__(key, float(self.__getattribute__(key)))
         for key in CONVERT_TO_INTEGER:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
-                self.__setattr__(key, int(self.__getattribute__(key)))
+                try:
+                    self.__setattr__(key, int(self.__getattribute__(key)))
+                except ValueError:
+                    pass
 
     @property
     def attributes(self) -> dict[str, Any]:

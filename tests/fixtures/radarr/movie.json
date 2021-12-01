@@ -42,14 +42,61 @@
     "votes": 0,
     "value": 0
   },
+  "movieFile": {
+    "movieId": 0,
+    "relativePath": "string",
+    "path": "string",
+    "size": 916662234,
+    "dateAdded": "2020-11-26T02:00:35Z",
+    "indexerFlags": 1,
+    "quality": {
+      "quality": {
+        "id": 14,
+        "name": "WEBRip-720p",
+        "source": "webrip",
+        "resolution": 720,
+        "modifier": "none"
+      },
+      "revision": {
+        "version": 1,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "mediaInfo": {
+      "audioBitrate": 0,
+      "audioChannels": 2,
+      "audioCodec": "AAC",
+      "audioLanguages": "",
+      "audioStreamCount": 1,
+      "videoBitDepth": 8,
+      "videoBitrate": 1000000,
+      "videoCodec": "x264",
+      "videoFps": 25.000,
+      "resolution": "1280x534",
+      "runTime": "1:49:06",
+      "scanType": "Progressive",
+      "subtitles": ""
+    },
+    "originalFilePath": "string",
+    "qualityCutoffNotMet": true,
+    "languages": [
+      {
+        "id": 26,
+        "name": "Hindi"
+      }
+    ],
+    "edition": "",
+    "id": 35361
+  },
   "collection": {
     "name": "string",
     "tmdbId": 0,
     "images": [
       {
         "coverType": "poster",
-        "url": "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964",
-        "remoteUrl": "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
+        "url": "string",
+        "remoteUrl": "string"
       }
     ]
   },

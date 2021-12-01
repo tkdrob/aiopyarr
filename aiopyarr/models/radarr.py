@@ -13,66 +13,18 @@ from .radarr_common import (  # isort:skip
     _RadarrCommon2,
     _RadarrCommon4,
     _RadarrCustomFilterAttr,
-    _RadarrMovieCollection,
     _RadarrMovieCustomFormats,
+    _RadarrMovie,
     _RadarrMovieFileCommon,
-    _RadarrMovieFileMediaInfo,
     _RadarrMovieHistoryBlocklistBase,
     _RadarrMovieHistoryData,
-    _RadarrMovieImages,
     _RadarrMovieQuality,
-    _RadarrMovieRatings,
     _RadarrNotificationMessage,
     _RadarrQualityProfileItems,
     _RadarrQueueStatusMessages,
     _RadarrUnmappedRootFolder,
     _RadarrUpdateChanges,
 )
-
-
-@dataclass(init=False)
-class RadarrMovie(_RadarrCommon2):
-    """Movie attributes."""
-
-    _responsetype = APIResponseType.LIST
-
-    added: str | None = None
-    certification: str | None = None
-    cleanTitle: str | None = None
-    collection: _RadarrMovieCollection | None = None
-    folderName: str | None = None
-    genres: list[str] | None = None
-    hasFile: bool | None = None
-    imdbId: str | None = None
-    images: list[_RadarrMovieImages] | None = None
-    inCinemas: str | None = None
-    isAvailable: bool | None = None
-    monitored: bool | None = None
-    overview: str | None = None
-    path: str | None = None
-    physicalRelease: str | None = None
-    ratings: _RadarrMovieRatings | None = None
-    rootFolderPath: str | None = None
-    runtime: int | None = None
-    sizeOnDisk: int | None = None
-    sortTitle: str | None = None
-    status: str | None = None
-    studio: str | None = None
-    tags: list[int] | None = None
-    title: str | None = None
-    titleSlug: str | None = None
-    tmdbId: int | None = None
-    website: str | None = None
-    year: int | None = None
-    youTubeTrailerId: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.images = [_RadarrMovieImages(image) for image in self.images or []]
-        self.ratings = _RadarrMovieRatings(self.ratings) or {}
-        if isinstance(self.collection, dict):
-            self.collection = _RadarrMovieCollection(self.collection) or {}
 
 
 @dataclass(init=False)
@@ -453,14 +405,13 @@ class RadarrQualityProfile(_RadarrCommon4):
 
 
 @dataclass(init=False)
-class RadarrCalendar(RadarrMovie):
+class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
     _responsetype = APIResponseType.LIST
 
     alternateTitles: list[str] | None = None
     digitalRelease: str | None = None
-    mediaInfo: _RadarrMovieFileMediaInfo | None = None
     minimumAvailability: str | None = None
     movieFile: _RadarrCalendarMovieFile | None = None
     originalTitle: str | None = None
@@ -470,7 +421,6 @@ class RadarrCalendar(RadarrMovie):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
         if isinstance(self.images, list):
             self.movieFile = _RadarrCalendarMovieFile(self.movieFile) or {}
 
@@ -564,3 +514,15 @@ class RadarrCommand(_RadarrCommon4):
         """Post init."""
         super().__post_init__()
         self.body = _RadarrCommandBody(self.body) or {}
+
+
+@dataclass(init=False)
+class RadarrMovie(_RadarrMovie):
+    """Movie attributes."""
+
+    movieFile: RadarrMovieFile | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.movieFile = RadarrMovieFile(self.movieFile) or {}
