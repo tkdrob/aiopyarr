@@ -79,9 +79,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             redact,
         )
 
-    async def async_get_movies(
-        self, movieid: int | None = None
-    ) -> list[RadarrMovie]:
+    async def async_get_movies(self, movieid: int | None = None) -> list[RadarrMovie]:
         """Get information about movies.
 
         Include a TMDB id for a specific movie or leave black for all.

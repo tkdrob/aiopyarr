@@ -342,7 +342,10 @@ class _RadarrMovie(_RadarrCommon2):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.alternateTitles = [_RadarrMovieAlternateTitle(alternateTitle) for alternateTitle in self.alternateTitles or []]
+        self.alternateTitles = [
+            _RadarrMovieAlternateTitle(alternateTitle)
+            for alternateTitle in self.alternateTitles or []
+        ]
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings) or {}
         if isinstance(self.collection, dict):
