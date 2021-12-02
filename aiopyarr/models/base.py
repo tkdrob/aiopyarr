@@ -26,18 +26,10 @@ class ApiJSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-class APIResponseType(str, Enum):
-    """ApiResponseType."""
-
-    DICT = "dict"
-    LIST = "list"
-
-
 class BaseModel:
     """BaseModel."""
 
     _datatype: BaseModel | None = None
-    _responsetype: APIResponseType = APIResponseType.DICT
 
     def __init__(
         self, data: dict[str, Any] | list[dict[str, Any]], datatype: BaseModel = None

@@ -81,15 +81,18 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_movies(
         self, movieid: int | None = None
-    ) -> RadarrMovie | list[RadarrMovie]:
+    ) -> list[RadarrMovie]:
         """Get information about movies.
 
         Include a TMDB id for a specific movie or leave black for all.
         """
-        return await self._async_request(
+        data = await self._async_request(
             f"movie{f'/{movieid}' if movieid is not None else ''}",
             datatype=RadarrMovie,
         )
+        if isinstance(data, list):
+            return data
+        return [data]
 
     async def async_add_movie(  # pylint: disable=too-many-arguments
         self,
@@ -314,7 +317,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     @api_command("metadata", datatype=RadarrMetadataConfig)
-    async def async_get_metadata_config(self) -> RadarrMetadataConfig:
+    async def async_get_metadata_config(self) -> list[RadarrMetadataConfig]:
         """Get information about metadata configuration."""
 
     async def async_get_tags_details(

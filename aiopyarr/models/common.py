@@ -4,14 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from aiopyarr.models.base import APIResponseType, BaseModel
+from aiopyarr.models.base import BaseModel
 
 
 @dataclass(init=False)
 class Diskspace(BaseModel):
     """Radarr diskspace attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     freeSpace: int | None = None
     label: str | None = None

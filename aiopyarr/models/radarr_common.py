@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import APIResponseType, BaseModel
+from .base import BaseModel
 from .common import _CommonAttrs
 
 
@@ -162,8 +162,6 @@ class _RadarrMovieCommon(BaseModel):
 class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Movie history/blocklist attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     customFormats: list[_RadarrMovieCustomFormats] | None = None
     date: str | None = None
     movieId: int | None = None
@@ -287,10 +285,30 @@ class _RadarrMovieHistoryData(BaseModel):
 
 
 @dataclass(init=False)
-class _RadarrMovie(_RadarrCommon2, BaseModel):
+class _RadarrMovieAlternateTitle(BaseModel):
+    """Movie history alternate title attributes."""
+
+    id: int | None = None
+    language: _RadarrCommon4 | None = None
+    movieId: int | None = None
+    sourceId: int | None = None
+    sourceType: str | None = None
+    title: str | None = None
+    voteCount: int | None = None
+    votes: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.language = _RadarrCommon4(self.language) or {}
+
+
+@dataclass(init=False)
+class _RadarrMovie(_RadarrCommon2):
     """Movie attributes."""
 
     added: str | None = None
+    alternateTitles: list[_RadarrMovieAlternateTitle] | None = None
     certification: str | None = None
     cleanTitle: str | None = None
     collection: _RadarrMovieCollection | None = None
@@ -302,6 +320,7 @@ class _RadarrMovie(_RadarrCommon2, BaseModel):
     inCinemas: str | None = None
     isAvailable: bool | None = None
     monitored: bool | None = None
+    originalTitle: str | None = None
     overview: str | None = None
     path: str | None = None
     physicalRelease: str | None = None
@@ -323,6 +342,7 @@ class _RadarrMovie(_RadarrCommon2, BaseModel):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.alternateTitles = [_RadarrMovieAlternateTitle(alternateTitle) for alternateTitle in self.alternateTitles or []]
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings) or {}
         if isinstance(self.collection, dict):

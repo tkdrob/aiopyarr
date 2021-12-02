@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import APIResponseType, BaseModel
+from .base import BaseModel
 
 from .radarr_common import (  # isort:skip
     _RadarrCalendarMovieFile,
@@ -76,8 +76,6 @@ class RadarrBlocklist(BaseModel):
 class RadarrQueueDetail(BaseModel):
     """Radarr queue details attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     customFormats: list[_RadarrMovieCustomFormats] | None = None
     downloadClient: str | None = None
     downloadId: str | None = None
@@ -86,6 +84,7 @@ class RadarrQueueDetail(BaseModel):
     id: int | None = None
     indexer: str | None = None
     languages: list[_RadarrCommon4] | None = None
+    movieId: int | None = None
     outputPath: str | None = None
     protocol: str | None = None
     quality: _RadarrMovieQuality | None = None
@@ -230,8 +229,6 @@ class RadarrTagDetails(RadarrTag):
 class Diskspace(BaseModel):
     """Radarr diskspace attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     freeSpace: int | None = None
     label: str | None = None
     path: str | None = None
@@ -307,10 +304,8 @@ class RadarrNamingConfig(BaseModel):
 
 
 @dataclass(init=False)
-class RadarrMetadataConfig(_RadarrCommon):
+class RadarrMetadataConfig(_RadarrCommon, BaseModel):
     """Radarr metadata consumer config attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     configContract: str | None = None
     enable: bool | None = None
@@ -354,8 +349,6 @@ class RadarrSystemStatus(BaseModel):
 class RadarrHealth(BaseModel):
     """Radarr failed health check attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     message: str | None = None
     source: str | None = None
     type: str | None = None
@@ -387,8 +380,6 @@ class RadarrUpdate(BaseModel):
 class RadarrQualityProfile(_RadarrCommon4):
     """Radarr quality profile attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     cutoff: int | None = None
     cutoffFormatScore: int | None = None
     formatItems: list | None = None
@@ -407,8 +398,6 @@ class RadarrQualityProfile(_RadarrCommon4):
 @dataclass(init=False)
 class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     alternateTitles: list[str] | None = None
     digitalRelease: str | None = None
@@ -429,8 +418,6 @@ class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
 class RadarrCustomFilter(BaseModel):
     """Radarr custom filter attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     id: int | None = None
     filters: list[_RadarrCustomFilterAttr] | None = None
     label: str | None = None
@@ -448,8 +435,6 @@ class RadarrCustomFilter(BaseModel):
 class RadarrRemotePathMapping(BaseModel):
     """Radarr remote path mapping attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     id: int | None = None
     host: str | None = None
     localPath: str | None = None
@@ -459,8 +444,6 @@ class RadarrRemotePathMapping(BaseModel):
 @dataclass(init=False)
 class RadarrRootFolder(BaseModel):
     """Radarr root folder attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     id: int | None = None
     freeSpace: int | None = None
@@ -492,8 +475,6 @@ class RadarrMovieEditor(BaseModel):
 @dataclass(init=False)
 class RadarrCommand(_RadarrCommon4):
     """Radarr command attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     body: _RadarrCommandBody | None = None
     commandName: str | None = None

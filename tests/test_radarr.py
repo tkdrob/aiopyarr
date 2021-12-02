@@ -689,83 +689,87 @@ async def test_async_get_movie(aresponses):
         )
         data = await client.async_get_movies(movieid=0)
 
-        assert data.id == 0
-        assert data.title == "Dark Phoenix"
-        assert data.sortTitle == "dark phoenix"
-        assert data.sizeOnDisk == 0
-        assert data.overview == "string"
-        assert data.inCinemas == "string"
-        assert data.physicalRelease == "string"
-        assert data.images[0].coverType == "poster"
-        assert (
-            data.images[0].url
-            == "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964"
-        )
-        assert (
-            data.images[0].remoteUrl
-            == "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
-        )
-        assert data.website == "http://darkphoenix.com"
-        assert data.year == 0
-        assert data.hasFile == True
-        assert data.youTubeTrailerId == "string"
-        assert data.studio == "string"
-        assert data.path == "string"
-        assert data.rootFolderPath == "string"
-        assert data.qualityProfileId == 0
-        assert data.monitored == True
-        assert data.minimumAvailability == "announced"
-        assert data.isAvailable == True
-        assert data.folderName == "string"
-        assert data.runtime == 0
-        assert data.cleanTitle == "string"
-        assert data.imdbId == "string"
-        assert data.tmdbId == 0
-        assert data.titleSlug == "string"
-        assert data.certification == "string"
-        assert data.genres == ["string"]
-        assert data.tags == [0]
-        assert data.added == "string"
-        assert data.ratings.votes == 0
-        assert data.ratings.value == 0
-        assert data.movieFile.movieId == 0
-        assert data.movieFile.relativePath == "string"
-        assert data.movieFile.path == "string"
-        assert data.movieFile.size == 916662234
-        assert data.movieFile.dateAdded == "2020-11-26T02:00:35Z"
-        assert data.movieFile.indexerFlags == 1
-        assert data.movieFile.quality.quality.id == 14
-        assert data.movieFile.quality.quality.name == "WEBRip-720p"
-        assert data.movieFile.quality.quality.source == "webrip"
-        assert data.movieFile.quality.quality.resolution == 720
-        assert data.movieFile.quality.quality.modifier == "none"
-        assert data.movieFile.quality.revision.version == 1
-        assert data.movieFile.quality.revision.real == 0
-        assert data.movieFile.quality.revision.isRepack == False
-        assert data.movieFile.mediaInfo.audioBitrate == 0
-        assert data.movieFile.mediaInfo.audioChannels == 2
-        assert data.movieFile.mediaInfo.audioCodec == "AAC"
-        assert data.movieFile.mediaInfo.audioLanguages == ""
-        assert data.movieFile.mediaInfo.audioStreamCount == 1
-        assert data.movieFile.mediaInfo.videoBitDepth == 8
-        assert data.movieFile.mediaInfo.videoBitrate == 1000000
-        assert data.movieFile.mediaInfo.videoCodec == "x264"
-        assert data.movieFile.mediaInfo.videoFps == 25.000
-        assert data.movieFile.mediaInfo.resolution == "1280x534"
-        assert data.movieFile.mediaInfo.runTime == "1:49:06"
-        assert data.movieFile.mediaInfo.scanType == "Progressive"
-        assert data.movieFile.originalFilePath == "string"
-        assert data.movieFile.qualityCutoffNotMet == True
-        assert data.movieFile.languages[0].id == 26
-        assert data.movieFile.languages[0].name == "Hindi"
-        assert data.movieFile.edition == ""
-        assert data.movieFile.id == 35361
-        assert data.collection.name == "string"
-        assert data.collection.tmdbId == 0
-        assert data.collection.images[0].coverType == "poster"
-        assert data.collection.images[0].url == "string"
-        assert data.collection.images[0].remoteUrl == "string"
-        assert data.status == "deleted"
+        assert data[0].id == 0
+        assert data[0].title == "string"
+        assert data[0].originalTitle == "string"
+        assert data[0].alternateTitles[0].sourceType == "tmdb"
+        assert data[0].alternateTitles[0].movieId == 1
+        assert data[0].alternateTitles[0].title == "string"
+        assert data[0].alternateTitles[0].sourceId == 0
+        assert data[0].alternateTitles[0].votes == 0
+        assert data[0].alternateTitles[0].voteCount == 0
+        assert data[0].alternateTitles[0].language.id == 1
+        assert data[0].alternateTitles[0].language.name == "English"
+        assert data[0].alternateTitles[0].id == 1
+        assert data[0].sortTitle == "string"
+        assert data[0].sizeOnDisk == 0
+        assert data[0].overview == "string"
+        assert data[0].inCinemas == "string"
+        assert data[0].physicalRelease == "string"
+        assert data[0].images[0].coverType == "poster"
+        assert data[0].images[0].url == "string"
+        assert data[0].images[0].remoteUrl == "string"
+        assert data[0].website == "string"
+        assert data[0].year == 0
+        assert data[0].hasFile == True
+        assert data[0].youTubeTrailerId == "string"
+        assert data[0].studio == "string"
+        assert data[0].path == "string"
+        assert data[0].rootFolderPath == "string"
+        assert data[0].qualityProfileId == 0
+        assert data[0].monitored == True
+        assert data[0].minimumAvailability == "announced"
+        assert data[0].isAvailable == True
+        assert data[0].folderName == "string"
+        assert data[0].runtime == 0
+        assert data[0].cleanTitle == "string"
+        assert data[0].imdbId == "string"
+        assert data[0].tmdbId == 0
+        assert data[0].titleSlug == "string"
+        assert data[0].certification == "string"
+        assert data[0].genres == ["string"]
+        assert data[0].tags == [0]
+        assert data[0].added == "string"
+        assert data[0].ratings.votes == 0
+        assert data[0].ratings.value == 0
+        assert data[0].movieFile.movieId == 0
+        assert data[0].movieFile.relativePath == "string"
+        assert data[0].movieFile.path == "string"
+        assert data[0].movieFile.size == 916662234
+        assert data[0].movieFile.dateAdded == "2020-11-26T02:00:35Z"
+        assert data[0].movieFile.indexerFlags == 1
+        assert data[0].movieFile.quality.quality.id == 14
+        assert data[0].movieFile.quality.quality.name == "WEBRip-720p"
+        assert data[0].movieFile.quality.quality.source == "webrip"
+        assert data[0].movieFile.quality.quality.resolution == 720
+        assert data[0].movieFile.quality.quality.modifier == "none"
+        assert data[0].movieFile.quality.revision.version == 1
+        assert data[0].movieFile.quality.revision.real == 0
+        assert data[0].movieFile.quality.revision.isRepack == False
+        assert data[0].movieFile.mediaInfo.audioBitrate == 0
+        assert data[0].movieFile.mediaInfo.audioChannels == 2
+        assert data[0].movieFile.mediaInfo.audioCodec == "AAC"
+        assert data[0].movieFile.mediaInfo.audioLanguages == ""
+        assert data[0].movieFile.mediaInfo.audioStreamCount == 1
+        assert data[0].movieFile.mediaInfo.videoBitDepth == 8
+        assert data[0].movieFile.mediaInfo.videoBitrate == 1000000
+        assert data[0].movieFile.mediaInfo.videoCodec == "x264"
+        assert data[0].movieFile.mediaInfo.videoFps == 25.000
+        assert data[0].movieFile.mediaInfo.resolution == "1280x534"
+        assert data[0].movieFile.mediaInfo.runTime == "1:49:06"
+        assert data[0].movieFile.mediaInfo.scanType == "Progressive"
+        assert data[0].movieFile.originalFilePath == "string"
+        assert data[0].movieFile.qualityCutoffNotMet == True
+        assert data[0].movieFile.languages[0].id == 26
+        assert data[0].movieFile.languages[0].name == "Hindi"
+        assert data[0].movieFile.edition == ""
+        assert data[0].movieFile.id == 35361
+        assert data[0].collection.name == "string"
+        assert data[0].collection.tmdbId == 0
+        assert data[0].collection.images[0].coverType == "poster"
+        assert data[0].collection.images[0].url == "string"
+        assert data[0].collection.images[0].remoteUrl == "string"
+        assert data[0].status == "deleted"
 
 
 @pytest.mark.asyncio
@@ -938,6 +942,7 @@ async def test_async_get_queue_details(aresponses):
         )
         data = await client.async_get_queue_details()
 
+        assert data[0].movieId == 0
         assert data[0].languages[0].id == 0
         assert data[0].languages[0].name == "string"
         assert data[0].quality.quality.id == 0
@@ -1160,18 +1165,10 @@ async def test_async_get_software_update_info(aresponses):
         assert data.branch == "nightly"
         assert data.releaseDate == "2020-09-02T05:36:13.047313Z"
         assert data.fileName == "Radarr.nightly.3.0.0.3553.windows-core-x64.zip"
-        assert (
-            data.url
-            == "https://dev.azure.com/Radarr/Radarr/_apis/build/builds/1896/artifacts?artifactName=Packages&fileId=A710686A9CB6848E73C3DDCA5F2B0D83C6189546E66DD3EF2D0D30B20735F6E802&fileName=Radarr.aphrodite.3.0.0.3553.windows-core-x64.zip&api-version=5.1"
-        )
+        assert data.url == "string"
         assert data.installed == False
         assert data.installed == False
         assert data.latest == False
         assert data.changes.new == []
-        assert data.changes.fixed == [
-            "Importing completed downloads from NZBGet with post processing script failing"
-        ]
-        assert (
-            data.hash
-            == "a95c855cbc3ee253fd0b74181e866106daffc7b71b4a9e2d57cfbeede4333aee"
-        )
+        assert data.changes.fixed == ["string"]
+        assert data.hash == "abc123"
