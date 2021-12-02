@@ -79,18 +79,17 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             redact,
         )
 
-    async def async_get_movies(self, movieid: int | None = None) -> list[RadarrMovie]:
+    async def async_get_movies(
+        self, movieid: int | None = None
+    ) -> RadarrMovie | list[RadarrMovie]:
         """Get information about movies.
 
         Include a TMDB id for a specific movie or leave black for all.
         """
-        data = await self._async_request(
+        return await self._async_request(
             f"movie{f'/{movieid}' if movieid is not None else ''}",
             datatype=RadarrMovie,
         )
-        if isinstance(data, list):
-            return data
-        return [data]
 
     async def async_add_movie(  # pylint: disable=too-many-arguments
         self,
