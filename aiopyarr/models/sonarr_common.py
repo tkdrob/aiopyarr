@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import APIResponseType, BaseModel
+from .base import BaseModel
 from .common import _CommonAttrs
 
 
@@ -445,8 +445,6 @@ class _SonarrSeriesTitleInfo(BaseModel):
 @dataclass(init=False)
 class _SonarrCommon3(BaseModel):
     """Sonarr common attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     episodeNumbers: list[int] | None = None
     fullSeason: bool | None = None

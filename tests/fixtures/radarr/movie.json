@@ -1,7 +1,23 @@
 {
   "id": 0,
-  "title": "Dark Phoenix",
-  "sortTitle": "dark phoenix",
+  "title": "string",
+  "originalTitle": "string",
+  "alternateTitles": [
+    {
+      "sourceType": "tmdb",
+      "movieId": 1,
+      "title": "string",
+      "sourceId": 0,
+      "votes": 0,
+      "voteCount": 0,
+      "language": {
+        "id": 1,
+        "name": "English"
+      },
+      "id": 1
+    }
+  ],
+  "sortTitle": "string",
   "sizeOnDisk": 0,
   "overview": "string",
   "inCinemas": "string",
@@ -9,11 +25,11 @@
   "images": [
     {
       "coverType": "poster",
-      "url": "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964",
-      "remoteUrl": "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
+      "url": "string",
+      "remoteUrl": "string"
     }
   ],
-  "website": "http://darkphoenix.com",
+  "website": "string",
   "year": 0,
   "hasFile": true,
   "youTubeTrailerId": "string",

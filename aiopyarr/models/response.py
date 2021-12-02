@@ -4,7 +4,7 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any
 
-from .base import APIResponseType, BaseModel
+from .base import BaseModel
 
 
 class APIResult(str, Enum):
@@ -28,10 +28,7 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
         if self._datatype is None:
             return data
 
-        if (
-            self._datatype._responsetype  # pylint: disable=protected-access
-            == APIResponseType.LIST
-        ):
+        if isinstance(data, list):
             return [self._datatype(item, self._datatype) for item in data]
 
         return self._datatype(data, self._datatype)

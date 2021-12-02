@@ -314,7 +314,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     @api_command("metadata", datatype=RadarrMetadataConfig)
-    async def async_get_metadata_config(self) -> RadarrMetadataConfig:
+    async def async_get_metadata_config(self) -> list[RadarrMetadataConfig]:
         """Get information about metadata configuration."""
 
     async def async_get_tags_details(

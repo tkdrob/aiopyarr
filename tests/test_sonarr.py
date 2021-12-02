@@ -30,45 +30,36 @@ async def test_async_get_calendar(aresponses):
         assert data[0].episodeFileId == 0
         assert data[0].seasonNumber == 4
         assert data[0].episodeNumber == 11
-        assert data[0].title == "Easy Com-mercial, Easy Go-mercial"
-        assert data[0].airDate == "2014-01-26"
-        assert data[0].airDateUtc == "2014-01-27T01:30:00Z"
-        assert (
-            data[0].overview
-            == "To compete with fellow “restaurateur,” Jimmy Pesto, and his blowout Super Bowl event, Bob is determined to create a Bob’s Burgers commercial to air during the “big game.” In an effort to outshine Pesto, the Belchers recruit Randy, a documentarian, to assist with the filmmaking and hire on former pro football star Connie Frye to be the celebrity endorser."
-        )
+        assert data[0].title == "string"
+        assert data[0].airDate == "2017-01-26"
+        assert data[0].airDateUtc == "2017-01-27T01:30:00Z"
+        assert data[0].overview == "string"
         assert data[0].hasFile == False
         assert data[0].monitored == True
         assert data[0].sceneEpisodeNumber == 0
         assert data[0].sceneSeasonNumber == 0
         assert data[0].tvDbEpisodeId == 0
-        assert data[0].series.tvdbId == 194031
-        assert data[0].series.tvRageId == 24607
-        assert data[0].series.imdbId == "tt1561755"
-        assert data[0].series.cleanTitle == "bobsburgers"
+        assert data[0].series.tvdbId == 0
+        assert data[0].series.tvRageId == 0
+        assert data[0].series.imdbId == "string"
+        assert data[0].series.cleanTitle == "string"
         assert data[0].series.status == "continuing"
-        assert (
-            data[0].series.overview
-            == "Bob's Burgers follows a third-generation restaurateur, Bob, as he runs Bob's Burgers with the help of his wife and their three kids. Bob and his quirky family have big ideas about burgers, but fall short on service and sophistication. Despite the greasy counters, lousy location and a dearth of customers, Bob and his family are determined to make Bob's Burgers \"grand re-re-re-opening\" a success."
-        )
+        assert data[0].series.overview == "string"
         assert data[0].series.airTime == "5:30pm"
         assert data[0].series.monitored == True
         assert data[0].series.qualityProfileId == 1
         assert data[0].series.seasonFolder == True
-        assert data[0].series.lastInfoSync == "2014-01-26T19:25:55.4555946Z"
+        assert data[0].series.lastInfoSync == "2017-01-26T19:25:55.4555946Z"
         assert data[0].series.runtime == 30
         assert data[0].series.images[0].coverType == "banner"
-        assert (
-            data[0].series.images[0].url
-            == "http://slurm.trakt.us/images/banners/1387.6.jpg"
-        )
+        assert data[0].series.images[0].url == "string"
         assert data[0].series.seriesType == "standard"
-        assert data[0].series.network == "FOX"
+        assert data[0].series.network == "string"
         assert data[0].series.useSceneNumbering == False
-        assert data[0].series.titleSlug == "bobs-burgers"
-        assert data[0].series.path == "T:\\Bob's Burgers"
+        assert data[0].series.titleSlug == "string"
+        assert data[0].series.path == "string"
         assert data[0].series.year == 0
-        assert data[0].series.firstAired == "2011-01-10T01:30:00Z"
+        assert data[0].series.firstAired == "2016-01-10T01:30:00Z"
         assert data[0].series.qualityProfile.value.name == "SD"
         assert data[0].series.qualityProfile.value.id == 1
         assert data[0].series.qualityProfile.value.allowed[0].id == 1
@@ -462,39 +453,33 @@ async def test_async_get_queue(aresponses):
         )
         data = await client.async_get_queue()
 
-        assert data[0].series.title == "Game of Thrones"
-        assert data[0].series.sortTitle == "game thrones"
-        assert data[0].series.seasonCount == 6
+        assert data[0].series.title == "string"
+        assert data[0].series.sortTitle == "string"
+        assert data[0].series.seasonCount == 2
         assert data[0].series.status == "continuing"
-        assert (
-            data[0].series.overview
-            == "Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and the icy horrors beyond."
-        )
-        assert data[0].series.network == "HBO"
+        assert data[0].series.overview == "string"
+        assert data[0].series.network == "string"
         assert data[0].series.airTime == "21:00"
         assert data[0].series.images[0].coverType == "fanart"
-        assert (
-            data[0].series.images[0].url
-            == "http://thetvdb.com/banners/fanart/original/121361-83.jpg"
-        )
+        assert data[0].series.images[0].url == "string"
         assert data[0].series.seasons[0].seasonNumber == 0
         assert data[0].series.seasons[0].monitored == False
-        assert data[0].series.year == 2011
-        assert data[0].series.path == "/Volumes/Media/Shows/Game of Thrones"
+        assert data[0].series.year == 2015
+        assert data[0].series.path == "string"
         assert data[0].series.profileId == 5
         assert data[0].series.seasonFolder == True
         assert data[0].series.monitored == True
         assert data[0].series.useSceneNumbering == False
         assert data[0].series.runtime == 60
-        assert data[0].series.tvdbId == 121361
-        assert data[0].series.tvRageId == 24493
-        assert data[0].series.tvMazeId == 82
-        assert data[0].series.firstAired == "2011-04-16T23:00:00Z"
-        assert data[0].series.lastInfoSync == "2016-02-05T16:40:11.614176Z"
+        assert data[0].series.tvdbId == 0
+        assert data[0].series.tvRageId == 0
+        assert data[0].series.tvMazeId == 0
+        assert data[0].series.firstAired == "2016-04-16T23:00:00Z"
+        assert data[0].series.lastInfoSync == "2017-02-05T16:40:11.614176Z"
         assert data[0].series.seriesType == "standard"
-        assert data[0].series.cleanTitle == "gamethrones"
-        assert data[0].series.imdbId == "tt0944947"
-        assert data[0].series.titleSlug == "game-of-thrones"
+        assert data[0].series.cleanTitle == "string"
+        assert data[0].series.imdbId == "string"
+        assert data[0].series.titleSlug == "string"
         assert data[0].series.certification == "TV-MA"
         assert data[0].series.genres == ["Adventure", "Drama", "Fantasy"]
         assert data[0].series.tags == []
@@ -507,13 +492,10 @@ async def test_async_get_queue(aresponses):
         assert data[0].episode.episodeFileId == 0
         assert data[0].episode.seasonNumber == 3
         assert data[0].episode.episodeNumber == 8
-        assert data[0].episode.title == "Second Sons"
+        assert data[0].episode.title == "string"
         assert data[0].episode.airDate == "2013-05-19"
         assert data[0].episode.airDateUtc == "2013-05-20T01:00:00Z"
-        assert (
-            data[0].episode.overview
-            == "King’s Landing hosts a wedding, and Tyrion and Sansa spend the night together. Daenerys meets the Titan’s Bastard. Davos demands proof from Melisandre. Sam and Gilly meet an older gentleman."
-        )
+        assert data[0].episode.overview == "string"
         assert data[0].episode.hasFile == False
         assert data[0].episode.monitored == False
         assert data[0].episode.absoluteEpisodeNumber == 28
@@ -555,30 +537,27 @@ async def test_async_get_release(aresponses):
         )
         data = await client.async_get_release(releaseid=0)
 
-        assert data[0].guid == "a5a4a6a7-f7c9-4ff0-b3c4-b8dea9ed965b"
+        assert data[0].guid == "string"
         assert data[0].quality.quality.id == 4
         assert data[0].quality.quality.name == "HDTV-720p"
         assert data[0].quality.proper == False
         assert data[0].age == 0
         assert data[0].size == 0
         assert data[0].indexerId == 5
-        assert data[0].indexer == "Wombles"
-        assert data[0].releaseGroup == "YesTV"
-        assert data[0].title == "The.Devils.Ride.S03E01.720p.HDTV.x264-YesTV"
+        assert data[0].indexer == "string"
+        assert data[0].releaseGroup == "string"
+        assert data[0].title == "string"
         assert data[0].fullSeason == False
         assert data[0].sceneSource == False
         assert data[0].seasonNumber == 3
         assert data[0].language == "english"
-        assert data[0].seriesTitle == "devilsride"
+        assert data[0].seriesTitle == "string"
         assert data[0].episodeNumbers == [1]
         assert data[0].approved == False
         assert data[0].tvRageId == 0
         assert data[0].rejections == ["Unknown Series"]
-        assert data[0].publishDate == "2014-02-10T00:00:00Z"
-        assert (
-            data[0].downloadUrl
-            == "http://www.newshost.co.za/nzb/5a6/The.Devils.Ride.S03E01.720p.HDTV.x264-YesTV.nzb"
-        )
+        assert data[0].publishDate == "2017-02-10T00:00:00Z"
+        assert data[0].downloadUrl == "string"
         assert data[0].downloadAllowed == True
 
 

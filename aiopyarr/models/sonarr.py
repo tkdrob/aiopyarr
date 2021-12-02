@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import APIResponseType, BaseModel
+from .base import BaseModel
 
 from .sonarr_common import (  # isort:skip
     _FileEpisodeQuality,
@@ -36,8 +36,6 @@ from .sonarr_common import (  # isort:skip
 @dataclass(init=False)
 class SonarrCalendar(_SonarrCommon5):
     """Sonarr calendar attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     downloading: bool | None = None
     series: SonarrSeries | None = None
@@ -122,8 +120,6 @@ class SonarrWantedMissing(_SonarrCommon):
 class SonarrQueueNew(_SonarrCommon6):
     """Sonarr queue attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     downloadId: str | None = None
     episode: _SonarrHistoryRecordEpisode | None = None
     estimatedCompletionTime: str | None = None
@@ -166,8 +162,6 @@ class SonarrParse(BaseModel):
 class SonarrQualityProfile(_SonarrCommon4):
     """Sonarr quality profile attributes."""
 
-    _responsetype = APIResponseType.LIST
-
     cutoff: _SonarrCutoff | None = None
     items: list[_SonarrQualityProfileValueItems] | None = None
 
@@ -182,8 +176,6 @@ class SonarrRelease(_SonarrCommon3, _SonarrCommon7):
 @dataclass(init=False)
 class SonarrRootFolder(_SonarrCommon6):
     """Sonarr root folder attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     freeSpace: int | None = None
     path: str | None = None
@@ -208,8 +200,6 @@ class SonarrSeries(_SonarrSeasonStatistics, _SonarrHistoryRecordSeries):
 @dataclass(init=False)
 class SonarrSeriesLookup(_SonarrSeriesCommon):
     """Sonarr series lookup attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     remotePoster: str | None = None
 
@@ -239,8 +229,6 @@ class SonarrSystemStatus(BaseModel):
 @dataclass(init=False)
 class SonarrSystemBackup(_SonarrCommon4):
     """Sonarr system backup attributes."""
-
-    _responsetype = APIResponseType.LIST
 
     path: str | None = None
     time: str | None = None

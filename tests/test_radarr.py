@@ -690,22 +690,26 @@ async def test_async_get_movie(aresponses):
         data = await client.async_get_movies(movieid=0)
 
         assert data.id == 0
-        assert data.title == "Dark Phoenix"
-        assert data.sortTitle == "dark phoenix"
+        assert data.title == "string"
+        assert data.originalTitle == "string"
+        assert data.alternateTitles[0].sourceType == "tmdb"
+        assert data.alternateTitles[0].movieId == 1
+        assert data.alternateTitles[0].title == "string"
+        assert data.alternateTitles[0].sourceId == 0
+        assert data.alternateTitles[0].votes == 0
+        assert data.alternateTitles[0].voteCount == 0
+        assert data.alternateTitles[0].language.id == 1
+        assert data.alternateTitles[0].language.name == "English"
+        assert data.alternateTitles[0].id == 1
+        assert data.sortTitle == "string"
         assert data.sizeOnDisk == 0
         assert data.overview == "string"
         assert data.inCinemas == "string"
         assert data.physicalRelease == "string"
         assert data.images[0].coverType == "poster"
-        assert (
-            data.images[0].url
-            == "/radarr/MediaCover/39/poster.jpg?lastWrite=637618111851086964"
-        )
-        assert (
-            data.images[0].remoteUrl
-            == "https://image.tmdb.org/t/p/original/i0FHyNF9VvQTXOi4yKnZJ1zql1.jpg"
-        )
-        assert data.website == "http://darkphoenix.com"
+        assert data.images[0].url == "string"
+        assert data.images[0].remoteUrl == "string"
+        assert data.website == "string"
         assert data.year == 0
         assert data.hasFile == True
         assert data.youTubeTrailerId == "string"
@@ -938,6 +942,7 @@ async def test_async_get_queue_details(aresponses):
         )
         data = await client.async_get_queue_details()
 
+        assert data[0].movieId == 0
         assert data[0].languages[0].id == 0
         assert data[0].languages[0].name == "string"
         assert data[0].quality.quality.id == 0
@@ -1160,18 +1165,10 @@ async def test_async_get_software_update_info(aresponses):
         assert data.branch == "nightly"
         assert data.releaseDate == "2020-09-02T05:36:13.047313Z"
         assert data.fileName == "Radarr.nightly.3.0.0.3553.windows-core-x64.zip"
-        assert (
-            data.url
-            == "https://dev.azure.com/Radarr/Radarr/_apis/build/builds/1896/artifacts?artifactName=Packages&fileId=A710686A9CB6848E73C3DDCA5F2B0D83C6189546E66DD3EF2D0D30B20735F6E802&fileName=Radarr.aphrodite.3.0.0.3553.windows-core-x64.zip&api-version=5.1"
-        )
+        assert data.url == "string"
         assert data.installed == False
         assert data.installed == False
         assert data.latest == False
         assert data.changes.new == []
-        assert data.changes.fixed == [
-            "Importing completed downloads from NZBGet with post processing script failing"
-        ]
-        assert (
-            data.hash
-            == "a95c855cbc3ee253fd0b74181e866106daffc7b71b4a9e2d57cfbeede4333aee"
-        )
+        assert data.changes.fixed == ["string"]
+        assert data.hash == "abc123"
