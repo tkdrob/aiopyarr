@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .base import BaseModel
+from .common import _RecordCommon
 
 from .sonarr_common import (  # isort:skip
     _FileEpisodeQuality,
-    _SonarrCommon,
     _SonarrCommon3,
     _SonarrCommon4,
     _SonarrCommon5,
@@ -19,7 +19,6 @@ from .sonarr_common import (  # isort:skip
     _SonarrHistoryRecord,
     _SonarrHistoryRecordEpisode,
     _SonarrHistoryRecordSeries,
-    _SonarrLogRecord,
     _SonarrParseEpisodeInfo,
     _SonarrQualityProfileValueItems,
     _SonarrQualitySub,
@@ -91,7 +90,7 @@ class SonarrEpisodeFileQuailty(_SonarrCommon6):
 
 
 @dataclass(init=False)
-class SonarrHistory(_SonarrCommon):
+class SonarrHistory(_RecordCommon):
     """Sonarr history attributes."""
 
     records: list[_SonarrHistoryRecord] | None = None
@@ -103,7 +102,7 @@ class SonarrHistory(_SonarrCommon):
 
 
 @dataclass(init=False)
-class SonarrWantedMissing(_SonarrCommon):
+class SonarrWantedMissing(_RecordCommon):
     """Sonarr wanted missing attributes."""
 
     records: list[_SonarrWantedMissingRecord] | None = None
@@ -117,7 +116,7 @@ class SonarrWantedMissing(_SonarrCommon):
 
 
 @dataclass(init=False)
-class SonarrQueueNew(_SonarrCommon6):
+class SonarrQueue(_SonarrCommon6):
     """Sonarr queue attributes."""
 
     downloadId: str | None = None
@@ -248,15 +247,3 @@ class SonarrSeriesUpdateParams(_SonarrSeriesCommon3):
 
     profileId: int | None = None
     seasons: list[_SonarrWantedMissingSeriesSeason] | None = None
-
-
-@dataclass(init=False)
-class Logs(_SonarrCommon):
-    """Log attributes."""
-
-    records: list[_SonarrLogRecord] | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.records = [_SonarrLogRecord(record) for record in self.records or []]

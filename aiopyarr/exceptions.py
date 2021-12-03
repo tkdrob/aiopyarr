@@ -4,6 +4,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from aiohttp import ClientResponse
+
     from .request_client import RequestClient
 
 
@@ -13,7 +15,7 @@ class ArrException(Exception):
     def __init__(
         self,
         client: RequestClient | None = None,
-        message: str | Exception = "",
+        message: str | BaseException | ClientResponse | Exception = "",
     ) -> None:
         """Initialize."""
         super().__init__(

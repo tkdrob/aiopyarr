@@ -5,10 +5,9 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from aiopyarr.const import HTTPMethod
-from aiopyarr.exceptions import ArrInvalidCommand, ArrResourceNotFound
-
+from .const import HTTPMethod
 from .decorator import api_command
+from .exceptions import ArrInvalidCommand, ArrResourceNotFound
 from .models.common import Diskspace
 from .request_client import RequestClient
 
@@ -21,7 +20,7 @@ from .models.sonarr import (  # isort:skip
     SonarrHistory,
     SonarrParse,
     SonarrQualityProfile,
-    SonarrQueueNew,
+    SonarrQueue,
     SonarrRelease,
     SonarrRootFolder,
     SonarrSeries,
@@ -32,8 +31,10 @@ from .models.sonarr import (  # isort:skip
     SonarrTag,
     SonarrWantedMissing,
 )
+
 if TYPE_CHECKING:
     from aiohttp.client import ClientSession
+
     from .const import HTTPResponse
     from .models.host_configuration import PyArrHostConfiguration
 
@@ -114,8 +115,8 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             raise ArrResourceNotFound
         return response
 
-    @api_command("queue", datatype=SonarrQueueNew)
-    async def async_get_queue(self) -> list[SonarrQueueNew]:
+    @api_command("queue", datatype=SonarrQueue)
+    async def async_get_queue(self) -> list[SonarrQueue]:
         """Get information about download queue."""
 
     async def async_delete_queue(
@@ -322,11 +323,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_delete_episode_file(self, fileid: int) -> dict:
-        """Delete the episode file with corresponding id.
-
-        Args:
-            id: Database id for episode file
-        """
+        """Delete the episode file with corresponding id."""
         return await self._async_request(
             f"episodefile/{fileid}", method=HTTPMethod.DELETE
         )
@@ -347,9 +344,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             page_size: Number of items per page.
             sort_asc: Sort items in ascending order.
             id: Filter to a specific episode ID.
-
-        Returns:
-            JSON: Array
         """
         params = {
             "page": page,
@@ -404,7 +398,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         path: file path of series / episode
         """
         if title is None and path is None:
-            raise ArrInvalidCommand("A title or path must be specified")
+            raise ArrInvalidCommand(self, "A title or path must be specified")
         params = {}
         if title is not None:
             params["title"] = title
@@ -567,7 +561,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         caching and augmentation proxy.
         """
         if term is None and seriesid is None:
-            raise ArrResourceNotFound("A term or TVDB id must be included")
+            raise ArrResourceNotFound(self, "A term or TVDB id must be included")
         return await self._async_request(
             "series/lookup",
             datatype=SonarrSeriesLookup,

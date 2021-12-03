@@ -1,8 +1,6 @@
 """PyArr constants."""
 from enum import Enum
-from logging import getLogger
-
-from logging import Logger
+from logging import Logger, getLogger
 
 LOGGER: Logger = getLogger(__package__)
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from aiopyarr.models.base import BaseModel
+from .base import BaseModel
 
 
 @dataclass(init=False)
@@ -34,3 +34,37 @@ class _CommonAttrs(BaseModel):
     videoBitrate: int | None = None
     videoCodec: str | None = None
     videoFps: float | None = None
+
+
+@dataclass(init=False)
+class _LogRecord(BaseModel):
+    """Sonarr log record attributes."""
+
+    id: int | None = None
+    level: str | None = None
+    logger: str | None = None
+    message: str | None = None
+    time: str | None = None
+
+
+@dataclass(init=False)
+class _RecordCommon(BaseModel):
+    """Sonarr common attributes."""
+
+    page: int | None = None
+    pageSize: int | None = None
+    sortDirection: str | None = None
+    sortKey: str | None = None
+    totalRecords: int | None = None
+
+
+@dataclass(init=False)
+class Logs(_RecordCommon):
+    """Log attributes."""
+
+    records: list[_LogRecord] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.records = [_LogRecord(record) for record in self.records or []]

@@ -395,17 +395,6 @@ class _SonarrHistoryRecord(_SonarrEpisodeFileCommon, _SonarrCommon6):
 
 
 @dataclass(init=False)
-class _SonarrCommon(BaseModel):
-    """Sonarr common attributes."""
-
-    page: int | None = None
-    pageSize: int | None = None
-    sortDirection: str | None = None
-    sortKey: str | None = None
-    totalRecords: int | None = None
-
-
-@dataclass(init=False)
 class _SonarrWantedMissingSeries(_SonarrSeries2, _SonarrCommon6):
     """Sonarr wanted missing series attributes."""
 
@@ -475,16 +464,6 @@ class _SonarrParseEpisodeInfo(_SonarrCommon3):
     def __post_init__(self):
         super().__post_init__()
         self.seriesTitleInfo = _SonarrSeriesTitleInfo(self.seriesTitleInfo) or {}
-
-
-@dataclass(init=False)
-class _SonarrLogRecord(_SonarrCommon6):
-    """Sonarr log record attributes."""
-
-    time: str | None = None
-    level: str | None = None
-    logger: str | None = None
-    message: str | None = None
 
 
 @dataclass(init=False)

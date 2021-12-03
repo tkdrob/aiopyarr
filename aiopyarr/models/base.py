@@ -3,13 +3,61 @@ from __future__ import annotations
 
 import json
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
+
 
 from ..const import LOGGER
 from .const import CONVERT_TO_BOOL, CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
 
 if TYPE_CHECKING:
-    from typing import Any
+    from .sonarr import (
+        SonarrCalendar,
+        SonarrCommand,
+        SonarrEpisode,
+        SonarrEpisodeFile,
+        SonarrHistory,
+        SonarrParse,
+        SonarrRelease,
+        SonarrSeries,
+        SonarrSeriesLookup,
+        SonarrTag,
+        SonarrWantedMissing,
+        SonarrQualityProfile,
+        SonarrQueue,
+        SonarrRootFolder,
+        SonarrSystemBackup,
+        SonarrSystemStatus,
+    )
+    from .radarr import (
+        RadarrMovieEditor,
+        RadarrBlocklist,
+        RadarrBlocklistMovie,
+        RadarrCalendar,
+        RadarrDownloadClient,
+        RadarrHostConfig,
+        RadarrImportList,
+        RadarrIndexer,
+        RadarrMovie,
+        RadarrMovieFile,
+        RadarrMovieHistory,
+        RadarrNamingConfig,
+        RadarrNotification,
+        RadarrQueue,
+        RadarrQueueDetail,
+        RadarrTag,
+        RadarrUIConfig,
+        RadarrCommand,
+        RadarrCustomFilter,
+        RadarrHealth,
+        RadarrMetadataConfig,
+        RadarrQualityProfile,
+        RadarrQueueStatus,
+        RadarrRemotePathMapping,
+        RadarrRootFolder,
+        RadarrSystemStatus,
+        RadarrUpdate,
+    )
+    from .common import Diskspace, Logs
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -32,10 +80,75 @@ class ApiJSONEncoder(json.JSONEncoder):
 class BaseModel:
     """BaseModel."""
 
-    _datatype: BaseModel | None = None
+    # fmt: off
+    _datatype: (type[Logs] | type[Diskspace] | type[RadarrBlocklist]
+                | type[RadarrBlocklistMovie] | type[RadarrCalendar] | type[RadarrCommand]
+                | type[RadarrCustomFilter] | type[RadarrDownloadClient] | type[RadarrHealth]
+                | type[RadarrHostConfig] | type[RadarrImportList] | type[RadarrIndexer]
+                | type[RadarrMetadataConfig] | type[RadarrMovie] | type[RadarrMovieEditor]
+                | type[RadarrMovieFile] | type[RadarrMovieHistory] | type[RadarrNamingConfig]
+                | type[RadarrNotification] | type[RadarrQualityProfile] | type[RadarrQueue]
+                | type[RadarrQueueDetail] | type[RadarrQueueStatus] | type[RadarrRemotePathMapping]
+                | type[RadarrRootFolder] | type[RadarrSystemStatus] | type[RadarrTag]
+                | type[RadarrUIConfig] | type[RadarrUpdate] | type[SonarrCalendar]
+                | type[SonarrCommand] | type[SonarrEpisode] | type[SonarrEpisodeFile]
+                | type[SonarrHistory] | type[SonarrParse] | type[SonarrQualityProfile]
+                | type[SonarrQueue] | type[SonarrRelease] | type[SonarrRootFolder]
+                | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemBackup]
+                | type[SonarrSystemStatus] | type[SonarrTag] | type[SonarrWantedMissing]
+                | None
+                ) = None
+    # fmt: on
 
     def __init__(
-        self, data: dict[str, Any] | list[dict[str, Any]], datatype: BaseModel = None
+        self,
+        data: dict[str, Any] | list[dict[str, Any]],
+        datatype: type[Logs]
+        | type[Diskspace]
+        | type[RadarrBlocklist]
+        | type[RadarrBlocklistMovie]
+        | type[RadarrCalendar]
+        | type[RadarrCommand]
+        | type[RadarrCustomFilter]
+        | type[RadarrDownloadClient]
+        | type[RadarrHealth]
+        | type[RadarrHostConfig]
+        | type[RadarrImportList]
+        | type[RadarrIndexer]
+        | type[RadarrMetadataConfig]
+        | type[RadarrMovie]
+        | type[RadarrMovieEditor]
+        | type[RadarrMovieFile]
+        | type[RadarrMovieHistory]
+        | type[RadarrNamingConfig]
+        | type[RadarrNotification]
+        | type[RadarrQualityProfile]
+        | type[RadarrQueue]
+        | type[RadarrQueueDetail]
+        | type[RadarrQueueStatus]
+        | type[RadarrRemotePathMapping]
+        | type[RadarrRootFolder]
+        | type[RadarrSystemStatus]
+        | type[RadarrTag]
+        | type[RadarrUIConfig]
+        | type[RadarrUpdate]
+        | type[SonarrCalendar]
+        | type[SonarrCommand]
+        | type[SonarrEpisode]
+        | type[SonarrEpisodeFile]
+        | type[SonarrHistory]
+        | type[SonarrParse]
+        | type[SonarrQualityProfile]
+        | type[SonarrQueue]
+        | type[SonarrRelease]
+        | type[SonarrRootFolder]
+        | type[SonarrSeries]
+        | type[SonarrSeriesLookup]
+        | type[SonarrSystemBackup]
+        | type[SonarrSystemStatus]
+        | type[SonarrTag]
+        | type[SonarrWantedMissing]
+        | None = None,
     ) -> None:
         """Init."""
         self._datatype = datatype

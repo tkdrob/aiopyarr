@@ -116,8 +116,8 @@ class RadarrQueue(BaseModel):
 
     page: int | None = None
     pageSize: int | None = None
-    sortKey: str | None = None
     sortDirection: str | None = None
+    sortKey: str | None = None
     totalRecords: int | None = None
     records: list[RadarrQueueDetail] | None = None
 
