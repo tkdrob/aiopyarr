@@ -60,7 +60,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         ssl: bool | None = None,
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
-        request_timeout: float = 10,
+        request_timeout: float = 60,
         raw_response: bool = False,
         redact: bool = True,
     ) -> None:

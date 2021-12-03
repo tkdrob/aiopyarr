@@ -399,11 +399,9 @@ class RadarrQualityProfile(_RadarrCommon4):
 class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
-    alternateTitles: list[str] | None = None
     digitalRelease: str | None = None
     minimumAvailability: str | None = None
     movieFile: _RadarrCalendarMovieFile | None = None
-    originalTitle: str | None = None
     qualityProfileId: int | None = None
     secondaryYearSourceId: int | None = None
 
