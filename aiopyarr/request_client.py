@@ -3,11 +3,10 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
+from typing import TYPE_CHECKING
 
-import aiohttp
-from aiohttp.client import ClientSession
+from aiohttp.client import ClientSession, ClientTimeout, ClientError
 
-from aiopyarr.models.base import BaseModel
 from aiopyarr.models.sonarr import Logs
 
 from .const import ATTR_DATA, LOGGER, HTTPMethod
@@ -20,6 +19,9 @@ from .exceptions import (  # isort:skip
     ArrException,
     ArrResourceNotFound,
 )
+
+if TYPE_CHECKING:
+    from aiopyarr.models.base import BaseModel
 
 
 class RequestClient:
@@ -105,7 +107,7 @@ class RequestClient:
                 params=params,
                 json=data,
                 verify_ssl=self._host.verify_ssl,
-                timeout=aiohttp.ClientTimeout(self._request_timeout),
+                timeout=ClientTimeout(self._request_timeout),
             )
 
             if request.status != 200:
@@ -131,7 +133,7 @@ class RequestClient:
             if self._raw_response:
                 return _result
 
-        except aiohttp.ClientError as exception:
+        except ClientError as exception:
             raise ArrConnectionException(
                 self,
                 f"Request exception for '{url}' with - {exception}",

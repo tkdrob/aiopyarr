@@ -2,13 +2,11 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from aiohttp.client import ClientSession
-
-from .const import HTTPMethod, HTTPResponse
+from .const import HTTPMethod
 from .decorator import api_command
 from .models.common import Diskspace
-from .models.host_configuration import PyArrHostConfiguration
 from .request_client import RequestClient
 
 from .models.radarr import (  # isort:skip
@@ -41,6 +39,10 @@ from .models.radarr import (  # isort:skip
     RadarrUIConfig,
     RadarrUpdate,
 )
+if TYPE_CHECKING:
+    from aiohttp.client import ClientSession
+    from .const import HTTPResponse
+    from .models.host_configuration import PyArrHostConfiguration
 
 
 class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods

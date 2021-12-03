@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any
+from typing import TYPE_CHECKING
 
 from .base import BaseModel
+
+if TYPE_CHECKING:
+    from typing import Any
 
 
 class APIResult(str, Enum):

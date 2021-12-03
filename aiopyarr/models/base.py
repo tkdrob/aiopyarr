@@ -3,16 +3,19 @@ from __future__ import annotations
 
 import json
 from enum import Enum
-from typing import Any
+from typing import TYPE_CHECKING
 
 from ..const import LOGGER
 from .const import CONVERT_TO_BOOL, CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
+
+if TYPE_CHECKING:
+    from typing import Any
 
 
 class ApiJSONEncoder(json.JSONEncoder):
     """Custom JSON encoder."""
 
-    def default(self, o):
+    def default(self, o: Any):
         """Encode default JSON."""
         if isinstance(o, BaseModel):
 

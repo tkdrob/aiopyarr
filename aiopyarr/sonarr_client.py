@@ -2,17 +2,14 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from aiohttp.client import ClientSession
-
-from aiopyarr.const import HTTPMethod, HTTPResponse
+from aiopyarr.const import HTTPMethod
 from aiopyarr.exceptions import ArrInvalidCommand, ArrResourceNotFound
 
 from .decorator import api_command
 from .models.common import Diskspace
-from .models.host_configuration import PyArrHostConfiguration
 from .request_client import RequestClient
 
 from .models.sonarr import (  # isort:skip
@@ -35,6 +32,10 @@ from .models.sonarr import (  # isort:skip
     SonarrTag,
     SonarrWantedMissing,
 )
+if TYPE_CHECKING:
+    from aiohttp.client import ClientSession
+    from .const import HTTPResponse
+    from .models.host_configuration import PyArrHostConfiguration
 
 
 class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods

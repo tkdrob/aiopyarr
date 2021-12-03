@@ -4,10 +4,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from .const import HTTPMethod
-from .models.base import BaseModel
 
 if TYPE_CHECKING:
+    from .models.base import BaseModel
     from .request_client import RequestClient
+    from typing import Any
 
 
 def api_command(
@@ -22,7 +23,7 @@ def api_command(
     def decorator(_):
         """Initialize decorator."""
 
-        async def wrapper(*args):
+        async def wrapper(*args: Any):
             """Initialize wrapper."""
             client: RequestClient = args[0]
             return await client._async_request(  # pylint: disable=protected-access
