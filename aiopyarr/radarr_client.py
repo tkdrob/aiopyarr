@@ -754,13 +754,13 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             raise Exception("Movie Doesn't Exist")
 
         return {
-            "title": movie[0].title if movie[0].title else "",
+            "title": movie[0].title or "",
             "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
-            "year": movie[0].year if movie[0].year else "",
-            "tmdbId": movie[0].tmdbId if movie[0].tmdbId else "",
-            "images": movie[0].images if movie[0].images else [],
-            "titleSlug": movie[0].titleSlug if movie[0].titleSlug else "",
+            "year": movie[0].year or "",
+            "tmdbId": movie[0].tmdbId or "",
+            "images": movie[0].images or [],
+            "titleSlug": movie[0].titleSlug or "",
             "monitored": monitored,
             "addOptions": {"searchForMovie": search_for_movie},
         }
