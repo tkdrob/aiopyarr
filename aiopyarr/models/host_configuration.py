@@ -10,7 +10,7 @@ from .. import ArrException
 class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
     """PyArrHostConfiguration."""
 
-    api_token: str
+    api_token: str | None = None
     hostname: str | None = None
     ipaddress: str | None = None
     port: int | None = None

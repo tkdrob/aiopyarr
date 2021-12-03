@@ -36,6 +36,9 @@ jobs:
 
       - name: 🧹 Lint files with flake8
         run:  flake8 aiopyarr
+
+      - name: 🔍 Inspect with mypy
+        run: mypy aiopyarr
   test:
     name: Test with Python ${{ matrix.python-version }}
     needs: lint

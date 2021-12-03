@@ -2,13 +2,11 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from aiohttp.client import ClientSession
-
-from .const import HTTPMethod, HTTPResponse
+from .const import HTTPMethod
 from .decorator import api_command
 from .models.common import Diskspace
-from .models.host_configuration import PyArrHostConfiguration
 from .request_client import RequestClient
 
 from .models.radarr import (  # isort:skip
@@ -42,6 +40,13 @@ from .models.radarr import (  # isort:skip
     RadarrUpdate,
 )
 
+if TYPE_CHECKING:
+    from aiohttp.client import ClientSession
+
+    from .const import HTTPResponse
+    from .models.host_configuration import PyArrHostConfiguration
+    from .models.radarr_common import _RadarrMovieImages
+
 
 class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     """API client for Radarr endpoints."""
@@ -58,7 +63,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         ssl: bool | None = None,
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
-        request_timeout: float = 10,
+        request_timeout: float = 60,
         raw_response: bool = False,
         redact: bool = True,
     ) -> None:
@@ -121,7 +126,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_update_movies(
-        self, data: RadarrMovie | RadarrMovieEditor, move_files: bool = False
+        self, data: RadarrMovieEditor, move_files: bool = False
     ) -> RadarrMovie | list[RadarrMovie]:
         """Edit movie properties of multiple movies at once."""
         return await self._async_request(
@@ -734,7 +739,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         monitored: bool = True,
         search_for_movie: bool = True,
         tmdb: bool = True,
-    ) -> dict[str, str | int | dict[str, bool]]:
+    ) -> dict[str, str | int | dict[str, bool] | list[_RadarrMovieImages]] | None:
         """Search for movie on tmdb and returns Movie json to add.
 
         Args:
@@ -745,17 +750,17 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             search_for_movie: Should we search for the movie.
             tmdb: Use TMDB IDs. Set to False to use IMDB.
         """
-        if not (movie := await self.async_lookup_movie(db_id, tmdb=tmdb)[0]):
+        if not (movie := await self.async_lookup_movie(db_id, tmdb=tmdb)):
             raise Exception("Movie Doesn't Exist")
 
         return {
-            "title": movie["title"],
+            "title": movie[0].title if movie[0].title else "",
             "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
-            "year": movie["year"],
-            "tmdbId": movie["tmdbId"],
-            "images": movie["images"],
-            "titleSlug": movie["titleSlug"],
+            "year": movie[0].year if movie[0].year else "",
+            "tmdbId": movie[0].tmdbId if movie[0].tmdbId else "",
+            "images": movie[0].images if movie[0].images else [],
+            "titleSlug": movie[0].titleSlug if movie[0].titleSlug else "",
             "monitored": monitored,
             "addOptions": {"searchForMovie": search_for_movie},
         }

@@ -13,6 +13,7 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     url="https://github.com/tkdrob/aiopyarr",
+    package_data={"aiopyarr": ["py.typed"]},
     packages=find_packages(include=["aiopyarr", "aiopyarr*"]),
     install_requires=["aiohttp>=3.6.1,<4.0"],
     keywords=["aiopyarr", "radarr", "sonarr", "plex"],

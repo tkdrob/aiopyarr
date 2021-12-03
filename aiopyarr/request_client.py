@@ -3,14 +3,12 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
+from typing import TYPE_CHECKING
 
-import aiohttp
-from aiohttp.client import ClientSession
-
-from aiopyarr.models.base import BaseModel
-from aiopyarr.models.sonarr import Logs
+from aiohttp.client import ClientError, ClientSession, ClientTimeout
 
 from .const import ATTR_DATA, LOGGER, HTTPMethod
+from .models.common import Logs
 from .models.host_configuration import PyArrHostConfiguration
 from .models.response import PyArrResponse
 
@@ -20,6 +18,59 @@ from .exceptions import (  # isort:skip
     ArrException,
     ArrResourceNotFound,
 )
+
+if TYPE_CHECKING:
+    from .models.common import Diskspace
+
+    from .models.radarr import (  # isort:skip
+        RadarrBlocklist,
+        RadarrBlocklistMovie,
+        RadarrCalendar,
+        RadarrCommand,
+        RadarrCustomFilter,
+        RadarrDownloadClient,
+        RadarrHealth,
+        RadarrHostConfig,
+        RadarrImportList,
+        RadarrIndexer,
+        RadarrMetadataConfig,
+        RadarrMovie,
+        RadarrMovieEditor,
+        RadarrMovieFile,
+        RadarrMovieHistory,
+        RadarrNamingConfig,
+        RadarrNotification,
+        RadarrQualityProfile,
+        RadarrQueue,
+        RadarrQueueDetail,
+        RadarrQueueStatus,
+        RadarrRemotePathMapping,
+        RadarrRootFolder,
+        RadarrSystemStatus,
+        RadarrTag,
+        RadarrUIConfig,
+        RadarrUpdate,
+    )
+    from .models.sonarr import (  # isort:skip
+        SonarrCalendar,
+        SonarrCommand,
+        SonarrEpisode,
+        SonarrEpisodeFile,
+        SonarrEpisodeFileQuailty,
+        SonarrHistory,
+        SonarrParse,
+        SonarrQualityProfile,
+        SonarrQueue,
+        SonarrRelease,
+        SonarrRootFolder,
+        SonarrSeries,
+        SonarrSeriesLookup,
+        SonarrSeriesUpdateParams,
+        SonarrSystemBackup,
+        SonarrSystemStatus,
+        SonarrTag,
+        SonarrWantedMissing,
+    )
 
 
 class RequestClient:
@@ -82,7 +133,7 @@ class RequestClient:
 
     def redact_string(self, string: str) -> str:
         """Redact a api token from a string if needed."""
-        if not self._redact:
+        if not self._redact or not self._host.api_token:
             return string
 
         return string.replace(self._host.api_token, "[REDACTED_API_TOKEN]")
@@ -91,8 +142,72 @@ class RequestClient:
         self,
         *args,
         params: dict | None = None,
-        data: dict | None = None,
-        datatype: BaseModel | None = None,
+        data: SonarrEpisode
+        | SonarrEpisodeFileQuailty
+        | SonarrSeriesUpdateParams
+        | SonarrTag
+        | list[RadarrMovie]
+        | RadarrMovieEditor
+        | RadarrUIConfig
+        | RadarrHostConfig
+        | RadarrNamingConfig
+        | RadarrDownloadClient
+        | RadarrImportList
+        | RadarrIndexer
+        | RadarrNotification
+        | RadarrCalendar
+        | dict[str, str | object]
+        | dict[str, int | list[list]]
+        | dict[str, str]
+        | dict[str, int | list[int]]
+        | list[int]
+        | None = None,
+        datatype: type[Logs]
+        | type[Diskspace]
+        | type[RadarrBlocklist]
+        | type[RadarrBlocklistMovie]
+        | type[RadarrCalendar]
+        | type[RadarrCommand]
+        | type[RadarrCustomFilter]
+        | type[RadarrDownloadClient]
+        | type[RadarrHealth]
+        | type[RadarrHostConfig]
+        | type[RadarrImportList]
+        | type[RadarrIndexer]
+        | type[RadarrMetadataConfig]
+        | type[RadarrMovie]
+        | type[RadarrMovieEditor]
+        | type[RadarrMovieFile]
+        | type[RadarrMovieHistory]
+        | type[RadarrNamingConfig]
+        | type[RadarrNotification]
+        | type[RadarrQualityProfile]
+        | type[RadarrQueue]
+        | type[RadarrQueueDetail]
+        | type[RadarrQueueStatus]
+        | type[RadarrRemotePathMapping]
+        | type[RadarrRootFolder]
+        | type[RadarrSystemStatus]
+        | type[RadarrTag]
+        | type[RadarrUIConfig]
+        | type[RadarrUpdate]
+        | type[SonarrCalendar]
+        | type[SonarrCommand]
+        | type[SonarrEpisode]
+        | type[SonarrEpisodeFile]
+        | type[SonarrHistory]
+        | type[SonarrParse]
+        | type[SonarrQualityProfile]
+        | type[SonarrQueue]
+        | type[SonarrRelease]
+        | type[SonarrRootFolder]
+        | type[SonarrSeries]
+        | type[SonarrSeriesLookup]
+        | type[SonarrSystemBackup]
+        | type[SonarrSystemStatus]
+        | type[SonarrTag]
+        | type[SonarrWantedMissing]
+        | None = None,
         method: HTTPMethod = HTTPMethod.GET,
     ):
         """Send API request."""
@@ -105,7 +220,7 @@ class RequestClient:
                 params=params,
                 json=data,
                 verify_ssl=self._host.verify_ssl,
-                timeout=aiohttp.ClientTimeout(self._request_timeout),
+                timeout=ClientTimeout(self._request_timeout),
             )
 
             if request.status != 200:
@@ -131,7 +246,7 @@ class RequestClient:
             if self._raw_response:
                 return _result
 
-        except aiohttp.ClientError as exception:
+        except ClientError as exception:
             raise ArrConnectionException(
                 self,
                 f"Request exception for '{url}' with - {exception}",
