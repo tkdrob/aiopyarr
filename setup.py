@@ -6,7 +6,7 @@ with open("README.md") as readme_file:
 
 setup(
     name="aiopyarr",
-    version="21.12.0",
+    version="master",
     author="Robert Hillis",
     author_email="tkdrob4390@yahoo.com",
     description="An Asynchronous Sonarr and Radarr API for Python.",
