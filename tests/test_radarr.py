@@ -1,5 +1,7 @@
 """Tests for Radarr object models."""
 from datetime import datetime
+from aiopyarr.models.common import Diskspace
+from aiopyarr.models.radarr import RadarrCommand, RadarrCustomFilter, RadarrHealth, RadarrHostConfig, RadarrMetadataConfig, RadarrNamingConfig, RadarrQualityProfile, RadarrQueueStatus, RadarrRemotePathMapping, RadarrRootFolder, RadarrSystemStatus, RadarrUIConfig, RadarrUpdate
 
 import pytest
 from aiohttp.client import ClientSession
@@ -14,13 +16,14 @@ async def test_async_get_blocklist(aresponses):
     """Test getting blocklisted movies."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/blocklist",
+        "/api/v3/blocklist?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=20&sortDirection=descending&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/blocklist.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -73,13 +76,14 @@ async def test_async_get_blocklist_movie(aresponses):
     """Test getting blocklisted movie."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/blocklist/movie",
+        "/api/v3/blocklist/movie?apikey=ur1234567-0abc12de3f456gh7ij89k012&movieId=0",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/blocklist-movie.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -127,13 +131,14 @@ async def test_async_get_calendar(aresponses):
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/calendar",
+        "/api/v3/calendar?apikey=ur1234567-0abc12de3f456gh7ij89k012&start=2020-11-30&end=2020-12-01&unmonitored=True",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/calendar.json"),
         ),
+        match_querystring=True,
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
@@ -219,19 +224,20 @@ async def test_async_get_command(aresponses):
     """Test getting commands."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/command",
+        "/api/v3/command?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/command.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_command()
+        data: list[RadarrCommand] = await client.async_get_command()
 
         assert data[0].name == "MessagingCleanup"
         assert data[0].commandName == "Messaging Cleanup"
@@ -267,19 +273,20 @@ async def test_async_get_host_config(aresponses):
     """Test getting host configuration."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/config/host",
+        "/api/v3/config/host?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/config-host.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_host_config()
+        data: RadarrHostConfig = await client.async_get_host_config()
 
         assert data.analyticsEnabled == True
         assert data.apiKey == "string"
@@ -320,19 +327,20 @@ async def test_async_get_naming_config(aresponses):
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/config/naming",
+        "/api/v3/config/naming?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/config-naming.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_naming_config()
+        data: RadarrNamingConfig = await client.async_get_naming_config()
 
         assert data.colonReplacementFormat == "string"
         assert data.id == 0
@@ -349,19 +357,20 @@ async def test_async_get_ui_config(aresponses):
     """Test getting ui configuration."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/config/ui",
+        "/api/v3/config/ui?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/config-ui.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_ui_config()
+        data: RadarrUIConfig = await client.async_get_ui_config()
 
         assert data.calendarWeekColumnHeader == "ddd M/D"
         assert data.enableColorImpairedMode == False
@@ -380,19 +389,20 @@ async def test_async_get_custom_filters(aresponses):
     """Test getting blocklisted movie."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/customfilter",
+        "/api/v3/customfilter?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/customfilter.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_custom_filters()
+        data: list[RadarrCustomFilter] = await client.async_get_custom_filters()
 
         assert data[0].id == 10
         assert data[0].type == "movieIndex"
@@ -407,19 +417,20 @@ async def test_async_get_diskspace(aresponses):
     """Test getting diskspace."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/diskspace",
+        "/api/v3/diskspace?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/diskspace.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_diskspace()
+        data: list[Diskspace] = await client.async_get_diskspace()
 
         assert data[0].freeSpace == 16187217043456
         assert data[0].label == "DrivePool"
@@ -432,13 +443,14 @@ async def test_async_get_download_client(aresponses):
     """Test getting download client."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/downloadclient/0",
+        "/api/v3/downloadclient/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/downloadclient.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -469,19 +481,20 @@ async def test_async_get_failed_health_checks(aresponses):
     """Test getting failed health checks."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/health",
+        "/api/v3/health?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/health.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_failed_health_checks()
+        data: list[RadarrHealth] = await client.async_get_failed_health_checks()
 
         assert data[0].message == "Enable Completed Download Handling"
         assert data[0].source == "ImportMechanismCheck"
@@ -497,13 +510,14 @@ async def test_async_get_movie_history(aresponses):
     """Test getting movie history."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/history/movie",
+        "/api/v3/history/movie?apikey=ur1234567-0abc12de3f456gh7ij89k012&movieId=0",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/history-movie.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -553,13 +567,15 @@ async def test_async_get_import_list(aresponses):
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/importlist/0",
+        "/api/v3/importlist/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/importlist.json"),
         ),
+        match_querystring=True,
+
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -597,13 +613,14 @@ async def test_async_get_indexer(aresponses):
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/indexer/0",
+        "/api/v3/indexer/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/indexer.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -639,19 +656,20 @@ async def test_async_get_metadata_config(aresponses):
     """Test getting metadata config."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/metadata",
+        "/api/v3/metadata?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/metadata.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_metadata_config()
+        data: list[RadarrMetadataConfig] = await client.async_get_metadata_config()
 
         assert data[0].enable == True
         assert data[0].name == "string"
@@ -675,13 +693,14 @@ async def test_async_get_movie(aresponses):
     """Test getting movie attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/movie/0",
+        "/api/v3/movie/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/movie.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -777,13 +796,14 @@ async def test_async_get_movie_file(aresponses):
     """Test getting movie file attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/moviefile",
+        "/api/v3/moviefile?apikey=ur1234567-0abc12de3f456gh7ij89k012&movieid=0",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/moviefile.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -831,13 +851,14 @@ async def test_async_get_notification(aresponses):
     """Test getting movie file attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/notification/0",
+        "/api/v3/notification/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/notification.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -881,19 +902,20 @@ async def test_async_get_quality_profiles(aresponses):
     """Test getting quality profiles."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/qualityProfile",
+        "/api/v3/qualityProfile?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/qualityProfile.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_quality_profiles()
+        data: list[RadarrQualityProfile] = await client.async_get_quality_profiles()
 
         assert data[0].name == "Any"
         assert data[0].upgradeAllowed == True
@@ -928,13 +950,14 @@ async def test_async_get_queue_details(aresponses):
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/queue/details",
+        "/api/v3/queue/details?apikey=ur1234567-0abc12de3f456gh7ij89k012&includeMovie=True",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/queue-details.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -993,19 +1016,20 @@ async def test_async_get_queue_status(aresponses):
     """Test getting queue status."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/queue/status",
+        "/api/v3/queue/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/queue-status.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_queue_status()
+        data: RadarrQueueStatus = await client.async_get_queue_status()
 
         assert data.totalCount == 0
         assert data.count == 0
@@ -1021,19 +1045,20 @@ async def test_async_get_remote_path_mappings(aresponses):
     """Test getting remote path mappings."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/remotePathMapping",
+        "/api/v3/remotePathMapping?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/remotePathMapping.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_remote_path_mappings()
+        data: list[RadarrRemotePathMapping] = await client.async_get_remote_path_mappings()
 
         assert data[0].host == "localhost"
         assert data[0].remotePath == "C:\\"
@@ -1046,19 +1071,20 @@ async def test_async_get_root_folders(aresponses):
     """Test getting root folders."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/rootfolder",
+        "/api/v3/rootfolder?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/rootfolder.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_root_folders()
+        data: list[RadarrRootFolder] = await client.async_get_root_folders()
 
         assert data[0].path == "C:\\Downloads\\Movies"
         assert data[0].freeSpace == 282500063232
@@ -1072,19 +1098,20 @@ async def test_async_get_system_status(aresponses):
     """Test getting system status."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/system/status",
+        "/api/v3/system/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/system-status.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_system_status()
+        data: RadarrSystemStatus = await client.async_get_system_status()
 
         assert data.appData == "C:\\ProgramData\\Radarr"
         assert data.authentication == True
@@ -1119,13 +1146,14 @@ async def test_async_get_tag_details(aresponses):
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/tag/detail/0",
+        "/api/v3/tag/detail/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/tag-detail.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -1147,19 +1175,20 @@ async def test_async_get_software_update_info(aresponses):
     """Test getting software update info."""
     aresponses.add(
         "127.0.0.1:7878",
-        "/api/v3/update",
+        "/api/v3/update?apikey=ur1234567-0abc12de3f456gh7ij89k012",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/update.json"),
         ),
+        match_querystring=True,
     )
     async with ClientSession() as session:
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data = await client.async_get_software_update_info()
+        data: RadarrUpdate = await client.async_get_software_update_info()
 
         assert data.version == "3.0.0.3553"
         assert data.branch == "nightly"

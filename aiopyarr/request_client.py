@@ -94,11 +94,12 @@ class RequestClient:
         request_timeout: float = 30,
         raw_response: bool = False,
         redact: bool = True,
+        api_ver: str | None = None,
     ) -> None:
         """Initialize."""
         if host_configuration is None:
             host_configuration = PyArrHostConfiguration(
-                hostname=hostname, ipaddress=ipaddress, url=url, api_token=api_token
+                hostname=hostname, ipaddress=ipaddress, url=url, api_token=api_token, api_ver=api_ver
             )
         else:
             host_configuration = copy(host_configuration)
@@ -276,7 +277,7 @@ class RequestClient:
         page_size: int = 10,
         sort_key: str = "time",
         sort_asc: bool = False,
-        filter_key: str | None = None,
+        filter_key: str | None = None,#TODO test
         filter_value: str = "All",
     ) -> Logs:
         """Get logs.

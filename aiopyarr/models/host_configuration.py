@@ -18,6 +18,7 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
     verify_ssl: bool = True
     base_api_path: str | None = None
     url: str | None = None
+    api_ver: str = "v3"
 
     def __post_init__(self) -> None:
         """Post init."""
@@ -30,7 +31,7 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
 
     def api_url(self, command: str) -> str:
         """Return the generated base URL based on host configuration."""
-        return f"{self.base_url}/api/v3/{command}?apikey={self.api_token}"
+        return f"{self.base_url}/api/{self.api_ver}/{command}?apikey={self.api_token}"
 
     @property
     def base_url(self) -> str:

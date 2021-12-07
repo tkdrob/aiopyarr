@@ -66,6 +66,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         request_timeout: float = 60,
         raw_response: bool = False,
         redact: bool = True,
+        api_ver: str | None = None,
     ) -> None:
         """Initialize Radarr API."""
         super().__init__(
@@ -82,6 +83,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             request_timeout,
             raw_response,
             redact,
+            api_ver,
         )
 
     async def async_get_movies(

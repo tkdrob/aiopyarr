@@ -57,6 +57,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         request_timeout: float = 30,
         raw_response: bool = False,
         redact: bool = True,
+        api_ver: str | None = None,
     ) -> None:
         """Initialize Sonarr API."""
         super().__init__(
@@ -73,6 +74,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             request_timeout,
             raw_response,
             redact,
+            api_ver,
         )
 
     @api_command("diskspace", datatype=Diskspace)
@@ -154,13 +156,9 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """
         params = {}
         if start_date:
-            params["start"] = datetime.strptime(str(start_date), "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
+            params["start"] = start_date.strftime("%Y-%m-%d"),
         if end_date:
-            params["end"] = datetime.strptime(str(end_date), "%Y-%m-%d").strftime(
-                "%Y-%m-%d"
-            )
+            params["end"] = end_date.strftime("%Y-%m-%d"),
 
         return await self._async_request(
             "calendar", params=params, datatype=SonarrCalendar
@@ -548,10 +546,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params={"id": seriesid, "deleteFiles": str(delete_files)},
             method=HTTPMethod.DELETE,
         )
-
-    @api_command("series/lookup", datatype=SonarrSeriesLookup)
-    async def async_get_series_lookup(self) -> list[SonarrSeriesLookup]:
-        """Lookup information about a series."""
 
     async def async_lookup_series(
         self, term: str | None = None, seriesid: int | None = None
