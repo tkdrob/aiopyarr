@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from .base import BaseModel
 
 if TYPE_CHECKING:
-    from .common import Diskspace, Logs
+    from .common import Diskspace, Logs, Tag
 
     from .radarr import (  # isort:skip
         RadarrBlocklist,
@@ -34,7 +34,6 @@ if TYPE_CHECKING:
         RadarrRemotePathMapping,
         RadarrRootFolder,
         RadarrSystemStatus,
-        RadarrTag,
         RadarrUIConfig,
         RadarrUpdate,
     )
@@ -53,7 +52,6 @@ if TYPE_CHECKING:
         SonarrSeriesLookup,
         SonarrSystemBackup,
         SonarrSystemStatus,
-        SonarrTag,
         SonarrWantedMissing,
     )
 
@@ -102,7 +100,6 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
         | RadarrRemotePathMapping
         | RadarrRootFolder
         | RadarrSystemStatus
-        | RadarrTag
         | RadarrUIConfig
         | RadarrUpdate
         | SonarrCalendar
@@ -119,8 +116,8 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
         | SonarrSeriesLookup
         | SonarrSystemBackup
         | SonarrSystemStatus
-        | SonarrTag
         | SonarrWantedMissing
+        | type[Tag]
         | dict[str, Any] | list[dict[str, Any]] | list
     ):  # fmt: on
         """Generate data."""

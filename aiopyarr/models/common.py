@@ -68,3 +68,11 @@ class Logs(_RecordCommon):
         """Post init."""
         super().__post_init__()
         self.records = [_LogRecord(record) for record in self.records or []]
+
+
+@dataclass(init=False)
+class Tag(BaseModel):
+    """Radarr tag attributes."""
+
+    id: int | None = None
+    label: str | None = None

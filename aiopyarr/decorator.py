@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 from .const import HTTPMethod
 
 if TYPE_CHECKING:
-    from .models.common import Diskspace, Logs
+    from .models.common import Diskspace, Logs, Tag
     from .request_client import RequestClient
 
     from .models.radarr import (  # isort:skip
@@ -34,7 +34,6 @@ if TYPE_CHECKING:
         RadarrRemotePathMapping,
         RadarrRootFolder,
         RadarrSystemStatus,
-        RadarrTag,
         RadarrUIConfig,
         RadarrUpdate,
     )
@@ -53,7 +52,6 @@ if TYPE_CHECKING:
         SonarrSeriesLookup,
         SonarrSystemBackup,
         SonarrSystemStatus,
-        SonarrTag,
         SonarrWantedMissing,
     )
 
@@ -88,7 +86,6 @@ def api_command(
     | type[RadarrRemotePathMapping]
     | type[RadarrRootFolder]
     | type[RadarrSystemStatus]
-    | type[RadarrTag]
     | type[RadarrUIConfig]
     | type[RadarrUpdate]
     | type[SonarrCalendar]
@@ -105,8 +102,8 @@ def api_command(
     | type[SonarrSeriesLookup]
     | type[SonarrSystemBackup]
     | type[SonarrSystemStatus]
-    | type[SonarrTag]
     | type[SonarrWantedMissing]
+    | type[Tag]
     | None = None,
     method: HTTPMethod = HTTPMethod.GET,
 ):

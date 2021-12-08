@@ -462,7 +462,7 @@
             "revision": {
               "version": 0,
               "real": 0,
-               "isRepack": true
+              "isRepack": true
             }
           },
           "mediaInfo": {
@@ -521,7 +521,7 @@
                     {
                       "url": "string",
                       "coverType": "unknown",
-                        "extension": "string"
+                      "extension": "string"
                     }
                   ],
                   "links": [

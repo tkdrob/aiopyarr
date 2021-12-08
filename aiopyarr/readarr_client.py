@@ -1,8 +1,8 @@
 """Readarr API."""
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from aiopyarr.const import HTTPMethod
-from aiopyarr.models.readarr import ReadarrAuthor
+from aiopyarr.const import HTTPMethod, HTTPResponse
+from aiopyarr.models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist
 
 from aiopyarr.request_client import RequestClient
 
@@ -11,8 +11,8 @@ if TYPE_CHECKING:
     from .models.host_configuration import PyArrHostConfiguration
 
 
-class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
-    """API client for Radarr endpoints."""
+class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
+    """API client for Readarr endpoints."""
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -31,7 +31,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         redact: bool = True,
         api_ver: str = "v1"
     ) -> None:
-        """Initialize Radarr API."""
+        """Initialize Readarr API."""
         super().__init__(
             host_configuration,
             session,
@@ -48,6 +48,39 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             redact,
             api_ver,
         )
+
+    async def async_author(self, authorid: int | None = None) -> ReadarrAuthor | list[ReadarrAuthor]:
+        """Get info about specified author by id or using a term for lookup"""
+        command = f"author{f'/{authorid}' if authorid is not None else ''}"
+        return await self._async_request(command, datatype=ReadarrAuthor)
+
+    async def async_author_lookup(self, term: str) -> list[ReadarrAuthorLookup]:
+        """Searches for new authors using a term"""
+        return await self._async_request("author/lookup", params={"term": term}, datatype=ReadarrAuthorLookup)
+
+    async def async_author_add(self, data: ReadarrAuthor) -> ReadarrAuthor:
+        """Add author to database"""
+        return await self._async_request("author", data=data, datatype=ReadarrAuthor, method=HTTPMethod.POST)
+
+    async def async_author_edit(self, data: ReadarrAuthorEditor) -> HTTPResponse:
+        """Add author database info"""
+        return await self._async_request("author/editor", data=data, method=HTTPMethod.PUT)
+    # add author editor delete
+    async def async_delete_author(self, authorid: int, delete_files: bool = False, import_list_exclusion: bool = True) -> HTTPResponse:
+        """Delete the author with the given id
+        Args:
+            authorid: Database id for author
+            delete_files: If true author folder and files will be deleted
+            import_list_exclusion: Add an exclusion so author doesn't get re-added
+        """
+        params = {
+            "deleteFiles": delete_files,
+            "addImportListExclusion": import_list_exclusion,
+        }
+        return await self._async_request(f"author/{authorid}", params=params, method=HTTPMethod.DELETE)
+
+    async def async_system_backup_info(self, authorid: int, delete_files: bool = False, import_list_exclusion: bool = True) -> HTTPResponse:
+        """Delete the author with the given id."""
 
     async def _async_construct_book_json(
         self,
@@ -124,6 +157,33 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             **kwargs,
         }
         return await self._async_request("command", data=data, method=HTTPMethod.POST)
+
+    async def async_blocklist(
+        self,
+        page: int = 1,
+        page_size: int = 20,
+        sort_direction: str = "descending",
+        sort_key: str = "date",
+    ) -> ReadarrBlocklist:
+        """Return blocklisted releases.
+
+        Args:
+            page: Page to be returned.
+            page_size: Number of results per page.
+            sort_direction: Direction to sort items.
+            sort_key: Field to sort by.
+        """
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
+        }
+        return await self._async_request(
+            "blocklist",
+            params=params,
+            datatype=ReadarrBlocklist,
+        )
 
     ## WANTED (MISSING)
 
@@ -217,7 +277,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Returns:
             JSON: Array
         """
-        path = f"book/{bookid}" if bookid else "book"
+        path = f"book/{bookid}" if bookid is not None else "book"
         return await self._async_request(path)
 
     # POST /book
@@ -303,26 +363,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """
         params = {"term": term}
         return await self._async_request("book/lookup", params=params)
-
-    async def async_lookup_author(self, term: str) -> list[ReadarrAuthor]:
-        """Searches for new authors using a term"""
-        params = {"term": term}
-        return await self._async_request("author/lookup", params=params)
-
-    async def async_del_author(self, authorid: int, delete_files: bool = False, import_list_exclusion: bool = True):
-        """Delete the author with the given id
-        Args:
-            authorid: Database id for author
-            delete_files: If true author folder and files will be deleted
-            import_list_exclusion: Add an exclusion so author doesn't get re-added
-        Returns:
-            JSON: Array
-        """
-        params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
-        }
-        return await self._async_request(f"author/{authorid}", params=params, method=HTTPMethod.DELETE)
 
     ## LOG
 

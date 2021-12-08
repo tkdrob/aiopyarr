@@ -8,7 +8,7 @@ from urllib.parse import quote
 from .const import HTTPMethod
 from .decorator import api_command
 from .exceptions import ArrInvalidCommand, ArrResourceNotFound
-from .models.common import Diskspace
+from .models.common import Diskspace, Tag
 from .request_client import RequestClient
 
 from .models.sonarr import (  # isort:skip
@@ -28,7 +28,6 @@ from .models.sonarr import (  # isort:skip
     SonarrSeriesUpdateParams,
     SonarrSystemBackup,
     SonarrSystemStatus,
-    SonarrTag,
     SonarrWantedMissing,
 )
 
@@ -564,17 +563,17 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_tags(
         self, tagid: int | None = None
-    ) -> SonarrTag | list[SonarrTag]:
+    ) -> Tag | list[Tag]:
         """Return all tags or specific tag by database id.
 
         id: Get tag matching id. Leave blank for all.
         """
         return await self._async_request(
             f"tag{f'/{tagid}' if tagid is not None else ''}",
-            datatype=SonarrTag,
+            datatype=Tag,
         )
 
-    async def async_create_tag(self, label: str) -> SonarrTag:
+    async def async_create_tag(self, label: str) -> Tag:
         """Add a new tag.
 
         label: Tag name / label
@@ -582,11 +581,11 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "tag",
             data={"label": label},
-            datatype=SonarrTag,
+            datatype=Tag,
             method=HTTPMethod.POST,
         )
 
-    async def async_update_tag(self, data: SonarrTag) -> SonarrTag:
+    async def async_update_tag(self, data: Tag) -> Tag:
         """Update an existing tag."""
         return await self._async_request("tag", data=data, method=HTTPMethod.PUT)
 

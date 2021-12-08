@@ -216,6 +216,19 @@ class _ReadarrAuthorValueSeriesValue(BaseModel):
         super().__post_init__()
         self.books = _ReadarrAuthorValueBooks(self.books) or {}
 
+
+@dataclass(init=False)
+class _ReadarrAuthorValueSeriesLinks(BaseModel):
+    """Author value series links attributes"""
+
+    value: _ReadarrAuthorValueSeriesValue | None = None
+    isLoaded: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.value = _ReadarrAuthorValueSeriesValue(self.value) or {}
+
     
 @dataclass(init=False)
 class _ReadarrAuthorValueSeries(BaseModel):
@@ -229,6 +242,18 @@ class _ReadarrAuthorValueSeries(BaseModel):
         super().__post_init__()
         self.value = [_ReadarrAuthorValueSeriesValue(item) for item in self.value or []]
 
+
+@dataclass(init=False)
+class _ReadarrAuthorValueMetadata(BaseModel):
+    """Author value metadata attributes"""
+
+    value: _ReadarrMetadataValue | None = None
+    isLoaded: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.value = _ReadarrMetadataValue(self.value) or {}
 
 @dataclass(init=False)
 class _ReadarrAuthorValue(BaseModel):
@@ -246,7 +271,7 @@ class _ReadarrAuthorValue(BaseModel):
     metadataProfileId: int | None = None
     tags: list[int] | None = None
     addOptions: _ReadarrAuthorAddOptions | None = None
-    metadata: _ReadarrMetadataValue | None = None
+    metadata: _ReadarrAuthorValueMetadata | None = None
     qualityProfile: _ReadarrQualityProfile | None = None
     metadataProfile: _ReadarrMetadataProfile | None = None
     books: _ReadarrAuthorValueBooks | None = None
@@ -259,7 +284,7 @@ class _ReadarrAuthorValue(BaseModel):
         super().__post_init__()
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.books = _ReadarrAuthorValueBooks(self.books) or {}
-        self.metadata = _ReadarrMetadataValue(self.metadata) or {}
+        self.metadata = _ReadarrAuthorValueMetadata(self.metadata) or {}
         self.metadataProfile = _ReadarrMetadataProfile(self.metadataProfile) or {}
         self.qualityProfile = _ReadarrQualityProfile(self.qualityProfile) or {}
         self.series = _ReadarrAuthorValueSeries(self.series) or {}
@@ -319,6 +344,14 @@ class _ReadarrEditionsValueBookFilesValueMediaInfo(BaseModel):
     audioSampleRate: int | None = None
 
 
+
+@dataclass(init=False)
+class _ReadarrEditionsValueBookFilesValueEdition(BaseModel):
+    """Editions value book files value edition attributes"""
+
+    isLoaded: bool | None = None
+
+
 @dataclass(init=False)
 class _ReadarrEditionsValueBookFilesValue(BaseModel):
     """Editions value book files value attributes"""
@@ -330,18 +363,20 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
     dateAdded: str | None = None
     sceneName: str | None = None
     releaseGroup: str | None = None
-    quality: _ReadarrQuality
+    quality: _ReadarrQuality | None = None
     mediaInfo: _ReadarrEditionsValueBookFilesValueMediaInfo | None = None
     editionId: int | None = None
     calibreId: int | None = None
     part: int | None = None
     author: _ReadarrAuthor | None = None
+    edition: _ReadarrEditionsValueBookFilesValueEdition | None = None
     partCount: int | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
         self.author = _ReadarrAuthor(self.author) or {}
+        self.edition = _ReadarrEditionsValueBookFilesValueEdition(self.edition) or {}
         self.mediaInfo = _ReadarrEditionsValueBookFilesValueMediaInfo(self.mediaInfo) or {}
         self.quality = _ReadarrQuality(self.quality) or {}
 
@@ -393,7 +428,7 @@ class _ReadarrEditionsValue(BaseModel):
         self.book = _ReadarrEditionsValueBook(self.book) or {}
         self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
-        self.links = [_ReadarrImage(link) for link in self.links or []]
+        self.links = [_ReadarrLink(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
 
 
@@ -419,14 +454,14 @@ class _ReadarrSeriesLinksValue(BaseModel):
     seriesId: int | None = None
     bookId: int | None = None
     isPrimary: bool | None = None
-    series: _ReadarrAuthorValueSeries | None = None
+    series: _ReadarrAuthorValueSeriesLinks | None = None
     book: _ReadarrEditionsValueBook | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
         self.book = _ReadarrEditionsValueBook(self.book) or {}
-        self.series = _ReadarrAuthorValueSeries(self.series) or {}
+        self.series = _ReadarrAuthorValueSeriesLinks(self.series) or {}
 
 
 
@@ -529,11 +564,11 @@ class _ReadarrAuthorStatistics(BaseModel):
     availableBookCount: int | None = None
     totalBookCount: int | None = None
     sizeOnDisk: int | None = None
-    percentOfBooks: int | None = None
+    percentOfBooks: float | None = None
 
 
 @dataclass(init=False)
-class ReadarrAuthor(_ReadarrCommon):
+class ReadarrAuthor(_ReadarrCommon, BaseModel):
     """Author attributes."""
 
     status: str | None = None
@@ -543,7 +578,6 @@ class ReadarrAuthor(_ReadarrCommon):
     foreignAuthorId: str | None = None
     overview: str | None = None
     disambiguation: str | None = None
-    links: list[_ReadarrLink] | None = None
     nextBook: _ReadarrNextbook | None = None
     lastBook: _ReadarrLastBook | None = None
     images: list[_ReadarrImage] | None = None
@@ -569,10 +603,16 @@ class ReadarrAuthor(_ReadarrCommon):
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.lastBook = _ReadarrLastBook(self.lastBook) or {}
-        self.links = [_ReadarrLink(link) for link in self.links or []]
         self.nextBook = _ReadarrNextbook(self.nextBook) or {}
         self.ratings = _ReadarrRating(self.ratings) or {}
         self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
+
+
+@dataclass(init=False)
+class ReadarrAuthorLookup(ReadarrAuthor):
+    """Author attributes."""
+
+    monitorNewItems: str | None = None
 
 
 @dataclass(init=False)
@@ -607,10 +647,12 @@ class _ReadarrBlocklistRecord(BaseModel):
     protocol: str | None = None
     indexer: str | None = None
     message: str | None = None
+    author : ReadarrAuthor | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.author = ReadarrAuthor(self.author) or {}
         self.quality = _ReadarrQuality(self.quality) or {}
 
 
@@ -631,3 +673,18 @@ class ReadarrBlocklist(BaseModel):
         super().__post_init__()
         self.filters = [_ReadarrBlocklistFilter(filter) for filter in self.filters or []]
         self.records = [_ReadarrBlocklistRecord(record) for record in self.records or []]
+
+
+@dataclass(init=False)
+class ReadarrAuthorEditor(BaseModel):
+    """Author editor attributes."""
+
+    authorIds: list[int]
+    monitored: bool
+    qualityProfileId: int
+    metadataProfileId: int
+    rootFolderPath: str
+    tags: list[int]
+    applyTags: str
+    moveFiles: bool
+    deleteFiles: bool

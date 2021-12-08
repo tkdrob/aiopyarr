@@ -1,4 +1,4 @@
-"""Tests for Soanrr object models."""
+"""Tests for Sonarr object models."""
 from datetime import datetime
 from aiopyarr.models.common import Diskspace
 from aiopyarr.models.sonarr import SonarrQualityProfile, SonarrQueue, SonarrRootFolder, SonarrSeriesLookup, SonarrSystemBackup, SonarrSystemStatus
@@ -23,7 +23,6 @@ async def test_async_get_calendar(aresponses):
             text=load_fixture("sonarr/calendar.json"),
         ),
         match_querystring=True,
-
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")

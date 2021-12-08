@@ -20,7 +20,6 @@ if TYPE_CHECKING:
         SonarrRelease,
         SonarrSeries,
         SonarrSeriesLookup,
-        SonarrTag,
         SonarrWantedMissing,
         SonarrQualityProfile,
         SonarrQueue,
@@ -44,7 +43,6 @@ if TYPE_CHECKING:
         RadarrNotification,
         RadarrQueue,
         RadarrQueueDetail,
-        RadarrTag,
         RadarrUIConfig,
         RadarrCommand,
         RadarrCustomFilter,
@@ -57,7 +55,7 @@ if TYPE_CHECKING:
         RadarrSystemStatus,
         RadarrUpdate,
     )
-    from .common import Diskspace, Logs
+    from .common import Diskspace, Logs, Tag
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -89,13 +87,13 @@ class BaseModel:
                 | type[RadarrMovieFile] | type[RadarrMovieHistory] | type[RadarrNamingConfig]
                 | type[RadarrNotification] | type[RadarrQualityProfile] | type[RadarrQueue]
                 | type[RadarrQueueDetail] | type[RadarrQueueStatus] | type[RadarrRemotePathMapping]
-                | type[RadarrRootFolder] | type[RadarrSystemStatus] | type[RadarrTag]
+                | type[RadarrRootFolder] | type[RadarrSystemStatus]
                 | type[RadarrUIConfig] | type[RadarrUpdate] | type[SonarrCalendar]
                 | type[SonarrCommand] | type[SonarrEpisode] | type[SonarrEpisodeFile]
                 | type[SonarrHistory] | type[SonarrParse] | type[SonarrQualityProfile]
                 | type[SonarrQueue] | type[SonarrRelease] | type[SonarrRootFolder]
                 | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemBackup]
-                | type[SonarrSystemStatus] | type[SonarrTag] | type[SonarrWantedMissing]
+                | type[SonarrSystemStatus] | type[SonarrWantedMissing] | type[Tag]
                 | None
                 ) = None
     # fmt: on
@@ -129,7 +127,6 @@ class BaseModel:
         | type[RadarrRemotePathMapping]
         | type[RadarrRootFolder]
         | type[RadarrSystemStatus]
-        | type[RadarrTag]
         | type[RadarrUIConfig]
         | type[RadarrUpdate]
         | type[SonarrCalendar]
@@ -146,8 +143,8 @@ class BaseModel:
         | type[SonarrSeriesLookup]
         | type[SonarrSystemBackup]
         | type[SonarrSystemStatus]
-        | type[SonarrTag]
         | type[SonarrWantedMissing]
+        | type[Tag]
         | None = None,
     ) -> None:
         """Init."""

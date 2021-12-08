@@ -25,6 +25,7 @@ from .radarr_common import (  # isort:skip
     _RadarrUnmappedRootFolder,
     _RadarrUpdateChanges,
 )
+from .common import Tag
 
 
 @dataclass(init=False)
@@ -207,15 +208,7 @@ class RadarrNotification(_RadarrCommon):
 
 
 @dataclass(init=False)
-class RadarrTag(BaseModel):
-    """Radarr tag attributes."""
-
-    id: int | None = None
-    label: str | None = None
-
-
-@dataclass(init=False)
-class RadarrTagDetails(RadarrTag):
+class RadarrTagDetails(Tag):
     """Radarr tag details attributes."""
 
     delayProfileIds: list[int] | None = None

@@ -5,8 +5,8 @@
     "ended": false,
     "authorName": "string",
     "authorNameLastFirst": "string",
-    "foreignAuthorId": "1",
-    "titleSlug": "1",
+    "foreignAuthorId": "string",
+    "titleSlug": "string",
     "overview": "string",
     "links": [
       {

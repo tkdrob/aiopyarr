@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from .const import HTTPMethod
 from .decorator import api_command
-from .models.common import Diskspace
+from .models.common import Diskspace, Tag
 from .request_client import RequestClient
 
 from .models.radarr import (  # isort:skip
@@ -34,7 +34,6 @@ from .models.radarr import (  # isort:skip
     RadarrRemotePathMapping,
     RadarrRootFolder,
     RadarrSystemStatus,
-    RadarrTag,
     RadarrTagDetails,
     RadarrUIConfig,
     RadarrUpdate,
@@ -338,14 +337,14 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_tags(
         self, tagid: int | None = None
-    ) -> RadarrTag | list[RadarrTag]:
+    ) -> Tag | list[Tag]:
         """Get information about tag.
 
         id: Get tag matching id. Leave blank for all.
         """
         return await self._async_request(
             f"tag{f'/{tagid}' if tagid is not None else ''}",
-            datatype=RadarrTag,
+            datatype=Tag,
         )
 
     async def async_get_blocklist(
@@ -577,7 +576,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "tag",
             data={"id": 0, "label": label},
-            datatype=RadarrTag,
+            datatype=Tag,
             method=HTTPMethod.POST,
         )
 
@@ -586,7 +585,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"tag/{tagid}",
             data={"id": tagid, "label": label},
-            datatype=RadarrTag,
+            datatype=Tag,
             method=HTTPMethod.PUT,
         )
 
@@ -594,7 +593,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Delete a tag."""
         return await self._async_request(
             f"tag/{tagid}",
-            datatype=RadarrTag,
+            datatype=Tag,
             method=HTTPMethod.DELETE,
         )
 
@@ -625,6 +624,8 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             data={"name": "CheckHealth"},
             method=HTTPMethod.POST,
         )
+
+        # TODO system backup?
 
     async def async_command_clear_blocklist(self) -> HTTPResponse:
         """Trigger the removal of all blocklisted movies."""

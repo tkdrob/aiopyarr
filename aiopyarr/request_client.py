@@ -20,7 +20,7 @@ from .exceptions import (  # isort:skip
 )
 
 if TYPE_CHECKING:
-    from .models.common import Diskspace
+    from .models.common import Diskspace, Tag
 
     from .models.radarr import (  # isort:skip
         RadarrBlocklist,
@@ -47,7 +47,6 @@ if TYPE_CHECKING:
         RadarrRemotePathMapping,
         RadarrRootFolder,
         RadarrSystemStatus,
-        RadarrTag,
         RadarrUIConfig,
         RadarrUpdate,
     )
@@ -68,7 +67,6 @@ if TYPE_CHECKING:
         SonarrSeriesUpdateParams,
         SonarrSystemBackup,
         SonarrSystemStatus,
-        SonarrTag,
         SonarrWantedMissing,
     )
 
@@ -111,6 +109,8 @@ class RequestClient:
             host_configuration.verify_ssl = verify_ssl
         if base_api_path is not None:
             host_configuration.base_api_path = base_api_path
+        if api_ver is not None:
+            host_configuration.api_ver = api_ver
 
         if session is None:
             session = ClientSession()
@@ -146,7 +146,6 @@ class RequestClient:
         data: SonarrEpisode
         | SonarrEpisodeFileQuailty
         | SonarrSeriesUpdateParams
-        | SonarrTag
         | list[RadarrMovie]
         | RadarrMovieEditor
         | RadarrUIConfig
@@ -189,7 +188,6 @@ class RequestClient:
         | type[RadarrRemotePathMapping]
         | type[RadarrRootFolder]
         | type[RadarrSystemStatus]
-        | type[RadarrTag]
         | type[RadarrUIConfig]
         | type[RadarrUpdate]
         | type[SonarrCalendar]
@@ -206,8 +204,8 @@ class RequestClient:
         | type[SonarrSeriesLookup]
         | type[SonarrSystemBackup]
         | type[SonarrSystemStatus]
-        | type[SonarrTag]
         | type[SonarrWantedMissing]
+        | type[Tag]
         | None = None,
         method: HTTPMethod = HTTPMethod.GET,
     ):

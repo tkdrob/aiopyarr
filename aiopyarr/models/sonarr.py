@@ -235,13 +235,6 @@ class SonarrSystemBackup(_SonarrCommon4):
 
 
 @dataclass(init=False)
-class SonarrTag(_SonarrCommon6):
-    """Sonarr tag attributes."""
-
-    label: str | None = None
-
-
-@dataclass(init=False)
 class SonarrSeriesUpdateParams(_SonarrSeriesCommon3):
     """Sonarr series update parameters."""
 
