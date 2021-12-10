@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 import json
 from .const import HTTPMethod, HTTPResponse
-from .models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist, ReadarrBook, ReadarrBookFile, ReadarrBookFileEditor, ReadarrBookLookup
+from .models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist, ReadarrBook, ReadarrBookFile, ReadarrBookFileEditor, ReadarrBookLookup, ReadarrBookshelf
 from .models.common import Logs
 from .request_client import RequestClient
 
@@ -330,3 +330,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         if booktype not in book_id_types:
             raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
         return await self._async_request("book/lookup", params={"term": f"{booktype}:{term}"}, datatype=ReadarrBookLookup)
+
+    async def async_add_bookself(self, data: ReadarrBookshelf) -> HTTPResponse:
+        """Add a bookshelf to the database"""
+        return await self._async_request("bookshelf", data=data, datatype=ReadarrBookshelf, method=HTTPMethod.POST)

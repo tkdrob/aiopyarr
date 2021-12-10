@@ -2717,4 +2717,3 @@ async def test_async_book_lookup(aresponses):
     assert data[0].editions[0].manualAdd is False
     assert data[0].editions[0].grabbed is False
     assert data[0].grabbed is False
-    

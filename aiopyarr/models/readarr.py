@@ -841,3 +841,46 @@ class ReadarrBookLookup(BaseModel):
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_ReadarrLink(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
+
+
+@dataclass(init=False)
+class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
+    """Bookshelf author Book attributes"""
+
+    id: int | None = None
+    statistics: _ReadarrAuthorStatistics | None = None
+    addOptions: _ReadarrAddOptions | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.addOptions = _ReadarrAddOptions(self.addOptions) or {}
+        self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
+
+
+@dataclass(init=False)
+class ReadarrBookshelfAuthor(BaseModel):
+    """Bookshelf author attributes"""
+
+    id: int | None = None
+    monitored: bool | None = None
+    books: list[ReadarrBookshelfAuthorBook] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.books = [ReadarrBookshelfAuthorBook(book) for book in self.books or []]
+
+
+@dataclass(init=False)
+class ReadarrBookshelf:
+    """Bookshelf attributes"""
+
+    authors: list[ReadarrBookshelfAuthor] | None = None
+    monitoringOptions: _ReadarrAuthorAddOptions | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.authors = [ReadarrBookshelfAuthor(author) for author in self.authors or []]
+        self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions) or {}
