@@ -12,6 +12,7 @@ from .models.common import Diskspace, Tag
 from .request_client import RequestClient
 
 from .models.sonarr import (  # isort:skip
+    SonarrBlocklist,
     SonarrCalendar,
     SonarrCommand,
     SonarrEpisode,
@@ -26,7 +27,6 @@ from .models.sonarr import (  # isort:skip
     SonarrSeries,
     SonarrSeriesLookup,
     SonarrSeriesUpdateParams,
-    SonarrSystemBackup,
     SonarrSystemStatus,
     SonarrWantedMissing,
 )
@@ -141,10 +141,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     @api_command("system/status", datatype=SonarrSystemStatus)
     async def async_get_system_status(self) -> SonarrSystemStatus:
         """Get information about system status."""
-
-    @api_command("system/backup", datatype=SonarrSystemBackup)
-    async def async_get_system_backup(self) -> list[SonarrSystemBackup]:
-        """Get information about system backup."""
 
     async def async_get_calendar(
         self, start_date: datetime | None = None, end_date: datetime | None = None
@@ -561,18 +557,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params={"term": quote(term, safe="") if term else f"tvdb:{seriesid}"},
         )
 
-    async def async_get_tags(
-        self, tagid: int | None = None
-    ) -> Tag | list[Tag]:
-        """Return all tags or specific tag by database id.
-
-        id: Get tag matching id. Leave blank for all.
-        """
-        return await self._async_request(
-            f"tag{f'/{tagid}' if tagid is not None else ''}",
-            datatype=Tag,
-        )
-
     async def async_create_tag(self, label: str) -> Tag:
         """Add a new tag.
 
@@ -592,6 +576,33 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_delete_tag(self, tagid: int) -> dict:
         """Delete the tag with the given ID."""
         return await self._async_request(f"tag/{tagid}", method=HTTPMethod.DELETE)
+
+    async def async_get_blocklist(
+        self,
+        page: int = 1,
+        page_size: int = 10,
+        sort_direction: str = "descending",
+        sort_key: str = "date",
+    ) -> SonarrBlocklist:
+        """Return blocklisted releases.
+
+        Args:
+            page: Page to be returned.
+            page_size: Number of results per page.
+            sort_direction: Direction to sort items.
+            sort_key: Field to sort by.
+        """
+        params = {
+            "page": page,
+            "pageSize": page_size,
+            "sortDirection": sort_direction,
+            "sortKey": sort_key,
+        }
+        return await self._async_request(
+            "blocklist",
+            params=params,
+            datatype=SonarrBlocklist,
+        )
 
     async def _async_construct_series_json(  # pylint: disable=too-many-arguments
         self,

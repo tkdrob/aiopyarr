@@ -221,6 +221,7 @@ class _SonarrEpisodeQuality:
 
 
 @dataclass(init=False)
+
 class _SonarrRevisionAttr(BaseModel):
     """Sonarr revision attributes."""
 
@@ -232,7 +233,7 @@ class _SonarrRevisionAttr(BaseModel):
 class _SonarrQualitySubSub(_SonarrCommon6):
     """Sonarr quality attributes."""
 
-    allowed: list | None = []
+    allowed: list | None = [] #TODO
     name: str | None = None
     source: str | None = None
     resolution: int | None = None
@@ -480,3 +481,11 @@ class _FileEpisodeQuality:
 
     quality: _SonarrCommon6 | None = None
     revision: _FileRevision | None = None
+
+
+@dataclass(init=False)
+class _SonarrBlocklistSeriesLanguage(BaseModel):
+    """Blocklist series language attributes."""
+
+    id: int | None = None
+    name: str | None = None

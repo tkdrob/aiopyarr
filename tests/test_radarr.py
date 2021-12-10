@@ -1,7 +1,21 @@
 """Tests for Radarr object models."""
 from datetime import datetime
 from aiopyarr.models.common import Diskspace
-from aiopyarr.models.radarr import RadarrCommand, RadarrCustomFilter, RadarrHealth, RadarrHostConfig, RadarrMetadataConfig, RadarrNamingConfig, RadarrQualityProfile, RadarrQueueStatus, RadarrRemotePathMapping, RadarrRootFolder, RadarrSystemStatus, RadarrUIConfig, RadarrUpdate
+from aiopyarr.models.radarr import (
+    RadarrCommand,
+    RadarrCustomFilter,
+    RadarrHealth,
+    RadarrHostConfig,
+    RadarrMetadataConfig,
+    RadarrNamingConfig,
+    RadarrQualityProfile,
+    RadarrQueueStatus,
+    RadarrRemotePathMapping,
+    RadarrRootFolder,
+    RadarrSystemStatus,
+    RadarrUIConfig,
+    RadarrUpdate,
+)
 
 import pytest
 from aiohttp.client import ClientSession
@@ -46,26 +60,26 @@ async def test_async_get_blocklist(aresponses):
         assert data.records[0].quality.quality.modifier == "string"
         assert data.records[0].quality.revision.version == 0
         assert data.records[0].quality.revision.real == 0
-        assert data.records[0].quality.revision.isRepack == True
+        assert data.records[0].quality.revision.isRepack is True
         assert data.records[0].languages[0].id == 0
         assert data.records[0].languages[0].name == "string"
         assert data.records[0].customFormats[0].id == 0
         assert data.records[0].customFormats[0].name == "string"
-        assert data.records[0].customFormats[0].includeCustomFormatWhenRenaming == True
+        assert data.records[0].customFormats[0].includeCustomFormatWhenRenaming is True
         spec = data.records[0].customFormats[0].specifications[0]
         assert spec.name == "string"
         assert spec.implementation == "string"
         assert spec.implementationName == "string"
         assert spec.infoLink == "string"
-        assert spec.negate == True
-        assert spec.required == True
+        assert spec.negate is True
+        assert spec.required is True
         assert spec.fields[0].order == 0
         assert spec.fields[0].name == "string"
         assert spec.fields[0].label == "string"
         assert spec.fields[0].helpText == "string"
         assert spec.fields[0].value == "string"
         assert spec.fields[0].type == "string"
-        assert spec.fields[0].advanced == True
+        assert spec.fields[0].advanced is True
         assert data.sortDirection == "string"
         assert data.sortKey == "string"
         assert data.totalRecords == 0
@@ -102,24 +116,24 @@ async def test_async_get_blocklist_movie(aresponses):
         assert data[0].quality.quality.modifier == "string"
         assert data[0].quality.revision.version == 0
         assert data[0].quality.revision.real == 0
-        assert data[0].quality.revision.isRepack == True
+        assert data[0].quality.revision.isRepack is True
         assert data[0].customFormats[0].id == 0
         assert data[0].customFormats[0].name == "string"
-        assert data[0].customFormats[0].includeCustomFormatWhenRenaming == True
+        assert data[0].customFormats[0].includeCustomFormatWhenRenaming is True
         spec = data[0].customFormats[0].specifications[0]
         assert spec.name == "string"
         assert spec.implementation == "string"
         assert spec.implementationName == "string"
         assert spec.infoLink == "string"
-        assert spec.negate == True
-        assert spec.required == True
+        assert spec.negate is True
+        assert spec.required is True
         assert spec.fields[0].order == 0
         assert spec.fields[0].name == "string"
         assert spec.fields[0].label == "string"
         assert spec.fields[0].helpText == "string"
         assert spec.fields[0].value == "string"
         assert spec.fields[0].type == "string"
-        assert spec.fields[0].advanced == True
+        assert spec.fields[0].advanced is True
         assert data[0].date == "string"
         assert data[0].id == 0
         assert data[0].indexer == "string"
@@ -162,14 +176,14 @@ async def test_async_get_calendar(aresponses):
         assert data[0].images[0].url == "string"
         assert data[0].website == "string"
         assert data[0].year == 2020
-        assert data[0].hasFile == True
+        assert data[0].hasFile is True
         assert data[0].youTubeTrailerId == "string"
         assert data[0].studio == "string"
         assert data[0].path == "string"
         assert data[0].qualityProfileId == 9
-        assert data[0].monitored == True
+        assert data[0].monitored is True
         assert data[0].minimumAvailability == "inCinemas"
-        assert data[0].isAvailable == True
+        assert data[0].isAvailable is True
         assert data[0].folderName == "string"
         assert data[0].runtime == 97
         assert data[0].cleanTitle == "string"
@@ -195,7 +209,7 @@ async def test_async_get_calendar(aresponses):
         assert data[0].movieFile.quality.quality.modifier == "none"
         assert data[0].movieFile.quality.revision.version == 1
         assert data[0].movieFile.quality.revision.real == 0
-        assert data[0].movieFile.quality.revision.isRepack == False
+        assert data[0].movieFile.quality.revision.isRepack is False
         assert data[0].movieFile.mediaInfo.audioBitrate == 224000
         assert data[0].movieFile.mediaInfo.audioChannels == 5.1
         assert data[0].movieFile.mediaInfo.audioCodec == "AAC"
@@ -210,7 +224,7 @@ async def test_async_get_calendar(aresponses):
         assert data[0].movieFile.mediaInfo.scanType == "Progressive"
         assert data[0].movieFile.mediaInfo.subtitles == ""
         assert data[0].movieFile.originalFilePath == "string"
-        assert data[0].movieFile.qualityCutoffNotMet == False
+        assert data[0].movieFile.qualityCutoffNotMet is False
         assert data[0].movieFile.languages[0].id == 1
         assert data[0].movieFile.languages[0].name == "English"
         assert data[0].movieFile.releaseGroup == "string"
@@ -242,18 +256,18 @@ async def test_async_get_command(aresponses):
         assert data[0].name == "MessagingCleanup"
         assert data[0].commandName == "Messaging Cleanup"
         assert data[0].message == "Completed"
-        assert data[0].body.sendUpdatesToClient == False
-        assert data[0].body.updateScheduledTask == True
+        assert data[0].body.sendUpdatesToClient is False
+        assert data[0].body.updateScheduledTask is True
         assert data[0].body.completionMessage == "Completed"
-        assert data[0].body.requiresDiskAccess == False
-        assert data[0].body.isExclusive == False
-        assert data[0].body.isNewMovie == False
-        assert data[0].body.isTypeExclusive == False
+        assert data[0].body.requiresDiskAccess is False
+        assert data[0].body.isExclusive is False
+        assert data[0].body.isNewMovie is False
+        assert data[0].body.isTypeExclusive is False
         assert data[0].body.name == "MessagingCleanup"
         assert data[0].body.lastExecutionTime == "2021-11-29T19:57:46Z"
         assert data[0].body.lastStartTime == "2021-11-29T19:57:46Z"
         assert data[0].body.trigger == "scheduled"
-        assert data[0].body.suppressMessages == False
+        assert data[0].body.suppressMessages is False
         assert data[0].priority == "low"
         assert data[0].status == "completed"
         assert data[0].queued == "2021-11-29T20:03:16Z"
@@ -262,8 +276,8 @@ async def test_async_get_command(aresponses):
         assert data[0].duration == "00:00:00.0102456"
         assert data[0].trigger == "scheduled"
         assert data[0].stateChangeTime == "2021-11-29T20:03:16Z"
-        assert data[0].sendUpdatesToClient == False
-        assert data[0].updateScheduledTask == True
+        assert data[0].sendUpdatesToClient is False
+        assert data[0].updateScheduledTask is True
         assert data[0].lastExecutionTime == "2021-11-29T19:57:46Z"
         assert data[0].id == 1987776
 
@@ -288,7 +302,7 @@ async def test_async_get_host_config(aresponses):
         )
         data: RadarrHostConfig = await client.async_get_host_config()
 
-        assert data.analyticsEnabled == True
+        assert data.analyticsEnabled is True
         assert data.apiKey == "string"
         assert data.authenticationMethod == "string"
         assert data.backupFolder == "string"
@@ -298,15 +312,15 @@ async def test_async_get_host_config(aresponses):
         assert data.branch == "string"
         assert data.certificateValidation == "string"
         assert data.consoleLogLevel == "string"
-        assert data.enableSsl == True
+        assert data.enableSsl is True
         assert data.id == 0
-        assert data.launchBrowser == True
+        assert data.launchBrowser is True
         assert data.logLevel == "string"
         assert data.password == "string"
         assert data.port == 0
         assert data.proxyBypassFilter == "string"
-        assert data.proxyBypassLocalAddresses == True
-        assert data.proxyEnabled == True
+        assert data.proxyBypassLocalAddresses is True
+        assert data.proxyEnabled is True
         assert data.proxyHostname == "string"
         assert data.proxyPassword == "string"
         assert data.proxyPort == 0
@@ -316,7 +330,7 @@ async def test_async_get_host_config(aresponses):
         assert data.sslCertPath == "string"
         assert data.sslPort == 0
         assert data.urlBase == "string"
-        assert data.updateAutomatically == True
+        assert data.updateAutomatically is True
         assert data.updateMechanism == "string"
         assert data.updateScriptPath == "string"
         assert data.username == "string"
@@ -344,11 +358,11 @@ async def test_async_get_naming_config(aresponses):
 
         assert data.colonReplacementFormat == "string"
         assert data.id == 0
-        assert data.includeQuality == True
+        assert data.includeQuality is True
         assert data.movieFolderFormat == "string"
-        assert data.renameMovies == True
-        assert data.replaceIllegalCharacters == True
-        assert data.replaceSpaces == True
+        assert data.renameMovies is True
+        assert data.replaceIllegalCharacters is True
+        assert data.replaceSpaces is True
         assert data.standardMovieFormat == "string"
 
 
@@ -373,14 +387,14 @@ async def test_async_get_ui_config(aresponses):
         data: RadarrUIConfig = await client.async_get_ui_config()
 
         assert data.calendarWeekColumnHeader == "ddd M/D"
-        assert data.enableColorImpairedMode == False
+        assert data.enableColorImpairedMode is False
         assert data.firstDayOfWeek == 0
         assert data.id == 1
         assert data.longDateFormat == "dddd, MMMM D YYYY"
         assert data.movieInfoLanguage == 1
         assert data.movieRuntimeFormat == "hoursMinutes"
         assert data.shortDateFormat == "MMM D YYYY"
-        assert data.showRelativeDates == True
+        assert data.showRelativeDates is True
         assert data.timeFormat == "h(:mm)a"
 
 
@@ -458,14 +472,14 @@ async def test_async_get_download_client(aresponses):
         )
         data = await client.async_get_download_clients(clientid=0)
         assert data.configContract == "string"
-        assert data.enable == True
+        assert data.enable is True
         assert data.fields[0].order == 0
         assert data.fields[0].name == "string"
         assert data.fields[0].label == "string"
         assert data.fields[0].helpText == "string"
         assert data.fields[0].value == "string"
         assert data.fields[0].type == "string"
-        assert data.fields[0].advanced == True
+        assert data.fields[0].advanced is True
         assert data.id == 0
         assert data.implementation == "string"
         assert data.implementationName == "string"
@@ -536,25 +550,25 @@ async def test_async_get_movie_history(aresponses):
         assert data[0].quality.quality.modifier == "string"
         assert data[0].quality.revision.version == 0
         assert data[0].quality.revision.real == 0
-        assert data[0].quality.revision.isRepack == True
+        assert data[0].quality.revision.isRepack is True
         assert data[0].customFormats[0].id == 0
         assert data[0].customFormats[0].name == "string"
-        assert data[0].customFormats[0].includeCustomFormatWhenRenaming == True
+        assert data[0].customFormats[0].includeCustomFormatWhenRenaming is True
         spec = data[0].customFormats[0].specifications[0]
         assert spec.name == "string"
         assert spec.implementation == "string"
         assert spec.implementationName == "string"
         assert spec.infoLink == "string"
-        assert spec.negate == True
-        assert spec.required == True
+        assert spec.negate is True
+        assert spec.required is True
         assert spec.fields[0].order == 0
         assert spec.fields[0].name == "string"
         assert spec.fields[0].label == "string"
         assert spec.fields[0].helpText == "string"
         assert spec.fields[0].value == "string"
         assert spec.fields[0].type == "string"
-        assert spec.fields[0].advanced == True
-        assert data[0].qualityCutoffNotMet == True
+        assert spec.fields[0].advanced is True
+        assert data[0].qualityCutoffNotMet is True
         assert data[0].date == "string"
         assert data[0].downloadId == "string"
         assert data[0].eventType == "string"
@@ -575,7 +589,6 @@ async def test_async_get_import_list(aresponses):
             text=load_fixture("radarr/importlist.json"),
         ),
         match_querystring=True,
-
     )
     async with ClientSession() as session:
         client = RadarrClient(
@@ -583,12 +596,12 @@ async def test_async_get_import_list(aresponses):
         )
         data = await client.async_get_import_lists(listid=0)
 
-        assert data.enabled == True
-        assert data.enableAuto == True
-        assert data.shouldMonitor == True
+        assert data.enabled is True
+        assert data.enableAuto is True
+        assert data.shouldMonitor is True
         assert data.rootFolderPath == "string"
         assert data.qualityProfileId == 0
-        assert data.searchOnAdd == True
+        assert data.searchOnAdd is True
         assert data.minimumAvailability == "string"
         assert data.listType == "string"
         assert data.listOrder == 0
@@ -599,7 +612,7 @@ async def test_async_get_import_list(aresponses):
         assert data.fields[0].helpText == "string"
         assert data.fields[0].value == "string"
         assert data.fields[0].type == "string"
-        assert data.fields[0].advanced == True
+        assert data.fields[0].advanced is True
         assert data.implementationName == "string"
         assert data.implementation == "string"
         assert data.configContract == "string"
@@ -628,11 +641,11 @@ async def test_async_get_indexer(aresponses):
         )
         data = await client.async_get_indexers(indexerid=0)
 
-        assert data.enableRss == True
-        assert data.enableAutomaticSearch == True
-        assert data.enableInteractiveSearch == True
-        assert data.supportsRss == True
-        assert data.supportsSearch == True
+        assert data.enableRss is True
+        assert data.enableAutomaticSearch is True
+        assert data.enableInteractiveSearch is True
+        assert data.supportsRss is True
+        assert data.supportsSearch is True
         assert data.protocol == "string"
         assert data.priority == 0
         assert data.name == "string"
@@ -642,7 +655,7 @@ async def test_async_get_indexer(aresponses):
         assert data.fields[0].helpText == "string"
         assert data.fields[0].value == "string"
         assert data.fields[0].type == "string"
-        assert data.fields[0].advanced == True
+        assert data.fields[0].advanced is True
         assert data.implementation == "string"
         assert data.implementationName == "string"
         assert data.configContract == "string"
@@ -671,7 +684,7 @@ async def test_async_get_metadata_config(aresponses):
         )
         data: list[RadarrMetadataConfig] = await client.async_get_metadata_config()
 
-        assert data[0].enable == True
+        assert data[0].enable is True
         assert data[0].name == "string"
         assert data[0].fields[0].order == 0
         assert data[0].fields[0].name == "string"
@@ -679,7 +692,7 @@ async def test_async_get_metadata_config(aresponses):
         assert data[0].fields[0].helpText == "string"
         assert data[0].fields[0].value == "string"
         assert data[0].fields[0].type == "string"
-        assert data[0].fields[0].advanced == True
+        assert data[0].fields[0].advanced is True
         assert data[0].implementationName == "string"
         assert data[0].implementation == "string"
         assert data[0].configContract == "string"
@@ -730,15 +743,15 @@ async def test_async_get_movie(aresponses):
         assert data.images[0].remoteUrl == "string"
         assert data.website == "string"
         assert data.year == 0
-        assert data.hasFile == True
+        assert data.hasFile is True
         assert data.youTubeTrailerId == "string"
         assert data.studio == "string"
         assert data.path == "string"
         assert data.rootFolderPath == "string"
         assert data.qualityProfileId == 0
-        assert data.monitored == True
+        assert data.monitored is True
         assert data.minimumAvailability == "announced"
-        assert data.isAvailable == True
+        assert data.isAvailable is True
         assert data.folderName == "string"
         assert data.runtime == 0
         assert data.cleanTitle == "string"
@@ -764,7 +777,7 @@ async def test_async_get_movie(aresponses):
         assert data.movieFile.quality.quality.modifier == "none"
         assert data.movieFile.quality.revision.version == 1
         assert data.movieFile.quality.revision.real == 0
-        assert data.movieFile.quality.revision.isRepack == False
+        assert data.movieFile.quality.revision.isRepack is False
         assert data.movieFile.mediaInfo.audioBitrate == 0
         assert data.movieFile.mediaInfo.audioChannels == 2
         assert data.movieFile.mediaInfo.audioCodec == "AAC"
@@ -778,7 +791,7 @@ async def test_async_get_movie(aresponses):
         assert data.movieFile.mediaInfo.runTime == "1:49:06"
         assert data.movieFile.mediaInfo.scanType == "Progressive"
         assert data.movieFile.originalFilePath == "string"
-        assert data.movieFile.qualityCutoffNotMet == True
+        assert data.movieFile.qualityCutoffNotMet is True
         assert data.movieFile.languages[0].id == 26
         assert data.movieFile.languages[0].name == "Hindi"
         assert data.movieFile.edition == ""
@@ -824,7 +837,7 @@ async def test_async_get_movie_file(aresponses):
         assert data.quality.quality.modifier == "string"
         assert data.quality.revision.version == 0
         assert data.quality.revision.real == 0
-        assert data.quality.revision.isRepack == True
+        assert data.quality.revision.isRepack is True
         assert data.mediaInfo.audioAdditionalFeatures == "string"
         assert data.mediaInfo.audioBitrate == 0
         assert data.mediaInfo.audioChannels == 0
@@ -839,7 +852,7 @@ async def test_async_get_movie_file(aresponses):
         assert data.mediaInfo.runTime == "string"
         assert data.mediaInfo.scanType == "string"
         assert data.mediaInfo.subtitles == "string"
-        assert data.qualityCutoffNotMet == True
+        assert data.qualityCutoffNotMet is True
         assert data.languages[0].id == 0
         assert data.languages[0].name == "string"
         assert data.releaseGroup == "string"
@@ -866,19 +879,19 @@ async def test_async_get_notification(aresponses):
         )
         data = await client.async_get_notifications(notifyid=0)
 
-        assert data.onGrab == True
-        assert data.onDownload == True
-        assert data.onUpgrade == True
-        assert data.onRename == True
-        assert data.onDelete == True
-        assert data.onHealthIssue == True
-        assert data.supportsOnGrab == True
-        assert data.supportsOnDownload == True
-        assert data.supportsOnUpgrade == True
-        assert data.supportsOnRename == True
-        assert data.supportsOnDelete == True
-        assert data.supportsOnHealthIssue == True
-        assert data.includeHealthWarnings == True
+        assert data.onGrab is True
+        assert data.onDownload is True
+        assert data.onUpgrade is True
+        assert data.onRename is True
+        assert data.onDelete is True
+        assert data.onHealthIssue is True
+        assert data.supportsOnGrab is True
+        assert data.supportsOnDownload is True
+        assert data.supportsOnUpgrade is True
+        assert data.supportsOnRename is True
+        assert data.supportsOnDelete is True
+        assert data.supportsOnHealthIssue is True
+        assert data.includeHealthWarnings is True
         assert data.name == "string"
         assert data.fields[0].order == 0
         assert data.fields[0].name == "string"
@@ -886,7 +899,7 @@ async def test_async_get_notification(aresponses):
         assert data.fields[0].helpText == "string"
         assert data.fields[0].value == "string"
         assert data.fields[0].type == "string"
-        assert data.fields[0].advanced == True
+        assert data.fields[0].advanced is True
         assert data.implementationName == "string"
         assert data.implementation == "string"
         assert data.configContract == "string"
@@ -918,7 +931,7 @@ async def test_async_get_quality_profiles(aresponses):
         data: list[RadarrQualityProfile] = await client.async_get_quality_profiles()
 
         assert data[0].name == "Any"
-        assert data[0].upgradeAllowed == True
+        assert data[0].upgradeAllowed is True
         assert data[0].cutoff == 20
         assert data[0].items[0].quality.id == 0
         assert data[0].items[0].quality.name == "Unknown"
@@ -926,7 +939,7 @@ async def test_async_get_quality_profiles(aresponses):
         assert data[0].items[0].quality.resolution == 0
         assert data[0].items[0].quality.modifier == "none"
         assert data[0].items[0].items == []
-        assert data[0].items[0].allowed == False
+        assert data[0].items[0].allowed is False
         assert data[0].items[1].name == "WEB 480p"
         assert data[0].items[1].items[0].quality.id == 12
         assert data[0].items[1].items[0].quality.name == "WEBRip-480p"
@@ -934,8 +947,8 @@ async def test_async_get_quality_profiles(aresponses):
         assert data[0].items[1].items[0].quality.resolution == 480
         assert data[0].items[1].items[0].quality.modifier == "none"
         assert data[0].items[1].items[0].items == []
-        assert data[0].items[1].items[0].allowed == True
-        assert data[0].items[1].allowed == True
+        assert data[0].items[1].items[0].allowed is True
+        assert data[0].items[1].allowed is True
         assert data[0].items[1].id == 1000
         assert data[0].minFormatScore == 0
         assert data[0].cutoffFormatScore == 0
@@ -975,23 +988,23 @@ async def test_async_get_queue_details(aresponses):
         assert data[0].quality.quality.modifier == "string"
         assert data[0].quality.revision.version == 0
         assert data[0].quality.revision.real == 0
-        assert data[0].quality.revision.isRepack == True
+        assert data[0].quality.revision.isRepack is True
         assert data[0].customFormats[0].id == 0
         assert data[0].customFormats[0].name == "string"
-        assert data[0].customFormats[0].includeCustomFormatWhenRenaming == True
+        assert data[0].customFormats[0].includeCustomFormatWhenRenaming is True
         assert data[0].customFormats[0].specifications[0].name == "string"
         assert data[0].customFormats[0].specifications[0].implementation == "string"
         assert data[0].customFormats[0].specifications[0].implementationName == "string"
         assert data[0].customFormats[0].specifications[0].infoLink == "string"
-        assert data[0].customFormats[0].specifications[0].negate == True
-        assert data[0].customFormats[0].specifications[0].required == True
+        assert data[0].customFormats[0].specifications[0].negate is True
+        assert data[0].customFormats[0].specifications[0].required is True
         assert data[0].customFormats[0].specifications[0].fields[0].order == 0
         assert data[0].customFormats[0].specifications[0].fields[0].name == "string"
         assert data[0].customFormats[0].specifications[0].fields[0].label == "string"
         assert data[0].customFormats[0].specifications[0].fields[0].helpText == "string"
         assert data[0].customFormats[0].specifications[0].fields[0].value == "string"
         assert data[0].customFormats[0].specifications[0].fields[0].type == "string"
-        assert data[0].customFormats[0].specifications[0].fields[0].advanced == True
+        assert data[0].customFormats[0].specifications[0].fields[0].advanced is True
         assert data[0].size == 0
         assert data[0].title == "string"
         assert data[0].sizeleft == 0
@@ -1034,10 +1047,10 @@ async def test_async_get_queue_status(aresponses):
         assert data.totalCount == 0
         assert data.count == 0
         assert data.unknownCount == 0
-        assert data.errors == True
-        assert data.warnings == True
-        assert data.unknownErrors == True
-        assert data.unknownWarnings == True
+        assert data.errors is True
+        assert data.warnings is True
+        assert data.unknownErrors is True
+        assert data.unknownWarnings is True
 
 
 @pytest.mark.asyncio
@@ -1058,7 +1071,9 @@ async def test_async_get_remote_path_mappings(aresponses):
         client = RadarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data: list[RadarrRemotePathMapping] = await client.async_get_remote_path_mappings()
+        data: list[
+            RadarrRemotePathMapping
+        ] = await client.async_get_remote_path_mappings()
 
         assert data[0].host == "localhost"
         assert data[0].remotePath == "C:\\"
@@ -1114,19 +1129,19 @@ async def test_async_get_system_status(aresponses):
         data: RadarrSystemStatus = await client.async_get_system_status()
 
         assert data.appData == "C:\\ProgramData\\Radarr"
-        assert data.authentication == True
+        assert data.authentication is True
         assert data.branch == "nightly"
         assert data.buildTime == "2020-09-01T23:23:23.9621974Z"
-        assert data.isAdmin == False
-        assert data.isDebug == True
-        assert data.isDocker == False
-        assert data.isLinux == False
-        assert data.isMono == False
-        assert data.isNetCore == True
-        assert data.isOsx == False
-        assert data.isProduction == False
-        assert data.isUserInteractive == True
-        assert data.isWindows == True
+        assert data.isAdmin is False
+        assert data.isDebug is True
+        assert data.isDocker is False
+        assert data.isLinux is False
+        assert data.isMono is False
+        assert data.isNetCore is True
+        assert data.isOsx is False
+        assert data.isProduction is False
+        assert data.isUserInteractive is True
+        assert data.isWindows is True
         assert data.migrationVersion == 180
         assert data.mode == "console"
         assert data.osName == "Windows"
@@ -1195,9 +1210,9 @@ async def test_async_get_software_update_info(aresponses):
         assert data.releaseDate == "2020-09-02T05:36:13.047313Z"
         assert data.fileName == "Radarr.nightly.3.0.0.3553.windows-core-x64.zip"
         assert data.url == "string"
-        assert data.installed == False
-        assert data.installed == False
-        assert data.latest == False
+        assert data.installed is False
+        assert data.installed is False
+        assert data.latest is False
         assert data.changes.new == []
         assert data.changes.fixed == ["string"]
         assert data.hash == "abc123"

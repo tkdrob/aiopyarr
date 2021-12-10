@@ -291,7 +291,7 @@
                   "audioBitrate": 0,
                   "audioChannels": 0,
                   "audioBits": 0,
-                  "audioSampleRate": 0
+                  "audioSampleRate": "string"
                 },
                 "editionId": 0,
                 "calibreId": 0,
@@ -467,10 +467,10 @@
           },
           "mediaInfo": {
             "audioFormat": "string",
-            "audioBitrate": 0,
+            "audioBitrate": "string",
             "audioChannels": 0,
             "audioBits": 0,
-            "audioSampleRate": 0
+            "audioSampleRate": "string"
           },
           "editionId": 0,
           "calibreId": 0,
@@ -930,7 +930,7 @@
                   "audioBitrate": 0,
                   "audioChannels": 0,
                   "audioBits": 0,
-                  "audioSampleRate": 0
+                  "audioSampleRate": "string"
                 },
                 "editionId": 0,
                 "calibreId": 0,
@@ -1109,7 +1109,7 @@
             "audioBitrate": 0,
             "audioChannels": 0,
             "audioBits": 0,
-            "audioSampleRate": 0
+            "audioSampleRate": "string"
           },
           "editionId": 0,
           "calibreId": 0,

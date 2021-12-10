@@ -1,10 +1,11 @@
 """Readarr API."""
 from __future__ import annotations
 from typing import TYPE_CHECKING
-from aiopyarr.const import HTTPMethod, HTTPResponse
-from aiopyarr.models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist
-
-from aiopyarr.request_client import RequestClient
+import json
+from .const import HTTPMethod, HTTPResponse
+from .models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist, ReadarrBook, ReadarrBookFile, ReadarrBookFileEditor, ReadarrBookLookup
+from .models.common import Logs
+from .request_client import RequestClient
 
 if TYPE_CHECKING:
     from aiohttp.client import ClientSession
@@ -78,9 +79,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "addImportListExclusion": import_list_exclusion,
         }
         return await self._async_request(f"author/{authorid}", params=params, method=HTTPMethod.DELETE)
-
-    async def async_system_backup_info(self, authorid: int, delete_files: bool = False, import_list_exclusion: bool = True) -> HTTPResponse:
-        """Delete the author with the given id."""
 
     async def _async_construct_book_json(
         self,
@@ -158,7 +156,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         }
         return await self._async_request("command", data=data, method=HTTPMethod.POST)
 
-    async def async_blocklist(
+    async def async_get_blocklist(
         self,
         page: int = 1,
         page_size: int = 20,
@@ -269,81 +267,26 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     ## BOOKS
     # GET /book and /book/{id}
-    async def async_get_book(self, bookid: int | None = None):
+    async def async_get_book(self, bookid: int | None = None) -> ReadarrBook | list[ReadarrBook]:
         """Returns all books in your collection or the book with the matching
-        book ID if one is found.
-        Args:
-            bookid: Database id for book.
-        Returns:
-            JSON: Array
-        """
+        book ID if one is found."""
         path = f"book/{bookid}" if bookid is not None else "book"
-        return await self._async_request(path)
+        return await self._async_request(path, datatype=ReadarrBook)
 
-    # POST /book
+    async def async_add_book(self, data: ReadarrBook) -> ReadarrBook:
+        """Add a new book and its associated author (if not already added)"""
+        return await self._async_request("book", data=json.dumps(data), method=HTTPMethod.POST)
 
-    async def async_add_book(
-        self,
-        db_id: int,
-        book_id_type: str,
-        root_dir: str,
-        quality_profile_id: int = 1,
-        metadata_profile_id: int = 0,
-        monitored: bool = True,
-        search_for_new_book: bool = False,
-        author_monitor: str = "all",
-        author_search_for_missing_books: bool = False,
-    ):
-        """Adds a new book and  its associated author (if not already added)
-        Args:
-            db_id: goodreads, isbn, asin ID for the book
-            book_id_type: goodreads / isbn / asin
-            root_dir: Directory for book to be stored
-            quality_profile_id: quality profile id
-            metadata_profile_id: metadata profile id
-            monitored: should the book be monitored
-            search_for_new_book: search for the book to download now
-            author_monitor: monitor the author for new books
-            author_search_for_missing_books: search for missing books from this author
-        Raises:
-            ValueError: error raised if book_id_type is incorrect
-        Returns:
-            JSON: Array
-        """
-        book_id_types = ["goodreads", "isbn", "asin"]
-        if book_id_type not in book_id_types:
-            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
+    async def async_update_book(self, data: ReadarrBook) -> ReadarrBook:
+        """Edit an existing book (if not already added)"""
+        return await self._async_request(f"book/{data.id}", data=json.dumps(data), method=HTTPMethod.PUT)
 
-        book_json = self._construct_book_json(
-            db_id,
-            book_id_type,
-            root_dir,
-            quality_profile_id,
-            metadata_profile_id,
-            monitored,
-            search_for_new_book,
-            author_monitor,
-            author_search_for_missing_books,
-        )
-        return await self._async_request("book", data=book_json, method=HTTPMethod.POST)
-
-    # PUT /book
-    async def async_update_book(self):
-        pass
-
-        # path = "book"
-        # return await self._async_request("book", data=data)
-
-
-    # DELETE /book/{id}
-    async def async_delete_book(self, bookid: int, delete_files: bool = False, import_list_exclusion: bool = True):
+    async def async_delete_book(self, bookid: int, delete_files: bool = False, import_list_exclusion: bool = True) -> HTTPResponse:
         """Delete the book with the given id
         Args:
             bookid: Database id for book
             delete_files: If true book folder and files will be deleted
             import_list_exclusion: Add an exclusion so book doesn't get re-added
-        Returns:
-            JSON: {}
         """
         params = {
             "deleteFiles": delete_files,
@@ -351,25 +294,39 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         }
         return await self._async_request(f"book/{bookid}", params=params, method=HTTPMethod.DELETE)
 
-    async def async_lookup_book(self, term: str):
-        """Searches for new books using a term, goodreads ID, isbn or asin.
-        Args:
-            term (str): search term
-            goodreads:656
-            isbn:067003469X
-            asin:B00JCDK5ME
-        Returns:
-            JSON: Array
-        """
-        params = {"term": term}
-        return await self._async_request("book/lookup", params=params)
+    async def async_get_book_file(self, authorid: int | None = None, fileid: int | list[int] | None = None, bookid: list[int] | None = None, unmapped: bool = False) -> ReadarrBookFile:
+        """Return all books in your collection or the book with the matching
+        book ID if one is found."""
+        params = {"unmapped": str(unmapped)}
+        if not isinstance(fileid, int):
+            if authorid is not None:
+                params["authorId"] = authorid
+            if fileid is not None:
+                params["bookFileIds"] = fileid
+            if bookid is not None:
+                params["bookId"] = bookid
+        if isinstance(fileid, list):
+            path = "bookfile"
+        else:
+            path = f"bookfile/{fileid}" if fileid is not None else "bookfile"
+        return await self._async_request(path, params=params, datatype=ReadarrBookFile)
 
-    ## LOG
+    async def async_edit_book_file(self, data: ReadarrBookFile) -> ReadarrBookFile:
+        """Edit book file attributes."""
+        return await self._async_request(f"bookfile/{data.id}", data=data, datatype=ReadarrBookFile, method=HTTPMethod.PUT)
 
-    # GET /log/file
-    async def async_get_log_file(self):
-        """Get log file
-        Returns:
-            JSON: Array
-        """
-        return await self._async_request("log/file")
+    async def async_edit_book_file_bulk(self, data: ReadarrBookFileEditor) -> HTTPResponse:
+        """Edit book file attributes in bulk."""
+        return await self._async_request("bookfile/editor", data=data, datatype=ReadarrBookFileEditor, method=HTTPMethod.PUT)
+
+    async def async_delete_book_file(self, fileid: int | None = None, data: ReadarrBookFileEditor | None = None) -> HTTPResponse:
+        """Delete book files. Use fileid for one file or data for mass deletion"""
+        command = f"bookfile/{f'{fileid}' if fileid is not None else 'bulk'}"
+        return await self._async_request(command, data=data, datatype=ReadarrBookFile, method=HTTPMethod.DELETE)
+
+    async def async_lookup_book(self, term: str, booktype: str = "isbn") -> list[ReadarrBookLookup]:
+        """Searches for new books using a term, goodreads ID, isbn or asin"""
+        book_id_types = ["goodreads", "isbn", "asin"]
+        if booktype not in book_id_types:
+            raise ValueError(f"Invalid book id type. Expected one of: {book_id_types}")
+        return await self._async_request("book/lookup", params={"term": f"{booktype}:{term}"}, datatype=ReadarrBookLookup)

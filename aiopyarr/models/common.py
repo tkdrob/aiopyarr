@@ -21,7 +21,7 @@ class Diskspace(BaseModel):
 class _CommonAttrs(BaseModel):
     """Common attributes."""
 
-    audioBitrate: int | None = None
+    audioBitrate: str | None = None
     audioChannels: float | None = None
     audioCodec: str | None = None
     audioLanguages: str | None = None
@@ -71,8 +71,30 @@ class Logs(_RecordCommon):
 
 
 @dataclass(init=False)
+class LogFiles(BaseModel):
+    """Log file attributes"""
+
+    filename: str | None = None
+    lastWriteTime: str | None = None
+    contentsUrl: str | None = None
+    downloadUrl: str | None = None
+    id: int | None = None
+
+
+@dataclass(init=False)
 class Tag(BaseModel):
     """Radarr tag attributes."""
 
     id: int | None = None
     label: str | None = None
+
+
+@dataclass(init=False)
+class SystemBackup(BaseModel):
+    """System backup attributes."""
+
+    id: int | None = None
+    name: str | None = None
+    path: str | None = None
+    time: str | None = None
+    type: str | None = None

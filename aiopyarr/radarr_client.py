@@ -335,18 +335,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrTagDetails,
         )
 
-    async def async_get_tags(
-        self, tagid: int | None = None
-    ) -> Tag | list[Tag]:
-        """Get information about tag.
-
-        id: Get tag matching id. Leave blank for all.
-        """
-        return await self._async_request(
-            f"tag{f'/{tagid}' if tagid is not None else ''}",
-            datatype=Tag,
-        )
-
     async def async_get_blocklist(
         self,
         page: int = 1,
@@ -374,14 +362,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrBlocklist,
         )
 
-    async def async_delete_blocklist(self, bocklistid: int) -> HTTPResponse:
-        """Remove a specific release (the id provided) from the blocklist."""
-        return await self._async_request(
-            "blocklist",
-            params={"id": bocklistid},
-            method=HTTPMethod.DELETE,
-        )
-
     async def async_get_blocklist_movie(
         self,
         bocklistid: int,
@@ -391,6 +371,14 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "blocklist/movie",
             params={"movieId": bocklistid},
             datatype=RadarrBlocklistMovie,
+        )
+
+    async def async_delete_blocklist(self, bocklistid: int) -> HTTPResponse:
+        """Remove a specific release (the id provided) from the blocklist."""
+        return await self._async_request(
+            "blocklist",
+            params={"id": bocklistid},
+            method=HTTPMethod.DELETE,
         )
 
     async def async_delete_blocklist_bulk(self, data: list[int]) -> HTTPResponse:

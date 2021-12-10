@@ -1,7 +1,13 @@
 """Tests for Sonarr object models."""
 from datetime import datetime
-from aiopyarr.models.common import Diskspace
-from aiopyarr.models.sonarr import SonarrQualityProfile, SonarrQueue, SonarrRootFolder, SonarrSeriesLookup, SonarrSystemBackup, SonarrSystemStatus
+from aiopyarr.models.common import Diskspace, SystemBackup
+from aiopyarr.models.sonarr import (
+    SonarrQualityProfile,
+    SonarrQueue,
+    SonarrRootFolder,
+    SonarrSeriesLookup,
+    SonarrSystemStatus,
+)
 import pytest
 from aiohttp.client import ClientSession
 
@@ -40,8 +46,8 @@ async def test_async_get_calendar(aresponses):
         assert data[0].airDate == "2017-01-26"
         assert data[0].airDateUtc == "2017-01-27T01:30:00Z"
         assert data[0].overview == "string"
-        assert data[0].hasFile == False
-        assert data[0].monitored == True
+        assert data[0].hasFile is False
+        assert data[0].monitored is True
         assert data[0].sceneEpisodeNumber == 0
         assert data[0].sceneSeasonNumber == 0
         assert data[0].tvDbEpisodeId == 0
@@ -52,16 +58,16 @@ async def test_async_get_calendar(aresponses):
         assert data[0].series.status == "continuing"
         assert data[0].series.overview == "string"
         assert data[0].series.airTime == "5:30pm"
-        assert data[0].series.monitored == True
+        assert data[0].series.monitored is True
         assert data[0].series.qualityProfileId == 1
-        assert data[0].series.seasonFolder == True
+        assert data[0].series.seasonFolder is True
         assert data[0].series.lastInfoSync == "2017-01-26T19:25:55.4555946Z"
         assert data[0].series.runtime == 30
         assert data[0].series.images[0].coverType == "banner"
         assert data[0].series.images[0].url == "string"
         assert data[0].series.seriesType == "standard"
         assert data[0].series.network == "string"
-        assert data[0].series.useSceneNumbering == False
+        assert data[0].series.useSceneNumbering is False
         assert data[0].series.titleSlug == "string"
         assert data[0].series.path == "string"
         assert data[0].series.year == 0
@@ -74,11 +80,11 @@ async def test_async_get_calendar(aresponses):
         assert data[0].series.qualityProfile.value.cutoff.id == 1
         assert data[0].series.qualityProfile.value.cutoff.name == "SDTV"
         assert data[0].series.qualityProfile.value.cutoff.weight == 1
-        assert data[0].series.qualityProfile.isLoaded == True
+        assert data[0].series.qualityProfile.isLoaded is True
         assert data[0].series.seasons[0].seasonNumber == 0
-        assert data[0].series.seasons[0].monitored == False
+        assert data[0].series.seasons[0].monitored is False
         assert data[0].series.id == 66
-        assert data[0].downloading == False
+        assert data[0].downloading is False
         assert data[0].id == 14402
 
 
@@ -105,7 +111,7 @@ async def test_async_get_commands(aresponses):
         assert data.name == "RescanSeries"
         assert data.startedOn == "0001-01-01T00:00:00Z"
         assert data.stateChangeTime == "2014-02-05T05:09:09.2366139Z"
-        assert data.sendUpdatesToClient == True
+        assert data.sendUpdatesToClient is True
         assert data.state == "pending"
         assert data.id == 24
 
@@ -180,7 +186,7 @@ async def test_async_get_episode_by_id(aresponses):
         assert data.episodeFile.quality.quality.resolution == 720
         assert data.episodeFile.quality.revision.version == 1
         assert data.episodeFile.quality.revision.real == 0
-        assert data.episodeFile.quality.revision.isRepack == False
+        assert data.episodeFile.quality.revision.isRepack is False
         assert data.episodeFile.mediaInfo.audioBitrate == 384000
         assert data.episodeFile.mediaInfo.audioChannels == 5.1
         assert data.episodeFile.mediaInfo.audioCodec == "AC3"
@@ -194,29 +200,29 @@ async def test_async_get_episode_by_id(aresponses):
         assert data.episodeFile.mediaInfo.runTime == "22:01"
         assert data.episodeFile.mediaInfo.scanType == "Progressive"
         assert data.episodeFile.mediaInfo.subtitles == "English"
-        assert data.episodeFile.qualityCutoffNotMet == False
-        assert data.episodeFile.languageCutoffNotMet == False
+        assert data.episodeFile.qualityCutoffNotMet is False
+        assert data.episodeFile.languageCutoffNotMet is False
         assert data.episodeFile.id == 18429
-        assert data.hasFile == True
-        assert data.monitored == True
+        assert data.hasFile is True
+        assert data.monitored is True
         assert data.absoluteEpisodeNumber == 3
-        assert data.unverifiedSceneNumbering == False
+        assert data.unverifiedSceneNumbering is False
         assert data.series.title == "string"
         assert data.series.sortTitle == "string"
         assert data.series.status == "ended"
-        assert data.series.ended == True
+        assert data.series.ended is True
         assert data.series.overview == "string"
         assert data.series.network == "string"
         assert data.series.airTime == "22:00"
         assert data.series.seasons[0].seasonNumber == 0
-        assert data.series.seasons[0].monitored == False
+        assert data.series.seasons[0].monitored is False
         assert data.series.year == 2017
         assert data.series.path == "string"
         assert data.series.qualityProfileId == 6
         assert data.series.languageProfileId == 1
-        assert data.series.seasonFolder == True
-        assert data.series.monitored == True
-        assert data.series.useSceneNumbering == False
+        assert data.series.seasonFolder is True
+        assert data.series.monitored is True
+        assert data.series.useSceneNumbering is False
         assert data.series.runtime == 21
         assert data.series.tvdbId == 0
         assert data.series.tvRageId == 0
@@ -267,7 +273,7 @@ async def test_async_get_episode_files(aresponses):
         assert data.quality.quality.id == 1
         assert data.quality.quality.name == "Bluray 720p"
         assert data.quality.quality.allowed == []
-        assert data.quality.proper == False
+        assert data.quality.proper is False
         assert data.id == 1
 
 
@@ -308,10 +314,10 @@ async def test_async_get_history(aresponses):
         assert data.records[0].quality.quality.resolution == 720
         assert data.records[0].quality.revision.version == 1
         assert data.records[0].quality.revision.real == 0
-        assert data.records[0].quality.revision.isRepack == False
-        assert data.records[0].qualityCutoffNotMet == True
-        assert data.records[0].languageCutoffNotMet == False
-        assert data.records[0].languageCutoffNotMet == False
+        assert data.records[0].quality.revision.isRepack is False
+        assert data.records[0].qualityCutoffNotMet is True
+        assert data.records[0].languageCutoffNotMet is False
+        assert data.records[0].languageCutoffNotMet is False
         assert data.records[0].date == "2019-11-01T09:09:34.288036Z"
         assert data.records[0].downloadId == "string"
         assert data.records[0].eventType == "downloadFolderImported"
@@ -336,38 +342,6 @@ async def test_async_get_history(aresponses):
         assert data.records[0].data.protocol == 2
         assert data.records[0].data.torrentInfoHash == "string"
         assert data.records[0].id == 76400
-
-
-@pytest.mark.asyncio
-async def test_async_get_logs(aresponses):
-    """Test getting history."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/log?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortKey=time&sortDir=desc&filterKey=None&filterValue=All",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/logs.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_logs()
-
-        assert data.page == 1
-        assert data.pageSize == 10
-        assert data.sortKey == "logger"
-        assert data.sortDirection == "default"
-        assert data.totalRecords == 74433
-        assert data.records[0].time == "2021-11-19T09:28:26.549994Z"
-        assert data.records[0].level == "info"
-        assert data.records[0].logger == "BackupService"
-        assert data.records[0].message == "Starting Backup"
-        assert data.records[0].id == 3920809
 
 
 @pytest.mark.asyncio
@@ -409,13 +383,13 @@ async def test_async_parse_title_or_path(aresponses):
         assert data.parsedEpisodeInfo.episodeNumbers == [1]
         assert data.parsedEpisodeInfo.absoluteEpisodeNumbers == []
         assert data.parsedEpisodeInfo.language == "english"
-        assert data.parsedEpisodeInfo.fullSeason == False
-        assert data.parsedEpisodeInfo.special == False
+        assert data.parsedEpisodeInfo.fullSeason is False
+        assert data.parsedEpisodeInfo.special is False
         assert data.parsedEpisodeInfo.releaseGroup == "Sonarr"
         assert data.parsedEpisodeInfo.releaseHash == ""
-        assert data.parsedEpisodeInfo.isDaily == False
-        assert data.parsedEpisodeInfo.isAbsoluteNumbering == False
-        assert data.parsedEpisodeInfo.isPossibleSpecialEpisode == False
+        assert data.parsedEpisodeInfo.isDaily is False
+        assert data.parsedEpisodeInfo.isAbsoluteNumbering is False
+        assert data.parsedEpisodeInfo.isPossibleSpecialEpisode is False
         assert data.series == {}
         assert data.episodes == []
 
@@ -478,13 +452,13 @@ async def test_async_get_queue(aresponses):
         assert data[0].series.images[0].coverType == "fanart"
         assert data[0].series.images[0].url == "string"
         assert data[0].series.seasons[0].seasonNumber == 0
-        assert data[0].series.seasons[0].monitored == False
+        assert data[0].series.seasons[0].monitored is False
         assert data[0].series.year == 2015
         assert data[0].series.path == "string"
         assert data[0].series.profileId == 5
-        assert data[0].series.seasonFolder == True
-        assert data[0].series.monitored == True
-        assert data[0].series.useSceneNumbering == False
+        assert data[0].series.seasonFolder is True
+        assert data[0].series.monitored is True
+        assert data[0].series.useSceneNumbering is False
         assert data[0].series.runtime == 60
         assert data[0].series.tvdbId == 0
         assert data[0].series.tvRageId == 0
@@ -511,10 +485,10 @@ async def test_async_get_queue(aresponses):
         assert data[0].episode.airDate == "2013-05-19"
         assert data[0].episode.airDateUtc == "2013-05-20T01:00:00Z"
         assert data[0].episode.overview == "string"
-        assert data[0].episode.hasFile == False
-        assert data[0].episode.monitored == False
+        assert data[0].episode.hasFile is False
+        assert data[0].episode.monitored is False
         assert data[0].episode.absoluteEpisodeNumber == 28
-        assert data[0].episode.unverifiedSceneNumbering == False
+        assert data[0].episode.unverifiedSceneNumbering is False
         assert data[0].episode.id == 889
         assert data[0].quality.quality.id == 7
         assert data[0].quality.quality.name == "Bluray-1080p"
@@ -556,25 +530,25 @@ async def test_async_get_release(aresponses):
         assert data[0].guid == "string"
         assert data[0].quality.quality.id == 4
         assert data[0].quality.quality.name == "HDTV-720p"
-        assert data[0].quality.proper == False
+        assert data[0].quality.proper is False
         assert data[0].age == 0
         assert data[0].size == 0
         assert data[0].indexerId == 5
         assert data[0].indexer == "string"
         assert data[0].releaseGroup == "string"
         assert data[0].title == "string"
-        assert data[0].fullSeason == False
-        assert data[0].sceneSource == False
+        assert data[0].fullSeason is False
+        assert data[0].sceneSource is False
         assert data[0].seasonNumber == 3
         assert data[0].language == "english"
         assert data[0].seriesTitle == "string"
         assert data[0].episodeNumbers == [1]
-        assert data[0].approved == False
+        assert data[0].approved is False
         assert data[0].tvRageId == 0
         assert data[0].rejections == ["Unknown Series"]
         assert data[0].publishDate == "2017-02-10T00:00:00Z"
         assert data[0].downloadUrl == "string"
-        assert data[0].downloadAllowed == True
+        assert data[0].downloadAllowed is True
 
 
 @pytest.mark.asyncio
@@ -634,12 +608,12 @@ async def test_async_lookup_series(aresponses):
         assert data[0].images[0].url == "string"
         assert data[0].remotePoster == "string"
         assert data[0].seasons[0].seasonNumber == 0
-        assert data[0].seasons[0].monitored == False
+        assert data[0].seasons[0].monitored is False
         assert data[0].year == 2013
         assert data[0].profileId == 0
-        assert data[0].seasonFolder == False
-        assert data[0].monitored == False
-        assert data[0].useSceneNumbering == False
+        assert data[0].seasonFolder is False
+        assert data[0].monitored is False
+        assert data[0].useSceneNumbering is False
         assert data[0].runtime == 45
         assert data[0].tvdbId == 0
         assert data[0].tvRageId == 0
@@ -694,7 +668,7 @@ async def test_async_get_series(aresponses):
         assert data.images[0].coverType == "fanart"
         assert data.images[0].url == "string"
         assert data.seasons[0].seasonNumber == 0
-        assert data.seasons[0].monitored == False
+        assert data.seasons[0].monitored is False
         assert data.seasons[0].statistics.previousAiring == "2019-04-29T01:00:00Z"
         assert data.seasons[0].statistics.episodeFileCount == 0
         assert data.seasons[0].statistics.episodeCount == 0
@@ -704,9 +678,9 @@ async def test_async_get_series(aresponses):
         assert data.year == 2017
         assert data.path == "string"
         assert data.profileId == 6
-        assert data.seasonFolder == True
-        assert data.monitored == True
-        assert data.useSceneNumbering == False
+        assert data.seasonFolder is True
+        assert data.monitored is True
+        assert data.useSceneNumbering is False
         assert data.runtime == 60
         assert data.tvdbId == 0
         assert data.tvRageId == 0
@@ -745,7 +719,7 @@ async def test_async_get_system_backup(aresponses):
         client = SonarrClient(
             session=session, host_configuration=TEST_HOST_CONFIGURATION
         )
-        data: list[SonarrSystemBackup] = await client.async_get_system_backup()
+        data: list[SystemBackup] = await client.async_get_system_backup()
 
         assert data[0].name == "nzbdrone_backup_2017.08.17_22.00.00.zip"
         assert data[0].path == "/backup/update/nzbdrone_backup_2017.08.17_22.00.00.zip"
@@ -776,44 +750,20 @@ async def test_async_get_system_status(aresponses):
 
         assert data.version == "2.0.0.1121"
         assert data.buildTime == "2014-02-08T20:49:36.5560392Z"
-        assert data.isDebug == False
-        assert data.isProduction == True
-        assert data.isAdmin == True
-        assert data.isUserInteractive == False
+        assert data.isDebug is False
+        assert data.isProduction is True
+        assert data.isAdmin is True
+        assert data.isUserInteractive is False
         assert data.startupPath == "C:\\ProgramData\\NzbDrone\\bin"
         assert data.appData == "C:\\ProgramData\\NzbDrone"
         assert data.osVersion == "6.2.9200.0"
-        assert data.isMono == False
-        assert data.isLinux == False
-        assert data.isWindows == True
+        assert data.isMono is False
+        assert data.isLinux is False
+        assert data.isWindows is True
         assert data.branch == "develop"
-        assert data.authentication == False
+        assert data.authentication is False
         assert data.startOfWeek == 0
         assert data.urlBase == ""
-
-
-@pytest.mark.asyncio
-async def test_async_get_tags(aresponses):
-    """Test getting tags."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/tag/1?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/tag.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_tags(tagid=1)
-
-        assert data.label == "amzn"
-        assert data.id == 1
 
 
 @pytest.mark.asyncio
@@ -849,8 +799,8 @@ async def test_async_get_wanted(aresponses):
         assert data.records[0].airDate == "2014-02-03"
         assert data.records[0].airDateUtc == "2014-02-04T03:00:00Z"
         assert data.records[0].overview == "string"
-        assert data.records[0].hasFile == False
-        assert data.records[0].monitored == True
+        assert data.records[0].hasFile is False
+        assert data.records[0].monitored is True
         assert data.records[0].sceneEpisodeNumber == 0
         assert data.records[0].sceneSeasonNumber == 0
         assert data.records[0].tvDbEpisodeId == 0
@@ -863,16 +813,16 @@ async def test_async_get_wanted(aresponses):
         assert data.records[0].series.status == "continuing"
         assert data.records[0].series.overview == "string"
         assert data.records[0].series.airTime == "7:00pm"
-        assert data.records[0].series.monitored == True
+        assert data.records[0].series.monitored is True
         assert data.records[0].series.qualityProfileId == 1
-        assert data.records[0].series.seasonFolder == True
+        assert data.records[0].series.seasonFolder is True
         assert data.records[0].series.lastInfoSync == "2014-02-05T04:39:28.550495Z"
         assert data.records[0].series.runtime == 30
         assert data.records[0].series.images[0].coverType == "banner"
         assert data.records[0].series.images[0].url == "string"
         assert data.records[0].series.seriesType == "standard"
         assert data.records[0].series.network == "string"
-        assert data.records[0].series.useSceneNumbering == False
+        assert data.records[0].series.useSceneNumbering is False
         assert data.records[0].series.titleSlug == "string"
         assert data.records[0].series.path == "string"
         assert data.records[0].series.year == 2009
@@ -883,11 +833,55 @@ async def test_async_get_wanted(aresponses):
         quality = data.records[0].series.qualityProfile.value.items[0].quality
         assert quality.id == 1
         assert quality.name == "SDTV"
-        assert data.records[0].series.qualityProfile.value.items[0].allowed == True
+        assert data.records[0].series.qualityProfile.value.items[0].allowed is True
         assert data.records[0].series.qualityProfile.value.id == 1
-        assert data.records[0].series.qualityProfile.isLoaded == True
+        assert data.records[0].series.qualityProfile.isLoaded is True
         assert data.records[0].series.seasons[0].seasonNumber == 5
-        assert data.records[0].series.seasons[0].monitored == True
+        assert data.records[0].series.seasons[0].monitored is True
         assert data.records[0].series.id == 1
-        assert data.records[0].downloading == False
+        assert data.records[0].downloading is False
         assert data.records[0].id == 55
+
+
+@pytest.mark.asyncio
+async def test_async_get_blocklist(aresponses):
+    """Test getting blocklist."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        "/api/v3/blocklist?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortDirection=descending&sortKey=date",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/blocklist.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = SonarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data = await client.async_get_blocklist()
+
+    assert data.page == 1
+    assert data.pageSize == 10
+    assert data.sortKey == "date"
+    assert data.sortDirection == "descending"
+    assert data.totalRecords == 0
+    assert data.records[0].seriesId == 0
+    assert data.records[0].episodeIds[0] == 0
+    assert data.records[0].sourceTitle == "string"
+    assert data.records[0].language.id == 1
+    assert data.records[0].language.name == "English"
+    assert data.records[0].quality.quality.id == 14
+    assert data.records[0].quality.quality.name == "string"
+    assert data.records[0].quality.quality.source == "string"
+    assert data.records[0].quality.quality.resolution == 720
+    assert data.records[0].quality.revision.version == 1
+    assert data.records[0].quality.revision.real == 0
+    assert data.records[0].quality.revision.isRepack is False
+    assert data.records[0].date == "2021-09-19T08:14:33.582863Z"
+    assert data.records[0].protocol == "string"
+    assert data.records[0].indexer == "string"
+    assert data.records[0].message == "string"
+    assert data.records[0].id == 0

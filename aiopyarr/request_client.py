@@ -6,9 +6,10 @@ from copy import copy
 from typing import TYPE_CHECKING
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
+from aiopyarr.decorator import api_command
 
-from .const import ATTR_DATA, LOGGER, HTTPMethod
-from .models.common import Logs
+from .const import ATTR_DATA, LOGGER, HTTPMethod, HTTPResponse
+from .models.common import LogFiles, Logs
 from .models.host_configuration import PyArrHostConfiguration
 from .models.response import PyArrResponse
 
@@ -18,10 +19,9 @@ from .exceptions import (  # isort:skip
     ArrException,
     ArrResourceNotFound,
 )
+from .models.common import Diskspace, Tag, SystemBackup
 
 if TYPE_CHECKING:
-    from .models.common import Diskspace, Tag
-
     from .models.radarr import (  # isort:skip
         RadarrBlocklist,
         RadarrBlocklistMovie,
@@ -65,7 +65,6 @@ if TYPE_CHECKING:
         SonarrSeries,
         SonarrSeriesLookup,
         SonarrSeriesUpdateParams,
-        SonarrSystemBackup,
         SonarrSystemStatus,
         SonarrWantedMissing,
     )
@@ -202,9 +201,9 @@ class RequestClient:
         | type[SonarrRootFolder]
         | type[SonarrSeries]
         | type[SonarrSeriesLookup]
-        | type[SonarrSystemBackup]
         | type[SonarrSystemStatus]
         | type[SonarrWantedMissing]
+        | type[SystemBackup]
         | type[Tag]
         | None = None,
         method: HTTPMethod = HTTPMethod.GET,
@@ -297,3 +296,35 @@ class RequestClient:
             "filterValue": filter_value,
         }
         return await self._async_request("log", params=params, datatype=Logs)
+
+    async def async_get_log_file(self) -> list[LogFiles]:
+        """Get log file."""
+        return await self._async_request("log/file", datatype=LogFiles) #TODO decorator
+
+    @api_command("system/backup", datatype=SystemBackup)
+    async def async_get_system_backup(self) -> list[SystemBackup]:
+        """Get information about system backup."""
+
+    async def async_restore_system_backup(self, backupid: int) -> HTTPResponse: #TODO test
+        """Restore from a system backup."""
+        return await self._async_request(f"system/backup/restore/{backupid}", method=HTTPMethod.POST)
+
+    async def async_upload_system_backup(self, data: bytes) -> HTTPResponse: #TODO test
+        """Upload a system backup."""
+        return await self._async_request(f"system/backup/restore/upload", data=data, method=HTTPMethod.POST)
+
+    async def async_delete_system_backup(self, backupid: int) -> HTTPResponse: #TODO test
+        """Delete a system backup."""
+        return await self._async_request(f"system/backup/{backupid}", method=HTTPMethod.DELETE)
+
+    async def async_get_tags(
+        self, tagid: int | None = None
+    ) -> Tag | list[Tag]:
+        """Return all tags or specific tag by database id.
+
+        id: Get tag matching id. Leave blank for all.
+        """
+        return await self._async_request(
+            f"tag{f'/{tagid}' if tagid is not None else ''}",
+            datatype=Tag,
+        )

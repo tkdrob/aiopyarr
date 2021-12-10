@@ -25,7 +25,7 @@ from .radarr_common import (  # isort:skip
     _RadarrUnmappedRootFolder,
     _RadarrUpdateChanges,
 )
-from .common import Tag
+from .common import Tag, _RecordCommon
 
 
 @dataclass(init=False)
@@ -57,15 +57,10 @@ class RadarrBlocklistMovie(_RadarrMovieHistoryBlocklistBase):
 
 
 @dataclass(init=False)
-class RadarrBlocklist(BaseModel):
+class RadarrBlocklist(_RecordCommon):
     """Blocklist attributes."""
 
-    page: int | None = None
-    pageSize: int | None = None
     records: list[RadarrBlocklistMovie] | None = None
-    sortDirection: str | None = None
-    sortKey: str | None = None
-    totalRecords: int | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -112,14 +107,9 @@ class RadarrQueueDetail(BaseModel):
 
 
 @dataclass(init=False)
-class RadarrQueue(BaseModel):
+class RadarrQueue(_RecordCommon):
     """Radarr queue attributes."""
 
-    page: int | None = None
-    pageSize: int | None = None
-    sortDirection: str | None = None
-    sortKey: str | None = None
-    totalRecords: int | None = None
     records: list[RadarrQueueDetail] | None = None
 
 

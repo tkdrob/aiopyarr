@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 from .base import BaseModel
 
 if TYPE_CHECKING:
-    from .common import Diskspace, Logs, Tag
+    from .common import Diskspace, Logs, Tag, SystemBackup
 
     from .radarr import (  # isort:skip
         RadarrBlocklist,
@@ -50,7 +50,6 @@ if TYPE_CHECKING:
         SonarrRootFolder,
         SonarrSeries,
         SonarrSeriesLookup,
-        SonarrSystemBackup,
         SonarrSystemStatus,
         SonarrWantedMissing,
     )
@@ -114,9 +113,9 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
         | SonarrRootFolder
         | SonarrSeries
         | SonarrSeriesLookup
-        | SonarrSystemBackup
         | SonarrSystemStatus
         | SonarrWantedMissing
+        | SystemBackup
         | type[Tag]
         | dict[str, Any] | list[dict[str, Any]] | list
     ):  # fmt: on

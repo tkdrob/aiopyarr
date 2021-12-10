@@ -9,6 +9,7 @@ from .common import _RecordCommon
 
 from .sonarr_common import (  # isort:skip
     _FileEpisodeQuality,
+    _SonarrBlocklistSeriesLanguage,
     _SonarrCommon3,
     _SonarrCommon4,
     _SonarrCommon5,
@@ -226,17 +227,42 @@ class SonarrSystemStatus(BaseModel):
 
 
 @dataclass(init=False)
-class SonarrSystemBackup(_SonarrCommon4):
-    """Sonarr system backup attributes."""
-
-    path: str | None = None
-    time: str | None = None
-    type: str | None = None
-
-
-@dataclass(init=False)
 class SonarrSeriesUpdateParams(_SonarrSeriesCommon3):
     """Sonarr series update parameters."""
 
     profileId: int | None = None
     seasons: list[_SonarrWantedMissingSeriesSeason] | None = None
+
+
+@dataclass(init=False)
+class SonarrBlocklistSeries(BaseModel):
+    """Blocklist series attributes."""
+
+    seriesId: int | None = None
+    episodeIds: list[int] | None = None
+    sourceTitle: str | None = None
+    language: _SonarrBlocklistSeriesLanguage | None = None
+    quality: _SonarrQualitySub | None = None
+    date: str | None = None
+    protocol: str | None = None
+    indexer: str | None = None
+    message: str | None = None
+    id: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.language = _SonarrBlocklistSeriesLanguage(self.language) or {}
+        self.quality = _SonarrQualitySub(self.quality) or {}
+
+
+@dataclass(init=False)
+class SonarrBlocklist(_RecordCommon):
+    """Blocklist attributes."""
+
+    records: list[SonarrBlocklistSeries] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.records = [SonarrBlocklistSeries(record) for record in self.records or []]

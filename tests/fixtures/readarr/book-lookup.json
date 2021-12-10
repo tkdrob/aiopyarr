@@ -1,0 +1,114 @@
+[
+  {
+    "title": "string",
+    "authorTitle": "string",
+    "seriesTitle": "string",
+    "disambiguation": "string",
+    "overview": "string",
+    "authorId": 0,
+    "foreignBookId": "string",
+    "titleSlug": "string",
+    "monitored": false,
+    "anyEditionOk": true,
+    "ratings": {
+      "votes": 0,
+      "value": 0.0,
+      "popularity": 0.0
+    },
+    "releaseDate": "1869-01-01T00:00:00Z",
+    "pageCount": 0,
+    "genres": [],
+    "author": {
+      "authorMetadataId": 0,
+      "status": "continuing",
+      "ended": false,
+      "authorName": "string",
+      "authorNameLastFirst": "string",
+      "foreignAuthorId": "string",
+      "titleSlug": "string",
+      "links": [],
+      "images": [
+        {
+          "url": "string",
+          "coverType": "poster",
+          "extension": "string"
+        }
+      ],
+      "qualityProfileId": 0,
+      "metadataProfileId": 0,
+      "monitored": false,
+      "monitorNewItems": "all",
+      "genres": [],
+      "cleanName": "string",
+      "sortName": "string",
+      "sortNameLastFirst": "string",
+      "tags": [],
+      "added": "0001-01-01T04:57:00Z",
+      "ratings": {
+        "votes": 0,
+        "value": 0.0,
+        "popularity": 0.0
+      },
+      "statistics": {
+        "bookFileCount": 0,
+        "bookCount": 0,
+        "availableBookCount": 0,
+        "totalBookCount": 0,
+        "sizeOnDisk": 0,
+        "percentOfBooks": 0
+      }
+    },
+    "images": [
+      {
+        "url": "string",
+        "coverType": "cover",
+        "extension": ".jpg"
+      }
+    ],
+    "links": [
+      {
+        "url": "string",
+        "name": "string"
+      }
+    ],
+    "added": "0001-01-01T04:57:00Z",
+    "remoteCover": "string",
+    "editions": [
+      {
+        "bookId": 0,
+        "foreignEditionId": "string",
+        "titleSlug": "string",
+        "title": "string",
+        "language": "string",
+        "overview": "string",
+        "isEbook": false,
+        "disambiguation": "string",
+        "publisher": "string",
+        "pageCount": 0,
+        "releaseDate": "1998-06-25T00:00:00Z",
+        "images": [
+          {
+            "url": "string",
+            "coverType": "cover",
+            "extension": ".jpg"
+          }
+        ],
+        "links": [
+          {
+            "url": "string",
+            "name": "string"
+          }
+        ],
+        "ratings": {
+          "votes": 0,
+          "value": 0.0,
+          "popularity": 0.0
+        },
+        "monitored": true,
+        "manualAdd": false,
+        "grabbed": false
+      }
+    ],
+    "grabbed": false
+  }
+]

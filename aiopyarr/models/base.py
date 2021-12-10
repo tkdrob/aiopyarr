@@ -24,7 +24,6 @@ if TYPE_CHECKING:
         SonarrQualityProfile,
         SonarrQueue,
         SonarrRootFolder,
-        SonarrSystemBackup,
         SonarrSystemStatus,
     )
     from .radarr import (
@@ -55,7 +54,7 @@ if TYPE_CHECKING:
         RadarrSystemStatus,
         RadarrUpdate,
     )
-    from .common import Diskspace, Logs, Tag
+    from .common import Diskspace, Logs, Tag, SystemBackup
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -92,8 +91,8 @@ class BaseModel:
                 | type[SonarrCommand] | type[SonarrEpisode] | type[SonarrEpisodeFile]
                 | type[SonarrHistory] | type[SonarrParse] | type[SonarrQualityProfile]
                 | type[SonarrQueue] | type[SonarrRelease] | type[SonarrRootFolder]
-                | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemBackup]
-                | type[SonarrSystemStatus] | type[SonarrWantedMissing] | type[Tag]
+                | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemStatus]
+                | type[SonarrWantedMissing] | type[Tag] | type[SystemBackup]
                 | None
                 ) = None
     # fmt: on
@@ -141,9 +140,9 @@ class BaseModel:
         | type[SonarrRootFolder]
         | type[SonarrSeries]
         | type[SonarrSeriesLookup]
-        | type[SonarrSystemBackup]
         | type[SonarrSystemStatus]
         | type[SonarrWantedMissing]
+        | type[SystemBackup]
         | type[Tag]
         | None = None,
     ) -> None:

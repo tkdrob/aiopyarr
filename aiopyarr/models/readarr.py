@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .base import BaseModel
+from .common import _RecordCommon
 
 @dataclass(init=False)
 class _ReadarrLink(BaseModel):
@@ -338,10 +339,12 @@ class _ReadarrEditionsValueBookFilesValueMediaInfo(BaseModel):
     """Editions value book files value media info attributes"""
 
     audioFormat: str | None = None
-    audioBitrate: int | None = None
+    audioBitRate: str | None = None
+    audioBitrate: str | None = None
     audioChannels: float | None = None
     audioBits: int | None = None
-    audioSampleRate: int | None = None
+    audioSampleRate: str | None = None
+    audioCodec: str | None = None
 
 
 
@@ -394,6 +397,19 @@ class _ReadarrEditionsValueBookFiles(BaseModel):
         self.value = [_ReadarrEditionsValueBookFilesValue(item) for item in self.value or []]
 
 
+@dataclass(init=False) # TODO
+class _ReadarrBookValueSeriesLinks(BaseModel):
+    """Book value series attributes"""
+
+    seriesLinks: _ReadarrSeriesLinks | None = None
+
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.seriesLinks = _ReadarrSeriesLinks(self.seriesLinks) or {}
+
+
 @dataclass(init=False)
 class _ReadarrEditionsValue(BaseModel):
     """Editions value attributes"""
@@ -420,6 +436,7 @@ class _ReadarrEditionsValue(BaseModel):
     manualAdd: bool | None = None
     book: _ReadarrEditionsValueBook | None = None
     bookFiles: _ReadarrEditionsValueBookFiles | None = None
+    grabbed: bool | None = None
 
 
     def __post_init__(self):
@@ -479,8 +496,8 @@ class _ReadarrSeriesLinks(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrNextbook(_ReadarrCommon):
-    """Next Book attributes."""
+class _ReadarrBookCommon(_ReadarrCommon):
+    """Book base common attributes."""
 
     foreignBookId: str | None = None
     title: str | None = None
@@ -494,8 +511,6 @@ class _ReadarrNextbook(_ReadarrCommon):
     added: str | None = None
     addOptions: _ReadarrAddOptions | None = None
     authorMetadata: _ReadarrAuthorMetadata | None = None
-    author: _ReadarrAuthor | None = None
-    editions: _ReadarrEditions | None = None
     bookFiles: _ReadarrEditionsValueBookFiles | None = None
     seriesLinks: _ReadarrSeriesLinks | None = None
 
@@ -503,46 +518,35 @@ class _ReadarrNextbook(_ReadarrCommon):
         """Post init."""
         super().__post_init__()
         self.addOptions = _ReadarrAddOptions(self.addOptions) or {}
-        self.author = _ReadarrAuthor(self.author) or {}
         self.authorMetadata = _ReadarrAuthorMetadata(self.authorMetadata) or {}
         self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
-        self.editions = _ReadarrEditions(self.editions) or {}
         self.ratings = _ReadarrRating(self.ratings) or {}
         self.seriesLinks = _ReadarrSeriesLinks(self.seriesLinks) or {}
 
 
 @dataclass(init=False)
-class _ReadarrLastBook(_ReadarrCommon):
-    """Last book attributes."""
+class ReadarrBook(_ReadarrBookCommon):
+    """Book attributes."""
 
-    foreignBookId: str | None = None
-    titleSlug: str | None = None
-    title: str | None = None
-    releaseDate: str | None = None
-    genres: list[str] | None = None
-    ratings: _ReadarrRating | None = None
-    cleanTitle: str | None = None
-    monitored: bool | None = None
-    anyEditionOk: bool | None = None
-    lastInfoSync: str | None = None
-    added: str | None = None
-    addOptions: _ReadarrAddOptions | None = None
-    authorMetadata: _ReadarrAuthorMetadata | None = None
-    author: _ReadarrAuthor | None = None
-    editions: _ReadarrEditions | None = None
-    bookFiles: _ReadarrEditionsValueBookFiles | None = None
-    seriesLinks: _ReadarrSeriesLinks | None = None
+    authorTitle: str | None = None
+    seriesTitle: str | None = None
+    disambiguation: str | None = None
+    overview: str | None = None
+    authorId: int | None = None
+    pageCount: int | None = None
+    author: ReadarrAuthor | None = None
+    images: list[_ReadarrImage] | None = None
+    statistics: _ReadarrAuthorStatistics | None = None
+    remoteCover: str | None = None
+    editions: list[_ReadarrEditionsValue] | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.ratings = _ReadarrRating(self.ratings) or {}
-        self.addOptions = _ReadarrAddOptions(self.addOptions) or {}
-        self.authorMetadata = _ReadarrAuthorMetadata(self.authorMetadata) or {}
-        self.author = _ReadarrAuthor(self.author) or {}
-        self.editions = _ReadarrEditions(self.editions) or {}
-        self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
-        self.seriesLinks = _ReadarrSeriesLinks(self.seriesLinks) or {}
+        self.author = ReadarrAuthor(self.author) or {}
+        self.editions = [_ReadarrEditionsValue(edition) for edition in self.editions or []]
+        self.images = [_ReadarrImage(image) for image in self.images or []]
+        self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
 
 
 @dataclass(init=False)
@@ -567,8 +571,23 @@ class _ReadarrAuthorStatistics(BaseModel):
     percentOfBooks: float | None = None
 
 
+
 @dataclass(init=False)
-class ReadarrAuthor(_ReadarrCommon, BaseModel):
+class _ReadarrAuthorBook(_ReadarrBookCommon):
+    """Author book attributes."""
+
+    author: _ReadarrAuthor | None = None
+    editions: _ReadarrEditions | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.author = _ReadarrAuthor(self.author) or {}
+        self.editions = _ReadarrEditions(self.editions) or {}
+
+
+@dataclass(init=False)
+class ReadarrAuthor(_ReadarrCommon):
     """Author attributes."""
 
     status: str | None = None
@@ -578,14 +597,15 @@ class ReadarrAuthor(_ReadarrCommon, BaseModel):
     foreignAuthorId: str | None = None
     overview: str | None = None
     disambiguation: str | None = None
-    nextBook: _ReadarrNextbook | None = None
-    lastBook: _ReadarrLastBook | None = None
+    nextBook: _ReadarrAuthorBook | None = None
+    lastBook: _ReadarrAuthorBook | None = None
     images: list[_ReadarrImage] | None = None
     remotePoster: str | None = None
     path: str | None = None
     qualityProfileId: int | None = None
     metadataProfileId: int | None = None
     monitored: bool | None = None
+    monitorNewItems: str | None = None
     rootFolderPath: str | None = None
     genres: list[str] | None = None
     cleanName: str | None = None
@@ -602,8 +622,8 @@ class ReadarrAuthor(_ReadarrCommon, BaseModel):
         super().__post_init__()
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
-        self.lastBook = _ReadarrLastBook(self.lastBook) or {}
-        self.nextBook = _ReadarrNextbook(self.nextBook) or {}
+        self.lastBook = _ReadarrAuthorBook(self.lastBook) or {}
+        self.nextBook = _ReadarrAuthorBook(self.nextBook) or {}
         self.ratings = _ReadarrRating(self.ratings) or {}
         self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
 
@@ -613,17 +633,6 @@ class ReadarrAuthorLookup(ReadarrAuthor):
     """Author attributes."""
 
     monitorNewItems: str | None = None
-
-
-@dataclass(init=False)
-class ReadarrSystemBackup(BaseModel):
-    """System backup attributes."""
-
-    id: int | None = None
-    name: str | None = None
-    path: str | None = None
-    type: str | None = None
-    time: str | None = None
 
 
 @dataclass(init=False)
@@ -657,15 +666,10 @@ class _ReadarrBlocklistRecord(BaseModel):
 
 
 @dataclass(init=False)
-class ReadarrBlocklist(BaseModel):
+class ReadarrBlocklist(_RecordCommon):
     """Blocklist attributes."""
 
-    page: int | None = None
-    pageSize: int | None = None
-    sortKey: str | None = None
-    sortDirection: str | None = None
     filters: list[_ReadarrBlocklistFilter] | None = None
-    totalRecords: int | None = None
     records: list[_ReadarrBlocklistRecord] | None = None
 
     def __post_init__(self):
@@ -688,3 +692,152 @@ class ReadarrAuthorEditor(BaseModel):
     applyTags: str
     moveFiles: bool
     deleteFiles: bool
+
+
+@dataclass(init=False)
+class _ReadarrCountry(BaseModel):
+    """Country attributes"""
+
+    twoLetterCode: str | None = None
+    name: str | None = None
+
+
+@dataclass(init=False)
+class _ReadarrDuration(BaseModel):
+    """Duration attributes"""
+
+    ticks: int | None = None
+    days: int | None = None
+    hours: int | None = None
+    milliseconds: int | None = None
+    minutes: int | None = None
+    seconds: int | None = None
+    totalDays: int | None = None
+    totalHours: int | None = None
+    totalMilliseconds: int | None = None
+    totalMinutes: int | None = None
+    totalSeconds: int | None = None
+
+@dataclass(init=False)
+class _ReadarrAudioTags(BaseModel):
+    """Audio tags attributes"""
+
+    title: str | None = None
+    cleanTitle: str | None = None
+    authors: list[str] | None = None
+    authorTitle: str | None = None
+    bookTitle: str | None = None
+    seriesTitle: str | None = None
+    seriesIndex: str | None = None
+    isbn: str | None = None
+    asin: str | None = None
+    goodreadsId: str | None = None
+    authorMBId: str | None = None
+    bookMBId: str | None = None
+    releaseMBId: str | None = None
+    recordingMBId: str | None = None
+    trackMBId: str | None = None
+    discNumber: int | None = None
+    discCount: int | None = None
+    country: _ReadarrCountry | None = None
+    year: int | None = None
+    publisher: str | None = None
+    label: str | None = None
+    source: str | None = None
+    catalogNumber: str | None = None
+    disambiguation: str | None = None
+    duration: _ReadarrDuration | None = None
+    quality: _ReadarrQuality | None = None
+    mediaInfo: _ReadarrEditionsValueBookFilesValueMediaInfo | None = None
+    trackNumbers: list[int] | None = None
+    language: str | None = None
+    releaseGroup: str | None = None
+    releaseHash: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.country = _ReadarrCountry(self.country) or {}
+        self.duration = _ReadarrDuration(self.duration) or {}
+        self.mediaInfo = _ReadarrEditionsValueBookFilesValueMediaInfo(self.mediaInfo) or {}
+        self.quality = _ReadarrQuality(self.quality) or {}
+
+
+@dataclass(init=False)
+class _ReadarrBookFileMediaInfo(_ReadarrEditionsValueBookFilesValueMediaInfo):
+    """Book file media info attributes"""
+
+    id: int | None = None
+
+
+@dataclass(init=False)
+class ReadarrBookFile(BaseModel):
+    """Book file attributes"""
+
+    id: int | None = None
+    authorId: int | None = None
+    bookId: int | None = None
+    path: str | None = None
+    size: int | None = None
+    dateAdded: str | None = None
+    quality: _ReadarrQuality | None = None
+    qualityWeight: int | None = None
+    mediaInfo: _ReadarrBookFileMediaInfo | None = None
+    qualityCutoffNotMet: bool | None = None
+    audioTags: _ReadarrAudioTags | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
+        self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo) or {}
+        self.quality = _ReadarrQuality(self.quality) or {}
+
+
+@dataclass(init=False)
+class ReadarrBookFileEditor(BaseModel):
+    """Book file attributes"""
+
+    bookFileIds: list[int] | None = None
+    quality: _ReadarrQuality | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.quality = _ReadarrQuality(self.quality) or {}
+
+
+@dataclass(init=False)
+class ReadarrBookLookup(BaseModel):
+    """Book lookup attributes"""
+
+    title: str | None = None
+    authorTitle: str | None = None
+    seriesTitle: str | None = None
+    disambiguation: str | None = None
+    overview: str | None = None
+    authorId: int | None = None
+    foreignBookId: str | None = None
+    titleSlug: str | None = None
+    monitored: bool | None = None
+    anyEditionOk: bool | None = None
+    ratings: _ReadarrRating | None = None
+    releaseDate: str | None = None
+    pageCount: int | None = None
+    genres: list[str] | None = None
+    author: ReadarrAuthor | None = None
+    images: list[_ReadarrImage] | None = None
+    links: list[_ReadarrLink] | None = None
+    added: str | None = None
+    remoteCover: str | None = None
+    editions: _ReadarrEditionsValue | None = None
+    grabbed: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.author = ReadarrAuthor(self.author) or {}
+        self.editions = [_ReadarrEditionsValue(edition) for edition in self.editions or []]
+        self.images = [_ReadarrImage(image) for image in self.images or []]
+        self.links = [_ReadarrLink(link) for link in self.links or []]
+        self.ratings = _ReadarrRating(self.ratings) or {}
