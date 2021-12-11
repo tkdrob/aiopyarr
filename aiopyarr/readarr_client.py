@@ -1,9 +1,10 @@
 """Readarr API."""
 from __future__ import annotations
+from datetime import datetime
 from typing import TYPE_CHECKING
 import json
 from .const import HTTPMethod, HTTPResponse
-from .models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist, ReadarrBook, ReadarrBookFile, ReadarrBookFileEditor, ReadarrBookLookup, ReadarrBookshelf
+from .models.readarr import ReadarrAuthor, ReadarrAuthorEditor, ReadarrAuthorLookup, ReadarrBlocklist, ReadarrBook, ReadarrBookFile, ReadarrBookFileEditor, ReadarrBookLookup, ReadarrBookshelf, ReadarrCalendar
 from .models.common import Logs
 from .request_client import RequestClient
 
@@ -334,3 +335,19 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_add_bookself(self, data: ReadarrBookshelf) -> HTTPResponse:
         """Add a bookshelf to the database"""
         return await self._async_request("bookshelf", data=data, datatype=ReadarrBookshelf, method=HTTPMethod.POST)
+
+    async def async_get_calendar(
+        self, start_date: datetime, end_date: datetime, unmonitored: bool = False, includeauthor: bool = False
+    ) -> list[ReadarrCalendar]:
+        """Get calendar items."""
+        params = {
+            "start": start_date.strftime("%Y-%m-%d"),
+            "end": end_date.strftime("%Y-%m-%d"),
+            "unmonitored": str(unmonitored),
+            "includeAuthor": str(includeauthor),
+        }
+        return await self._async_request(
+            "calendar",
+            params=params,
+            datatype=ReadarrCalendar,
+        )

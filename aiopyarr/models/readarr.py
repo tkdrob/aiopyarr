@@ -436,6 +436,7 @@ class _ReadarrEditionsValue(BaseModel):
     manualAdd: bool | None = None
     book: _ReadarrEditionsValueBook | None = None
     bookFiles: _ReadarrEditionsValueBookFiles | None = None
+    remoteCover: str | None = None
     grabbed: bool | None = None
 
 
@@ -830,7 +831,7 @@ class ReadarrBookLookup(BaseModel):
     links: list[_ReadarrLink] | None = None
     added: str | None = None
     remoteCover: str | None = None
-    editions: _ReadarrEditionsValue | None = None
+    editions: list[_ReadarrEditionsValue] | None = None
     grabbed: bool | None = None
 
     def __post_init__(self):
@@ -858,6 +859,12 @@ class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
         self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
 
 
+
+@dataclass(init=False)
+class ReadarrCalendar(ReadarrBookshelfAuthorBook):
+    """Calendar attributes"""
+
+
 @dataclass(init=False)
 class ReadarrBookshelfAuthor(BaseModel):
     """Bookshelf author attributes"""
@@ -873,7 +880,7 @@ class ReadarrBookshelfAuthor(BaseModel):
 
 
 @dataclass(init=False)
-class ReadarrBookshelf:
+class ReadarrBookshelf(BaseModel):
     """Bookshelf attributes"""
 
     authors: list[ReadarrBookshelfAuthor] | None = None
