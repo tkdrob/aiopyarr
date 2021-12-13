@@ -10,7 +10,9 @@
       "level": "info",
       "logger": "BackupService",
       "message": "Starting Backup",
-      "id": 3920809
+      "id": 3920809,
+      "exception": "string",
+      "exceptionType": "string"
     }
   ]
 }

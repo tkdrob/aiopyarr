@@ -3629,7 +3629,7 @@ async def test_async_get_wanted_missing(aresponses):
     """Test getting wanted and missing books."""
     aresponses.add(
         "127.0.0.1:8787",
-        "/api/v1/wanted/missing?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=airDateUtc&page=1&pageSize=10&sortDir=asc",
+        "/api/v1/wanted/missing?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=title&page=1&pageSize=10",
         "GET",
         aresponses.Response(
             status=200,
@@ -3743,7 +3743,7 @@ async def test_async_get_wanted_cutoff(aresponses):
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8787",
-        "/api/v1/wanted/cutoff?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=airDateUtc&page=1&pageSize=10&sortDir=asc",
+        "/api/v1/wanted/cutoff?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=title&page=1&pageSize=10",
         "GET",
         aresponses.Response(
             status=200,
@@ -3759,3 +3759,25 @@ async def test_async_get_wanted_cutoff(aresponses):
         data = await client.async_get_wanted_cutoff()
     assert data.filters[0].key == "string"
     assert data.filters[0].value == "string"
+
+
+@pytest.mark.asyncio
+async def test_async_get_metadata_profiles(aresponses):
+    """Test getting wanted cutoff books."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        "/api/v1/metadataprofile",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/metadata-profile.json"),
+        ),
+        #match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = ReadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data = await client.async_get_metadata_profiles()
+    assert data[0].id == 0

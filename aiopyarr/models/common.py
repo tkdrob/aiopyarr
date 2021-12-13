@@ -40,6 +40,8 @@ class _CommonAttrs(BaseModel):
 class _LogRecord(BaseModel):
     """Sonarr log record attributes."""
 
+    exception: str | None = None
+    exceptionType: str | None = None
     id: int | None = None
     level: str | None = None
     logger: str | None = None
@@ -72,7 +74,7 @@ class Logs(_RecordCommon):
 
 @dataclass(init=False)
 class LogFiles(BaseModel):
-    """Log file attributes"""
+    """Log file attributes."""
 
     filename: str | None = None
     lastWriteTime: str | None = None

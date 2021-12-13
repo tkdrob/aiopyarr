@@ -90,7 +90,7 @@ class _ReadarrMetadataValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorMetadata(BaseModel):
-    """Author Metadata attributes"""
+    """Author Metadata attributes."""
 
     isLoaded: bool | None = None
     value: _ReadarrMetadataValue | None = None
@@ -103,7 +103,7 @@ class _ReadarrAuthorMetadata(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorAddOptions(BaseModel):
-    """Author add options attributes"""
+    """Author add options attributes."""
 
     monitor: str | None = None
     booksToMonitor: list[str] | None = None
@@ -113,7 +113,7 @@ class _ReadarrAuthorAddOptions(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrIdName(BaseModel):
-    """Id/name attributes"""
+    """Id/name attributes."""
 
     id: int | None = None
     name: str | None = None
@@ -121,7 +121,7 @@ class _ReadarrIdName(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrQualityItem(_ReadarrIdName):
-    """Quality item attributes"""
+    """Quality item attributes."""
 
     quality: _ReadarrIdName | None = None
     items: list | None = None  # Currently unknown contents
@@ -135,7 +135,7 @@ class _ReadarrQualityItem(_ReadarrIdName):
 
 @dataclass(init=False)
 class _ReadarrQualityProfileValue(_ReadarrIdName):
-    """Quality profile value attributes"""
+    """Quality profile value attributes."""
 
     upgradeAllowed: bool | None = None
     cutoff: int | None = None
@@ -149,7 +149,7 @@ class _ReadarrQualityProfileValue(_ReadarrIdName):
 
 @dataclass(init=False)
 class _ReadarrQualityProfile(BaseModel):
-    """Quality profile attributes"""
+    """Quality profile attributes."""
 
     isLoaded: bool | None = None
     value: _ReadarrQualityProfileValue | None = None
@@ -162,7 +162,7 @@ class _ReadarrQualityProfile(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrMetadataProfileValue(BaseModel):
-    """Metadata profile value attributes"""
+    """Metadata profile value attributes."""
 
     id: int | None = None
     name: str | None = None
@@ -178,7 +178,7 @@ class _ReadarrMetadataProfileValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrMetadataProfile(BaseModel):
-    """Metadata profile attributes"""
+    """Metadata profile attributes."""
 
     isLoaded: bool | None = None
     value: _ReadarrMetadataProfileValue | None = None
@@ -191,7 +191,7 @@ class _ReadarrMetadataProfile(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValueBooks(BaseModel):
-    """Author value books attributes"""
+    """Author value books attributes."""
 
     isLoaded: bool | None = None
     value: list | None = None  # Currently unknown contents
@@ -199,7 +199,7 @@ class _ReadarrAuthorValueBooks(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValueSeriesValue(BaseModel):
-    """Author value series value attributes"""
+    """Author value series value attributes."""
 
     id: int | None = None
     foreignSeriesId: str | None = None
@@ -219,7 +219,7 @@ class _ReadarrAuthorValueSeriesValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValueSeriesLinks(BaseModel):
-    """Author value series links attributes"""
+    """Author value series links attributes."""
 
     value: _ReadarrAuthorValueSeriesValue | None = None
     isLoaded: bool | None = None
@@ -232,7 +232,7 @@ class _ReadarrAuthorValueSeriesLinks(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValueSeries(BaseModel):
-    """Author value series attributes"""
+    """Author value series attributes."""
 
     value: list[_ReadarrAuthorValueSeriesValue] | None = None
     isLoaded: bool | None = None
@@ -245,7 +245,7 @@ class _ReadarrAuthorValueSeries(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValueMetadata(BaseModel):
-    """Author value metadata attributes"""
+    """Author value metadata attributes."""
 
     value: _ReadarrMetadataValue | None = None
     isLoaded: bool | None = None
@@ -258,7 +258,7 @@ class _ReadarrAuthorValueMetadata(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthorValue(BaseModel):
-    """Author value attributes"""
+    """Author value attributes."""
 
     id: int | None = None
     authorMetadataId: int | None = None
@@ -293,7 +293,7 @@ class _ReadarrAuthorValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAuthor(BaseModel):
-    """Author attributes"""
+    """Author attributes."""
 
     isLoaded: bool | None = None
     value: _ReadarrAuthorValue | None = None
@@ -306,14 +306,14 @@ class _ReadarrAuthor(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditionsValueBook(BaseModel):
-    """Editions value book attributes"""
+    """Editions value book attributes."""
 
     isLoaded: bool | None = None
 
 
 @dataclass(init=False)
 class _ReadarrQualityRevision(BaseModel):
-    """Quality revision attributes attributes"""
+    """Quality revision attributes attributes."""
 
     version: int | None = None
     real: int | None = None
@@ -322,7 +322,7 @@ class _ReadarrQualityRevision(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrQuality(BaseModel):
-    """Quality attributes attributes"""
+    """Quality attributes attributes."""
 
     quality: _ReadarrIdName | None = None
     revision: _ReadarrQualityRevision | None = None
@@ -336,7 +336,7 @@ class _ReadarrQuality(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditionsValueBookFilesValueMediaInfo(BaseModel):
-    """Editions value book files value media info attributes"""
+    """Editions value book files value media info attributes."""
 
     audioFormat: str | None = None
     audioBitRate: str | None = None
@@ -349,14 +349,14 @@ class _ReadarrEditionsValueBookFilesValueMediaInfo(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditionsValueBookFilesValueEdition(BaseModel):
-    """Editions value book files value edition attributes"""
+    """Editions value book files value edition attributes."""
 
     isLoaded: bool | None = None
 
 
 @dataclass(init=False)
 class _ReadarrEditionsValueBookFilesValue(BaseModel):
-    """Editions value book files value attributes"""
+    """Editions value book files value attributes."""
 
     id: int | None = None
     path: str | None = None
@@ -387,7 +387,7 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditionsValueBookFiles(BaseModel):
-    """Editions value book files attributes"""
+    """Editions value book files attributes."""
 
     isLoaded: bool | None = None
     value: list[_ReadarrEditionsValueBookFilesValue] | None = None
@@ -402,7 +402,7 @@ class _ReadarrEditionsValueBookFiles(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditionsValue(BaseModel):
-    """Editions value attributes"""
+    """Editions value attributes."""
 
     id: int | None = None
     bookId: int | None = None
@@ -441,7 +441,7 @@ class _ReadarrEditionsValue(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrEditions(BaseModel):
-    """Editions attributes"""
+    """Editions attributes."""
 
     isLoaded: bool | None = None
     value: list[_ReadarrEditionsValue] | None = None
@@ -613,7 +613,7 @@ class _ReadarrBlocklistRecord(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrCountry(BaseModel):
-    """Country attributes"""
+    """Country attributes."""
 
     twoLetterCode: str | None = None
     name: str | None = None
@@ -621,7 +621,7 @@ class _ReadarrCountry(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrDuration(BaseModel):
-    """Duration attributes"""
+    """Duration attributes."""
 
     ticks: int | None = None
     days: int | None = None
@@ -638,7 +638,7 @@ class _ReadarrDuration(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrAudioTags(BaseModel):
-    """Audio tags attributes"""
+    """Audio tags attributes."""
 
     title: str | None = None
     cleanTitle: str | None = None
@@ -685,14 +685,14 @@ class _ReadarrAudioTags(BaseModel):
 
 @dataclass(init=False)
 class _ReadarrBookFileMediaInfo(_ReadarrEditionsValueBookFilesValueMediaInfo):
-    """Book file media info attributes"""
+    """Book file media info attributes."""
 
     id: int | None = None
 
 
 @dataclass(init=False)
 class _ReadarrCommandBody(BaseModel):
-    """Command body attributes"""
+    """Command body attributes."""
 
     sendUpdatesToClient: bool | None = None
     updateScheduledTask: bool | None = None

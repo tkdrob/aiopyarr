@@ -204,15 +204,13 @@ class RequestClient:
         page_size: int = 10,
         sort_key: str = "time",
         sort_asc: bool = False,
-        filter_key: str | None = None,  # TODO test
-        filter_value: str = "All",
     ) -> Logs:
         """Get logs.
 
         Args:
             page: Specifiy page to return.
             page_size: Number of items per page.
-            sort_key: Field to sort by.
+            sort_key: Field to sort by. id, level, logger, time
             sort_asc: Sort items in ascending order.
             filter_key: Key to filter by.
             filter_value: Value of the filter.
@@ -221,9 +219,7 @@ class RequestClient:
             "page": page,
             "pageSize": page_size,
             "sortKey": sort_key,
-            "sortDir": "asc" if sort_asc is True else "desc",
-            "filterKey": str(filter_key),
-            "filterValue": filter_value,
+            "sortDir": "ascending" if sort_asc is True else "descending",
         }
         return await self._async_request("log", params=params, datatype=Logs)
 
@@ -239,9 +235,7 @@ class RequestClient:
     async def async_get_system_backup(self) -> list[SystemBackup]:
         """Get information about system backup."""
 
-    async def async_restore_system_backup(
-        self, backupid: int
-    ) -> HTTPResponse:  # TODO test
+    async def async_restore_system_backup(self, backupid: int) -> HTTPResponse:
         """Restore from a system backup."""
         return await self._async_request(
             f"system/backup/restore/{backupid}", method=HTTPMethod.POST
@@ -249,9 +243,7 @@ class RequestClient:
 
     # Upload system backup not working
 
-    async def async_delete_system_backup(
-        self, backupid: int
-    ) -> HTTPResponse:
+    async def async_delete_system_backup(self, backupid: int) -> HTTPResponse:
         """Delete a system backup."""
         return await self._async_request(
             f"system/backup/{backupid}", method=HTTPMethod.DELETE

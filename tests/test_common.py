@@ -258,7 +258,7 @@ async def test_async_get_logs(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        "/api/v3/log?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortKey=time&sortDir=desc&filterKey=None&filterValue=All",
+        "/api/v3/log?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortKey=time&sortDir=descending",
         "GET",
         aresponses.Response(
             status=200,
@@ -283,6 +283,8 @@ async def test_async_get_logs(aresponses):
         assert data.records[0].logger == "BackupService"
         assert data.records[0].message == "Starting Backup"
         assert data.records[0].id == 3920809
+        assert data.records[0].exception == "string"
+        assert data.records[0].exceptionType == "string"
 
 
 @pytest.mark.asyncio

@@ -22,6 +22,7 @@ from .readarr_common import (  # isort:skip
     _ReadarrEditionsValue,
     _ReadarrImage,
     _ReadarrLink,
+    _ReadarrMetadataProfileValue,
     _ReadarrQuality,
     _ReadarrRating,
 )
@@ -100,7 +101,7 @@ class ReadarrAuthorEditor(BaseModel):
 
 @dataclass(init=False)
 class ReadarrBookFile(BaseModel):
-    """Book file attributes"""
+    """Book file attributes."""
 
     id: int | None = None
     authorId: int | None = None
@@ -124,7 +125,7 @@ class ReadarrBookFile(BaseModel):
 
 @dataclass(init=False)
 class ReadarrBookFileEditor(BaseModel):
-    """Book file attributes"""
+    """Book file attributes."""
 
     bookFileIds: list[int] | None = None
     quality: _ReadarrQuality | None = None
@@ -137,7 +138,7 @@ class ReadarrBookFileEditor(BaseModel):
 
 @dataclass(init=False)
 class ReadarrBookLookup(BaseModel):
-    """Book lookup attributes"""
+    """Book lookup attributes."""
 
     title: str | None = None
     authorTitle: str | None = None
@@ -173,7 +174,7 @@ class ReadarrBookLookup(BaseModel):
 
 @dataclass(init=False)
 class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
-    """Bookshelf author Book attributes"""
+    """Bookshelf author Book attributes."""
 
     id: int | None = None
     statistics: _ReadarrAuthorStatistics | None = None
@@ -188,12 +189,12 @@ class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
 
 @dataclass(init=False)
 class ReadarrCalendar(ReadarrBookshelfAuthorBook):
-    """Calendar attributes"""
+    """Calendar attributes."""
 
 
 @dataclass(init=False)
 class ReadarrBookshelfAuthor(BaseModel):
-    """Bookshelf author attributes"""
+    """Bookshelf author attributes."""
 
     id: int | None = None
     monitored: bool | None = None
@@ -207,7 +208,7 @@ class ReadarrBookshelfAuthor(BaseModel):
 
 @dataclass(init=False)
 class ReadarrBookshelf(BaseModel):
-    """Bookshelf attributes"""
+    """Bookshelf attributes."""
 
     authors: list[ReadarrBookshelfAuthor] | None = None
     monitoringOptions: _ReadarrAuthorAddOptions | None = None
@@ -221,7 +222,7 @@ class ReadarrBookshelf(BaseModel):
 
 @dataclass(init=False)
 class ReadarrCommand(BaseModel):
-    """Command attributes"""
+    """Command attributes."""
 
     id: int | None = None
     name: str | None = None
@@ -251,7 +252,7 @@ class ReadarrCommand(BaseModel):
 
 @dataclass(init=False)
 class ReadarrWantedMissing(_RecordCommon):
-    """Wanted missing attributes"""
+    """Wanted missing attributes."""
 
     records: list[ReadarrBook] | None = None
 
@@ -263,7 +264,7 @@ class ReadarrWantedMissing(_RecordCommon):
 
 @dataclass(init=False)
 class ReadarrWantedCutoff(ReadarrWantedMissing):
-    """Wanted cutoff attributes"""
+    """Wanted cutoff attributes."""
 
     filters: list[_ReadarrBlocklistFilter] | None = None
 
@@ -273,3 +274,8 @@ class ReadarrWantedCutoff(ReadarrWantedMissing):
         self.filters = [
             _ReadarrBlocklistFilter(filter) for filter in self.filters or []
         ]
+
+
+@dataclass(init=False)
+class ReadarrMetadataProfile(_ReadarrMetadataProfileValue):
+    """Metadata profile attributes."""
