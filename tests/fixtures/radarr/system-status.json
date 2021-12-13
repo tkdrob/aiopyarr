@@ -11,6 +11,7 @@
   "osVersion": "10.0.18363.0",
   "isNetCore": true,
   "isMono": false,
+  "isMonoRuntime": false,
   "isLinux": false,
   "isOsx": false,
   "isWindows": true,

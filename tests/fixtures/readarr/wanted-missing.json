@@ -1,0 +1,141 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "string",
+  "sortDirection": "default",
+  "totalRecords": 0,
+  "records": [
+    {
+      "title": "string",
+      "authorTitle": "string",
+      "seriesTitle": "string",
+      "disambiguation": "string",
+      "overview": "string",
+      "authorId": 0,
+      "foreignBookId": "string",
+      "titleSlug": "string",
+      "monitored": true,
+      "anyEditionOk": true,
+      "ratings": {
+        "votes": 0,
+        "value": 0,
+        "popularity": 0
+      },
+      "releaseDate": "2021-12-11T09:30:28.339Z",
+      "pageCount": 0,
+      "genres": [
+        "string"
+      ],
+      "author": {
+        "authorMetadataId": 0,
+        "status": "continuing",
+        "ended": false,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "string",
+        "titleSlug": "string",
+        "overview": "string",
+        "links": [
+          {
+            "url": "string",
+            "name": "string"
+          }
+        ],
+        "images": [
+          {
+            "url": "string",
+            "coverType": "unknown",
+            "extension": "string"
+          }
+        ],
+        "path": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": true,
+        "monitorNewItems": "all",
+        "genres": [],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [],
+        "added": "2021-12-06T22:23:55Z",
+        "ratings": {
+          "votes": 0,
+          "value": 0,
+          "popularity": 0
+        },
+        "statistics": {
+          "bookFileCount": 0,
+          "bookCount": 0,
+          "availableBookCount": 0,
+          "totalBookCount": 0,
+          "sizeOnDisk": 0,
+          "percentOfBooks": 0
+        },
+        "id": 0
+      },
+      "images": [
+        {
+          "url": "string",
+          "coverType": "unknown",
+          "extension": "string"
+        }
+      ],
+      "links": [
+        {
+          "url": "string",
+          "name": "string"
+        }
+      ],
+      "statistics": {
+        "bookFileCount": 0,
+        "bookCount": 0,
+        "totalBookCount": 0,
+        "sizeOnDisk": 0,
+        "percentOfBooks": 0
+      },
+      "added": "2021-12-06T22:23:58Z",
+      "editions": [
+        {
+          "bookId": 0,
+          "foreignEditionId": "string",
+          "titleSlug": "string",
+          "asin": "string",
+          "title": "string",
+          "language": "string",
+          "overview": "string",
+          "format": "string",
+          "isEbook": true,
+          "disambiguation": "string",
+          "publisher": "string",
+          "pageCount": 0,
+          "releaseDate": "2017-03-15T00:00:00Z",
+          "images": [
+            {
+              "url": "string",
+              "coverType": "unknown",
+              "extension": "string"
+            }
+          ],
+          "links": [
+            {
+              "url": "string",
+              "name": "string"
+            }
+          ],
+          "ratings": {
+            "votes": 0,
+            "value": 0,
+            "popularity": 0
+          },
+          "monitored": false,
+          "manualAdd": false,
+          "grabbed": false,
+          "id": 0
+        }
+      ],
+      "grabbed": false,
+      "id": 0
+    }
+  ]
+}

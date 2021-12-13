@@ -221,7 +221,6 @@ class _SonarrEpisodeQuality:
 
 
 @dataclass(init=False)
-
 class _SonarrRevisionAttr(BaseModel):
     """Sonarr revision attributes."""
 
@@ -233,7 +232,7 @@ class _SonarrRevisionAttr(BaseModel):
 class _SonarrQualitySubSub(_SonarrCommon6):
     """Sonarr quality attributes."""
 
-    allowed: list | None = [] #TODO
+    allowed: list | None = []  # contents not known
     name: str | None = None
     source: str | None = None
     resolution: int | None = None

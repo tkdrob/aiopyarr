@@ -13,7 +13,7 @@
   "isLinux": false,
   "isWindows": true,
   "branch": "develop",
-  "authentication": false,
+  "authentication": "none",
   "startOfWeek": 0,
   "urlBase": ""
 }

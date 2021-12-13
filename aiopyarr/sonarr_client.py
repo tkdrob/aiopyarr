@@ -8,7 +8,7 @@ from urllib.parse import quote
 from .const import HTTPMethod
 from .decorator import api_command
 from .exceptions import ArrInvalidCommand, ArrResourceNotFound
-from .models.common import Diskspace, Tag
+from .models.common import Tag
 from .request_client import RequestClient
 
 from .models.sonarr import (  # isort:skip
@@ -23,11 +23,9 @@ from .models.sonarr import (  # isort:skip
     SonarrQualityProfile,
     SonarrQueue,
     SonarrRelease,
-    SonarrRootFolder,
     SonarrSeries,
     SonarrSeriesLookup,
     SonarrSeriesUpdateParams,
-    SonarrSystemStatus,
     SonarrWantedMissing,
 )
 
@@ -60,25 +58,21 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> None:
         """Initialize Sonarr API."""
         super().__init__(
+            port,
+            request_timeout,
+            raw_response,
+            redact,
             host_configuration,
             session,
             hostname,
             ipaddress,
             url,
             api_token,
-            port,
             ssl,
             verify_ssl,
             base_api_path,
-            request_timeout,
-            raw_response,
-            redact,
             api_ver,
         )
-
-    @api_command("diskspace", datatype=Diskspace)
-    async def async_get_diskspace(self) -> list[Diskspace]:
-        """Get information about diskspace."""
 
     async def async_get_episode_files(
         self, seriesid: int, episodeid: int | None = None
@@ -134,14 +128,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_profiles(self) -> list[SonarrQualityProfile]:
         """Get information about configured quality profiles."""
 
-    @api_command("rootfolder", datatype=SonarrRootFolder)
-    async def async_get_root_folders(self) -> list[SonarrRootFolder]:
-        """Get information about root folders."""
-
-    @api_command("system/status", datatype=SonarrSystemStatus)
-    async def async_get_system_status(self) -> SonarrSystemStatus:
-        """Get information about system status."""
-
     async def async_get_calendar(
         self, start_date: datetime | None = None, end_date: datetime | None = None
     ) -> list[SonarrCalendar]:
@@ -151,9 +137,9 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """
         params = {}
         if start_date:
-            params["start"] = start_date.strftime("%Y-%m-%d"),
+            params["start"] = (start_date.strftime("%Y-%m-%d"),)
         if end_date:
-            params["end"] = end_date.strftime("%Y-%m-%d"),
+            params["end"] = (end_date.strftime("%Y-%m-%d"),)
 
         return await self._async_request(
             "calendar", params=params, datatype=SonarrCalendar

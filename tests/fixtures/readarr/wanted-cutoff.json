@@ -1,0 +1,1446 @@
+{
+  "page": 0,
+  "pageSize": 0,
+  "sortKey": "string",
+  "sortDirection": "default",
+  "filters": [
+    {
+      "key": "string",
+      "value": "string"
+    }
+  ],
+  "totalRecords": 0,
+  "records": [
+    {
+      "id": 0,
+      "title": "string",
+      "authorTitle": "string",
+      "seriesTitle": "string",
+      "disambiguation": "string",
+      "overview": "string",
+      "authorId": 0,
+      "foreignBookId": "string",
+      "titleSlug": "string",
+      "monitored": true,
+      "anyEditionOk": true,
+      "ratings": {
+        "votes": 0,
+        "value": 0,
+        "popularity": 0
+      },
+      "releaseDate": "2021-12-12T21:32:22.045Z",
+      "pageCount": 0,
+      "genres": [
+        "string"
+      ],
+      "author": {
+        "id": 0,
+        "authorMetadataId": 0,
+        "status": "continuing",
+        "ended": true,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "string",
+        "titleSlug": "string",
+        "overview": "string",
+        "disambiguation": "string",
+        "links": [
+          {
+            "url": "string",
+            "name": "string"
+          }
+        ],
+        "nextBook": {
+          "id": 0,
+          "authorMetadataId": 0,
+          "foreignBookId": "string",
+          "titleSlug": "string",
+          "title": "string",
+          "releaseDate": "2021-12-12T21:32:22.045Z",
+          "links": [
+            {
+              "url": "string",
+              "name": "string"
+            }
+          ],
+          "genres": [
+            "string"
+          ],
+          "ratings": {
+            "votes": 0,
+            "value": 0,
+            "popularity": 0
+          },
+          "cleanTitle": "string",
+          "monitored": true,
+          "anyEditionOk": true,
+          "lastInfoSync": "2021-12-12T21:32:22.045Z",
+          "added": "2021-12-12T21:32:22.045Z",
+          "addOptions": {
+            "addType": "automatic",
+            "searchForNewBook": true
+          },
+          "authorMetadata": {
+            "value": {
+              "id": 0,
+              "foreignAuthorId": "string",
+              "titleSlug": "string",
+              "name": "string",
+              "sortName": "string",
+              "nameLastFirst": "string",
+              "sortNameLastFirst": "string",
+              "aliases": [
+                "string"
+              ],
+              "overview": "string",
+              "disambiguation": "string",
+              "gender": "string",
+              "hometown": "string",
+              "born": "2021-12-12T21:32:22.045Z",
+              "died": "2021-12-12T21:32:22.045Z",
+              "status": "continuing",
+              "images": [
+                {
+                  "url": "string",
+                  "coverType": "unknown",
+                  "extension": "string"
+                }
+              ],
+              "links": [
+                {
+                  "url": "string",
+                  "name": "string"
+                }
+              ],
+              "genres": [
+                "string"
+              ],
+              "ratings": {
+                "votes": 0,
+                "value": 0,
+                "popularity": 0
+              }
+            },
+            "isLoaded": true
+          },
+          "author": {
+            "value": {
+              "id": 0,
+              "authorMetadataId": 0,
+              "cleanName": "string",
+              "monitored": true,
+              "lastInfoSync": "2021-12-12T21:32:22.045Z",
+              "path": "string",
+              "rootFolderPath": "string",
+              "added": "2021-12-12T21:32:22.045Z",
+              "qualityProfileId": 0,
+              "metadataProfileId": 0,
+              "tags": [
+                0
+              ],
+              "addOptions": {
+                "monitor": "all",
+                "booksToMonitor": [
+                  "string"
+                ],
+                "monitored": true,
+                "searchForMissingBooks": true
+              },
+              "metadata": {
+                "value": {
+                  "id": 0,
+                  "foreignAuthorId": "string",
+                  "titleSlug": "string",
+                  "name": "string",
+                  "sortName": "string",
+                  "nameLastFirst": "string",
+                  "sortNameLastFirst": "string",
+                  "aliases": [
+                    "string"
+                  ],
+                  "overview": "string",
+                  "disambiguation": "string",
+                  "gender": "string",
+                  "hometown": "string",
+                  "born": "2021-12-12T21:32:22.045Z",
+                  "died": "2021-12-12T21:32:22.045Z",
+                  "status": "continuing",
+                  "images": [
+                    {
+                      "url": "string",
+                      "coverType": "unknown",
+                      "extension": "string"
+                    }
+                  ],
+                  "links": [
+                    {
+                      "url": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "genres": [
+                    "string"
+                  ],
+                  "ratings": {
+                    "votes": 0,
+                    "value": 0,
+                    "popularity": 0
+                  }
+                },
+                "isLoaded": true
+              },
+              "qualityProfile": {
+                "value": {
+                  "id": 0,
+                  "name": "string",
+                  "upgradeAllowed": true,
+                  "cutoff": 0,
+                  "items": [
+                    {
+                      "id": 0,
+                      "name": "string",
+                      "quality": {
+                        "id": 0,
+                        "name": "string"
+                      },
+                      "items": [
+                        null
+                      ],
+                      "allowed": true
+                    }
+                  ]
+                },
+                "isLoaded": true
+              },
+              "metadataProfile": {
+                "value": {
+                  "id": 0,
+                  "name": "string",
+                  "minPopularity": 0,
+                  "skipMissingDate": true,
+                  "skipMissingIsbn": true,
+                  "skipPartsAndSets": true,
+                  "skipSeriesSecondary": true,
+                  "allowedLanguages": "string",
+                  "minPages": 0,
+                  "ignored": "string"
+                },
+                "isLoaded": true
+              },
+              "books": {
+                "value": [
+                  null
+                ],
+                "isLoaded": true
+              },
+              "series": {
+                "value": [
+                  {
+                    "id": 0,
+                    "foreignSeriesId": "string",
+                    "title": "string",
+                    "description": "string",
+                    "numbered": true,
+                    "workCount": 0,
+                    "primaryWorkCount": 0,
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "foreignAuthorId": "string"
+                  }
+                ],
+                "isLoaded": true
+              },
+              "name": "string",
+              "foreignAuthorId": "string"
+            },
+            "isLoaded": true
+          },
+          "editions": {
+            "value": [
+              {
+                "id": 0,
+                "bookId": 0,
+                "foreignEditionId": "string",
+                "titleSlug": "string",
+                "isbn13": "string",
+                "asin": "string",
+                "title": "string",
+                "language": "string",
+                "overview": "string",
+                "format": "string",
+                "isEbook": true,
+                "disambiguation": "string",
+                "publisher": "string",
+                "pageCount": 0,
+                "releaseDate": "2021-12-12T21:32:22.045Z",
+                "images": [
+                  {
+                    "url": "string",
+                    "coverType": "unknown",
+                    "extension": "string"
+                  }
+                ],
+                "links": [
+                  {
+                    "url": "string",
+                    "name": "string"
+                  }
+                ],
+                "ratings": {
+                  "votes": 0,
+                  "value": 0,
+                  "popularity": 0
+                },
+                "monitored": true,
+                "manualAdd": true,
+                "book": {
+                  "isLoaded": true
+                },
+                "bookFiles": {
+                  "value": [
+                    {
+                      "id": 0,
+                      "path": "string",
+                      "size": 0,
+                      "modified": "2021-12-12T21:32:22.045Z",
+                      "dateAdded": "2021-12-12T21:32:22.045Z",
+                      "sceneName": "string",
+                      "releaseGroup": "string",
+                      "quality": {
+                        "quality": {
+                          "id": 0,
+                          "name": "string"
+                        },
+                        "revision": {
+                          "version": 0,
+                          "real": 0,
+                          "isRepack": true
+                        }
+                      },
+                      "mediaInfo": {
+                        "audioFormat": "string",
+                        "audioBitrate": 0,
+                        "audioChannels": 0,
+                        "audioBits": 0,
+                        "audioSampleRate": 0
+                      },
+                      "editionId": 0,
+                      "calibreId": 0,
+                      "part": 0,
+                      "author": {
+                        "value": {
+                          "id": 0,
+                          "authorMetadataId": 0,
+                          "cleanName": "string",
+                          "monitored": true,
+                          "lastInfoSync": "2021-12-12T21:32:22.045Z",
+                          "path": "string",
+                          "rootFolderPath": "string",
+                          "added": "2021-12-12T21:32:22.045Z",
+                          "qualityProfileId": 0,
+                          "metadataProfileId": 0,
+                          "tags": [
+                            0
+                          ],
+                          "addOptions": {
+                            "monitor": "all",
+                            "booksToMonitor": [
+                              "string"
+                            ],
+                            "monitored": true,
+                            "searchForMissingBooks": true
+                          },
+                          "metadata": {
+                            "value": {
+                              "id": 0,
+                              "foreignAuthorId": "string",
+                              "titleSlug": "string",
+                              "name": "string",
+                              "sortName": "string",
+                              "nameLastFirst": "string",
+                              "sortNameLastFirst": "string",
+                              "aliases": [
+                                "string"
+                              ],
+                              "overview": "string",
+                              "disambiguation": "string",
+                              "gender": "string",
+                              "hometown": "string",
+                              "born": "2021-12-12T21:32:22.045Z",
+                              "died": "2021-12-12T21:32:22.045Z",
+                              "status": "continuing",
+                              "images": [
+                                {
+                                  "url": "string",
+                                  "coverType": "unknown",
+                                  "extension": "string"
+                                }
+                              ],
+                              "links": [
+                                {
+                                  "url": "string",
+                                  "name": "string"
+                                }
+                              ],
+                              "genres": [
+                                "string"
+                              ],
+                              "ratings": {
+                                "votes": 0,
+                                "value": 0,
+                                "popularity": 0
+                              }
+                            },
+                            "isLoaded": true
+                          },
+                          "qualityProfile": {
+                            "value": {
+                              "id": 0,
+                              "name": "string",
+                              "upgradeAllowed": true,
+                              "cutoff": 0,
+                              "items": [
+                                {
+                                  "id": 0,
+                                  "name": "string",
+                                  "quality": {
+                                    "id": 0,
+                                    "name": "string"
+                                  },
+                                  "items": [
+                                    null
+                                  ],
+                                  "allowed": true
+                                }
+                              ]
+                            },
+                            "isLoaded": true
+                          },
+                          "metadataProfile": {
+                            "value": {
+                              "id": 0,
+                              "name": "string",
+                              "minPopularity": 0,
+                              "skipMissingDate": true,
+                              "skipMissingIsbn": true,
+                              "skipPartsAndSets": true,
+                              "skipSeriesSecondary": true,
+                              "allowedLanguages": "string",
+                              "minPages": 0,
+                              "ignored": "string"
+                            },
+                            "isLoaded": true
+                          },
+                          "books": {
+                            "value": [
+                              null
+                            ],
+                            "isLoaded": true
+                          },
+                          "series": {
+                            "value": [
+                              {
+                                "id": 0,
+                                "foreignSeriesId": "string",
+                                "title": "string",
+                                "description": "string",
+                                "numbered": true,
+                                "workCount": 0,
+                                "primaryWorkCount": 0,
+                                "books": {
+                                  "value": [
+                                    null
+                                  ],
+                                  "isLoaded": true
+                                },
+                                "foreignAuthorId": "string"
+                              }
+                            ],
+                            "isLoaded": true
+                          },
+                          "name": "string",
+                          "foreignAuthorId": "string"
+                        },
+                        "isLoaded": true
+                      },
+                      "edition": {
+                        "isLoaded": true
+                      },
+                      "partCount": 0
+                    }
+                  ],
+                  "isLoaded": true
+                }
+              }
+            ],
+            "isLoaded": true
+          },
+          "bookFiles": {
+            "value": [
+              {
+                "id": 0,
+                "path": "string",
+                "size": 0,
+                "modified": "2021-12-12T21:32:22.045Z",
+                "dateAdded": "2021-12-12T21:32:22.045Z",
+                "sceneName": "string",
+                "releaseGroup": "string",
+                "quality": {
+                  "quality": {
+                    "id": 0,
+                    "name": "string"
+                  },
+                  "revision": {
+                    "version": 0,
+                    "real": 0,
+                    "isRepack": true
+                  }
+                },
+                "mediaInfo": {
+                  "audioFormat": "string",
+                  "audioBitrate": 0,
+                  "audioChannels": 0,
+                  "audioBits": 0,
+                  "audioSampleRate": 0
+                },
+                "editionId": 0,
+                "calibreId": 0,
+                "part": 0,
+                "author": {
+                  "value": {
+                    "id": 0,
+                    "authorMetadataId": 0,
+                    "cleanName": "string",
+                    "monitored": true,
+                    "lastInfoSync": "2021-12-12T21:32:22.045Z",
+                    "path": "string",
+                    "rootFolderPath": "string",
+                    "added": "2021-12-12T21:32:22.045Z",
+                    "qualityProfileId": 0,
+                    "metadataProfileId": 0,
+                    "tags": [
+                      0
+                    ],
+                    "addOptions": {
+                      "monitor": "all",
+                      "booksToMonitor": [
+                        "string"
+                      ],
+                      "monitored": true,
+                      "searchForMissingBooks": true
+                    },
+                    "metadata": {
+                      "value": {
+                        "id": 0,
+                        "foreignAuthorId": "string",
+                        "titleSlug": "string",
+                        "name": "string",
+                        "sortName": "string",
+                        "nameLastFirst": "string",
+                        "sortNameLastFirst": "string",
+                        "aliases": [
+                          "string"
+                        ],
+                        "overview": "string",
+                        "disambiguation": "string",
+                        "gender": "string",
+                        "hometown": "string",
+                        "born": "2021-12-12T21:32:22.045Z",
+                        "died": "2021-12-12T21:32:22.045Z",
+                        "status": "continuing",
+                        "images": [
+                          {
+                            "url": "string",
+                            "coverType": "unknown",
+                            "extension": "string"
+                          }
+                        ],
+                        "links": [
+                          {
+                            "url": "string",
+                            "name": "string"
+                          }
+                        ],
+                        "genres": [
+                          "string"
+                        ],
+                        "ratings": {
+                          "votes": 0,
+                          "value": 0,
+                          "popularity": 0
+                        }
+                      },
+                      "isLoaded": true
+                    },
+                    "qualityProfile": {
+                      "value": {
+                        "id": 0,
+                        "name": "string",
+                        "upgradeAllowed": true,
+                        "cutoff": 0,
+                        "items": [
+                          {
+                            "id": 0,
+                            "name": "string",
+                            "quality": {
+                              "id": 0,
+                              "name": "string"
+                            },
+                            "items": [
+                              null
+                            ],
+                            "allowed": true
+                          }
+                        ]
+                      },
+                      "isLoaded": true
+                    },
+                    "metadataProfile": {
+                      "value": {
+                        "id": 0,
+                        "name": "string",
+                        "minPopularity": 0,
+                        "skipMissingDate": true,
+                        "skipMissingIsbn": true,
+                        "skipPartsAndSets": true,
+                        "skipSeriesSecondary": true,
+                        "allowedLanguages": "string",
+                        "minPages": 0,
+                        "ignored": "string"
+                      },
+                      "isLoaded": true
+                    },
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "series": {
+                      "value": [
+                        {
+                          "id": 0,
+                          "foreignSeriesId": "string",
+                          "title": "string",
+                          "description": "string",
+                          "numbered": true,
+                          "workCount": 0,
+                          "primaryWorkCount": 0,
+                          "books": {
+                            "value": [
+                              null
+                            ],
+                            "isLoaded": true
+                          },
+                          "foreignAuthorId": "string"
+                        }
+                      ],
+                      "isLoaded": true
+                    },
+                    "name": "string",
+                    "foreignAuthorId": "string"
+                  },
+                  "isLoaded": true
+                },
+                "edition": {
+                  "isLoaded": true
+                },
+                "partCount": 0
+              }
+            ],
+            "isLoaded": true
+          },
+          "seriesLinks": {
+            "value": [
+              {
+                "id": 0,
+                "position": "string",
+                "seriesId": 0,
+                "bookId": 0,
+                "isPrimary": true,
+                "series": {
+                  "value": {
+                    "id": 0,
+                    "foreignSeriesId": "string",
+                    "title": "string",
+                    "description": "string",
+                    "numbered": true,
+                    "workCount": 0,
+                    "primaryWorkCount": 0,
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "foreignAuthorId": "string"
+                  },
+                  "isLoaded": true
+                },
+                "book": {
+                  "isLoaded": true
+                }
+              }
+            ],
+            "isLoaded": true
+          }
+        },
+        "lastBook": {
+          "id": 0,
+          "authorMetadataId": 0,
+          "foreignBookId": "string",
+          "titleSlug": "string",
+          "title": "string",
+          "releaseDate": "2021-12-12T21:32:22.045Z",
+          "links": [
+            {
+              "url": "string",
+              "name": "string"
+            }
+          ],
+          "genres": [
+            "string"
+          ],
+          "ratings": {
+            "votes": 0,
+            "value": 0,
+            "popularity": 0
+          },
+          "cleanTitle": "string",
+          "monitored": true,
+          "anyEditionOk": true,
+          "lastInfoSync": "2021-12-12T21:32:22.045Z",
+          "added": "2021-12-12T21:32:22.045Z",
+          "addOptions": {
+            "addType": "automatic",
+            "searchForNewBook": true
+          },
+          "authorMetadata": {
+            "value": {
+              "id": 0,
+              "foreignAuthorId": "string",
+              "titleSlug": "string",
+              "name": "string",
+              "sortName": "string",
+              "nameLastFirst": "string",
+              "sortNameLastFirst": "string",
+              "aliases": [
+                "string"
+              ],
+              "overview": "string",
+              "disambiguation": "string",
+              "gender": "string",
+              "hometown": "string",
+              "born": "2021-12-12T21:32:22.045Z",
+              "died": "2021-12-12T21:32:22.045Z",
+              "status": "continuing",
+              "images": [
+                {
+                  "url": "string",
+                  "coverType": "unknown",
+                  "extension": "string"
+                }
+              ],
+              "links": [
+                {
+                  "url": "string",
+                  "name": "string"
+                }
+              ],
+              "genres": [
+                "string"
+              ],
+              "ratings": {
+                "votes": 0,
+                "value": 0,
+                "popularity": 0
+              }
+            },
+            "isLoaded": true
+          },
+          "author": {
+            "value": {
+              "id": 0,
+              "authorMetadataId": 0,
+              "cleanName": "string",
+              "monitored": true,
+              "lastInfoSync": "2021-12-12T21:32:22.045Z",
+              "path": "string",
+              "rootFolderPath": "string",
+              "added": "2021-12-12T21:32:22.045Z",
+              "qualityProfileId": 0,
+              "metadataProfileId": 0,
+              "tags": [
+                0
+              ],
+              "addOptions": {
+                "monitor": "all",
+                "booksToMonitor": [
+                  "string"
+                ],
+                "monitored": true,
+                "searchForMissingBooks": true
+              },
+              "metadata": {
+                "value": {
+                  "id": 0,
+                  "foreignAuthorId": "string",
+                  "titleSlug": "string",
+                  "name": "string",
+                  "sortName": "string",
+                  "nameLastFirst": "string",
+                  "sortNameLastFirst": "string",
+                  "aliases": [
+                    "string"
+                  ],
+                  "overview": "string",
+                  "disambiguation": "string",
+                  "gender": "string",
+                  "hometown": "string",
+                  "born": "2021-12-12T21:32:22.046Z",
+                  "died": "2021-12-12T21:32:22.046Z",
+                  "status": "continuing",
+                  "images": [
+                    {
+                      "url": "string",
+                      "coverType": "unknown",
+                      "extension": "string"
+                    }
+                  ],
+                  "links": [
+                    {
+                      "url": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "genres": [
+                    "string"
+                  ],
+                  "ratings": {
+                    "votes": 0,
+                    "value": 0,
+                    "popularity": 0
+                  }
+                },
+                "isLoaded": true
+              },
+              "qualityProfile": {
+                "value": {
+                  "id": 0,
+                  "name": "string",
+                  "upgradeAllowed": true,
+                  "cutoff": 0,
+                  "items": [
+                    {
+                      "id": 0,
+                      "name": "string",
+                      "quality": {
+                        "id": 0,
+                        "name": "string"
+                      },
+                      "items": [
+                        null
+                      ],
+                      "allowed": true
+                    }
+                  ]
+                },
+                "isLoaded": true
+              },
+              "metadataProfile": {
+                "value": {
+                  "id": 0,
+                  "name": "string",
+                  "minPopularity": 0,
+                  "skipMissingDate": true,
+                  "skipMissingIsbn": true,
+                  "skipPartsAndSets": true,
+                  "skipSeriesSecondary": true,
+                  "allowedLanguages": "string",
+                  "minPages": 0,
+                  "ignored": "string"
+                },
+                "isLoaded": true
+              },
+              "books": {
+                "value": [
+                  null
+                ],
+                "isLoaded": true
+              },
+              "series": {
+                "value": [
+                  {
+                    "id": 0,
+                    "foreignSeriesId": "string",
+                    "title": "string",
+                    "description": "string",
+                    "numbered": true,
+                    "workCount": 0,
+                    "primaryWorkCount": 0,
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "foreignAuthorId": "string"
+                  }
+                ],
+                "isLoaded": true
+              },
+              "name": "string",
+              "foreignAuthorId": "string"
+            },
+            "isLoaded": true
+          },
+          "editions": {
+            "value": [
+              {
+                "id": 0,
+                "bookId": 0,
+                "foreignEditionId": "string",
+                "titleSlug": "string",
+                "isbn13": "string",
+                "asin": "string",
+                "title": "string",
+                "language": "string",
+                "overview": "string",
+                "format": "string",
+                "isEbook": true,
+                "disambiguation": "string",
+                "publisher": "string",
+                "pageCount": 0,
+                "releaseDate": "2021-12-12T21:32:22.046Z",
+                "images": [
+                  {
+                    "url": "string",
+                    "coverType": "unknown",
+                    "extension": "string"
+                  }
+                ],
+                "links": [
+                  {
+                    "url": "string",
+                    "name": "string"
+                  }
+                ],
+                "ratings": {
+                  "votes": 0,
+                  "value": 0,
+                  "popularity": 0
+                },
+                "monitored": true,
+                "manualAdd": true,
+                "book": {
+                  "isLoaded": true
+                },
+                "bookFiles": {
+                  "value": [
+                    {
+                      "id": 0,
+                      "path": "string",
+                      "size": 0,
+                      "modified": "2021-12-12T21:32:22.046Z",
+                      "dateAdded": "2021-12-12T21:32:22.046Z",
+                      "sceneName": "string",
+                      "releaseGroup": "string",
+                      "quality": {
+                        "quality": {
+                          "id": 0,
+                          "name": "string"
+                        },
+                        "revision": {
+                          "version": 0,
+                          "real": 0,
+                          "isRepack": true
+                        }
+                      },
+                      "mediaInfo": {
+                        "audioFormat": "string",
+                        "audioBitrate": 0,
+                        "audioChannels": 0,
+                        "audioBits": 0,
+                        "audioSampleRate": 0
+                      },
+                      "editionId": 0,
+                      "calibreId": 0,
+                      "part": 0,
+                      "author": {
+                        "value": {
+                          "id": 0,
+                          "authorMetadataId": 0,
+                          "cleanName": "string",
+                          "monitored": true,
+                          "lastInfoSync": "2021-12-12T21:32:22.046Z",
+                          "path": "string",
+                          "rootFolderPath": "string",
+                          "added": "2021-12-12T21:32:22.046Z",
+                          "qualityProfileId": 0,
+                          "metadataProfileId": 0,
+                          "tags": [
+                            0
+                          ],
+                          "addOptions": {
+                            "monitor": "all",
+                            "booksToMonitor": [
+                              "string"
+                            ],
+                            "monitored": true,
+                            "searchForMissingBooks": true
+                          },
+                          "metadata": {
+                            "value": {
+                              "id": 0,
+                              "foreignAuthorId": "string",
+                              "titleSlug": "string",
+                              "name": "string",
+                              "sortName": "string",
+                              "nameLastFirst": "string",
+                              "sortNameLastFirst": "string",
+                              "aliases": [
+                                "string"
+                              ],
+                              "overview": "string",
+                              "disambiguation": "string",
+                              "gender": "string",
+                              "hometown": "string",
+                              "born": "2021-12-12T21:32:22.046Z",
+                              "died": "2021-12-12T21:32:22.046Z",
+                              "status": "continuing",
+                              "images": [
+                                {
+                                  "url": "string",
+                                  "coverType": "unknown",
+                                  "extension": "string"
+                                }
+                              ],
+                              "links": [
+                                {
+                                  "url": "string",
+                                  "name": "string"
+                                }
+                              ],
+                              "genres": [
+                                "string"
+                              ],
+                              "ratings": {
+                                "votes": 0,
+                                "value": 0,
+                                "popularity": 0
+                              }
+                            },
+                            "isLoaded": true
+                          },
+                          "qualityProfile": {
+                            "value": {
+                              "id": 0,
+                              "name": "string",
+                              "upgradeAllowed": true,
+                              "cutoff": 0,
+                              "items": [
+                                {
+                                  "id": 0,
+                                  "name": "string",
+                                  "quality": {
+                                    "id": 0,
+                                    "name": "string"
+                                  },
+                                  "items": [
+                                    null
+                                  ],
+                                  "allowed": true
+                                }
+                              ]
+                            },
+                            "isLoaded": true
+                          },
+                          "metadataProfile": {
+                            "value": {
+                              "id": 0,
+                              "name": "string",
+                              "minPopularity": 0,
+                              "skipMissingDate": true,
+                              "skipMissingIsbn": true,
+                              "skipPartsAndSets": true,
+                              "skipSeriesSecondary": true,
+                              "allowedLanguages": "string",
+                              "minPages": 0,
+                              "ignored": "string"
+                            },
+                            "isLoaded": true
+                          },
+                          "books": {
+                            "value": [
+                              null
+                            ],
+                            "isLoaded": true
+                          },
+                          "series": {
+                            "value": [
+                              {
+                                "id": 0,
+                                "foreignSeriesId": "string",
+                                "title": "string",
+                                "description": "string",
+                                "numbered": true,
+                                "workCount": 0,
+                                "primaryWorkCount": 0,
+                                "books": {
+                                  "value": [
+                                    null
+                                  ],
+                                  "isLoaded": true
+                                },
+                                "foreignAuthorId": "string"
+                              }
+                            ],
+                            "isLoaded": true
+                          },
+                          "name": "string",
+                          "foreignAuthorId": "string"
+                        },
+                        "isLoaded": true
+                      },
+                      "edition": {
+                        "isLoaded": true
+                      },
+                      "partCount": 0
+                    }
+                  ],
+                  "isLoaded": true
+                }
+              }
+            ],
+            "isLoaded": true
+          },
+          "bookFiles": {
+            "value": [
+              {
+                "id": 0,
+                "path": "string",
+                "size": 0,
+                "modified": "2021-12-12T21:32:22.046Z",
+                "dateAdded": "2021-12-12T21:32:22.046Z",
+                "sceneName": "string",
+                "releaseGroup": "string",
+                "quality": {
+                  "quality": {
+                    "id": 0,
+                    "name": "string"
+                  },
+                  "revision": {
+                    "version": 0,
+                    "real": 0,
+                    "isRepack": true
+                  }
+                },
+                "mediaInfo": {
+                  "audioFormat": "string",
+                  "audioBitrate": 0,
+                  "audioChannels": 0,
+                  "audioBits": 0,
+                  "audioSampleRate": 0
+                },
+                "editionId": 0,
+                "calibreId": 0,
+                "part": 0,
+                "author": {
+                  "value": {
+                    "id": 0,
+                    "authorMetadataId": 0,
+                    "cleanName": "string",
+                    "monitored": true,
+                    "lastInfoSync": "2021-12-12T21:32:22.046Z",
+                    "path": "string",
+                    "rootFolderPath": "string",
+                    "added": "2021-12-12T21:32:22.046Z",
+                    "qualityProfileId": 0,
+                    "metadataProfileId": 0,
+                    "tags": [
+                      0
+                    ],
+                    "addOptions": {
+                      "monitor": "all",
+                      "booksToMonitor": [
+                        "string"
+                      ],
+                      "monitored": true,
+                      "searchForMissingBooks": true
+                    },
+                    "metadata": {
+                      "value": {
+                        "id": 0,
+                        "foreignAuthorId": "string",
+                        "titleSlug": "string",
+                        "name": "string",
+                        "sortName": "string",
+                        "nameLastFirst": "string",
+                        "sortNameLastFirst": "string",
+                        "aliases": [
+                          "string"
+                        ],
+                        "overview": "string",
+                        "disambiguation": "string",
+                        "gender": "string",
+                        "hometown": "string",
+                        "born": "2021-12-12T21:32:22.046Z",
+                        "died": "2021-12-12T21:32:22.046Z",
+                        "status": "continuing",
+                        "images": [
+                          {
+                            "url": "string",
+                            "coverType": "unknown",
+                            "extension": "string"
+                          }
+                        ],
+                        "links": [
+                          {
+                            "url": "string",
+                            "name": "string"
+                          }
+                        ],
+                        "genres": [
+                          "string"
+                        ],
+                        "ratings": {
+                          "votes": 0,
+                          "value": 0,
+                          "popularity": 0
+                        }
+                      },
+                      "isLoaded": true
+                    },
+                    "qualityProfile": {
+                      "value": {
+                        "id": 0,
+                        "name": "string",
+                        "upgradeAllowed": true,
+                        "cutoff": 0,
+                        "items": [
+                          {
+                            "id": 0,
+                            "name": "string",
+                            "quality": {
+                              "id": 0,
+                              "name": "string"
+                            },
+                            "items": [
+                              null
+                            ],
+                            "allowed": true
+                          }
+                        ]
+                      },
+                      "isLoaded": true
+                    },
+                    "metadataProfile": {
+                      "value": {
+                        "id": 0,
+                        "name": "string",
+                        "minPopularity": 0,
+                        "skipMissingDate": true,
+                        "skipMissingIsbn": true,
+                        "skipPartsAndSets": true,
+                        "skipSeriesSecondary": true,
+                        "allowedLanguages": "string",
+                        "minPages": 0,
+                        "ignored": "string"
+                      },
+                      "isLoaded": true
+                    },
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "series": {
+                      "value": [
+                        {
+                          "id": 0,
+                          "foreignSeriesId": "string",
+                          "title": "string",
+                          "description": "string",
+                          "numbered": true,
+                          "workCount": 0,
+                          "primaryWorkCount": 0,
+                          "books": {
+                            "value": [
+                              null
+                            ],
+                            "isLoaded": true
+                          },
+                          "foreignAuthorId": "string"
+                        }
+                      ],
+                      "isLoaded": true
+                    },
+                    "name": "string",
+                    "foreignAuthorId": "string"
+                  },
+                  "isLoaded": true
+                },
+                "edition": {
+                  "isLoaded": true
+                },
+                "partCount": 0
+              }
+            ],
+            "isLoaded": true
+          },
+          "seriesLinks": {
+            "value": [
+              {
+                "id": 0,
+                "position": "string",
+                "seriesId": 0,
+                "bookId": 0,
+                "isPrimary": true,
+                "series": {
+                  "value": {
+                    "id": 0,
+                    "foreignSeriesId": "string",
+                    "title": "string",
+                    "description": "string",
+                    "numbered": true,
+                    "workCount": 0,
+                    "primaryWorkCount": 0,
+                    "books": {
+                      "value": [
+                        null
+                      ],
+                      "isLoaded": true
+                    },
+                    "foreignAuthorId": "string"
+                  },
+                  "isLoaded": true
+                },
+                "book": {
+                  "isLoaded": true
+                }
+              }
+            ],
+            "isLoaded": true
+          }
+        },
+        "images": [
+          {
+            "url": "string",
+            "coverType": "unknown",
+            "extension": "string"
+          }
+        ],
+        "remotePoster": "string",
+        "path": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": true,
+        "rootFolderPath": "string",
+        "genres": [
+          "string"
+        ],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [
+          0
+        ],
+        "added": "2021-12-12T21:32:22.046Z",
+        "addOptions": {
+          "monitor": "all",
+          "booksToMonitor": [
+            "string"
+          ],
+          "monitored": true,
+          "searchForMissingBooks": true
+        },
+        "ratings": {
+          "votes": 0,
+          "value": 0,
+          "popularity": 0
+        },
+        "statistics": {
+          "bookFileCount": 0,
+          "bookCount": 0,
+          "availableBookCount": 0,
+          "totalBookCount": 0,
+          "sizeOnDisk": 0,
+          "percentOfBooks": 0
+        }
+      },
+      "images": [
+        {
+          "url": "string",
+          "coverType": "unknown",
+          "extension": "string"
+        }
+      ],
+      "links": [
+        {
+          "url": "string",
+          "name": "string"
+        }
+      ],
+      "statistics": {
+        "bookFileCount": 0,
+        "bookCount": 0,
+        "totalBookCount": 0,
+        "sizeOnDisk": 0,
+        "percentOfBooks": 0
+      },
+      "added": "2021-12-12T21:32:22.046Z",
+      "addOptions": {
+        "addType": "automatic",
+        "searchForNewBook": true
+      },
+      "remoteCover": "string",
+      "editions": [
+        {
+          "id": 0,
+          "bookId": 0,
+          "foreignEditionId": "string",
+          "titleSlug": "string",
+          "isbn13": "string",
+          "asin": "string",
+          "title": "string",
+          "language": "string",
+          "overview": "string",
+          "format": "string",
+          "isEbook": true,
+          "disambiguation": "string",
+          "publisher": "string",
+          "pageCount": 0,
+          "releaseDate": "2021-12-12T21:32:22.046Z",
+          "images": [
+            {
+              "url": "string",
+              "coverType": "unknown",
+              "extension": "string"
+            }
+          ],
+          "links": [
+            {
+              "url": "string",
+              "name": "string"
+            }
+          ],
+          "ratings": {
+            "votes": 0,
+            "value": 0,
+            "popularity": 0
+          },
+          "monitored": true,
+          "manualAdd": true,
+          "remoteCover": "string",
+          "grabbed": true
+        }
+      ],
+      "grabbed": true
+    }
+  ]
+}

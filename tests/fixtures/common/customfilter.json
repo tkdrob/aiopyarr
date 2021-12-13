@@ -1,0 +1,16 @@
+[
+  {
+    "type": "string",
+    "label": "string",
+    "filters": [
+      {
+        "key": "string",
+        "value": [
+          "string"
+        ],
+        "type": "string"
+      }
+    ],
+    "id": 10
+  }
+]

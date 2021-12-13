@@ -1,19 +1,13 @@
 """Tests for Radarr object models."""
 from datetime import datetime
-from aiopyarr.models.common import Diskspace
 from aiopyarr.models.radarr import (
     RadarrCommand,
-    RadarrCustomFilter,
     RadarrHealth,
-    RadarrHostConfig,
     RadarrMetadataConfig,
     RadarrNamingConfig,
     RadarrQualityProfile,
     RadarrQueueStatus,
     RadarrRemotePathMapping,
-    RadarrRootFolder,
-    RadarrSystemStatus,
-    RadarrUIConfig,
     RadarrUpdate,
 )
 
@@ -283,60 +277,6 @@ async def test_async_get_command(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_host_config(aresponses):
-    """Test getting host configuration."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/config/host?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/config-host.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: RadarrHostConfig = await client.async_get_host_config()
-
-        assert data.analyticsEnabled is True
-        assert data.apiKey == "string"
-        assert data.authenticationMethod == "string"
-        assert data.backupFolder == "string"
-        assert data.backupInterval == 0
-        assert data.backupRetention == 0
-        assert data.bindAddress == "string"
-        assert data.branch == "string"
-        assert data.certificateValidation == "string"
-        assert data.consoleLogLevel == "string"
-        assert data.enableSsl is True
-        assert data.id == 0
-        assert data.launchBrowser is True
-        assert data.logLevel == "string"
-        assert data.password == "string"
-        assert data.port == 0
-        assert data.proxyBypassFilter == "string"
-        assert data.proxyBypassLocalAddresses is True
-        assert data.proxyEnabled is True
-        assert data.proxyHostname == "string"
-        assert data.proxyPassword == "string"
-        assert data.proxyPort == 0
-        assert data.proxyType == "string"
-        assert data.proxyUsername == "string"
-        assert data.sslCertPassword == "string"
-        assert data.sslCertPath == "string"
-        assert data.sslPort == 0
-        assert data.urlBase == "string"
-        assert data.updateAutomatically is True
-        assert data.updateMechanism == "string"
-        assert data.updateScriptPath == "string"
-        assert data.username == "string"
-
-
-@pytest.mark.asyncio
 async def test_async_get_naming_config(aresponses):
     """Test getting naming configuration."""
     aresponses.add(
@@ -364,92 +304,6 @@ async def test_async_get_naming_config(aresponses):
         assert data.replaceIllegalCharacters is True
         assert data.replaceSpaces is True
         assert data.standardMovieFormat == "string"
-
-
-@pytest.mark.asyncio
-async def test_async_get_ui_config(aresponses):
-    """Test getting ui configuration."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/config/ui?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/config-ui.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: RadarrUIConfig = await client.async_get_ui_config()
-
-        assert data.calendarWeekColumnHeader == "ddd M/D"
-        assert data.enableColorImpairedMode is False
-        assert data.firstDayOfWeek == 0
-        assert data.id == 1
-        assert data.longDateFormat == "dddd, MMMM D YYYY"
-        assert data.movieInfoLanguage == 1
-        assert data.movieRuntimeFormat == "hoursMinutes"
-        assert data.shortDateFormat == "MMM D YYYY"
-        assert data.showRelativeDates is True
-        assert data.timeFormat == "h(:mm)a"
-
-
-@pytest.mark.asyncio
-async def test_async_get_custom_filters(aresponses):
-    """Test getting blocklisted movie."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/customfilter?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/customfilter.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: list[RadarrCustomFilter] = await client.async_get_custom_filters()
-
-        assert data[0].id == 10
-        assert data[0].type == "movieIndex"
-        assert data[0].label == "Rated G"
-        assert data[0].filters[0].key == "certification"
-        assert data[0].filters[0].value == ["G"]
-        assert data[0].filters[0].type == "equal"
-
-
-@pytest.mark.asyncio
-async def test_async_get_diskspace(aresponses):
-    """Test getting diskspace."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/diskspace?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/diskspace.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: list[Diskspace] = await client.async_get_diskspace()
-
-        assert data[0].freeSpace == 16187217043456
-        assert data[0].label == "DrivePool"
-        assert data[0].path == "D:\\"
-        assert data[0].totalSpace == 56009755148288
 
 
 @pytest.mark.asyncio
@@ -1079,81 +933,6 @@ async def test_async_get_remote_path_mappings(aresponses):
         assert data[0].remotePath == "C:\\"
         assert data[0].localPath == "A:\\Movies\\"
         assert data[0].id == 1
-
-
-@pytest.mark.asyncio
-async def test_async_get_root_folders(aresponses):
-    """Test getting root folders."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/rootfolder?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/rootfolder.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: list[RadarrRootFolder] = await client.async_get_root_folders()
-
-        assert data[0].path == "C:\\Downloads\\Movies"
-        assert data[0].freeSpace == 282500063232
-        assert data[0].unmappedFolders[0].name == "string"
-        assert data[0].unmappedFolders[0].path == "path"
-        assert data[0].id == 1
-
-
-@pytest.mark.asyncio
-async def test_async_get_system_status(aresponses):
-    """Test getting system status."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        "/api/v3/system/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/system-status.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: RadarrSystemStatus = await client.async_get_system_status()
-
-        assert data.appData == "C:\\ProgramData\\Radarr"
-        assert data.authentication is True
-        assert data.branch == "nightly"
-        assert data.buildTime == "2020-09-01T23:23:23.9621974Z"
-        assert data.isAdmin is False
-        assert data.isDebug is True
-        assert data.isDocker is False
-        assert data.isLinux is False
-        assert data.isMono is False
-        assert data.isNetCore is True
-        assert data.isOsx is False
-        assert data.isProduction is False
-        assert data.isUserInteractive is True
-        assert data.isWindows is True
-        assert data.migrationVersion == 180
-        assert data.mode == "console"
-        assert data.osName == "Windows"
-        assert data.osVersion == "10.0.18363.0"
-        assert data.packageUpdateMechanism == "builtIn"
-        assert data.runtimeName == "netCore"
-        assert data.runtimeVersion == "3.1.10"
-        assert data.sqliteVersion == "3.32.1"
-        assert data.startTime == "2020-09-01T23:50:20.2415965Z"
-        assert data.startupPath == "C:\\ProgramData\\Radarr"
-        assert data.urlBase == ""
-        assert data.version == "10.0.0.34882"
 
 
 @pytest.mark.asyncio

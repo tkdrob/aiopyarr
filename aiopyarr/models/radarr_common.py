@@ -243,15 +243,6 @@ class _RadarrCalendarMovieFile(_RadarrMovieFileCommon):
 
 
 @dataclass(init=False)
-class _RadarrCustomFilterAttr(BaseModel):
-    """Radarr custom filter attributes."""
-
-    key: str | None = None
-    type: str | None = None
-    value: list[str] | None = None
-
-
-@dataclass(init=False)
 class _RadarrCommandBody(BaseModel):
     """Radarr command body attributes."""
 
@@ -267,14 +258,6 @@ class _RadarrCommandBody(BaseModel):
     suppressMessages: bool | None = None
     trigger: str | None = None
     updateScheduledTask: bool | None = None
-
-
-@dataclass(init=False)
-class _RadarrUnmappedRootFolder(BaseModel):
-    """Radarr root unmapped folder attributes."""
-
-    name: str | None = None
-    path: str | None = None
 
 
 @dataclass(init=False)

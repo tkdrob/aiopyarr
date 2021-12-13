@@ -3,58 +3,10 @@ from __future__ import annotations
 
 import json
 from enum import Enum
-from typing import TYPE_CHECKING, Any
-
+from typing import Any
 
 from ..const import LOGGER
-from .const import CONVERT_TO_BOOL, CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
-
-if TYPE_CHECKING:
-    from .sonarr import (
-        SonarrCalendar,
-        SonarrCommand,
-        SonarrEpisode,
-        SonarrEpisodeFile,
-        SonarrHistory,
-        SonarrParse,
-        SonarrRelease,
-        SonarrSeries,
-        SonarrSeriesLookup,
-        SonarrWantedMissing,
-        SonarrQualityProfile,
-        SonarrQueue,
-        SonarrRootFolder,
-        SonarrSystemStatus,
-    )
-    from .radarr import (
-        RadarrMovieEditor,
-        RadarrBlocklist,
-        RadarrBlocklistMovie,
-        RadarrCalendar,
-        RadarrDownloadClient,
-        RadarrHostConfig,
-        RadarrImportList,
-        RadarrIndexer,
-        RadarrMovie,
-        RadarrMovieFile,
-        RadarrMovieHistory,
-        RadarrNamingConfig,
-        RadarrNotification,
-        RadarrQueue,
-        RadarrQueueDetail,
-        RadarrUIConfig,
-        RadarrCommand,
-        RadarrCustomFilter,
-        RadarrHealth,
-        RadarrMetadataConfig,
-        RadarrQualityProfile,
-        RadarrQueueStatus,
-        RadarrRemotePathMapping,
-        RadarrRootFolder,
-        RadarrSystemStatus,
-        RadarrUpdate,
-    )
-    from .common import Diskspace, Logs, Tag, SystemBackup
+from .const import CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -77,74 +29,12 @@ class ApiJSONEncoder(json.JSONEncoder):
 class BaseModel:
     """BaseModel."""
 
-    # fmt: off
-    _datatype: (type[Logs] | type[Diskspace] | type[RadarrBlocklist]
-                | type[RadarrBlocklistMovie] | type[RadarrCalendar] | type[RadarrCommand]
-                | type[RadarrCustomFilter] | type[RadarrDownloadClient] | type[RadarrHealth]
-                | type[RadarrHostConfig] | type[RadarrImportList] | type[RadarrIndexer]
-                | type[RadarrMetadataConfig] | type[RadarrMovie] | type[RadarrMovieEditor]
-                | type[RadarrMovieFile] | type[RadarrMovieHistory] | type[RadarrNamingConfig]
-                | type[RadarrNotification] | type[RadarrQualityProfile] | type[RadarrQueue]
-                | type[RadarrQueueDetail] | type[RadarrQueueStatus] | type[RadarrRemotePathMapping]
-                | type[RadarrRootFolder] | type[RadarrSystemStatus]
-                | type[RadarrUIConfig] | type[RadarrUpdate] | type[SonarrCalendar]
-                | type[SonarrCommand] | type[SonarrEpisode] | type[SonarrEpisodeFile]
-                | type[SonarrHistory] | type[SonarrParse] | type[SonarrQualityProfile]
-                | type[SonarrQueue] | type[SonarrRelease] | type[SonarrRootFolder]
-                | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemStatus]
-                | type[SonarrWantedMissing] | type[Tag] | type[SystemBackup]
-                | None
-                ) = None
-    # fmt: on
+    _datatype: Any = None
 
     def __init__(
         self,
         data: dict[str, Any] | list[dict[str, Any]],
-        datatype: type[Logs]
-        | type[Diskspace]
-        | type[RadarrBlocklist]
-        | type[RadarrBlocklistMovie]
-        | type[RadarrCalendar]
-        | type[RadarrCommand]
-        | type[RadarrCustomFilter]
-        | type[RadarrDownloadClient]
-        | type[RadarrHealth]
-        | type[RadarrHostConfig]
-        | type[RadarrImportList]
-        | type[RadarrIndexer]
-        | type[RadarrMetadataConfig]
-        | type[RadarrMovie]
-        | type[RadarrMovieEditor]
-        | type[RadarrMovieFile]
-        | type[RadarrMovieHistory]
-        | type[RadarrNamingConfig]
-        | type[RadarrNotification]
-        | type[RadarrQualityProfile]
-        | type[RadarrQueue]
-        | type[RadarrQueueDetail]
-        | type[RadarrQueueStatus]
-        | type[RadarrRemotePathMapping]
-        | type[RadarrRootFolder]
-        | type[RadarrSystemStatus]
-        | type[RadarrUIConfig]
-        | type[RadarrUpdate]
-        | type[SonarrCalendar]
-        | type[SonarrCommand]
-        | type[SonarrEpisode]
-        | type[SonarrEpisodeFile]
-        | type[SonarrHistory]
-        | type[SonarrParse]
-        | type[SonarrQualityProfile]
-        | type[SonarrQueue]
-        | type[SonarrRelease]
-        | type[SonarrRootFolder]
-        | type[SonarrSeries]
-        | type[SonarrSeriesLookup]
-        | type[SonarrSystemStatus]
-        | type[SonarrWantedMissing]
-        | type[SystemBackup]
-        | type[Tag]
-        | None = None,
+        datatype: Any = None,
     ) -> None:
         """Init."""
         self._datatype = datatype
@@ -168,14 +58,13 @@ class BaseModel:
 
     def __post_init__(self):
         """Post init."""
-        for key in CONVERT_TO_BOOL:
-            if hasattr(self, key) and self.__getattribute__(key) is not None:
-                self.__setattr__(key, bool(self.__getattribute__(key)))
-            if hasattr(self, "completionMessage"):
-                if self.__getattribute__("isNewMovie") is None:
-                    self.__setattr__("isNewMovie", False)
-                else:
-                    LOGGER.debug("isNewMovie is now always included by API")
+        if hasattr(self, "completionMessage") and (
+            not hasattr(self, "clientUserAgent") or not hasattr(self, "lastStartTime")
+        ):
+            if self.__getattribute__("isNewMovie") is None:
+                self.__setattr__("isNewMovie", False)
+            else:
+                LOGGER.debug("isNewMovie is now always included by API")
         for key in CONVERT_TO_FLOAT:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
                 self.__setattr__(key, float(self.__getattribute__(key)))

@@ -2,57 +2,9 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from .base import BaseModel
-
-if TYPE_CHECKING:
-    from .common import Diskspace, Logs, Tag, SystemBackup
-
-    from .radarr import (  # isort:skip
-        RadarrBlocklist,
-        RadarrBlocklistMovie,
-        RadarrCalendar,
-        RadarrCommand,
-        RadarrCustomFilter,
-        RadarrDownloadClient,
-        RadarrHealth,
-        RadarrHostConfig,
-        RadarrImportList,
-        RadarrIndexer,
-        RadarrMetadataConfig,
-        RadarrMovie,
-        RadarrMovieEditor,
-        RadarrMovieFile,
-        RadarrMovieHistory,
-        RadarrNamingConfig,
-        RadarrNotification,
-        RadarrQualityProfile,
-        RadarrQueue,
-        RadarrQueueDetail,
-        RadarrQueueStatus,
-        RadarrRemotePathMapping,
-        RadarrRootFolder,
-        RadarrSystemStatus,
-        RadarrUIConfig,
-        RadarrUpdate,
-    )
-    from .sonarr import (  # isort:skip
-        SonarrCalendar,
-        SonarrCommand,
-        SonarrEpisode,
-        SonarrEpisodeFile,
-        SonarrHistory,
-        SonarrParse,
-        SonarrQualityProfile,
-        SonarrQueue,
-        SonarrRelease,
-        SonarrRootFolder,
-        SonarrSeries,
-        SonarrSeriesLookup,
-        SonarrSystemStatus,
-        SonarrWantedMissing,
-    )
 
 
 class APIResult(str, Enum):
@@ -68,57 +20,8 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
     data: dict[str, Any] | list[dict[str, Any]] | None = None
     message: str | None = None
     result: APIResult | None = None
-    # fmt: off
 
-    def _generate_data(
-        self, data: dict[str, Any] | list[dict[str, Any]]
-    ) -> (
-        Logs
-        | Diskspace
-        | RadarrBlocklist
-        | RadarrBlocklistMovie
-        | RadarrCalendar
-        | RadarrCommand
-        | RadarrCustomFilter
-        | RadarrDownloadClient
-        | RadarrHealth
-        | RadarrHostConfig
-        | RadarrImportList
-        | RadarrIndexer
-        | RadarrMetadataConfig
-        | RadarrMovie
-        | RadarrMovieEditor
-        | RadarrMovieFile
-        | RadarrMovieHistory
-        | RadarrNamingConfig
-        | RadarrNotification
-        | RadarrQualityProfile
-        | RadarrQueue
-        | RadarrQueueDetail
-        | RadarrQueueStatus
-        | RadarrRemotePathMapping
-        | RadarrRootFolder
-        | RadarrSystemStatus
-        | RadarrUIConfig
-        | RadarrUpdate
-        | SonarrCalendar
-        | SonarrCommand
-        | SonarrEpisode
-        | SonarrEpisodeFile
-        | SonarrHistory
-        | SonarrParse
-        | SonarrQualityProfile
-        | SonarrQueue
-        | SonarrRelease
-        | SonarrRootFolder
-        | SonarrSeries
-        | SonarrSeriesLookup
-        | SonarrSystemStatus
-        | SonarrWantedMissing
-        | SystemBackup
-        | type[Tag]
-        | dict[str, Any] | list[dict[str, Any]] | list
-    ):  # fmt: on
+    def _generate_data(self, data: dict[str, Any] | list[dict[str, Any]]) -> Any:
         """Generate data."""
         if self._datatype is None:
             return data

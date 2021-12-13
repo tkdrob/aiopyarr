@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .base import BaseModel
+from .common import Tag, _RecordCommon
 
 from .radarr_common import (  # isort:skip
     _RadarrCalendarMovieFile,
@@ -12,7 +13,6 @@ from .radarr_common import (  # isort:skip
     _RadarrCommon,
     _RadarrCommon2,
     _RadarrCommon4,
-    _RadarrCustomFilterAttr,
     _RadarrMovieCustomFormats,
     _RadarrMovie,
     _RadarrMovieFileCommon,
@@ -22,10 +22,8 @@ from .radarr_common import (  # isort:skip
     _RadarrNotificationMessage,
     _RadarrQualityProfileItems,
     _RadarrQueueStatusMessages,
-    _RadarrUnmappedRootFolder,
     _RadarrUpdateChanges,
 )
-from .common import Tag, _RecordCommon
 
 
 @dataclass(init=False)
@@ -219,60 +217,6 @@ class Diskspace(BaseModel):
 
 
 @dataclass(init=False)
-class RadarrUIConfig(BaseModel):
-    """Radarr UI config attributes."""
-
-    calendarWeekColumnHeader: str | None = None
-    enableColorImpairedMode: bool | None = None
-    firstDayOfWeek: int | None = None
-    id: int | None = None
-    longDateFormat: str | None = None
-    movieInfoLanguage: int | None = None
-    movieRuntimeFormat: str | None = None
-    shortDateFormat: str | None = None
-    showRelativeDates: bool | None = None
-    timeFormat: str | None = None
-
-
-@dataclass(init=False)
-class RadarrHostConfig(BaseModel):
-    """Radarr host config attributes."""
-
-    analyticsEnabled: bool | None = None
-    apiKey: str | None = None
-    authenticationMethod: str | None = None
-    backupFolder: str | None = None
-    backupInterval: int | None = None
-    backupRetention: int | None = None
-    bindAddress: str | None = None
-    branch: str | None = None
-    certificateValidation: str | None = None
-    consoleLogLevel: str | None = None
-    enableSsl: bool | None = None
-    id: int | None = None
-    launchBrowser: bool | None = None
-    logLevel: str | None = None
-    password: str | None = None
-    port: int | None = None
-    proxyBypassFilter: str | None = None
-    proxyBypassLocalAddresses: bool | None = None
-    proxyEnabled: bool | None = None
-    proxyHostname: str | None = None
-    proxyPassword: str | None = None
-    proxyPort: int | None = None
-    proxyType: str | None = None
-    proxyUsername: str | None = None
-    sslCertPassword: str | None = None
-    sslCertPath: str | None = None
-    sslPort: int | None = None
-    urlBase: str | None = None
-    updateAutomatically: bool | None = None
-    updateMechanism: str | None = None
-    updateScriptPath: str | None = None
-    username: str | None = None
-
-
-@dataclass(init=False)
 class RadarrNamingConfig(BaseModel):
     """Radarr host naming config attributes."""
 
@@ -294,38 +238,6 @@ class RadarrMetadataConfig(_RadarrCommon, BaseModel):
     enable: bool | None = None
     id: int | None = None
     tags: list[int] | None = None
-
-
-@dataclass(init=False)
-class RadarrSystemStatus(BaseModel):
-    """Radarr system status attributes."""
-
-    appData: str | None = None
-    authentication: str | None = None
-    branch: str | None = None
-    buildTime: str | None = None
-    isAdmin: bool | None = None
-    isDebug: bool | None = None
-    isDocker: bool | None = None
-    isLinux: bool | None = None
-    isMono: bool | None = None
-    isNetCore: bool | None = None
-    isOsx: bool | None = None
-    isProduction: bool | None = None
-    isUserInteractive: bool | None = None
-    isWindows: bool | None = None
-    migrationVersion: int | None = None
-    mode: str | None = None
-    osName: str | None = None
-    osVersion: str | None = None
-    packageUpdateMechanism: str | None = None
-    runtimeVersion: str | None = None
-    runtimeName: str | None = None
-    sqliteVersion: str | None = None
-    startTime: str | None = None
-    startupPath: str | None = None
-    urlBase: str | None = None
-    version: str | None = None
 
 
 @dataclass(init=False)
@@ -396,23 +308,6 @@ class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
 
 
 @dataclass(init=False)
-class RadarrCustomFilter(BaseModel):
-    """Radarr custom filter attributes."""
-
-    id: int | None = None
-    filters: list[_RadarrCustomFilterAttr] | None = None
-    label: str | None = None
-    type: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.filters = [
-            _RadarrCustomFilterAttr(filter) for filter in self.filters or []
-        ]
-
-
-@dataclass(init=False)
 class RadarrRemotePathMapping(BaseModel):
     """Radarr remote path mapping attributes."""
 
@@ -420,23 +315,6 @@ class RadarrRemotePathMapping(BaseModel):
     host: str | None = None
     localPath: str | None = None
     remotePath: str | None = None
-
-
-@dataclass(init=False)
-class RadarrRootFolder(BaseModel):
-    """Radarr root folder attributes."""
-
-    id: int | None = None
-    freeSpace: int | None = None
-    path: str | None = None
-    unmappedFolders: list[_RadarrUnmappedRootFolder] | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.unmappedFolders = [
-            _RadarrUnmappedRootFolder(unmap) for unmap in self.unmappedFolders or []
-        ]
 
 
 @dataclass(init=False)

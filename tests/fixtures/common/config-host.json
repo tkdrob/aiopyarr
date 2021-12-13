@@ -12,6 +12,7 @@
   "consoleLogLevel": "string",
   "branch": "string",
   "apiKey": "string",
+  "sslCertHash": "string",
   "sslCertPath": "string",
   "sslCertPassword": "string",
   "urlBase": "string",

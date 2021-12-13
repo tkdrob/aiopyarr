@@ -3,15 +3,28 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
-from typing import TYPE_CHECKING
+from typing import Any
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
+
 from aiopyarr.decorator import api_command
 
 from .const import ATTR_DATA, LOGGER, HTTPMethod, HTTPResponse
-from .models.common import LogFiles, Logs
 from .models.host_configuration import PyArrHostConfiguration
 from .models.response import PyArrResponse
+
+from .models.common import (  # isort:skip
+    CustomFilter,
+    Diskspace,
+    HostConfig,
+    LogFiles,
+    Logs,
+    RootFolder,
+    SystemBackup,
+    SystemStatus,
+    Tag,
+    UIConfig,
+)
 
 from .exceptions import (  # isort:skip
     ArrAuthenticationException,
@@ -19,55 +32,6 @@ from .exceptions import (  # isort:skip
     ArrException,
     ArrResourceNotFound,
 )
-from .models.common import Diskspace, Tag, SystemBackup
-
-if TYPE_CHECKING:
-    from .models.radarr import (  # isort:skip
-        RadarrBlocklist,
-        RadarrBlocklistMovie,
-        RadarrCalendar,
-        RadarrCommand,
-        RadarrCustomFilter,
-        RadarrDownloadClient,
-        RadarrHealth,
-        RadarrHostConfig,
-        RadarrImportList,
-        RadarrIndexer,
-        RadarrMetadataConfig,
-        RadarrMovie,
-        RadarrMovieEditor,
-        RadarrMovieFile,
-        RadarrMovieHistory,
-        RadarrNamingConfig,
-        RadarrNotification,
-        RadarrQualityProfile,
-        RadarrQueue,
-        RadarrQueueDetail,
-        RadarrQueueStatus,
-        RadarrRemotePathMapping,
-        RadarrRootFolder,
-        RadarrSystemStatus,
-        RadarrUIConfig,
-        RadarrUpdate,
-    )
-    from .models.sonarr import (  # isort:skip
-        SonarrCalendar,
-        SonarrCommand,
-        SonarrEpisode,
-        SonarrEpisodeFile,
-        SonarrEpisodeFileQuailty,
-        SonarrHistory,
-        SonarrParse,
-        SonarrQualityProfile,
-        SonarrQueue,
-        SonarrRelease,
-        SonarrRootFolder,
-        SonarrSeries,
-        SonarrSeriesLookup,
-        SonarrSeriesUpdateParams,
-        SonarrSystemStatus,
-        SonarrWantedMissing,
-    )
 
 
 class RequestClient:
@@ -78,30 +42,33 @@ class RequestClient:
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
+        port: int,
+        request_timeout: float,
+        raw_response: bool,
+        redact: bool,
         host_configuration: PyArrHostConfiguration | None = None,
         session: ClientSession | None = None,
         hostname: str | None = None,
         ipaddress: str | None = None,
         url: str | None = None,
         api_token: str | None = None,
-        port: int | None = None,
         ssl: bool | None = None,
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
-        request_timeout: float = 30,
-        raw_response: bool = False,
-        redact: bool = True,
         api_ver: str | None = None,
     ) -> None:
         """Initialize."""
         if host_configuration is None:
             host_configuration = PyArrHostConfiguration(
-                hostname=hostname, ipaddress=ipaddress, url=url, api_token=api_token, api_ver=api_ver
+                hostname=hostname,
+                ipaddress=ipaddress,
+                url=url,
+                api_token=api_token,
+                api_ver=api_ver,
             )
         else:
             host_configuration = copy(host_configuration)
-        if port is not None and host_configuration.port is None:
-            host_configuration.port = port
+        host_configuration.port = port
         if ssl is not None:
             host_configuration.ssl = ssl
         if verify_ssl is not None:
@@ -142,70 +109,8 @@ class RequestClient:
         self,
         *args,
         params: dict | None = None,
-        data: SonarrEpisode
-        | SonarrEpisodeFileQuailty
-        | SonarrSeriesUpdateParams
-        | list[RadarrMovie]
-        | RadarrMovieEditor
-        | RadarrUIConfig
-        | RadarrHostConfig
-        | RadarrNamingConfig
-        | RadarrDownloadClient
-        | RadarrImportList
-        | RadarrIndexer
-        | RadarrNotification
-        | RadarrCalendar
-        | dict[str, str | object]
-        | dict[str, int | list[list]]
-        | dict[str, str]
-        | dict[str, int | list[int]]
-        | list[int]
-        | None = None,
-        datatype: type[Logs]
-        | type[Diskspace]
-        | type[RadarrBlocklist]
-        | type[RadarrBlocklistMovie]
-        | type[RadarrCalendar]
-        | type[RadarrCommand]
-        | type[RadarrCustomFilter]
-        | type[RadarrDownloadClient]
-        | type[RadarrHealth]
-        | type[RadarrHostConfig]
-        | type[RadarrImportList]
-        | type[RadarrIndexer]
-        | type[RadarrMetadataConfig]
-        | type[RadarrMovie]
-        | type[RadarrMovieEditor]
-        | type[RadarrMovieFile]
-        | type[RadarrMovieHistory]
-        | type[RadarrNamingConfig]
-        | type[RadarrNotification]
-        | type[RadarrQualityProfile]
-        | type[RadarrQueue]
-        | type[RadarrQueueDetail]
-        | type[RadarrQueueStatus]
-        | type[RadarrRemotePathMapping]
-        | type[RadarrRootFolder]
-        | type[RadarrSystemStatus]
-        | type[RadarrUIConfig]
-        | type[RadarrUpdate]
-        | type[SonarrCalendar]
-        | type[SonarrCommand]
-        | type[SonarrEpisode]
-        | type[SonarrEpisodeFile]
-        | type[SonarrHistory]
-        | type[SonarrParse]
-        | type[SonarrQualityProfile]
-        | type[SonarrQueue]
-        | type[SonarrRelease]
-        | type[SonarrRootFolder]
-        | type[SonarrSeries]
-        | type[SonarrSeriesLookup]
-        | type[SonarrSystemStatus]
-        | type[SonarrWantedMissing]
-        | type[SystemBackup]
-        | type[Tag]
-        | None = None,
+        data: Any = None,
+        datatype: Any = None,
         method: HTTPMethod = HTTPMethod.GET,
     ):
         """Send API request."""
@@ -268,13 +173,38 @@ class RequestClient:
         else:
             return response.data
 
+    @api_command("diskspace", datatype=Diskspace)
+    async def async_get_diskspace(self) -> list[Diskspace]:
+        """Get information about diskspace."""
+
+    @api_command("rootfolder", datatype=RootFolder)
+    async def async_get_root_folders(self) -> list[RootFolder]:
+        """Get information about root folders."""
+
+    @api_command("config/host", datatype=HostConfig)
+    async def async_get_host_config(self) -> HostConfig:
+        """Get information about host configuration."""
+
+    async def async_update_host_config(self, data: HostConfig) -> HTTPResponse:
+        """Edit General/Host settings for Radarr."""
+        return await self._async_request(
+            "config/host",
+            data=data,
+            datatype=HostConfig,
+            method=HTTPMethod.PUT,
+        )
+
+    @api_command("config/ui", datatype=UIConfig)
+    async def async_get_ui_config(self) -> UIConfig:
+        """Get information about UI configuration."""
+
     async def async_get_logs(  # pylint: disable=too-many-arguments
         self,
         page: int = 1,
         page_size: int = 10,
         sort_key: str = "time",
         sort_asc: bool = False,
-        filter_key: str | None = None,#TODO test
+        filter_key: str | None = None,  # TODO test
         filter_value: str = "All",
     ) -> Logs:
         """Get logs.
@@ -297,29 +227,37 @@ class RequestClient:
         }
         return await self._async_request("log", params=params, datatype=Logs)
 
+    @api_command("log/file", datatype=LogFiles)
     async def async_get_log_file(self) -> list[LogFiles]:
         """Get log file."""
-        return await self._async_request("log/file", datatype=LogFiles) #TODO decorator
+
+    @api_command("system/status", datatype=SystemStatus)
+    async def async_get_system_status(self) -> SystemStatus:
+        """Get information about system status."""
 
     @api_command("system/backup", datatype=SystemBackup)
     async def async_get_system_backup(self) -> list[SystemBackup]:
         """Get information about system backup."""
 
-    async def async_restore_system_backup(self, backupid: int) -> HTTPResponse: #TODO test
+    async def async_restore_system_backup(
+        self, backupid: int
+    ) -> HTTPResponse:  # TODO test
         """Restore from a system backup."""
-        return await self._async_request(f"system/backup/restore/{backupid}", method=HTTPMethod.POST)
+        return await self._async_request(
+            f"system/backup/restore/{backupid}", method=HTTPMethod.POST
+        )
 
-    async def async_upload_system_backup(self, data: bytes) -> HTTPResponse: #TODO test
-        """Upload a system backup."""
-        return await self._async_request(f"system/backup/restore/upload", data=data, method=HTTPMethod.POST)
+    # Upload system backup not working
 
-    async def async_delete_system_backup(self, backupid: int) -> HTTPResponse: #TODO test
+    async def async_delete_system_backup(
+        self, backupid: int
+    ) -> HTTPResponse:
         """Delete a system backup."""
-        return await self._async_request(f"system/backup/{backupid}", method=HTTPMethod.DELETE)
+        return await self._async_request(
+            f"system/backup/{backupid}", method=HTTPMethod.DELETE
+        )
 
-    async def async_get_tags(
-        self, tagid: int | None = None
-    ) -> Tag | list[Tag]:
+    async def async_get_tags(self, tagid: int | None = None) -> Tag | list[Tag]:
         """Return all tags or specific tag by database id.
 
         id: Get tag matching id. Leave blank for all.
@@ -327,4 +265,36 @@ class RequestClient:
         return await self._async_request(
             f"tag{f'/{tagid}' if tagid is not None else ''}",
             datatype=Tag,
+        )
+
+    async def async_get_custom_filters(
+        self, filterid: int | None = None
+    ) -> CustomFilter | list[CustomFilter]:
+        """Get information about custom filters."""
+        return await self._async_request(
+            f"customfilter{f'/{filterid}' if filterid is not None else ''}",
+            datatype=CustomFilter,
+        )
+
+    async def async_add_custom_filter(self, data: CustomFilter) -> CustomFilter:
+        """Add a custom filter."""
+        return await self._async_request(
+            "customfilter", data=data, datatype=CustomFilter, method=HTTPMethod.POST
+        )
+
+    async def async_edit_custom_filter(
+        self, filterid: int, data: CustomFilter
+    ) -> CustomFilter:
+        """Edit a custom filter."""
+        return await self._async_request(
+            f"customfilter/{filterid}",
+            data=data,
+            datatype=CustomFilter,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_delete_custom_filter(self, filterid: int) -> HTTPResponse:
+        """Delete a custom filter."""
+        return await self._async_request(
+            f"customfilter/{filterid}", datatype=CustomFilter, method=HTTPMethod.DELETE
         )

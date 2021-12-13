@@ -1,12 +1,10 @@
 """Tests for Sonarr object models."""
 from datetime import datetime
-from aiopyarr.models.common import Diskspace, SystemBackup
+from aiopyarr.models.common import SystemBackup
 from aiopyarr.models.sonarr import (
     SonarrQualityProfile,
     SonarrQueue,
-    SonarrRootFolder,
     SonarrSeriesLookup,
-    SonarrSystemStatus,
 )
 import pytest
 from aiohttp.client import ClientSession
@@ -114,32 +112,6 @@ async def test_async_get_commands(aresponses):
         assert data.sendUpdatesToClient is True
         assert data.state == "pending"
         assert data.id == 24
-
-
-@pytest.mark.asyncio
-async def test_async_get_diskspace(aresponses):
-    """Test getting diskspace."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/diskspace?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/diskspace.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: list[Diskspace] = await client.async_get_diskspace()
-
-        assert data[0].path == "C:\\"
-        assert data[0].label == ""
-        assert data[0].freeSpace == 282500067328
-        assert data[0].totalSpace == 499738734592
 
 
 @pytest.mark.asyncio
@@ -552,32 +524,6 @@ async def test_async_get_release(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_root_folders(aresponses):
-    """Test getting root folders."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/rootfolder?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/rootfolder.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: list[SonarrRootFolder] = await client.async_get_root_folders()
-
-        assert data[0].path == "C:\\Downloads\\TV"
-        assert data[0].freeSpace == 282500063232
-        assert data[0].unmappedFolders == []
-        assert data[0].id == 1
-
-
-@pytest.mark.asyncio
 async def test_async_lookup_series(aresponses):
     """Test getting series lookup data."""
     aresponses.add(
@@ -726,44 +672,6 @@ async def test_async_get_system_backup(aresponses):
         assert data[0].type == "update"
         assert data[0].time == "2017-08-18T05:00:37Z"
         assert data[0].id == 1207435784
-
-
-@pytest.mark.asyncio
-async def test_async_get_system_status(aresponses):
-    """Test getting system status info."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/system/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/system-status.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data: SonarrSystemStatus = await client.async_get_system_status()
-
-        assert data.version == "2.0.0.1121"
-        assert data.buildTime == "2014-02-08T20:49:36.5560392Z"
-        assert data.isDebug is False
-        assert data.isProduction is True
-        assert data.isAdmin is True
-        assert data.isUserInteractive is False
-        assert data.startupPath == "C:\\ProgramData\\NzbDrone\\bin"
-        assert data.appData == "C:\\ProgramData\\NzbDrone"
-        assert data.osVersion == "6.2.9200.0"
-        assert data.isMono is False
-        assert data.isLinux is False
-        assert data.isWindows is True
-        assert data.branch == "develop"
-        assert data.authentication is False
-        assert data.startOfWeek == 0
-        assert data.urlBase == ""
 
 
 @pytest.mark.asyncio

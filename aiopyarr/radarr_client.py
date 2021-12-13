@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from .const import HTTPMethod
 from .decorator import api_command
-from .models.common import Diskspace, Tag
+from .models.common import Tag, UIConfig
 from .request_client import RequestClient
 
 from .models.radarr import (  # isort:skip
@@ -14,10 +14,8 @@ from .models.radarr import (  # isort:skip
     RadarrBlocklistMovie,
     RadarrCalendar,
     RadarrCommand,
-    RadarrCustomFilter,
     RadarrDownloadClient,
     RadarrHealth,
-    RadarrHostConfig,
     RadarrImportList,
     RadarrIndexer,
     RadarrMetadataConfig,
@@ -32,10 +30,7 @@ from .models.radarr import (  # isort:skip
     RadarrQueueDetail,
     RadarrQueueStatus,
     RadarrRemotePathMapping,
-    RadarrRootFolder,
-    RadarrSystemStatus,
     RadarrTagDetails,
-    RadarrUIConfig,
     RadarrUpdate,
 )
 
@@ -69,19 +64,19 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> None:
         """Initialize Radarr API."""
         super().__init__(
+            port,
+            request_timeout,
+            raw_response,
+            redact,
             host_configuration,
             session,
             hostname,
             ipaddress,
             url,
             api_token,
-            port,
             ssl,
             verify_ssl,
             base_api_path,
-            request_timeout,
-            raw_response,
-            redact,
             api_ver,
         )
 
@@ -274,33 +269,12 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrImportList,
         )
 
-    @api_command("diskspace", datatype=Diskspace)
-    async def async_get_diskspace(self) -> list[Diskspace]:
-        """Get information about diskspace."""
-
-    @api_command("config/ui", datatype=RadarrUIConfig)
-    async def async_get_ui_config(self) -> RadarrUIConfig:
-        """Get information about UI configuration."""
-
-    async def async_update_ui_config(self, data: RadarrUIConfig) -> HTTPResponse:
+    async def async_update_ui_config(self, data: UIConfig) -> HTTPResponse:
         """Edit one or many UI settings and save to to the database."""
         return await self._async_request(
             "config/ui",
             data=data,
-            datatype=RadarrUIConfig,
-            method=HTTPMethod.PUT,
-        )
-
-    @api_command("config/host", datatype=RadarrHostConfig)
-    async def async_get_host_config(self) -> RadarrHostConfig:
-        """Get information about host configuration."""
-
-    async def async_update_host_config(self, data: RadarrHostConfig) -> HTTPResponse:
-        """Edit General/Host settings for Radarr."""
-        return await self._async_request(
-            "config/host",
-            data=data,
-            datatype=RadarrHostConfig,
+            datatype=UIConfig,
             method=HTTPMethod.PUT,
         )
 
@@ -613,8 +587,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-        # TODO system backup?
-
     async def async_command_clear_blocklist(self) -> HTTPResponse:
         """Trigger the removal of all blocklisted movies."""
         return await self._async_request(
@@ -694,10 +666,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrCalendar,
         )
 
-    @api_command("system/status", datatype=RadarrSystemStatus)
-    async def async_get_system_status(self) -> RadarrSystemStatus:
-        """Get information about system status."""
-
     @api_command("health", datatype=RadarrHealth)
     async def async_get_failed_health_checks(self) -> RadarrHealth:
         """Get information about failed health checks."""
@@ -710,17 +678,9 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_quality_profiles(self) -> list[RadarrQualityProfile]:
         """Get information about quality profiles."""
 
-    @api_command("customfilter", datatype=RadarrCustomFilter)
-    async def async_get_custom_filters(self) -> list[RadarrCustomFilter]:
-        """Get information about custom filters."""
-
     @api_command("remotePathMapping", datatype=RadarrRemotePathMapping)
     async def async_get_remote_path_mappings(self) -> list[RadarrRemotePathMapping]:
         """Get information about remote path mappings."""
-
-    @api_command("rootfolder", datatype=RadarrRootFolder)
-    async def async_get_root_folders(self) -> list[RadarrRootFolder]:
-        """Get information about root folders."""
 
     async def _async_construct_movie_json(  # pylint: disable=too-many-arguments
         self,

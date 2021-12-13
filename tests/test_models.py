@@ -1,20 +1,14 @@
 """Tests for object models."""
-from datetime import datetime
 from aiopyarr.const import ATTR_DATA
-from aiopyarr.models.base import BaseModel
-from aiopyarr.models.common import Diskspace
 from aiopyarr.models.response import PyArrResponse
 
-from aiopyarr.readarr_client import ReadarrClient
 import pytest
-from aiohttp.client import ClientSession
 import json
 
-from aiopyarr.sonarr_client import SonarrClient
-from aiopyarr.models.readarr import _ReadarrBookValueSeriesLinks, _ReadarrEditionsValue, ReadarrBookshelf, _ReadarrAuthorValueBooks, _ReadarrAuthorValueSeries, _ReadarrEditions, _ReadarrEditionsValueBookFiles, _ReadarrSeriesLinks
+from aiopyarr.models.readarr import ReadarrBookshelf
+from aiopyarr.models.readarr_common import _ReadarrEditions, _ReadarrAuthorValueBooks, _ReadarrAuthorValueSeries, _ReadarrEditionsValueBookFiles, _ReadarrSeriesLinks
 
-
-from . import TEST_HOST_CONFIGURATION, load_fixture
+from . import load_fixture
 
 
 

@@ -174,15 +174,6 @@ class SonarrRelease(_SonarrCommon3, _SonarrCommon7):
 
 
 @dataclass(init=False)
-class SonarrRootFolder(_SonarrCommon6):
-    """Sonarr root folder attributes."""
-
-    freeSpace: int | None = None
-    path: str | None = None
-    unmappedFolders: list[str] | None = None
-
-
-@dataclass(init=False)
 class SonarrSeries(_SonarrSeasonStatistics, _SonarrHistoryRecordSeries):
     """Sonarr series attributes."""
 
@@ -202,28 +193,6 @@ class SonarrSeriesLookup(_SonarrSeriesCommon):
     """Sonarr series lookup attributes."""
 
     remotePoster: str | None = None
-
-
-@dataclass(init=False)
-class SonarrSystemStatus(BaseModel):
-    """Sonarr system status attributes."""
-
-    appData: str | None = None
-    authentication: bool | None = None
-    branch: str | None = None
-    buildTime: str | None = None
-    isAdmin: bool | None = None
-    isDebug: bool | None = None
-    isLinux: bool | None = None
-    isMono: bool | None = None
-    isProduction: bool | None = None
-    isUserInteractive: bool | None = None
-    isWindows: bool | None = None
-    osVersion: str | None = None
-    startOfWeek: int | None = None
-    startupPath: str | None = None
-    urlBase: str | None = None
-    version: str | None = None
 
 
 @dataclass(init=False)

@@ -1,13 +1,9 @@
 """Tests for Readarr object models."""
 from datetime import datetime
-from aiopyarr.models.common import Diskspace
 
 from aiopyarr.readarr_client import ReadarrClient
 import pytest
 from aiohttp.client import ClientSession
-
-from aiopyarr.sonarr_client import SonarrClient
-from aiopyarr.models.readarr import _ReadarrBookValueSeriesLinks, _ReadarrEditionsValue
 
 
 from . import TEST_HOST_CONFIGURATION, load_fixture
@@ -2144,28 +2140,25 @@ async def test_async_get_book(aresponses):
     assert _value.bookFiles.value[0].edition.isLoaded is True
     assert _value.bookFiles.value[0].partCount == 0
     assert _value.bookFiles.isLoaded is True
-    # value = data[0].author.nextBook.editions.value[0]
-    # assert isinstance(value, _ReadarrBookValueSeriesLinks)
-    # TODO
-    # assert value.seriesLinks.value[0].id == 0
-    # assert value.seriesLinks.value[0].position == "string"
-    # assert value.seriesLinks.value[0].seriesId == 0
-    # assert value.seriesLinks.value[0].bookId == 0
-    # assert value.seriesLinks.value[0].isPrimary is True
-    # assert value.seriesLinks.value[0].series.value.id == 0
-    # assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
-    # assert value.seriesLinks.value[0].series.value.title == "string"
-    # assert value.seriesLinks.value[0].series.value.description == "string"
-    # assert value.seriesLinks.value[0].series.value.numbered is True
-    # assert value.seriesLinks.value[0].series.value.workCount == 0
-    # assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
-    # assert value.seriesLinks.value[0].series.value.books.value[0] is None
-    # assert value.seriesLinks.value[0].series.value.books.isLoaded is True
-    # assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
-    # assert value.seriesLinks.value[0].series.isLoaded is True
-    # assert value.seriesLinks.value[0].book.isLoaded is True
-    # assert value.seriesLinks.isLoaded is True
-
+    value = data[0].author.nextBook
+    assert value.seriesLinks.value[0].id == 0
+    assert value.seriesLinks.value[0].position == "string"
+    assert value.seriesLinks.value[0].seriesId == 0
+    assert value.seriesLinks.value[0].bookId == 0
+    assert value.seriesLinks.value[0].isPrimary is True
+    assert value.seriesLinks.value[0].series.value.id == 0
+    assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
+    assert value.seriesLinks.value[0].series.value.title == "string"
+    assert value.seriesLinks.value[0].series.value.description == "string"
+    assert value.seriesLinks.value[0].series.value.numbered is True
+    assert value.seriesLinks.value[0].series.value.workCount == 0
+    assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert value.seriesLinks.value[0].series.value.books.value[0] is None
+    assert value.seriesLinks.value[0].series.value.books.isLoaded is True
+    assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
+    assert value.seriesLinks.value[0].series.isLoaded is True
+    assert value.seriesLinks.value[0].book.isLoaded is True
+    assert value.seriesLinks.isLoaded is True
     assert data[0].author.lastBook.id == 0
     assert data[0].author.lastBook.authorMetadataId == 0
     assert data[0].author.lastBook.foreignBookId == "string"
@@ -2420,27 +2413,25 @@ async def test_async_get_book(aresponses):
     assert _val.edition.isLoaded is True
     assert _val.partCount == 0
     assert _value.bookFiles.isLoaded is True
-    # value = data[0].author.lastBook.editions.value[0]
-    # assert isinstance(value, _ReadarrBookValueSeriesLinks)
-    # TODO
-    # assert value.seriesLinks.value[0].id == 0
-    # assert value.seriesLinks.value[0].position == "string"
-    # assert value.seriesLinks.value[0].seriesId == 0
-    # assert value.seriesLinks.value[0].bookId == 0
-    # assert value.seriesLinks.value[0].isPrimary is True
-    # assert value.seriesLinks.value[0].series.value.id == 0
-    # assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
-    # assert value.seriesLinks.value[0].series.value.title == "string"
-    # assert value.seriesLinks.value[0].series.value.description == "string"
-    # assert value.seriesLinks.value[0].series.value.numbered is True
-    # assert value.seriesLinks.value[0].series.value.workCount == 0
-    # assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
-    # assert value.seriesLinks.value[0].series.value.books.value[0] is None
-    # assert value.seriesLinks.value[0].series.value.books.isLoaded is True
-    # assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
-    # assert value.seriesLinks.value[0].series.isLoaded is True
-    # assert value.seriesLinks.value[0].book.isLoaded is True
-    # assert value.seriesLinks.isLoaded is True
+    value = data[0].author.lastBook
+    assert value.seriesLinks.value[0].id == 0
+    assert value.seriesLinks.value[0].position == "string"
+    assert value.seriesLinks.value[0].seriesId == 0
+    assert value.seriesLinks.value[0].bookId == 0
+    assert value.seriesLinks.value[0].isPrimary is True
+    assert value.seriesLinks.value[0].series.value.id == 0
+    assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
+    assert value.seriesLinks.value[0].series.value.title == "string"
+    assert value.seriesLinks.value[0].series.value.description == "string"
+    assert value.seriesLinks.value[0].series.value.numbered is True
+    assert value.seriesLinks.value[0].series.value.workCount == 0
+    assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert value.seriesLinks.value[0].series.value.books.value[0] is None
+    assert value.seriesLinks.value[0].series.value.books.isLoaded is True
+    assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
+    assert value.seriesLinks.value[0].series.isLoaded is True
+    assert value.seriesLinks.value[0].book.isLoaded is True
+    assert value.seriesLinks.isLoaded is True
     assert data[0].author.images[0].url == "string"
     assert data[0].author.images[0].coverType == "unknown"
     assert data[0].author.images[0].extension == "string"
@@ -2508,9 +2499,9 @@ async def test_async_get_book(aresponses):
     assert data[0].editions[0].ratings.popularity == 0
     assert data[0].editions[0].monitored is True
     assert data[0].editions[0].manualAdd is True
-# assert data[0].editions[0].remoteCover == "string" TODO
-# assert data[0].editions[0].grabbed is True TODO
-# assert data[0].grabbed is True
+    assert data[0].editions[0].remoteCover == "string"
+    assert data[0].editions[0].grabbed is True
+    assert data[0].grabbed is True
 
 
 @pytest.mark.asyncio
@@ -2912,105 +2903,106 @@ async def test_async_get_calendar(aresponses):
     assert _book.editions.value[0].monitored is True
     assert _book.editions.value[0].manualAdd is True
     assert _book.editions.value[0].book.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].path == "string"
-    assert _book.editions.value[0].bookFiles.value[0].size == 0
-    assert _book.editions.value[0].bookFiles.value[0].modified == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].dateAdded == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].sceneName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].releaseGroup == "string"
-    assert _book.editions.value[0].bookFiles.value[0].quality.quality.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.quality.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.version == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.real == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.isRepack is True
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioFormat == "string"
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioBitrate == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioChannels == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioBits == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioSampleRate == 0
-    assert _book.editions.value[0].bookFiles.value[0].editionId == 0
-    assert _book.editions.value[0].bookFiles.value[0].calibreId == 0
-    assert _book.editions.value[0].bookFiles.value[0].part == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.authorMetadataId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.cleanName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.monitored is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.path == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.rootFolderPath == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.added == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfileId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfileId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.tags[0] == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.monitor == "all"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.booksToMonitor[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.monitored is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.searchForMissingBooks is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.foreignAuthorId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.titleSlug == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.sortName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.nameLastFirst == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.sortNameLastFirst == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.aliases[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.overview == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.disambiguation == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.gender == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.hometown == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.status == "continuing"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].url == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].coverType == "unknown"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].extension == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.links[0].url == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.links[0].name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.genres[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.votes == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.value == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.popularity == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.upgradeAllowed is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.cutoff == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].items == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].allowed is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.minPopularity == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipMissingDate is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipMissingIsbn is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipPartsAndSets is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipSeriesSecondary is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.minPages == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.ignored == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.books.value == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.books.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].foreignSeriesId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].title == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].description == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].numbered is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].workCount == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].primaryWorkCount == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].books.value == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].books.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].foreignAuthorId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].edition.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].partCount == 0
+    _value = _book.editions.value[0].bookFiles.value[0]
+    assert _value.id == 0
+    assert _value.path == "string"
+    assert _value.size == 0
+    assert _value.modified == "2021-12-11T09:30:28.339Z"
+    assert _value.dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _value.sceneName == "string"
+    assert _value.releaseGroup == "string"
+    assert _value.quality.quality.id == 0
+    assert _value.quality.quality.name == "string"
+    assert _value.quality.revision.version == 0
+    assert _value.quality.revision.real == 0
+    assert _value.quality.revision.isRepack is True
+    assert _value.mediaInfo.audioFormat == "string"
+    assert _value.mediaInfo.audioBitrate == 0
+    assert _value.mediaInfo.audioChannels == 0
+    assert _value.mediaInfo.audioBits == 0
+    assert _value.mediaInfo.audioSampleRate == 0
+    assert _value.editionId == 0
+    assert _value.calibreId == 0
+    assert _value.part == 0
+    assert _value.author.value.id == 0
+    assert _value.author.value.authorMetadataId == 0
+    assert _value.author.value.cleanName == "string"
+    assert _value.author.value.monitored is True
+    assert _value.author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.path == "string"
+    assert _value.author.value.rootFolderPath == "string"
+    assert _value.author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.qualityProfileId == 0
+    assert _value.author.value.metadataProfileId == 0
+    assert _value.author.value.tags[0] == 0
+    assert _value.author.value.addOptions.monitor == "all"
+    assert _value.author.value.addOptions.booksToMonitor[0] == "string"
+    assert _value.author.value.addOptions.monitored is True
+    assert _value.author.value.addOptions.searchForMissingBooks is True
+    assert _value.author.value.metadata.value.id == 0
+    assert _value.author.value.metadata.value.foreignAuthorId == "string"
+    assert _value.author.value.metadata.value.titleSlug == "string"
+    assert _value.author.value.metadata.value.name == "string"
+    assert _value.author.value.metadata.value.sortName == "string"
+    assert _value.author.value.metadata.value.nameLastFirst == "string"
+    assert _value.author.value.metadata.value.sortNameLastFirst == "string"
+    assert _value.author.value.metadata.value.aliases[0] == "string"
+    assert _value.author.value.metadata.value.overview == "string"
+    assert _value.author.value.metadata.value.disambiguation == "string"
+    assert _value.author.value.metadata.value.gender == "string"
+    assert _value.author.value.metadata.value.hometown == "string"
+    assert _value.author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.status == "continuing"
+    assert _value.author.value.metadata.value.images[0].url == "string"
+    assert _value.author.value.metadata.value.images[0].coverType == "unknown"
+    assert _value.author.value.metadata.value.images[0].extension == "string"
+    assert _value.author.value.metadata.value.links[0].url == "string"
+    assert _value.author.value.metadata.value.links[0].name == "string"
+    assert _value.author.value.metadata.value.genres[0] == "string"
+    assert _value.author.value.metadata.value.ratings.votes == 0
+    assert _value.author.value.metadata.value.ratings.value == 0
+    assert _value.author.value.metadata.value.ratings.popularity == 0
+    assert _value.author.value.metadata.isLoaded is True
+    assert _value.author.value.qualityProfile.value.id == 0
+    assert _value.author.value.qualityProfile.value.name == "string"
+    assert _value.author.value.qualityProfile.value.upgradeAllowed is True
+    assert _value.author.value.qualityProfile.value.cutoff == 0
+    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert _value.author.value.qualityProfile.value.items[0].name == "string"
+    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
+    assert _value.author.value.qualityProfile.value.items[0].items == [None]
+    assert _value.author.value.qualityProfile.value.items[0].allowed is True
+    assert _value.author.value.qualityProfile.isLoaded is True
+    assert _value.author.value.metadataProfile.value.id == 0
+    assert _value.author.value.metadataProfile.value.name == "string"
+    assert _value.author.value.metadataProfile.value.minPopularity == 0
+    assert _value.author.value.metadataProfile.value.skipMissingDate is True
+    assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
+    assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
+    assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
+    assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
+    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert _value.author.value.metadataProfile.value.ignored == "string"
+    assert _value.author.value.metadataProfile.isLoaded is True
+    assert _value.author.value.books.value == [None]
+    assert _value.author.value.books.isLoaded is True
+    assert _value.author.value.series.value[0].id == 0
+    assert _value.author.value.series.value[0].foreignSeriesId == "string"
+    assert _value.author.value.series.value[0].title == "string"
+    assert _value.author.value.series.value[0].description == "string"
+    assert _value.author.value.series.value[0].numbered is True
+    assert _value.author.value.series.value[0].workCount == 0
+    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert _value.author.value.series.value[0].books.value == [None]
+    assert _value.author.value.series.value[0].books.isLoaded is True
+    assert _value.author.value.series.value[0].foreignAuthorId == "string"
+    assert _value.author.value.series.isLoaded is True
+    assert _value.author.value.name == "string"
+    assert _value.author.isLoaded is True
+    assert _value.edition.isLoaded is True
+    assert _value.partCount == 0
     assert _book.editions.value[0].bookFiles.isLoaded is True
     assert _book.editions.isLoaded is True
     assert _book.bookFiles.value[0].id == 0
@@ -3033,84 +3025,85 @@ async def test_async_get_calendar(aresponses):
     assert _book.bookFiles.value[0].editionId == 0
     assert _book.bookFiles.value[0].calibreId == 0
     assert _book.bookFiles.value[0].part == 0
-    assert _book.bookFiles.value[0].author.value.id == 0
-    assert _book.bookFiles.value[0].author.value.authorMetadataId == 0
-    assert _book.bookFiles.value[0].author.value.cleanName == "string"
-    assert _book.bookFiles.value[0].author.value.monitored is True
-    assert _book.bookFiles.value[0].author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.path == "string"
-    assert _book.bookFiles.value[0].author.value.rootFolderPath == "string"
-    assert _book.bookFiles.value[0].author.value.added == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.qualityProfileId == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfileId == 0
-    assert _book.bookFiles.value[0].author.value.tags[0] == 0
-    assert _book.bookFiles.value[0].author.value.addOptions.monitor == "all"
-    assert _book.bookFiles.value[0].author.value.addOptions.booksToMonitor[0] == "string"
-    assert _book.bookFiles.value[0].author.value.addOptions.monitored is True
-    assert _book.bookFiles.value[0].author.value.addOptions.searchForMissingBooks is True
-    assert _book.bookFiles.value[0].author.value.metadata.value.id == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.titleSlug == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.sortName == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.nameLastFirst == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.sortNameLastFirst == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.aliases[0] == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.overview == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.disambiguation == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.gender == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.hometown == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.metadata.value.status == "continuing"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].url == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].coverType == "unknown"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].extension == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.links[0].url == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.links[0].name == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.genres[0] == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.votes == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.value == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.popularity == 0
-    assert _book.bookFiles.value[0].author.value.metadata.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.upgradeAllowed is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.cutoff == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].items == [None]
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].allowed is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.id == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.minPopularity == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipMissingDate is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipMissingIsbn is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipPartsAndSets is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipSeriesSecondary is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.minPages == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.ignored == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.books.value == [None]
-    assert _book.bookFiles.value[0].author.value.books.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].id == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].foreignSeriesId == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].title == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].description == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].numbered is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].workCount == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].primaryWorkCount == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].books.value == [None]
-    assert _book.bookFiles.value[0].author.value.series.value[0].books.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.value.series.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.isLoaded is True
+    _author = _book.bookFiles.value[0].author
+    assert _author.value.id == 0
+    assert _author.value.authorMetadataId == 0
+    assert _author.value.cleanName == "string"
+    assert _author.value.monitored is True
+    assert _author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _author.value.path == "string"
+    assert _author.value.rootFolderPath == "string"
+    assert _author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _author.value.qualityProfileId == 0
+    assert _author.value.metadataProfileId == 0
+    assert _author.value.tags[0] == 0
+    assert _author.value.addOptions.monitor == "all"
+    assert _author.value.addOptions.booksToMonitor[0] == "string"
+    assert _author.value.addOptions.monitored is True
+    assert _author.value.addOptions.searchForMissingBooks is True
+    assert _author.value.metadata.value.id == 0
+    assert _author.value.metadata.value.foreignAuthorId == "string"
+    assert _author.value.metadata.value.titleSlug == "string"
+    assert _author.value.metadata.value.name == "string"
+    assert _author.value.metadata.value.sortName == "string"
+    assert _author.value.metadata.value.nameLastFirst == "string"
+    assert _author.value.metadata.value.sortNameLastFirst == "string"
+    assert _author.value.metadata.value.aliases[0] == "string"
+    assert _author.value.metadata.value.overview == "string"
+    assert _author.value.metadata.value.disambiguation == "string"
+    assert _author.value.metadata.value.gender == "string"
+    assert _author.value.metadata.value.hometown == "string"
+    assert _author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.status == "continuing"
+    assert _author.value.metadata.value.images[0].url == "string"
+    assert _author.value.metadata.value.images[0].coverType == "unknown"
+    assert _author.value.metadata.value.images[0].extension == "string"
+    assert _author.value.metadata.value.links[0].url == "string"
+    assert _author.value.metadata.value.links[0].name == "string"
+    assert _author.value.metadata.value.genres[0] == "string"
+    assert _author.value.metadata.value.ratings.votes == 0
+    assert _author.value.metadata.value.ratings.value == 0
+    assert _author.value.metadata.value.ratings.popularity == 0
+    assert _author.value.metadata.isLoaded is True
+    assert _author.value.qualityProfile.value.id == 0
+    assert _author.value.qualityProfile.value.name == "string"
+    assert _author.value.qualityProfile.value.upgradeAllowed is True
+    assert _author.value.qualityProfile.value.cutoff == 0
+    assert _author.value.qualityProfile.value.items[0].id == 0
+    assert _author.value.qualityProfile.value.items[0].name == "string"
+    assert _author.value.qualityProfile.value.items[0].quality.id == 0
+    assert _author.value.qualityProfile.value.items[0].quality.name == "string"
+    assert _author.value.qualityProfile.value.items[0].items == [None]
+    assert _author.value.qualityProfile.value.items[0].allowed is True
+    assert _author.value.qualityProfile.isLoaded is True
+    assert _author.value.metadataProfile.value.id == 0
+    assert _author.value.metadataProfile.value.name == "string"
+    assert _author.value.metadataProfile.value.minPopularity == 0
+    assert _author.value.metadataProfile.value.skipMissingDate is True
+    assert _author.value.metadataProfile.value.skipMissingIsbn is True
+    assert _author.value.metadataProfile.value.skipPartsAndSets is True
+    assert _author.value.metadataProfile.value.skipSeriesSecondary is True
+    assert _author.value.metadataProfile.value.allowedLanguages == "string"
+    assert _author.value.metadataProfile.value.minPages == 0
+    assert _author.value.metadataProfile.value.ignored == "string"
+    assert _author.value.metadataProfile.isLoaded is True
+    assert _author.value.books.value == [None]
+    assert _author.value.books.isLoaded is True
+    assert _author.value.series.value[0].id == 0
+    assert _author.value.series.value[0].foreignSeriesId == "string"
+    assert _author.value.series.value[0].title == "string"
+    assert _author.value.series.value[0].description == "string"
+    assert _author.value.series.value[0].numbered is True
+    assert _author.value.series.value[0].workCount == 0
+    assert _author.value.series.value[0].primaryWorkCount == 0
+    assert _author.value.series.value[0].books.value == [None]
+    assert _author.value.series.value[0].books.isLoaded is True
+    assert _author.value.series.value[0].foreignAuthorId == "string"
+    assert _author.value.series.isLoaded is True
+    assert _author.value.name == "string"
+    assert _author.value.foreignAuthorId == "string"
+    assert _author.isLoaded is True
     assert _book.bookFiles.value[0].edition.isLoaded is True
     assert _book.bookFiles.value[0].partCount == 0
     assert _book.bookFiles.isLoaded is True
@@ -3277,105 +3270,106 @@ async def test_async_get_calendar(aresponses):
     assert _book.editions.value[0].monitored is True
     assert _book.editions.value[0].manualAdd is True
     assert _book.editions.value[0].book.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].path == "string"
-    assert _book.editions.value[0].bookFiles.value[0].size == 0
-    assert _book.editions.value[0].bookFiles.value[0].modified == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].dateAdded == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].sceneName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].releaseGroup == "string"
-    assert _book.editions.value[0].bookFiles.value[0].quality.quality.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.quality.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.version == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.real == 0
-    assert _book.editions.value[0].bookFiles.value[0].quality.revision.isRepack is True
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioFormat == "string"
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioBitrate == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioChannels == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioBits == 0
-    assert _book.editions.value[0].bookFiles.value[0].mediaInfo.audioSampleRate == 0
-    assert _book.editions.value[0].bookFiles.value[0].editionId == 0
-    assert _book.editions.value[0].bookFiles.value[0].calibreId == 0
-    assert _book.editions.value[0].bookFiles.value[0].part == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.authorMetadataId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.cleanName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.monitored is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.path == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.rootFolderPath == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.added == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfileId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfileId == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.tags[0] == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.monitor == "all"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.booksToMonitor[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.monitored is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.addOptions.searchForMissingBooks is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.foreignAuthorId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.titleSlug == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.sortName == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.nameLastFirst == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.sortNameLastFirst == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.aliases[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.overview == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.disambiguation == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.gender == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.hometown == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.status == "continuing"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].url == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].coverType == "unknown"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.images[0].extension == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.links[0].url == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.links[0].name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.genres[0] == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.votes == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.value == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.value.ratings.popularity == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadata.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.upgradeAllowed is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.cutoff == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].items == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.value.items[0].allowed is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.qualityProfile.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.minPopularity == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipMissingDate is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipMissingIsbn is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipPartsAndSets is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.skipSeriesSecondary is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.minPages == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.value.ignored == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.metadataProfile.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.books.value == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.books.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].id == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].foreignSeriesId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].title == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].description == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].numbered is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].workCount == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].primaryWorkCount == 0
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].books.value == [None]
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].books.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.value[0].foreignAuthorId == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.value.series.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].author.value.name == "string"
-    assert _book.editions.value[0].bookFiles.value[0].author.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].edition.isLoaded is True
-    assert _book.editions.value[0].bookFiles.value[0].partCount == 0
+    _value = _book.editions.value[0].bookFiles.value[0]
+    assert _value.id == 0
+    assert _value.path == "string"
+    assert _value.size == 0
+    assert _value.modified == "2021-12-11T09:30:28.339Z"
+    assert _value.dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _value.sceneName == "string"
+    assert _value.releaseGroup == "string"
+    assert _value.quality.quality.id == 0
+    assert _value.quality.quality.name == "string"
+    assert _value.quality.revision.version == 0
+    assert _value.quality.revision.real == 0
+    assert _value.quality.revision.isRepack is True
+    assert _value.mediaInfo.audioFormat == "string"
+    assert _value.mediaInfo.audioBitrate == 0
+    assert _value.mediaInfo.audioChannels == 0
+    assert _value.mediaInfo.audioBits == 0
+    assert _value.mediaInfo.audioSampleRate == 0
+    assert _value.editionId == 0
+    assert _value.calibreId == 0
+    assert _value.part == 0
+    assert _value.author.value.id == 0
+    assert _value.author.value.authorMetadataId == 0
+    assert _value.author.value.cleanName == "string"
+    assert _value.author.value.monitored is True
+    assert _value.author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.path == "string"
+    assert _value.author.value.rootFolderPath == "string"
+    assert _value.author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.qualityProfileId == 0
+    assert _value.author.value.metadataProfileId == 0
+    assert _value.author.value.tags[0] == 0
+    assert _value.author.value.addOptions.monitor == "all"
+    assert _value.author.value.addOptions.booksToMonitor[0] == "string"
+    assert _value.author.value.addOptions.monitored is True
+    assert _value.author.value.addOptions.searchForMissingBooks is True
+    assert _value.author.value.metadata.value.id == 0
+    assert _value.author.value.metadata.value.foreignAuthorId == "string"
+    assert _value.author.value.metadata.value.titleSlug == "string"
+    assert _value.author.value.metadata.value.name == "string"
+    assert _value.author.value.metadata.value.sortName == "string"
+    assert _value.author.value.metadata.value.nameLastFirst == "string"
+    assert _value.author.value.metadata.value.sortNameLastFirst == "string"
+    assert _value.author.value.metadata.value.aliases[0] == "string"
+    assert _value.author.value.metadata.value.overview == "string"
+    assert _value.author.value.metadata.value.disambiguation == "string"
+    assert _value.author.value.metadata.value.gender == "string"
+    assert _value.author.value.metadata.value.hometown == "string"
+    assert _value.author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.status == "continuing"
+    assert _value.author.value.metadata.value.images[0].url == "string"
+    assert _value.author.value.metadata.value.images[0].coverType == "unknown"
+    assert _value.author.value.metadata.value.images[0].extension == "string"
+    assert _value.author.value.metadata.value.links[0].url == "string"
+    assert _value.author.value.metadata.value.links[0].name == "string"
+    assert _value.author.value.metadata.value.genres[0] == "string"
+    assert _value.author.value.metadata.value.ratings.votes == 0
+    assert _value.author.value.metadata.value.ratings.value == 0
+    assert _value.author.value.metadata.value.ratings.popularity == 0
+    assert _value.author.value.metadata.isLoaded is True
+    assert _value.author.value.qualityProfile.value.id == 0
+    assert _value.author.value.qualityProfile.value.name == "string"
+    assert _value.author.value.qualityProfile.value.upgradeAllowed is True
+    assert _value.author.value.qualityProfile.value.cutoff == 0
+    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert _value.author.value.qualityProfile.value.items[0].name == "string"
+    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
+    assert _value.author.value.qualityProfile.value.items[0].items == [None]
+    assert _value.author.value.qualityProfile.value.items[0].allowed is True
+    assert _value.author.value.qualityProfile.isLoaded is True
+    assert _value.author.value.metadataProfile.value.id == 0
+    assert _value.author.value.metadataProfile.value.name == "string"
+    assert _value.author.value.metadataProfile.value.minPopularity == 0
+    assert _value.author.value.metadataProfile.value.skipMissingDate is True
+    assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
+    assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
+    assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
+    assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
+    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert _value.author.value.metadataProfile.value.ignored == "string"
+    assert _value.author.value.metadataProfile.isLoaded is True
+    assert _value.author.value.books.value == [None]
+    assert _value.author.value.books.isLoaded is True
+    assert _value.author.value.series.value[0].id == 0
+    assert _value.author.value.series.value[0].foreignSeriesId == "string"
+    assert _value.author.value.series.value[0].title == "string"
+    assert _value.author.value.series.value[0].description == "string"
+    assert _value.author.value.series.value[0].numbered is True
+    assert _value.author.value.series.value[0].workCount == 0
+    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert _value.author.value.series.value[0].books.value == [None]
+    assert _value.author.value.series.value[0].books.isLoaded is True
+    assert _value.author.value.series.value[0].foreignAuthorId == "string"
+    assert _value.author.value.series.isLoaded is True
+    assert _value.author.value.name == "string"
+    assert _value.author.isLoaded is True
+    assert _value.edition.isLoaded is True
+    assert _value.partCount == 0
     assert _book.editions.value[0].bookFiles.isLoaded is True
     assert _book.editions.isLoaded is True
     assert _book.bookFiles.value[0].id == 0
@@ -3398,84 +3392,85 @@ async def test_async_get_calendar(aresponses):
     assert _book.bookFiles.value[0].editionId == 0
     assert _book.bookFiles.value[0].calibreId == 0
     assert _book.bookFiles.value[0].part == 0
-    assert _book.bookFiles.value[0].author.value.id == 0
-    assert _book.bookFiles.value[0].author.value.authorMetadataId == 0
-    assert _book.bookFiles.value[0].author.value.cleanName == "string"
-    assert _book.bookFiles.value[0].author.value.monitored is True
-    assert _book.bookFiles.value[0].author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.path == "string"
-    assert _book.bookFiles.value[0].author.value.rootFolderPath == "string"
-    assert _book.bookFiles.value[0].author.value.added == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.qualityProfileId == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfileId == 0
-    assert _book.bookFiles.value[0].author.value.tags[0] == 0
-    assert _book.bookFiles.value[0].author.value.addOptions.monitor == "all"
-    assert _book.bookFiles.value[0].author.value.addOptions.booksToMonitor[0] == "string"
-    assert _book.bookFiles.value[0].author.value.addOptions.monitored is True
-    assert _book.bookFiles.value[0].author.value.addOptions.searchForMissingBooks is True
-    assert _book.bookFiles.value[0].author.value.metadata.value.id == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.titleSlug == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.sortName == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.nameLastFirst == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.sortNameLastFirst == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.aliases[0] == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.overview == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.disambiguation == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.gender == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.hometown == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].author.value.metadata.value.status == "continuing"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].url == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].coverType == "unknown"
-    assert _book.bookFiles.value[0].author.value.metadata.value.images[0].extension == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.links[0].url == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.links[0].name == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.genres[0] == "string"
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.votes == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.value == 0
-    assert _book.bookFiles.value[0].author.value.metadata.value.ratings.popularity == 0
-    assert _book.bookFiles.value[0].author.value.metadata.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.upgradeAllowed is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.cutoff == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.id == 0
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].quality.name == "string"
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].items == [None]
-    assert _book.bookFiles.value[0].author.value.qualityProfile.value.items[0].allowed is True
-    assert _book.bookFiles.value[0].author.value.qualityProfile.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.id == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.minPopularity == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipMissingDate is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipMissingIsbn is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipPartsAndSets is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.skipSeriesSecondary is True
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.minPages == 0
-    assert _book.bookFiles.value[0].author.value.metadataProfile.value.ignored == "string"
-    assert _book.bookFiles.value[0].author.value.metadataProfile.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.books.value == [None]
-    assert _book.bookFiles.value[0].author.value.books.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].id == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].foreignSeriesId == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].title == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].description == "string"
-    assert _book.bookFiles.value[0].author.value.series.value[0].numbered is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].workCount == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].primaryWorkCount == 0
-    assert _book.bookFiles.value[0].author.value.series.value[0].books.value == [None]
-    assert _book.bookFiles.value[0].author.value.series.value[0].books.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.series.value[0].foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.value.series.isLoaded is True
-    assert _book.bookFiles.value[0].author.value.name == "string"
-    assert _book.bookFiles.value[0].author.value.foreignAuthorId == "string"
-    assert _book.bookFiles.value[0].author.isLoaded is True
+    _author = _book.bookFiles.value[0].author
+    assert _author.value.id == 0
+    assert _author.value.authorMetadataId == 0
+    assert _author.value.cleanName == "string"
+    assert _author.value.monitored is True
+    assert _author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _author.value.path == "string"
+    assert _author.value.rootFolderPath == "string"
+    assert _author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _author.value.qualityProfileId == 0
+    assert _author.value.metadataProfileId == 0
+    assert _author.value.tags[0] == 0
+    assert _author.value.addOptions.monitor == "all"
+    assert _author.value.addOptions.booksToMonitor[0] == "string"
+    assert _author.value.addOptions.monitored is True
+    assert _author.value.addOptions.searchForMissingBooks is True
+    assert _author.value.metadata.value.id == 0
+    assert _author.value.metadata.value.foreignAuthorId == "string"
+    assert _author.value.metadata.value.titleSlug == "string"
+    assert _author.value.metadata.value.name == "string"
+    assert _author.value.metadata.value.sortName == "string"
+    assert _author.value.metadata.value.nameLastFirst == "string"
+    assert _author.value.metadata.value.sortNameLastFirst == "string"
+    assert _author.value.metadata.value.aliases[0] == "string"
+    assert _author.value.metadata.value.overview == "string"
+    assert _author.value.metadata.value.disambiguation == "string"
+    assert _author.value.metadata.value.gender == "string"
+    assert _author.value.metadata.value.hometown == "string"
+    assert _author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.status == "continuing"
+    assert _author.value.metadata.value.images[0].url == "string"
+    assert _author.value.metadata.value.images[0].coverType == "unknown"
+    assert _author.value.metadata.value.images[0].extension == "string"
+    assert _author.value.metadata.value.links[0].url == "string"
+    assert _author.value.metadata.value.links[0].name == "string"
+    assert _author.value.metadata.value.genres[0] == "string"
+    assert _author.value.metadata.value.ratings.votes == 0
+    assert _author.value.metadata.value.ratings.value == 0
+    assert _author.value.metadata.value.ratings.popularity == 0
+    assert _author.value.metadata.isLoaded is True
+    assert _author.value.qualityProfile.value.id == 0
+    assert _author.value.qualityProfile.value.name == "string"
+    assert _author.value.qualityProfile.value.upgradeAllowed is True
+    assert _author.value.qualityProfile.value.cutoff == 0
+    assert _author.value.qualityProfile.value.items[0].id == 0
+    assert _author.value.qualityProfile.value.items[0].name == "string"
+    assert _author.value.qualityProfile.value.items[0].quality.id == 0
+    assert _author.value.qualityProfile.value.items[0].quality.name == "string"
+    assert _author.value.qualityProfile.value.items[0].items == [None]
+    assert _author.value.qualityProfile.value.items[0].allowed is True
+    assert _author.value.qualityProfile.isLoaded is True
+    assert _author.value.metadataProfile.value.id == 0
+    assert _author.value.metadataProfile.value.name == "string"
+    assert _author.value.metadataProfile.value.minPopularity == 0
+    assert _author.value.metadataProfile.value.skipMissingDate is True
+    assert _author.value.metadataProfile.value.skipMissingIsbn is True
+    assert _author.value.metadataProfile.value.skipPartsAndSets is True
+    assert _author.value.metadataProfile.value.skipSeriesSecondary is True
+    assert _author.value.metadataProfile.value.allowedLanguages == "string"
+    assert _author.value.metadataProfile.value.minPages == 0
+    assert _author.value.metadataProfile.value.ignored == "string"
+    assert _author.value.metadataProfile.isLoaded is True
+    assert _author.value.books.value == [None]
+    assert _author.value.books.isLoaded is True
+    assert _author.value.series.value[0].id == 0
+    assert _author.value.series.value[0].foreignSeriesId == "string"
+    assert _author.value.series.value[0].title == "string"
+    assert _author.value.series.value[0].description == "string"
+    assert _author.value.series.value[0].numbered is True
+    assert _author.value.series.value[0].workCount == 0
+    assert _author.value.series.value[0].primaryWorkCount == 0
+    assert _author.value.series.value[0].books.value == [None]
+    assert _author.value.series.value[0].books.isLoaded is True
+    assert _author.value.series.value[0].foreignAuthorId == "string"
+    assert _author.value.series.isLoaded is True
+    assert _author.value.name == "string"
+    assert _author.value.foreignAuthorId == "string"
+    assert _author.isLoaded is True
     assert _book.bookFiles.value[0].edition.isLoaded is True
     assert _book.bookFiles.value[0].partCount == 0
     assert _book.bookFiles.isLoaded is True
@@ -3567,3 +3562,200 @@ async def test_async_get_calendar(aresponses):
     assert data[0].editions[0].remoteCover == "string"
     assert data[0].editions[0].grabbed is True
     assert data[0].grabbed is True
+
+
+@pytest.mark.asyncio
+async def test_async_command(aresponses):
+    """Test getting command info."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        "/api/v1/command?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = ReadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data = await client.async_get_command()
+    assert data[0].id == 0
+    assert data[0].name == "string"
+    assert data[0].commandName == "string"
+    assert data[0].message == "string"
+    assert data[0].body.sendUpdatesToClient is True
+    assert data[0].body.updateScheduledTask is True
+    assert data[0].body.completionMessage == "string"
+    assert data[0].body.requiresDiskAccess is True
+    assert data[0].body.isExclusive is True
+    assert data[0].body.isTypeExclusive is True
+    assert data[0].body.name == "string"
+    assert data[0].body.lastExecutionTime == "2021-12-12T17:40:12.167Z"
+    assert data[0].body.lastStartTime == "2021-12-12T17:40:12.167Z"
+    assert data[0].body.trigger == "unspecified"
+    assert data[0].body.suppressMessages is True
+    assert data[0].body.clientUserAgent == "string"
+    assert data[0].priority == "normal"
+    assert data[0].status == "queued"
+    assert data[0].queued == "2021-12-12T17:40:12.167Z"
+    assert data[0].started == "2021-12-12T17:40:12.167Z"
+    assert data[0].ended == "2021-12-12T17:40:12.167Z"
+    assert data[0].duration.ticks == 0
+    assert data[0].duration.days == 0
+    assert data[0].duration.hours == 0
+    assert data[0].duration.milliseconds == 0
+    assert data[0].duration.minutes == 0
+    assert data[0].duration.seconds == 0
+    assert data[0].duration.totalDays == 0
+    assert data[0].duration.totalHours == 0
+    assert data[0].duration.totalMilliseconds == 0
+    assert data[0].duration.totalMinutes == 0
+    assert data[0].duration.totalSeconds == 0
+    assert data[0].exception == "string"
+    assert data[0].trigger == "unspecified"
+    assert data[0].clientUserAgent == "string"
+    assert data[0].stateChangeTime == "2021-12-12T17:40:12.167Z"
+    assert data[0].sendUpdatesToClient is True
+    assert data[0].updateScheduledTask is True
+    assert data[0].lastExecutionTime == "2021-12-12T17:40:12.167Z"
+
+
+@pytest.mark.asyncio
+async def test_async_get_wanted_missing(aresponses):
+    """Test getting wanted and missing books."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        "/api/v1/wanted/missing?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=airDateUtc&page=1&pageSize=10&sortDir=asc",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/wanted-missing.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = ReadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data = await client.async_get_wanted_missing()
+    assert data.page == 1
+    assert data.pageSize == 10
+    assert data.sortKey == "string"
+    assert data.sortDirection == "default"
+    assert data.totalRecords == 0
+    assert data.records[0].title == "string"
+    assert data.records[0].authorTitle == "string"
+    assert data.records[0].seriesTitle == "string"
+    assert data.records[0].disambiguation == "string"
+    assert data.records[0].overview == "string"
+    assert data.records[0].authorId == 0
+    assert data.records[0].foreignBookId == "string"
+    assert data.records[0].titleSlug == "string"
+    assert data.records[0].monitored is True
+    assert data.records[0].anyEditionOk is True
+    assert data.records[0].ratings.votes == 0
+    assert data.records[0].ratings.value == 0
+    assert data.records[0].ratings.popularity == 0
+    assert data.records[0].releaseDate == "2021-12-11T09:30:28.339Z"
+    assert data.records[0].pageCount == 0
+    assert data.records[0].genres[0] == "string"
+    assert data.records[0].author.authorMetadataId == 0
+    assert data.records[0].author.status == "continuing"
+    assert data.records[0].author.ended is False
+    assert data.records[0].author.authorName == "string"
+    assert data.records[0].author.authorNameLastFirst == "string"
+    assert data.records[0].author.foreignAuthorId == "string"
+    assert data.records[0].author.titleSlug == "string"
+    assert data.records[0].author.overview == "string"
+    assert data.records[0].author.links[0].url == "string"
+    assert data.records[0].author.links[0].name == "string"
+    assert data.records[0].author.images[0].url == "string"
+    assert data.records[0].author.images[0].coverType == "unknown"
+    assert data.records[0].author.images[0].extension == "string"
+    assert data.records[0].author.path == "string"
+    assert data.records[0].author.qualityProfileId == 0
+    assert data.records[0].author.metadataProfileId == 0
+    assert data.records[0].author.monitored is True
+    assert data.records[0].author.monitorNewItems == "all"
+    assert data.records[0].author.genres == []
+    assert data.records[0].author.cleanName == "string"
+    assert data.records[0].author.sortName == "string"
+    assert data.records[0].author.sortNameLastFirst == "string"
+    assert data.records[0].author.tags == []
+    assert data.records[0].author.added == "2021-12-06T22:23:55Z"
+    assert data.records[0].author.ratings.votes == 0
+    assert data.records[0].author.ratings.value == 0
+    assert data.records[0].author.ratings.popularity == 0
+    assert data.records[0].author.statistics.bookFileCount == 0
+    assert data.records[0].author.statistics.bookCount == 0
+    assert data.records[0].author.statistics.availableBookCount == 0
+    assert data.records[0].author.statistics.totalBookCount == 0
+    assert data.records[0].author.statistics.sizeOnDisk == 0
+    assert data.records[0].author.statistics.percentOfBooks == 0
+    assert data.records[0].author.id == 0
+    assert data.records[0].images[0].url == "string"
+    assert data.records[0].images[0].coverType == "unknown"
+    assert data.records[0].images[0].extension == "string"
+    assert data.records[0].links[0].url == "string"
+    assert data.records[0].links[0].name == "string"
+    assert data.records[0].statistics.bookFileCount == 0
+    assert data.records[0].statistics.bookCount == 0
+    assert data.records[0].statistics.totalBookCount == 0
+    assert data.records[0].statistics.sizeOnDisk == 0
+    assert data.records[0].statistics.percentOfBooks == 0
+    assert data.records[0].added == "2021-12-06T22:23:58Z"
+    assert data.records[0].editions[0].bookId == 0
+    assert data.records[0].editions[0].foreignEditionId == "string"
+    assert data.records[0].editions[0].titleSlug == "string"
+    assert data.records[0].editions[0].asin == "string"
+    assert data.records[0].editions[0].title == "string"
+    assert data.records[0].editions[0].language == "string"
+    assert data.records[0].editions[0].overview == "string"
+    assert data.records[0].editions[0].format == "string"
+    assert data.records[0].editions[0].isEbook is True
+    assert data.records[0].editions[0].disambiguation == "string"
+    assert data.records[0].editions[0].publisher == "string"
+    assert data.records[0].editions[0].pageCount == 0
+    assert data.records[0].editions[0].releaseDate == "2017-03-15T00:00:00Z"
+    assert data.records[0].editions[0].images[0].url == "string"
+    assert data.records[0].editions[0].images[0].coverType == "unknown"
+    assert data.records[0].editions[0].images[0].extension == "string"
+    assert data.records[0].editions[0].links[0].url == "string"
+    assert data.records[0].editions[0].links[0].name == "string"
+    assert data.records[0].editions[0].ratings.votes == 0
+    assert data.records[0].editions[0].ratings.value == 0
+    assert data.records[0].editions[0].ratings.popularity == 0
+    assert data.records[0].editions[0].monitored is False
+    assert data.records[0].editions[0].manualAdd is False
+    assert data.records[0].editions[0].grabbed is False
+    assert data.records[0].editions[0].id == 0
+    assert data.records[0].grabbed is False
+    assert data.records[0].id == 0
+
+
+@pytest.mark.asyncio
+async def test_async_get_wanted_cutoff(aresponses):
+    """Test getting wanted cutoff books."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        "/api/v1/wanted/cutoff?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=airDateUtc&page=1&pageSize=10&sortDir=asc",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/wanted-cutoff.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = ReadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data = await client.async_get_wanted_cutoff()
+    assert data.filters[0].key == "string"
+    assert data.filters[0].value == "string"
