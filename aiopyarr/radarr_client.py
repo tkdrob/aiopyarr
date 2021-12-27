@@ -559,10 +559,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
-    @api_command("command", datatype=RadarrCommand)
-    async def async_get_command(self) -> list[RadarrCommand]:
-        """Get status of recently run commands/tasks."""
-
     async def async_command_app_update(self) -> HTTPResponse:
         """Trigger Radarr software update."""
         return await self._async_request(

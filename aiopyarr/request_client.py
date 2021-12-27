@@ -14,6 +14,7 @@ from .models.host_configuration import PyArrHostConfiguration
 from .models.response import PyArrResponse
 
 from .models.common import (  # isort:skip
+    Command,
     CustomFilter,
     Diskspace,
     HostConfig,
@@ -222,6 +223,15 @@ class RequestClient:
             "sortDir": "ascending" if sort_asc is True else "descending",
         }
         return await self._async_request("log", params=params, datatype=Logs)
+
+    async def async_get_commands(
+        self, cmdid: int | None = None
+    ) -> Command | list[Command]:
+        """Query the status of a previously started command, or all currently started commands."""
+        return await self._async_request(
+            f"command{f'/{cmdid}' if cmdid is not None else ''}",
+            datatype=Command,
+        )
 
     @api_command("log/file", datatype=LogFiles)
     async def async_get_log_file(self) -> list[LogFiles]:

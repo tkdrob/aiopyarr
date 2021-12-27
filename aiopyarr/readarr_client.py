@@ -166,15 +166,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
         return books[0]
 
-    async def async_get_command(
-        self, commandid: int | None = None
-    ) -> ReadarrCommand | list[ReadarrCommand]:
-        """Query the status of previously started commands."""
-        return await self._async_request(
-            f"command{f'/{commandid}' if commandid is not None else ''}",
-            datatype=ReadarrCommand,
-        )
-
     async def async_post_command(self, name: str) -> HTTPResponse:
         """Perform any of the predetermined command routines."""
         return await self._async_request(
@@ -301,14 +292,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_metadata_profiles(self, profileid: int | None = None) -> ReadarrMetadataProfile | list[ReadarrMetadataProfile]:
         """Get metadata profiles."""
         return await self._async_request(f"metadataprofile{f'/{profileid}' if profileid is not None else ''}", datatype=ReadarrMetadataProfile)
-
-    #@api_command("delayprofile", datatype=)
-    #async def async_get_delay_profiles(self):
-    #    """Get all delay profiles."""
-
-    #@api_command("releaseprofile", datatype=)
-    #async def async_get_release_profiles(self):
-    #    """Get all release profiles."""
 
     async def async_get_book(
         self, bookid: int | None = None
@@ -442,3 +425,12 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     # /api/v1/calendar/readarr.ics not working
+
+
+    #@api_command("delayprofile", datatype=)
+    #async def async_get_delay_profiles(self):
+    #    """Get all delay profiles."""
+
+    #@api_command("releaseprofile", datatype=)
+    #async def async_get_release_profiles(self):
+    #    """Get all release profiles."""

@@ -50,7 +50,7 @@ class SonarrCalendar(_SonarrCommon5):
 
 
 @dataclass(init=False)
-class SonarrCommand(_SonarrCommon4):
+class SonarrCommand(_SonarrCommon4): #TODO remove
     """Sonarr command attributes."""
 
     sendUpdatesToClient: bool | None = None

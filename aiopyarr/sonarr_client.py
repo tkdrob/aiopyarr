@@ -145,15 +145,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "calendar", params=params, datatype=SonarrCalendar
         )
 
-    async def async_get_commands(
-        self, cmdid: int | None = None
-    ) -> SonarrCommand | list[SonarrCommand]:
-        """Query the status of a previously started command, or all currently started commands."""
-        return await self._async_request(
-            f"command{f'/{cmdid}' if cmdid is not None else ''}",
-            datatype=SonarrCommand,
-        )
-
     async def async_command_refresh_series(
         self, seriesid: int | None = None
     ) -> SonarrCommand:

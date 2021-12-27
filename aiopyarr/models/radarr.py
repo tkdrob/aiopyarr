@@ -339,7 +339,6 @@ class RadarrCommand(_RadarrCommon4):
     commandName: str | None = None
     duration: str | None = None
     ended: str | None = None
-    lastExecutionTime: str | None = None
     message: str | None = None
     priority: str | None = None
     queued: str | None = None

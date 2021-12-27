@@ -38,7 +38,7 @@ class _SonarrCommon5(_SonarrSeriesAlternateTitle, _SonarrCommon6):
 
 
 @dataclass(init=False)
-class _SonarrCommon4(_SonarrCommon6):
+class _SonarrCommon4(_SonarrCommon6): #TODO remove
     """Sonarr common attributes."""
 
     allowed: list[_SonarrQualityProfileValueAttr] | None = None

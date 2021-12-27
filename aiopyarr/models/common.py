@@ -238,3 +238,25 @@ class SystemStatus(BaseModel):
     startupPath: str | None = None
     urlBase: str | None = None
     version: str | None = None
+
+
+@dataclass(init=False)
+class Command(BaseModel):
+    """Command attributes."""
+
+    name: str | None = None
+    commandName: str | None = None
+    message: str | None = None
+    body: dict
+    priority: str | None = None
+    status: str | None = None
+    queued: str | None = None
+    started: str | None = None
+    ended: str | None = None
+    duration: str | None = None
+    trigger: str | None = None
+    stateChangeTime: str | None = None
+    sendUpdatesToClient: bool | None = None
+    updateScheduledTask: bool | None = None
+    lastExecutionTime: str | None = None
+    id: int | None = None
