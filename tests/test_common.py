@@ -1,5 +1,5 @@
 """Tests for common methods."""
-from aiopyarr.models.common import Diskspace, HostConfig, RootFolder, SystemBackup, UIConfig, SystemStatus
+from aiopyarr.models.common import Command, Diskspace, HostConfig, RootFolder, SystemBackup, UIConfig, SystemStatus
 
 from aiopyarr.readarr_client import ReadarrClient
 import pytest
@@ -338,3 +338,52 @@ async def test_async_get_custom_filters(aresponses):
         assert data[0].filters[0].key == "string"
         assert data[0].filters[0].value == ["string"]
         assert data[0].filters[0].type == "string"
+
+
+@pytest.mark.asyncio
+async def test_async_get_command(aresponses):
+    """Test getting commands."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/api/v3/command?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = RadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        data: list[Command] = await client.async_get_commands()
+
+        assert data[0].name == "MessagingCleanup"
+        assert data[0].commandName == "Messaging Cleanup"
+        assert data[0].message == "Completed"
+        assert data[0].body.sendUpdatesToClient is False
+        assert data[0].body.updateScheduledTask is True
+        assert data[0].body.completionMessage == "Completed"
+        assert data[0].body.requiresDiskAccess is False
+        assert data[0].body.isExclusive is False
+        assert data[0].body.isNewMovie is False
+        assert data[0].body.isTypeExclusive is False
+        assert data[0].body.name == "MessagingCleanup"
+        assert data[0].body.lastExecutionTime == "2021-11-29T19:57:46Z"
+        assert data[0].body.lastStartTime == "2021-11-29T19:57:46Z"
+        assert data[0].body.trigger == "scheduled"
+        assert data[0].body.suppressMessages is False
+        assert data[0].priority == "low"
+        assert data[0].status == "completed"
+        assert data[0].queued == "2021-11-29T20:03:16Z"
+        assert data[0].started == "2021-11-29T20:03:16Z"
+        assert data[0].ended == "2021-11-29T20:03:16Z"
+        assert data[0].duration == "00:00:00.0102456"
+        assert data[0].trigger == "scheduled"
+        assert data[0].stateChangeTime == "2021-11-29T20:03:16Z"
+        assert data[0].sendUpdatesToClient is False
+        assert data[0].updateScheduledTask is True
+        assert data[0].lastExecutionTime == "2021-11-29T19:57:46Z"
+        assert data[0].id == 1987776

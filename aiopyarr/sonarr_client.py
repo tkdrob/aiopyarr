@@ -8,13 +8,12 @@ from urllib.parse import quote
 from .const import HTTPMethod
 from .decorator import api_command
 from .exceptions import ArrInvalidCommand, ArrResourceNotFound
-from .models.common import Tag
+from .models.common import Command, Tag
 from .request_client import RequestClient
 
 from .models.sonarr import (  # isort:skip
     SonarrBlocklist,
     SonarrCalendar,
-    SonarrCommand,
     SonarrEpisode,
     SonarrEpisodeFile,
     SonarrEpisodeFileQuailty,
@@ -105,7 +104,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         ]
 
         cmd = f"MediaCover/{imageid}/{imagetype}{f'-{value}' if size != 'large' else ''}.jpg"
-        response = await self._async_request(cmd, datatype=SonarrCommand)
+        response = await self._async_request(cmd)
         if isinstance(response, dict):
             raise ArrResourceNotFound
         return response
@@ -147,7 +146,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_command_refresh_series(
         self, seriesid: int | None = None
-    ) -> SonarrCommand:
+    ) -> Command:
         """Send refresh series command."""
         data = {"name": "RefreshSeries"}
         if seriesid is not None:
@@ -155,13 +154,13 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "command",
             data=data,
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
     async def async_command_rescan_series(
         self, seriesid: int | None = None
-    ) -> SonarrCommand:
+    ) -> Command:
         """Send rescan series command."""
         data = {"name": "RefreshSeries"}
         if seriesid is not None:
@@ -169,22 +168,22 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "command",
             data=data,
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_episode_search(self, episodeids: int) -> SonarrCommand:
+    async def async_command_episode_search(self, episodeids: int) -> Command:
         """Send episode search command."""
         return await self._async_request(
             "command",
             data={"name": "EpisodeSearch", "episodeIds": episodeids},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
     async def async_command_season_search(
         self, seriesid: int, seasonnumber: int
-    ) -> SonarrCommand:
+    ) -> Command:
         """Send season search command."""
         return await self._async_request(
             "command",
@@ -193,16 +192,16 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
                 "seriesId": seriesid,
                 "seasonNumber": seasonnumber,
             },
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_series_search(self, seriesid: int) -> SonarrCommand:
+    async def async_command_series_search(self, seriesid: int) -> Command:
         """Send series search command."""
         return await self._async_request(
             "command",
             data={"name": "SeriesSearch", "seriesId": seriesid},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
@@ -211,7 +210,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         path: str,
         clientid: str | None = None,
         importmode: str = "Copy",
-    ) -> SonarrCommand:
+    ) -> Command:
         """Send series search command.
 
         importMode: Copy or Hardlink depending on Sonarr configuration
@@ -223,52 +222,52 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "command",
             data=data,
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_rss_sync(self) -> SonarrCommand:
+    async def async_command_rss_sync(self) -> Command:
         """Send rss sync command."""
         return await self._async_request(
             "command",
             data={"name": "RssSync"},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_rename_files(self, files: list[int]) -> SonarrCommand:
+    async def async_command_rename_files(self, files: list[int]) -> Command:
         """Send rename files command."""
         return await self._async_request(
             "command",
             data={"name": "RenameFiles", "files": files},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_rename_series(self, seriesids: list[int]) -> SonarrCommand:
+    async def async_command_rename_series(self, seriesids: list[int]) -> Command:
         """Send rename series command."""
         return await self._async_request(
             "command",
             data={"name": "RenameSeries", "seriesIds": seriesids},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_backup(self) -> SonarrCommand:
+    async def async_command_backup(self) -> Command:
         """Send backup command."""
         return await self._async_request(
             "command",
             data={"name": "Backup"},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 
-    async def async_command_missing_search(self) -> SonarrCommand:
+    async def async_command_missing_search(self) -> Command:
         """Send missing episode search command."""
         return await self._async_request(
             "command",
             data={"name": "missingEpisodeSearch"},
-            datatype=SonarrCommand,
+            datatype=Command,
             method=HTTPMethod.POST,
         )
 

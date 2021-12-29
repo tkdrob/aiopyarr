@@ -243,24 +243,6 @@ class _RadarrCalendarMovieFile(_RadarrMovieFileCommon):
 
 
 @dataclass(init=False)
-class _RadarrCommandBody(BaseModel):
-    """Radarr command body attributes."""
-
-    completionMessage: str | None = None
-    isExclusive: bool | None = None
-    isNewMovie: bool | None = None
-    isTypeExclusive: bool | None = None
-    lastExecutionTime: str | None = None
-    lastStartTime: str | None = None
-    name: str | None = None
-    requiresDiskAccess: bool | None = None
-    sendUpdatesToClient: bool | None = None
-    suppressMessages: bool | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
-
-
-@dataclass(init=False)
 class _RadarrMovieHistoryData(BaseModel):
     """Movie history data attributes."""
 

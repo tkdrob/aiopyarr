@@ -688,21 +688,3 @@ class _ReadarrBookFileMediaInfo(_ReadarrEditionsValueBookFilesValueMediaInfo):
     """Book file media info attributes."""
 
     id: int | None = None
-
-
-@dataclass(init=False)
-class _ReadarrCommandBody(BaseModel):
-    """Command body attributes."""
-
-    sendUpdatesToClient: bool | None = None
-    updateScheduledTask: bool | None = None
-    completionMessage: str | None = None
-    requiresDiskAccess: bool | None = None
-    isExclusive: bool | None = None
-    isTypeExclusive: bool | None = None
-    name: str | None = None
-    lastExecutionTime: str | None = None
-    lastStartTime: str | None = None
-    trigger: str | None = None
-    suppressMessages: bool | None = None
-    clientUserAgent: str | None = None

@@ -13,7 +13,6 @@ from .models.radarr import (  # isort:skip
     RadarrBlocklist,
     RadarrBlocklistMovie,
     RadarrCalendar,
-    RadarrCommand,
     RadarrDownloadClient,
     RadarrHealth,
     RadarrImportList,

@@ -9,7 +9,6 @@ from .common import Tag, _RecordCommon
 
 from .radarr_common import (  # isort:skip
     _RadarrCalendarMovieFile,
-    _RadarrCommandBody,
     _RadarrCommon,
     _RadarrCommon2,
     _RadarrCommon4,
@@ -329,30 +328,6 @@ class RadarrMovieEditor(BaseModel):
     qualityProfileId: int | None = None
     rootFolderPath: str | None = None
     tags: list[int] | None = None
-
-
-@dataclass(init=False)
-class RadarrCommand(_RadarrCommon4):
-    """Radarr command attributes."""
-
-    body: _RadarrCommandBody | None = None
-    commandName: str | None = None
-    duration: str | None = None
-    ended: str | None = None
-    message: str | None = None
-    priority: str | None = None
-    queued: str | None = None
-    sendUpdatesToClient: bool | None = None
-    started: str | None = None
-    stateChangeTime: str | None = None
-    status: str | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.body = _RadarrCommandBody(self.body) or {}
 
 
 @dataclass(init=False)

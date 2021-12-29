@@ -17,7 +17,6 @@ from .readarr_common import (  # isort:skip
     _ReadarrBlocklistRecord,
     _ReadarrBookCommon,
     _ReadarrBookFileMediaInfo,
-    _ReadarrCommandBody,
     _ReadarrDuration,
     _ReadarrEditionsValue,
     _ReadarrImage,
@@ -218,36 +217,6 @@ class ReadarrBookshelf(BaseModel):
         super().__post_init__()
         self.authors = [ReadarrBookshelfAuthor(author) for author in self.authors or []]
         self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions) or {}
-
-
-@dataclass(init=False)
-class ReadarrCommand(BaseModel):
-    """Command attributes."""
-
-    id: int | None = None
-    name: str | None = None
-    commandName: str | None = None
-    message: str | None = None
-    body: _ReadarrCommandBody | None = None
-    priority: str | None = None
-    status: str | None = None
-    queued: str | None = None
-    started: str | None = None
-    ended: str | None = None
-    duration: _ReadarrDuration | None = None
-    exception: str | None = None
-    trigger: str | None = None
-    clientUserAgent: str | None = None
-    stateChangeTime: str | None = None
-    sendUpdatesToClient: bool | None = None
-    updateScheduledTask: bool | None = None
-    lastExecutionTime: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.body = _ReadarrCommandBody(self.body) or {}
-        self.duration = _ReadarrDuration(self.duration) or {}
 
 
 @dataclass(init=False)

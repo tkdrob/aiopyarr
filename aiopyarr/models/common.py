@@ -247,7 +247,7 @@ class Command(BaseModel):
     name: str | None = None
     commandName: str | None = None
     message: str | None = None
-    body: dict
+    body: _CommandBody | None = None
     priority: str | None = None
     status: str | None = None
     queued: str | None = None
@@ -260,3 +260,26 @@ class Command(BaseModel):
     updateScheduledTask: bool | None = None
     lastExecutionTime: str | None = None
     id: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.body = _CommandBody(self.body) or {}
+
+
+@dataclass(init=False)
+class _CommandBody(BaseModel):
+    """Command body attributes."""
+
+    completionMessage: str | None = None
+    isExclusive: bool | None = None
+    isNewMovie: bool | None = None
+    isTypeExclusive: bool | None = None
+    lastExecutionTime: str | None = None
+    lastStartTime: str | None = None
+    name: str | None = None
+    requiresDiskAccess: bool | None = None
+    sendUpdatesToClient: bool | None = None
+    suppressMessages: bool | None = None
+    trigger: str | None = None
+    updateScheduledTask: bool | None = None

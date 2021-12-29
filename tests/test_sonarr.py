@@ -87,34 +87,6 @@ async def test_async_get_calendar(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_commands(aresponses):
-    """Test getting commands."""
-    aresponses.add(
-        "127.0.0.1:8989",
-        "/api/v3/command/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/command.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_commands(cmdid=0)
-
-        assert data.name == "RescanSeries"
-        assert data.startedOn == "0001-01-01T00:00:00Z"
-        assert data.stateChangeTime == "2014-02-05T05:09:09.2366139Z"
-        assert data.sendUpdatesToClient is True
-        assert data.state == "pending"
-        assert data.id == 24
-
-
-@pytest.mark.asyncio
 async def test_async_get_episode_by_id(aresponses):
     """Test getting episode by ID."""
     aresponses.add(

@@ -3565,66 +3565,6 @@ async def test_async_get_calendar(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_command(aresponses):
-    """Test getting command info."""
-    aresponses.add(
-        "127.0.0.1:8787",
-        "/api/v1/command?apikey=ur1234567-0abc12de3f456gh7ij89k012",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("readarr/command.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_command()
-    assert data[0].id == 0
-    assert data[0].name == "string"
-    assert data[0].commandName == "string"
-    assert data[0].message == "string"
-    assert data[0].body.sendUpdatesToClient is True
-    assert data[0].body.updateScheduledTask is True
-    assert data[0].body.completionMessage == "string"
-    assert data[0].body.requiresDiskAccess is True
-    assert data[0].body.isExclusive is True
-    assert data[0].body.isTypeExclusive is True
-    assert data[0].body.name == "string"
-    assert data[0].body.lastExecutionTime == "2021-12-12T17:40:12.167Z"
-    assert data[0].body.lastStartTime == "2021-12-12T17:40:12.167Z"
-    assert data[0].body.trigger == "unspecified"
-    assert data[0].body.suppressMessages is True
-    assert data[0].body.clientUserAgent == "string"
-    assert data[0].priority == "normal"
-    assert data[0].status == "queued"
-    assert data[0].queued == "2021-12-12T17:40:12.167Z"
-    assert data[0].started == "2021-12-12T17:40:12.167Z"
-    assert data[0].ended == "2021-12-12T17:40:12.167Z"
-    assert data[0].duration.ticks == 0
-    assert data[0].duration.days == 0
-    assert data[0].duration.hours == 0
-    assert data[0].duration.milliseconds == 0
-    assert data[0].duration.minutes == 0
-    assert data[0].duration.seconds == 0
-    assert data[0].duration.totalDays == 0
-    assert data[0].duration.totalHours == 0
-    assert data[0].duration.totalMilliseconds == 0
-    assert data[0].duration.totalMinutes == 0
-    assert data[0].duration.totalSeconds == 0
-    assert data[0].exception == "string"
-    assert data[0].trigger == "unspecified"
-    assert data[0].clientUserAgent == "string"
-    assert data[0].stateChangeTime == "2021-12-12T17:40:12.167Z"
-    assert data[0].sendUpdatesToClient is True
-    assert data[0].updateScheduledTask is True
-    assert data[0].lastExecutionTime == "2021-12-12T17:40:12.167Z"
-
-
-@pytest.mark.asyncio
 async def test_async_get_wanted_missing(aresponses):
     """Test getting wanted and missing books."""
     aresponses.add(

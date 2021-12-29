@@ -21,7 +21,6 @@ from .models.readarr import (  # isort:skip
     ReadarrBookLookup,
     ReadarrBookshelf,
     ReadarrCalendar,
-    ReadarrCommand,
     ReadarrMetadataProfile,
     ReadarrWantedCutoff,
     ReadarrWantedMissing,

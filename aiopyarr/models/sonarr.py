@@ -50,16 +50,6 @@ class SonarrCalendar(_SonarrCommon5):
 
 
 @dataclass(init=False)
-class SonarrCommand(_SonarrCommon4): #TODO remove
-    """Sonarr command attributes."""
-
-    sendUpdatesToClient: bool | None = None
-    startedOn: str | None = None
-    state: str | None = None
-    stateChangeTime: str | None = None
-
-
-@dataclass(init=False)
 class SonarrEpisode(_SonarrCommon5):
     """Sonarr episode attributes."""
 
