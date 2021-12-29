@@ -3,10 +3,19 @@ from __future__ import annotations
 
 import json
 from enum import Enum
+from datetime import datetime
+from re import search, sub
 from typing import Any
 
 from ..const import LOGGER
 from .const import CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
+
+
+def get_time_from_string(string: str) -> datetime:
+    """Convert string to datetime object."""
+    if not search(r"\.[0-9]+Z$", string):
+        string = sub("Z", ".000000Z", string)
+    return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 class ApiJSONEncoder(json.JSONEncoder):

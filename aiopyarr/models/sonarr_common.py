@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 from .common import _CommonAttrs
 
 
@@ -359,6 +359,7 @@ class _SonarrSeriesCommon(_SonarrSeriesCommon2, BaseModel):
 
     def __post_init__(self):
         super().__post_init__()
+        self.added = get_time_from_string(self.added)
         if isinstance(self.ratings, dict):
             self.ratings = _SonarrRatings(self.ratings) or {}
         if isinstance(self.seasons, list):

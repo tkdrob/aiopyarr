@@ -936,7 +936,7 @@ async def test_async_get_software_update_info(aresponses):
 
         assert data.version == "3.0.0.3553"
         assert data.branch == "nightly"
-        assert data.releaseDate == "2020-09-02T05:36:13.047313Z"
+        assert data.releaseDate == datetime(2020, 9, 2, 5, 36, 13, 47313)
         assert data.fileName == "Radarr.nightly.3.0.0.3553.windows-core-x64.zip"
         assert data.url == "string"
         assert data.installed is False

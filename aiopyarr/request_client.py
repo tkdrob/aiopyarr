@@ -168,8 +168,8 @@ class RequestClient:
         except ArrException as ex:
             raise ArrException(self, ex) from ex
 
-        except (Exception, BaseException) as ex:
-            raise ArrException(self, ex) from ex
+        #except (Exception, BaseException) as ex:
+        #    raise ArrException(self, ex) from ex
 
         else:
             return response.data

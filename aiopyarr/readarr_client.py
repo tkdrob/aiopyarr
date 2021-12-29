@@ -5,8 +5,6 @@ import json
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from aiopyarr.decorator import api_command
-
 from .const import HTTPMethod, HTTPResponse
 from .request_client import RequestClient
 

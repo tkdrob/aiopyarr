@@ -179,7 +179,7 @@ async def test_async_get_episode_by_id(aresponses):
         assert data.series.certification == "TV-MA"
         assert data.series.genres == ["Comedy"]
         assert data.series.tags == []
-        assert data.series.added == "2019-05-19T05:33:42.24392Z"
+        assert data.series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
         assert data.series.ratings.votes == 80
         assert data.series.ratings.value == 8.7
         assert data.series.id == 15
@@ -416,7 +416,7 @@ async def test_async_get_queue(aresponses):
         assert data[0].series.certification == "TV-MA"
         assert data[0].series.genres == ["Adventure", "Drama", "Fantasy"]
         assert data[0].series.tags == []
-        assert data[0].series.added == "2015-12-28T13:44:24.204583Z"
+        assert data[0].series.added == datetime(2015, 12, 28, 13, 44, 24, 204583)
         assert data[0].series.ratings.votes == 1128
         assert data[0].series.ratings.value == 9.4
         assert data[0].series.qualityProfileId == 5
@@ -543,7 +543,7 @@ async def test_async_lookup_series(aresponses):
         assert data[0].certification == "TV-14"
         assert data[0].genres == ["Action", "Crime", "Drama", "Mystery"]
         assert data[0].tags == []
-        assert data[0].added == "0001-01-01T00:00:00Z"
+        assert data[0].added == datetime(1, 1, 1, 0, 0)
         assert data[0].ratings.votes == 182
         assert data[0].ratings.value == 8.6
         assert data[0].qualityProfileId == 0
@@ -612,7 +612,7 @@ async def test_async_get_series(aresponses):
         assert data.certification == "TV-MA"
         assert data.genres == ["Action", "Adventure", "Fantasy", "Suspense"]
         assert data.tags == []
-        assert data.added == "2019-09-13T15:50:29.325136Z"
+        assert data.added == datetime(2019, 9, 13, 15, 50, 29, 325136)
         assert data.ratings.votes == 0
         assert data.ratings.value == 0.0
         assert data.qualityProfileId == 6

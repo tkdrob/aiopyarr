@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 from .common import Tag, _RecordCommon
 
 from .radarr_common import (  # isort:skip
@@ -260,7 +261,7 @@ class RadarrUpdate(BaseModel):
     installable: bool | None = None
     installed: bool | None = None
     latest: bool | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     url: str | None = None
     version: str | None = None
 
@@ -268,6 +269,7 @@ class RadarrUpdate(BaseModel):
         """Post init."""
         super().__post_init__()
         self.changes = _RadarrUpdateChanges(self.changes) or {}
+        self.releaseDate = get_time_from_string(self.releaseDate)
 
 
 @dataclass(init=False)

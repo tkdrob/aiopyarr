@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 
 
 @dataclass(init=False)
@@ -34,6 +34,12 @@ class _CommonAttrs(BaseModel):
     videoBitrate: int | None = None
     videoCodec: str | None = None
     videoFps: float | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.lastExecutionTime = get_time_from_string(self.lastExecutionTime)
+        self.lastStartTime = get_time_from_string(self.lastStartTime)
 
 
 @dataclass(init=False)
@@ -283,3 +289,9 @@ class _CommandBody(BaseModel):
     suppressMessages: bool | None = None
     trigger: str | None = None
     updateScheduledTask: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.lastExecutionTime = get_time_from_string(self.lastExecutionTime)
+        self.lastStartTime = get_time_from_string(self.lastStartTime)

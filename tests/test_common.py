@@ -1,4 +1,5 @@
 """Tests for common methods."""
+from datetime import datetime
 from aiopyarr.models.common import Command, Diskspace, HostConfig, RootFolder, SystemBackup, UIConfig, SystemStatus
 
 from aiopyarr.readarr_client import ReadarrClient
@@ -371,8 +372,8 @@ async def test_async_get_command(aresponses):
         assert data[0].body.isNewMovie is False
         assert data[0].body.isTypeExclusive is False
         assert data[0].body.name == "MessagingCleanup"
-        assert data[0].body.lastExecutionTime == "2021-11-29T19:57:46Z"
-        assert data[0].body.lastStartTime == "2021-11-29T19:57:46Z"
+        assert data[0].body.lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46)
+        assert data[0].body.lastStartTime == datetime(2021, 11, 29, 19, 57, 46)
         assert data[0].body.trigger == "scheduled"
         assert data[0].body.suppressMessages is False
         assert data[0].priority == "low"
