@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 from .base import BaseModel, get_time_from_string
 from .common import _CommonAttrs
@@ -27,14 +28,18 @@ class _SonarrSeriesAlternateTitle(BaseModel):
 class _SonarrCommon5(_SonarrSeriesAlternateTitle, _SonarrCommon6):
     """Sonarr common attributes."""
 
-    airDate: str | None = None
-    airDateUtc: str | None = None
+    airDate: datetime | None = None
+    airDateUtc: datetime | None = None
     episodeFileId: int | None = None
     episodeNumber: int | None = None
     hasFile: bool | None = None
     monitored: bool | None = None
     overview: str | None = None
     seriesId: int | None = None
+
+    def __post_init__(self):
+        self.airDate = get_time_from_string(self.airDate)
+        self.airDateUtc = get_time_from_string(self.airDateUtc)
 
 
 @dataclass(init=False)
@@ -47,7 +52,6 @@ class _SonarrCommon4(_SonarrCommon6): #TODO remove
     name: str | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.allowed = [
             _SonarrQualityProfileValueAttr(allowed) for allowed in self.allowed or []
         ]
@@ -82,7 +86,6 @@ class _SonarrQualityProfileValueItems(BaseModel):
     quality: _SonarrCutoff | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.quality = _SonarrCutoff(self.quality) or {}
 
 
@@ -94,7 +97,6 @@ class _SonarrQualityProfile(BaseModel):
     value: _SonarrQualityProfileValueAttr | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.value = _SonarrQualityProfileValueAttr(self.value) or {}
 
 
@@ -124,7 +126,7 @@ class _SonarrSeriesCommon2(_SonarrSeriesCommon3):
     airTime: str | None = None
     cleanTitle: str | None = None
     ended: bool | None = None
-    firstAired: str | None = None
+    firstAired: datetime | None = None
     imdbId: str | None = None
     languageProfileId: int | None = None
     monitored: bool | None = None
@@ -140,6 +142,7 @@ class _SonarrSeriesCommon2(_SonarrSeriesCommon3):
     year: int | None = None
 
     def __post_init__(self):
+        self.firstAired = get_time_from_string(self.firstAired)
         self.images = [_SonarrImages(image) for image in self.images or []]
         if isinstance(self.qualityProfile, dict):
             self.qualityProfile = _SonarrQualityProfile(self.qualityProfile) or {}
@@ -149,10 +152,14 @@ class _SonarrSeriesCommon2(_SonarrSeriesCommon3):
 class _SonarrSeries2(_SonarrSeriesCommon2):
     """Sonarr series attributes."""
 
-    lastInfoSync: str | None = None
+    lastInfoSync: datetime | None = None
     overview: str | None = None
     path: str | None = None
     qualityProfile: _SonarrQualityProfile | None = None
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.lastInfoSync = get_time_from_string(self.lastInfoSync)
 
 
 @dataclass(init=False)
@@ -169,10 +176,10 @@ class _SonarrEpisodeFileCommon:
 
 
 @dataclass(init=False)
-class _SonarrCommon8:
+class _SonarrCommon8(BaseModel):
     """Sonarr episode file common attributes."""
 
-    dateAdded: str | None = None
+    dateAdded: datetime | None = None
     path: str | None = None
     sceneName: str | None = None
     seasonNumber: int | None = None
@@ -190,6 +197,7 @@ class _SonarrEpisodeFile(_SonarrEpisodeFileCommon, _SonarrCommon6, _SonarrCommon
 
     def __post_init__(self):
         super().__post_init__()
+        self.dateAdded = get_time_from_string(self.dateAdded)
         if isinstance(self.language, dict):
             self.language = _SonarrCutoff(self.language) or {}
         if isinstance(self.mediaInfo, dict):
@@ -247,7 +255,6 @@ class _SonarrQualitySub(BaseModel):
     revision: _SonarrRevisionAttr | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.quality = _SonarrQualitySubSub(self.quality) or {}
         if isinstance(self.revision, dict):
             self.revision = _SonarrRevisionAttr(self.revision) or {}
@@ -322,10 +329,13 @@ class _SonarrSeasonStatistics(BaseModel):
     episodeCount: int | None = None
     episodeFileCount: int | None = None
     percentOfEpisodes: float | None = None
-    previousAiring: str | None = None
+    previousAiring: datetime | None = None
     sizeOnDisk: int | None = None
     totalEpisodeCount: int | None = None
 
+    def __post_init__(self):
+        super().__post_init__()
+        self.previousAiring = get_time_from_string(self.previousAiring)
 
 @dataclass(init=False)
 class _SonarrWantedMissingSeriesSeason(BaseModel):
@@ -336,7 +346,6 @@ class _SonarrWantedMissingSeriesSeason(BaseModel):
     statistics: _SonarrSeasonStatistics | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         if isinstance(self.statistics, dict):
             self.statistics = _SonarrSeasonStatistics(self.statistics) or {}
 
@@ -345,7 +354,7 @@ class _SonarrWantedMissingSeriesSeason(BaseModel):
 class _SonarrSeriesCommon(_SonarrSeriesCommon2, BaseModel):
     """Sonarr series common attributes."""
 
-    added: str | None = None
+    added: datetime | None = None
     certification: str | None = None
     genres: list[str] | None = None
     overview: str | None = None
@@ -373,8 +382,12 @@ class _SonarrSeriesCommon(_SonarrSeriesCommon2, BaseModel):
 class _SonarrHistoryRecordSeries(_SonarrSeriesCommon, _SonarrCommon6):
     """Sonarr history record series attributes."""
 
-    lastInfoSync: str | None = None
+    lastInfoSync: datetime | None = None
     path: str | None = None
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.lastInfoSync = get_time_from_string(self.lastInfoSync)
 
 
 @dataclass(init=False)
@@ -382,7 +395,7 @@ class _SonarrHistoryRecord(_SonarrEpisodeFileCommon, _SonarrCommon6):
     """Sonarr history record attributes."""
 
     data: _SonarrHistoryRecordData | None = None
-    date: str | None = None
+    date: datetime | None = None
     downloadId: str | None = None
     episodeId: int | None = None
     eventType: str | None = None
@@ -391,6 +404,7 @@ class _SonarrHistoryRecord(_SonarrEpisodeFileCommon, _SonarrCommon6):
 
     def __post_init__(self):
         super().__post_init__()
+        self.date = get_time_from_string(self.date)
         self.data = _SonarrHistoryRecordData(self.data) or {}
         self.language = _SonarrCommon4(self.language) or {}
 
@@ -444,7 +458,6 @@ class _SonarrCommon3(BaseModel):
     seriesTitle: str | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.quality = _SonarrQualitySub(self.quality) or {}
 
 

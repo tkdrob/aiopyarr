@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 from .common import _CommonAttrs
 
 
@@ -42,7 +43,6 @@ class _RadarrMovieQuality(BaseModel):
     revision: _RadarrMovieQualityRevision | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.quality = _RadarrMovieQualityInfo(self.quality) or {}
         self.revision = _RadarrMovieQualityRevision(self.revision) or {}
 
@@ -80,7 +80,6 @@ class _RadarrMovieCollection(BaseModel):
     tmdbId: int | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
 
 
@@ -108,7 +107,6 @@ class _RadarrCommon(BaseModel):
     name: str | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.fields = [_RadarrMovieFields(field) for field in self.fields or []]
 
 
@@ -128,7 +126,6 @@ class _RadarrMovieCustomFormats(_RadarrCommon4):
     specifications: list[_RadarrMovieSpecifications] | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.specifications = [
             _RadarrMovieSpecifications(spec) for spec in self.specifications or []
         ]
@@ -153,7 +150,6 @@ class _RadarrMovieCommon(BaseModel):
     quality: _RadarrMovieQuality | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.languages = [_RadarrCommon4(language) for language in self.languages or []]
         self.quality = _RadarrMovieQuality(self.quality) or {}
 
@@ -207,7 +203,6 @@ class _RadarrQualityProfileItems(_RadarrCommon4):
     quality: _RadarrMovieQualityInfo | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.items = [_RadarrQualityProfileItems(item) for item in self.items or []]
         if isinstance(self.quality, dict):
             self.quality = _RadarrMovieQualityInfo(self.quality) or {}
@@ -230,6 +225,7 @@ class _RadarrMovieFileCommon(_RadarrMovieCommon):
 
     def __post_init__(self):
         super().__post_init__()
+        self.dateAdded = get_time_from_string(self.dateAdded)
         self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
 
 
@@ -264,7 +260,6 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.language = _RadarrCommon4(self.language) or {}
 
 
@@ -288,7 +283,7 @@ class _RadarrMovie(_RadarrCommon2):
     originalTitle: str | None = None
     overview: str | None = None
     path: str | None = None
-    physicalRelease: str | None = None
+    physicalRelease: datetime | None = None
     ratings: _RadarrMovieRatings | None = None
     rootFolderPath: str | None = None
     runtime: int | None = None
@@ -306,12 +301,13 @@ class _RadarrMovie(_RadarrCommon2):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
+        self.added = get_time_from_string(self.added)
         self.alternateTitles = [
             _RadarrMovieAlternateTitle(alternateTitle)
             for alternateTitle in self.alternateTitles or []
         ]
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
+        self.physicalRelease = get_time_from_string(self.physicalRelease)
         self.ratings = _RadarrMovieRatings(self.ratings) or {}
         if isinstance(self.collection, dict):
             self.collection = _RadarrMovieCollection(self.collection) or {}

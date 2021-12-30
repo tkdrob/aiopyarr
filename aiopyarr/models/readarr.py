@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 from .common import _RecordCommon
 
 from .readarr_common import (  # isort:skip
@@ -74,7 +75,6 @@ class ReadarrBlocklist(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.filters = [
             _ReadarrBlocklistFilter(filter) for filter in self.filters or []
         ]
@@ -116,8 +116,8 @@ class ReadarrBookFile(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
+        self.dateAdded = get_time_from_string(self.dateAdded)
         self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo) or {}
         self.quality = _ReadarrQuality(self.quality) or {}
 
@@ -131,7 +131,6 @@ class ReadarrBookFileEditor(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.quality = _ReadarrQuality(self.quality) or {}
 
 
@@ -156,19 +155,20 @@ class ReadarrBookLookup(BaseModel):
     author: ReadarrAuthor | None = None
     images: list[_ReadarrImage] | None = None
     links: list[_ReadarrLink] | None = None
-    added: str | None = None
+    added: datetime | None = None
     remoteCover: str | None = None
     editions: list[_ReadarrEditionsValue] | None = None
     grabbed: bool | None = None
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
+        self.added = get_time_from_string(self.added)
         self.author = ReadarrAuthor(self.author) or {}
         self.editions = [_ReadarrEditionsValue(editn) for editn in self.editions or []]
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_ReadarrLink(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
+        self.releaseDate = get_time_from_string(self.releaseDate)
 
 
 @dataclass(init=False)
@@ -201,7 +201,6 @@ class ReadarrBookshelfAuthor(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.books = [ReadarrBookshelfAuthorBook(book) for book in self.books or []]
 
 
@@ -214,7 +213,6 @@ class ReadarrBookshelf(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.authors = [ReadarrBookshelfAuthor(author) for author in self.authors or []]
         self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions) or {}
 
@@ -227,7 +225,6 @@ class ReadarrWantedMissing(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [ReadarrBook(record) for record in self.records or []]
 
 
@@ -239,7 +236,6 @@ class ReadarrWantedCutoff(ReadarrWantedMissing):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.filters = [
             _ReadarrBlocklistFilter(filter) for filter in self.filters or []
         ]

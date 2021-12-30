@@ -45,7 +45,7 @@ async def test_async_author(aresponses):
     assert data.nextBook.foreignBookId == "string"
     assert data.nextBook.titleSlug == "string"
     assert data.nextBook.title == "string"
-    assert data.nextBook.releaseDate == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.links[0].url == "string"
     assert data.nextBook.links[0].name == "string"
     assert data.nextBook.genres[0] == "string"
@@ -55,8 +55,8 @@ async def test_async_author(aresponses):
     assert data.nextBook.cleanTitle == "string"
     assert data.nextBook.monitored is True
     assert data.nextBook.anyEditionOk is True
-    assert data.nextBook.lastInfoSync == "2021-12-06T22:12:47.067Z"
-    assert data.nextBook.added == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.addOptions.addType == "automatic"
     assert data.nextBook.addOptions.searchForNewBook is True
     assert data.nextBook.authorMetadata.value.id == 0
@@ -71,8 +71,8 @@ async def test_async_author(aresponses):
     assert data.nextBook.authorMetadata.value.disambiguation == "string"
     assert data.nextBook.authorMetadata.value.gender == "string"
     assert data.nextBook.authorMetadata.value.hometown == "string"
-    assert data.nextBook.authorMetadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.nextBook.authorMetadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.authorMetadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.authorMetadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.authorMetadata.value.status == "continuing"
     assert data.nextBook.authorMetadata.value.images[0].url == "string"
     assert data.nextBook.authorMetadata.value.images[0].coverType == "unknown"
@@ -88,10 +88,10 @@ async def test_async_author(aresponses):
     assert data.nextBook.author.value.authorMetadataId == 0
     assert data.nextBook.author.value.cleanName == "string"
     assert data.nextBook.author.value.monitored is True
-    assert data.nextBook.author.value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.author.value.path == "string"
     assert data.nextBook.author.value.rootFolderPath == "string"
-    assert data.nextBook.author.value.added == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.author.value.qualityProfileId == 0
     assert data.nextBook.author.value.metadataProfileId == 0
     assert data.nextBook.author.value.tags[0] == 0
@@ -111,8 +111,8 @@ async def test_async_author(aresponses):
     assert data.nextBook.author.value.metadata.value.disambiguation == "string"
     assert data.nextBook.author.value.metadata.value.gender == "string"
     assert data.nextBook.author.value.metadata.value.hometown == "string"
-    assert data.nextBook.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.nextBook.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.author.value.metadata.value.status == "continuing"
     assert data.nextBook.author.value.metadata.value.images[0].url == "string"
     assert data.nextBook.author.value.metadata.value.images[0].coverType == "unknown"
@@ -143,8 +143,8 @@ async def test_async_author(aresponses):
     assert data.nextBook.author.value.metadata.value.disambiguation == "string"
     assert data.nextBook.author.value.metadata.value.gender == "string"
     assert data.nextBook.author.value.metadata.value.hometown == "string"
-    assert data.nextBook.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.nextBook.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.author.value.metadata.value.status == "continuing"
     assert data.nextBook.author.value.metadata.value.images[0].url == "string"
     assert data.nextBook.author.value.metadata.value.images[0].coverType == "unknown"
@@ -208,7 +208,7 @@ async def test_async_author(aresponses):
     assert data.nextBook.editions.value[0].disambiguation == "string"
     assert data.nextBook.editions.value[0].publisher == "string"
     assert data.nextBook.editions.value[0].pageCount == 0
-    assert data.nextBook.editions.value[0].releaseDate == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.editions.value[0].releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.editions.value[0].images[0].url == "string"
     assert data.nextBook.editions.value[0].images[0].coverType == "unknown"
     assert data.nextBook.editions.value[0].images[0].extension == "string"
@@ -224,8 +224,8 @@ async def test_async_author(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-06T22:12:47.067Z"
-    assert _value.dateAdded == "2021-12-06T22:12:47.067Z"
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -245,10 +245,10 @@ async def test_async_author(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -268,8 +268,8 @@ async def test_async_author(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert _value.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -332,8 +332,8 @@ async def test_async_author(aresponses):
     assert data.nextBook.bookFiles.value[0].id == 0
     assert data.nextBook.bookFiles.value[0].path == "string"
     assert data.nextBook.bookFiles.value[0].size == 0
-    assert data.nextBook.bookFiles.value[0].modified == "2021-12-06T22:12:47.067Z"
-    assert data.nextBook.bookFiles.value[0].dateAdded == "2021-12-06T22:12:47.067Z"
+    assert data.nextBook.bookFiles.value[0].modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.bookFiles.value[0].dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.nextBook.bookFiles.value[0].sceneName == "string"
     assert data.nextBook.bookFiles.value[0].releaseGroup == "string"
     assert data.nextBook.bookFiles.value[0].quality.quality.id == 0
@@ -353,10 +353,10 @@ async def test_async_author(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-06T22:12:47.067Z"
+    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -375,8 +375,8 @@ async def test_async_author(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert _value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -451,7 +451,7 @@ async def test_async_author(aresponses):
     assert data.lastBook.foreignBookId == "string"
     assert data.lastBook.titleSlug == "string"
     assert data.lastBook.title == "string"
-    assert data.lastBook.releaseDate == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.links[0].url == "string"
     assert data.lastBook.links[0].name == "string"
     assert data.lastBook.genres[0] == "string"
@@ -461,8 +461,8 @@ async def test_async_author(aresponses):
     assert data.lastBook.cleanTitle == "string"
     assert data.lastBook.monitored is True
     assert data.lastBook.anyEditionOk is True
-    assert data.lastBook.lastInfoSync == "2021-12-06T22:12:47.067Z"
-    assert data.lastBook.added == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.addOptions.addType == "automatic"
     assert data.lastBook.addOptions.searchForNewBook is True
     assert data.lastBook.authorMetadata.value.id == 0
@@ -477,8 +477,8 @@ async def test_async_author(aresponses):
     assert data.lastBook.authorMetadata.value.disambiguation == "string"
     assert data.lastBook.authorMetadata.value.gender == "string"
     assert data.lastBook.authorMetadata.value.hometown == "string"
-    assert data.lastBook.authorMetadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.lastBook.authorMetadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.authorMetadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.authorMetadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.authorMetadata.value.status == "continuing"
     assert data.lastBook.authorMetadata.value.images[0].url == "string"
     assert data.lastBook.authorMetadata.value.images[0].coverType == "unknown"
@@ -494,10 +494,10 @@ async def test_async_author(aresponses):
     assert data.lastBook.author.value.authorMetadataId == 0
     assert data.lastBook.author.value.cleanName == "string"
     assert data.lastBook.author.value.monitored is True
-    assert data.lastBook.author.value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.author.value.path == "string"
     assert data.lastBook.author.value.rootFolderPath == "string"
-    assert data.lastBook.author.value.added == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.author.value.qualityProfileId == 0
     assert data.lastBook.author.value.metadataProfileId == 0
     assert data.lastBook.author.value.tags[0] == 0
@@ -517,8 +517,8 @@ async def test_async_author(aresponses):
     assert data.lastBook.author.value.metadata.value.disambiguation == "string"
     assert data.lastBook.author.value.metadata.value.gender == "string"
     assert data.lastBook.author.value.metadata.value.hometown == "string"
-    assert data.lastBook.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.lastBook.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.author.value.metadata.value.status == "continuing"
     assert data.lastBook.author.value.metadata.value.images[0].url == "string"
     assert data.lastBook.author.value.metadata.value.images[0].coverType == "unknown"
@@ -549,8 +549,8 @@ async def test_async_author(aresponses):
     assert data.lastBook.author.value.metadata.value.disambiguation == "string"
     assert data.lastBook.author.value.metadata.value.gender == "string"
     assert data.lastBook.author.value.metadata.value.hometown == "string"
-    assert data.lastBook.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert data.lastBook.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.author.value.metadata.value.status == "continuing"
     assert data.lastBook.author.value.metadata.value.images[0].url == "string"
     assert data.lastBook.author.value.metadata.value.images[0].coverType == "unknown"
@@ -614,7 +614,7 @@ async def test_async_author(aresponses):
     assert data.lastBook.editions.value[0].disambiguation == "string"
     assert data.lastBook.editions.value[0].publisher == "string"
     assert data.lastBook.editions.value[0].pageCount == 0
-    assert data.lastBook.editions.value[0].releaseDate == "2021-12-06T22:12:47.067Z"
+    assert data.lastBook.editions.value[0].releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert data.lastBook.editions.value[0].images[0].url == "string"
     assert data.lastBook.editions.value[0].images[0].coverType == "unknown"
     assert data.lastBook.editions.value[0].images[0].extension == "string"
@@ -630,8 +630,8 @@ async def test_async_author(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-06T22:12:47.067Z"
-    assert _value.dateAdded == "2021-12-06T22:12:47.067Z"
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -651,10 +651,10 @@ async def test_async_author(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -674,8 +674,8 @@ async def test_async_author(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert _value.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -739,8 +739,8 @@ async def test_async_author(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-06T22:12:47.067Z"
-    assert _value.dateAdded == "2021-12-06T22:12:47.067Z"
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -759,10 +759,10 @@ async def test_async_author(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -781,8 +781,8 @@ async def test_async_author(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-06T22:12:47.067Z"
-    assert _value.author.value.metadata.value.died == "2021-12-06T22:12:47.067Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -866,7 +866,7 @@ async def test_async_author(aresponses):
     assert data.sortName == "string"
     assert data.sortNameLastFirst == "string"
     assert data.tags[0] == 0
-    assert data.added == "2021-12-06T22:12:47.068Z"
+    assert data.added == datetime(2021, 12, 6, 22, 12, 47, 68000)
     assert data.addOptions.monitor == "all"
     assert data.addOptions.booksToMonitor[0] == "string"
     assert data.addOptions.monitored is True
@@ -925,7 +925,7 @@ async def test_async_author_lookup(aresponses):
     assert data[0].sortName == "string"
     assert data[0].sortNameLastFirst == "string"
     assert data[0].tags == []
-    assert data[0].added == "2021-12-06T22:23:55Z"
+    assert data[0].added == datetime(2021, 12, 6, 22, 23, 55)
     assert data[0].ratings.votes == 16374205
     assert data[0].ratings.value == 4.05
     assert data[0].ratings.popularity == 66315530.25
@@ -973,7 +973,7 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].quality.revision.version == 0
     assert data.records[0].quality.revision.real == 0
     assert data.records[0].quality.revision.isRepack is True
-    assert data.records[0].date == "2021-12-07T08:55:41.226Z"
+    assert data.records[0].date == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert data.records[0].protocol == "unknown"
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
@@ -994,7 +994,7 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.nextBook.foreignBookId == "string"
     assert data.records[0].author.nextBook.titleSlug == "string"
     assert data.records[0].author.nextBook.title == "string"
-    assert data.records[0].author.nextBook.releaseDate == "2021-12-07T08:55:41.226Z"
+    assert data.records[0].author.nextBook.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert data.records[0].author.nextBook.links[0].url == "string"
     assert data.records[0].author.nextBook.links[0].name == "string"
     assert data.records[0].author.nextBook.genres[0] == "string"
@@ -1004,8 +1004,8 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.nextBook.cleanTitle == "string"
     assert data.records[0].author.nextBook.monitored is True
     assert data.records[0].author.nextBook.anyEditionOk is True
-    assert data.records[0].author.nextBook.lastInfoSync == "2021-12-07T08:55:41.226Z"
-    assert data.records[0].author.nextBook.added == "2021-12-07T08:55:41.226Z"
+    assert data.records[0].author.nextBook.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert data.records[0].author.nextBook.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert data.records[0].author.nextBook.addOptions.addType == "automatic"
     assert data.records[0].author.nextBook.addOptions.searchForNewBook is True
     _value = data.records[0].author.nextBook.authorMetadata.value
@@ -1021,8 +1021,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-07T08:55:41.226Z"
-    assert _value.died == "2021-12-07T08:55:41.226Z"
+    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -1039,10 +1039,10 @@ async def test_async_get_blocklist(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-07T08:55:41.226Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-07T08:55:41.226Z"
+    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -1062,8 +1062,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T08:55:41.226Z"
-    assert _value.metadata.value.died == "2021-12-07T08:55:41.226Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -1094,8 +1094,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T08:55:41.226Z"
-    assert _value.metadata.value.died == "2021-12-07T08:55:41.226Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -1159,7 +1159,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert _value.pageCount == 0
-    assert _value.releaseDate == "2021-12-07T08:55:41.226Z"
+    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
     assert _value.images[0].extension == "string"
@@ -1175,8 +1175,8 @@ async def test_async_get_blocklist(aresponses):
     assert _val.id == 0
     assert _val.path == "string"
     assert _val.size == 0
-    assert _val.modified == "2021-12-07T08:55:41.226Z"
-    assert _val.dateAdded == "2021-12-07T08:55:41.226Z"
+    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert _val.quality.quality.id == 0
@@ -1196,10 +1196,10 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.authorMetadataId == 0
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == "2021-12-07T08:55:41.226Z"
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == "2021-12-07T08:55:41.226Z"
+    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.author.value.qualityProfileId == 0
     assert _val.author.value.metadataProfileId == 0
     assert _val.author.value.tags[0] == 0
@@ -1220,8 +1220,8 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.metadata.value.disambiguation == "string"
     assert _val.author.value.metadata.value.gender == "string"
     assert _val.author.value.metadata.value.hometown == "string"
-    assert _val.author.value.metadata.value.born == "2021-12-07T08:55:41.226Z"
-    assert _val.author.value.metadata.value.died == "2021-12-07T08:55:41.226Z"
+    assert _val.author.value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _val.author.value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.author.value.metadata.value.status == "continuing"
     assert _val.author.value.metadata.value.images[0].url == "string"
     assert _val.author.value.metadata.value.images[0].coverType == "unknown"
@@ -1285,8 +1285,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-07T08:55:41.227Z"
-    assert _value.dateAdded == "2021-12-07T08:55:41.227Z"
+    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -1305,10 +1305,10 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -1327,8 +1327,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-07T08:55:41.227Z"
-    assert _value.author.value.metadata.value.died == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -1404,7 +1404,7 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.lastBook.foreignBookId == "string"
     assert data.records[0].author.lastBook.titleSlug == "string"
     assert data.records[0].author.lastBook.title == "string"
-    assert data.records[0].author.lastBook.releaseDate == "2021-12-07T08:55:41.227Z"
+    assert data.records[0].author.lastBook.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert data.records[0].author.lastBook.links[0].url == "string"
     assert data.records[0].author.lastBook.links[0].name == "string"
     assert data.records[0].author.lastBook.genres[0] == "string"
@@ -1414,8 +1414,8 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.lastBook.cleanTitle == "string"
     assert data.records[0].author.lastBook.monitored is True
     assert data.records[0].author.lastBook.anyEditionOk is True
-    assert data.records[0].author.lastBook.lastInfoSync == "2021-12-07T08:55:41.227Z"
-    assert data.records[0].author.lastBook.added == "2021-12-07T08:55:41.227Z"
+    assert data.records[0].author.lastBook.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert data.records[0].author.lastBook.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert data.records[0].author.lastBook.addOptions.addType == "automatic"
     assert data.records[0].author.lastBook.addOptions.searchForNewBook is True
     _value = data.records[0].author.lastBook.authorMetadata.value
@@ -1431,8 +1431,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-07T08:55:41.227Z"
-    assert _value.died == "2021-12-07T08:55:41.227Z"
+    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -1449,10 +1449,10 @@ async def test_async_get_blocklist(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-07T08:55:41.227Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-07T08:55:41.227Z"
+    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -1472,8 +1472,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T08:55:41.227Z"
-    assert _value.metadata.value.died == "2021-12-07T08:55:41.227Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -1504,8 +1504,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T08:55:41.227Z"
-    assert _value.metadata.value.died == "2021-12-07T08:55:41.227Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -1569,7 +1569,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert _value.pageCount == 0
-    assert _value.releaseDate == "2021-12-07T08:55:41.227Z"
+    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
     assert _value.images[0].extension == "string"
@@ -1585,8 +1585,8 @@ async def test_async_get_blocklist(aresponses):
     assert _val.id == 0
     assert _val.path == "string"
     assert _val.size == 0
-    assert _val.modified == "2021-12-07T08:55:41.227Z"
-    assert _val.dateAdded == "2021-12-07T08:55:41.227Z"
+    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert _val.quality.quality.id == 0
@@ -1606,10 +1606,10 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.authorMetadataId == 0
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == "2021-12-07T08:55:41.227Z"
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == "2021-12-07T08:55:41.227Z"
+    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.author.value.qualityProfileId == 0
     assert _val.author.value.metadataProfileId == 0
     assert _val.author.value.tags[0] == 0
@@ -1629,8 +1629,8 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.metadata.value.disambiguation == "string"
     assert _val.author.value.metadata.value.gender == "string"
     assert _val.author.value.metadata.value.hometown == "string"
-    assert _val.author.value.metadata.value.born == "2021-12-07T08:55:41.227Z"
-    assert _val.author.value.metadata.value.died == "2021-12-07T08:55:41.227Z"
+    assert _val.author.value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _val.author.value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.author.value.metadata.value.status == "continuing"
     assert _val.author.value.metadata.value.images[0].url == "string"
     assert _val.author.value.metadata.value.images[0].coverType == "unknown"
@@ -1694,8 +1694,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-07T08:55:41.227Z"
-    assert _value.dateAdded == "2021-12-07T08:55:41.227Z"
+    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -1714,10 +1714,10 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -1736,8 +1736,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-07T08:55:41.227Z"
-    assert _value.author.value.metadata.value.died == "2021-12-07T08:55:41.227Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -1822,7 +1822,7 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
     assert data.records[0].author.tags[0] == 0
-    assert data.records[0].author.added == "2021-12-07T08:55:41.227Z"
+    assert data.records[0].author.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert data.records[0].author.addOptions.monitor == "all"
     assert data.records[0].author.addOptions.booksToMonitor[0] == "string"
     assert data.records[0].author.addOptions.monitored is True
@@ -1871,7 +1871,7 @@ async def test_async_get_book(aresponses):
     assert data[0].ratings.votes == 0
     assert data[0].ratings.value == 0
     assert data[0].ratings.popularity == 0
-    assert data[0].releaseDate == "2021-12-07T09:07:35.508Z"
+    assert data[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000)
     assert data[0].pageCount == 0
     assert data[0].genres[0] == "string"
     assert data[0].author.id == 0
@@ -1891,7 +1891,7 @@ async def test_async_get_book(aresponses):
     assert data[0].author.nextBook.foreignBookId == "string"
     assert data[0].author.nextBook.titleSlug == "string"
     assert data[0].author.nextBook.title == "string"
-    assert data[0].author.nextBook.releaseDate == "2021-12-07T09:07:35.508Z"
+    assert data[0].author.nextBook.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000)
     assert data[0].author.nextBook.links[0].url == "string"
     assert data[0].author.nextBook.links[0].name == "string"
     assert data[0].author.nextBook.genres[0] == "string"
@@ -1901,8 +1901,8 @@ async def test_async_get_book(aresponses):
     assert data[0].author.nextBook.cleanTitle == "string"
     assert data[0].author.nextBook.monitored is True
     assert data[0].author.nextBook.anyEditionOk is True
-    assert data[0].author.nextBook.lastInfoSync == "2021-12-07T09:07:35.508Z"
-    assert data[0].author.nextBook.added == "2021-12-07T09:07:35.508Z"
+    assert data[0].author.nextBook.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 508000)
+    assert data[0].author.nextBook.added == datetime(2021, 12, 7, 9, 7, 35, 508000)
     assert data[0].author.nextBook.addOptions.addType == "automatic"
     assert data[0].author.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
@@ -1918,8 +1918,8 @@ async def test_async_get_book(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-07T09:07:35.508Z"
-    assert _value.died == "2021-12-07T09:07:35.509Z"
+    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 508000)
+    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -1936,10 +1936,10 @@ async def test_async_get_book(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-07T09:07:35.509Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-07T09:07:35.509Z"
+    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -1959,8 +1959,8 @@ async def test_async_get_book(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T09:07:35.509Z"
-    assert _value.metadata.value.died == "2021-12-07T09:07:35.509Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -2025,7 +2025,7 @@ async def test_async_get_book(aresponses):
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert _value.pageCount == 0
-    assert _value.releaseDate == "2021-12-07T09:07:35.509Z"
+    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
     assert _value.images[0].extension == "string"
@@ -2040,8 +2040,8 @@ async def test_async_get_book(aresponses):
     assert _value.bookFiles.value[0].id == 0
     assert _value.bookFiles.value[0].path == "string"
     assert _value.bookFiles.value[0].size == 0
-    assert _value.bookFiles.value[0].modified == "2021-12-07T09:07:35.509Z"
-    assert _value.bookFiles.value[0].dateAdded == "2021-12-07T09:07:35.509Z"
+    assert _value.bookFiles.value[0].modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.bookFiles.value[0].dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.bookFiles.value[0].sceneName == "string"
     assert _value.bookFiles.value[0].releaseGroup == "string"
     assert _value.bookFiles.value[0].quality.quality.id == 0
@@ -2062,10 +2062,10 @@ async def test_async_get_book(aresponses):
     assert _val.authorMetadataId == 0
     assert _val.cleanName == "string"
     assert _val.monitored is True
-    assert _val.lastInfoSync == "2021-12-07T09:07:35.509Z"
+    assert _val.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.path == "string"
     assert _val.rootFolderPath == "string"
-    assert _val.added == "2021-12-07T09:07:35.509Z"
+    assert _val.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.qualityProfileId == 0
     assert _val.metadataProfileId == 0
     assert _val.tags[0] == 0
@@ -2085,8 +2085,8 @@ async def test_async_get_book(aresponses):
     assert _val.metadata.value.disambiguation == "string"
     assert _val.metadata.value.gender == "string"
     assert _val.metadata.value.hometown == "string"
-    assert _val.metadata.value.born == "2021-12-07T09:07:35.509Z"
-    assert _val.metadata.value.died == "2021-12-07T09:07:35.509Z"
+    assert _val.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.metadata.value.status == "continuing"
     assert _val.metadata.value.images[0].url == "string"
     assert _val.metadata.value.images[0].coverType == "unknown"
@@ -2164,7 +2164,7 @@ async def test_async_get_book(aresponses):
     assert data[0].author.lastBook.foreignBookId == "string"
     assert data[0].author.lastBook.titleSlug == "string"
     assert data[0].author.lastBook.title == "string"
-    assert data[0].author.lastBook.releaseDate == "2021-12-07T09:07:35.509Z"
+    assert data[0].author.lastBook.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert data[0].author.lastBook.links[0].url == "string"
     assert data[0].author.lastBook.links[0].name == "string"
     assert data[0].author.lastBook.genres[0] == "string"
@@ -2174,8 +2174,8 @@ async def test_async_get_book(aresponses):
     assert data[0].author.lastBook.cleanTitle == "string"
     assert data[0].author.lastBook.monitored is True
     assert data[0].author.lastBook.anyEditionOk is True
-    assert data[0].author.lastBook.lastInfoSync == "2021-12-07T09:07:35.509Z"
-    assert data[0].author.lastBook.added == "2021-12-07T09:07:35.509Z"
+    assert data[0].author.lastBook.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert data[0].author.lastBook.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert data[0].author.lastBook.addOptions.addType == "automatic"
     assert data[0].author.lastBook.addOptions.searchForNewBook is True
     _value = data[0].author.lastBook.authorMetadata.value
@@ -2191,8 +2191,8 @@ async def test_async_get_book(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-07T09:07:35.509Z"
-    assert _value.died == "2021-12-07T09:07:35.509Z"
+    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -2209,10 +2209,10 @@ async def test_async_get_book(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-07T09:07:35.509Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-07T09:07:35.509Z"
+    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -2232,8 +2232,8 @@ async def test_async_get_book(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-07T09:07:35.509Z"
-    assert _value.metadata.value.died == "2021-12-07T09:07:35.509Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -2298,7 +2298,7 @@ async def test_async_get_book(aresponses):
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert _value.pageCount == 0
-    assert _value.releaseDate == "2021-12-07T09:07:35.509Z"
+    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
     assert _value.images[0].extension == "string"
@@ -2314,8 +2314,8 @@ async def test_async_get_book(aresponses):
     assert _val.id == 0
     assert _val.path == "string"
     assert _val.size == 0
-    assert _val.modified == "2021-12-07T09:07:35.509Z"
-    assert _val.dateAdded == "2021-12-07T09:07:35.509Z"
+    assert _val.modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert _val.quality.quality.id == 0
@@ -2335,10 +2335,10 @@ async def test_async_get_book(aresponses):
     assert _val.author.value.authorMetadataId == 0
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == "2021-12-07T09:07:35.509Z"
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == "2021-12-07T09:07:35.510Z"
+    assert _val.author.value.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert _val.author.value.qualityProfileId == 0
     assert _val.author.value.metadataProfileId == 0
     assert _val.author.value.tags[0] == 0
@@ -2358,8 +2358,8 @@ async def test_async_get_book(aresponses):
     assert _val.author.value.metadata.value.disambiguation == "string"
     assert _val.author.value.metadata.value.gender == "string"
     assert _val.author.value.metadata.value.hometown == "string"
-    assert _val.author.value.metadata.value.born == "2021-12-07T09:07:35.510Z"
-    assert _val.author.value.metadata.value.died == "2021-12-07T09:07:35.510Z"
+    assert _val.author.value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert _val.author.value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert _val.author.value.metadata.value.status == "continuing"
     assert _val.author.value.metadata.value.images[0].url == "string"
     assert _val.author.value.metadata.value.images[0].coverType == "unknown"
@@ -2446,7 +2446,7 @@ async def test_async_get_book(aresponses):
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert data[0].author.tags[0] == 0
-    assert data[0].author.added == "2021-12-07T09:07:35.510Z"
+    assert data[0].author.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].author.addOptions.monitor == "all"
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
@@ -2470,7 +2470,7 @@ async def test_async_get_book(aresponses):
     assert data[0].statistics.totalBookCount == 0
     assert data[0].statistics.sizeOnDisk == 0
     assert data[0].statistics.percentOfBooks == 0
-    assert data[0].added == "2021-12-07T09:07:35.510Z"
+    assert data[0].added == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].addOptions.addType == "automatic"
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
@@ -2488,7 +2488,7 @@ async def test_async_get_book(aresponses):
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert data[0].editions[0].pageCount == 0
-    assert data[0].editions[0].releaseDate == "2021-12-07T09:07:35.510Z"
+    assert data[0].editions[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "unknown"
     assert data[0].editions[0].images[0].extension == "string"
@@ -2528,7 +2528,7 @@ async def test_async_get_book_file(aresponses):
     assert data.bookId == 0
     assert data.path == "string"
     assert data.size == 0
-    assert data.dateAdded == "2021-12-09T20:39:08.079Z"
+    assert data.dateAdded == datetime(2021, 12, 9, 20, 39, 8, 79000)
     assert data.quality.quality.id == 0
     assert data.quality.quality.name == "string"
     assert data.quality.revision.version == 0
@@ -2644,7 +2644,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].ratings.votes == 0
     assert data[0].ratings.value == 0.0
     assert data[0].ratings.popularity == 0.0
-    assert data[0].releaseDate == "1869-01-01T00:00:00Z"
+    assert data[0].releaseDate == datetime(1869, 1, 1, 0, 0)
     assert data[0].pageCount == 0
     assert data[0].genres == []
     assert data[0].author.authorMetadataId == 0
@@ -2667,7 +2667,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert data[0].author.tags == []
-    assert data[0].author.added == "0001-01-01T04:57:00Z"
+    assert data[0].author.added == datetime(1, 1, 1, 4, 57)
     assert data[0].author.ratings.votes == 0
     assert data[0].author.ratings.value == 0.0
     assert data[0].author.ratings.popularity == 0.0
@@ -2682,7 +2682,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].images[0].extension == ".jpg"
     assert data[0].links[0].url == "string"
     assert data[0].links[0].name == "string"
-    assert data[0].added == "0001-01-01T04:57:00Z"
+    assert data[0].added == datetime(1, 1, 1, 4, 57)
     assert data[0].remoteCover == "string"
     assert data[0].editions[0].bookId == 0
     assert data[0].editions[0].foreignEditionId == "string"
@@ -2694,7 +2694,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert data[0].editions[0].pageCount == 0
-    assert data[0].editions[0].releaseDate == "1998-06-25T00:00:00Z"
+    assert data[0].editions[0].releaseDate == datetime(1998, 6, 25, 0, 0)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "cover"
     assert data[0].editions[0].images[0].extension == ".jpg"
@@ -2744,7 +2744,7 @@ async def test_async_get_calendar(aresponses):
     assert data[0].anyEditionOk is True
     assert data[0].ratings.votes == 0
     assert data[0].ratings.value == 0
-    assert data[0].releaseDate == "2021-12-11T09:30:28.338Z"
+    assert data[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert data[0].pageCount == 0
     assert data[0].genres[0] == "string"
     _value = data[0].author
@@ -2764,7 +2764,7 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == "2021-12-11T09:30:28.338Z"
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -2773,8 +2773,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == "2021-12-11T09:30:28.338Z"
-    assert _value.nextBook.added == "2021-12-11T09:30:28.338Z"
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.nextBook.addOptions.addType == "automatic"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
@@ -2789,8 +2789,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-11T09:30:28.338Z"
-    assert _value.died == "2021-12-11T09:30:28.338Z"
+    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -2805,10 +2805,10 @@ async def test_async_get_calendar(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-11T09:30:28.338Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-11T09:30:28.338Z"
+    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -2828,8 +2828,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-11T09:30:28.338Z"
-    assert _value.metadata.value.died == "2021-12-11T09:30:28.338Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -2891,7 +2891,7 @@ async def test_async_get_calendar(aresponses):
     assert _book.editions.value[0].disambiguation == "string"
     assert _book.editions.value[0].publisher == "string"
     assert _book.editions.value[0].pageCount == 0
-    assert _book.editions.value[0].releaseDate == "2021-12-11T09:30:28.339Z"
+    assert _book.editions.value[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _book.editions.value[0].images[0].url == "string"
     assert _book.editions.value[0].images[0].coverType == "unknown"
     assert _book.editions.value[0].images[0].extension == "string"
@@ -2907,8 +2907,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-11T09:30:28.339Z"
-    assert _value.dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -2928,10 +2928,10 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -2951,8 +2951,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _value.author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -3008,8 +3008,8 @@ async def test_async_get_calendar(aresponses):
     assert _book.bookFiles.value[0].id == 0
     assert _book.bookFiles.value[0].path == "string"
     assert _book.bookFiles.value[0].size == 0
-    assert _book.bookFiles.value[0].modified == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _book.bookFiles.value[0].modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _book.bookFiles.value[0].dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _book.bookFiles.value[0].sceneName == "string"
     assert _book.bookFiles.value[0].releaseGroup == "string"
     assert _book.bookFiles.value[0].quality.quality.id == 0
@@ -3030,10 +3030,10 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.authorMetadataId == 0
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
-    assert _author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
-    assert _author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.qualityProfileId == 0
     assert _author.value.metadataProfileId == 0
     assert _author.value.tags[0] == 0
@@ -3053,8 +3053,8 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.metadata.value.disambiguation == "string"
     assert _author.value.metadata.value.gender == "string"
     assert _author.value.metadata.value.hometown == "string"
-    assert _author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.metadata.value.status == "continuing"
     assert _author.value.metadata.value.images[0].url == "string"
     assert _author.value.metadata.value.images[0].coverType == "unknown"
@@ -3131,7 +3131,7 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == "2021-12-11T09:30:28.338Z"
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -3140,8 +3140,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == "2021-12-11T09:30:28.338Z"
-    assert _value.nextBook.added == "2021-12-11T09:30:28.338Z"
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.nextBook.addOptions.addType == "automatic"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
@@ -3156,8 +3156,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-11T09:30:28.338Z"
-    assert _value.died == "2021-12-11T09:30:28.338Z"
+    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -3172,10 +3172,10 @@ async def test_async_get_calendar(aresponses):
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-11T09:30:28.338Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-11T09:30:28.338Z"
+    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -3195,8 +3195,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-11T09:30:28.338Z"
-    assert _value.metadata.value.died == "2021-12-11T09:30:28.338Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -3258,7 +3258,7 @@ async def test_async_get_calendar(aresponses):
     assert _book.editions.value[0].disambiguation == "string"
     assert _book.editions.value[0].publisher == "string"
     assert _book.editions.value[0].pageCount == 0
-    assert _book.editions.value[0].releaseDate == "2021-12-11T09:30:28.339Z"
+    assert _book.editions.value[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _book.editions.value[0].images[0].url == "string"
     assert _book.editions.value[0].images[0].coverType == "unknown"
     assert _book.editions.value[0].images[0].extension == "string"
@@ -3274,8 +3274,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.id == 0
     assert _value.path == "string"
     assert _value.size == 0
-    assert _value.modified == "2021-12-11T09:30:28.339Z"
-    assert _value.dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert _value.quality.quality.id == 0
@@ -3295,10 +3295,10 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.authorMetadataId == 0
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.qualityProfileId == 0
     assert _value.author.value.metadataProfileId == 0
     assert _value.author.value.tags[0] == 0
@@ -3318,8 +3318,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.metadata.value.disambiguation == "string"
     assert _value.author.value.metadata.value.gender == "string"
     assert _value.author.value.metadata.value.hometown == "string"
-    assert _value.author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _value.author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _value.author.value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.metadata.value.status == "continuing"
     assert _value.author.value.metadata.value.images[0].url == "string"
     assert _value.author.value.metadata.value.images[0].coverType == "unknown"
@@ -3375,8 +3375,8 @@ async def test_async_get_calendar(aresponses):
     assert _book.bookFiles.value[0].id == 0
     assert _book.bookFiles.value[0].path == "string"
     assert _book.bookFiles.value[0].size == 0
-    assert _book.bookFiles.value[0].modified == "2021-12-11T09:30:28.339Z"
-    assert _book.bookFiles.value[0].dateAdded == "2021-12-11T09:30:28.339Z"
+    assert _book.bookFiles.value[0].modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _book.bookFiles.value[0].dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _book.bookFiles.value[0].sceneName == "string"
     assert _book.bookFiles.value[0].releaseGroup == "string"
     assert _book.bookFiles.value[0].quality.quality.id == 0
@@ -3397,10 +3397,10 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.authorMetadataId == 0
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
-    assert _author.value.lastInfoSync == "2021-12-11T09:30:28.339Z"
+    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
-    assert _author.value.added == "2021-12-11T09:30:28.339Z"
+    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.qualityProfileId == 0
     assert _author.value.metadataProfileId == 0
     assert _author.value.tags[0] == 0
@@ -3420,8 +3420,8 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.metadata.value.disambiguation == "string"
     assert _author.value.metadata.value.gender == "string"
     assert _author.value.metadata.value.hometown == "string"
-    assert _author.value.metadata.value.born == "2021-12-11T09:30:28.339Z"
-    assert _author.value.metadata.value.died == "2021-12-11T09:30:28.339Z"
+    assert _author.value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.metadata.value.status == "continuing"
     assert _author.value.metadata.value.images[0].url == "string"
     assert _author.value.metadata.value.images[0].coverType == "unknown"
@@ -3506,7 +3506,7 @@ async def test_async_get_calendar(aresponses):
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert data[0].author.tags[0] == 0
-    assert data[0].author.added == "2021-12-11T09:30:28.339Z"
+    assert data[0].author.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].author.addOptions.monitor == "all"
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
@@ -3530,7 +3530,7 @@ async def test_async_get_calendar(aresponses):
     assert data[0].statistics.totalBookCount == 0
     assert data[0].statistics.sizeOnDisk == 0
     assert data[0].statistics.percentOfBooks == 0
-    assert data[0].added == "2021-12-11T09:30:28.339Z"
+    assert data[0].added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].addOptions.addType == "automatic"
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
@@ -3548,7 +3548,7 @@ async def test_async_get_calendar(aresponses):
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert data[0].editions[0].pageCount == 0
-    assert data[0].editions[0].releaseDate == "2021-12-11T09:30:28.339Z"
+    assert data[0].editions[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "unknown"
     assert data[0].editions[0].images[0].extension == "string"
@@ -3601,7 +3601,7 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].ratings.votes == 0
     assert data.records[0].ratings.value == 0
     assert data.records[0].ratings.popularity == 0
-    assert data.records[0].releaseDate == "2021-12-11T09:30:28.339Z"
+    assert data.records[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data.records[0].pageCount == 0
     assert data.records[0].genres[0] == "string"
     assert data.records[0].author.authorMetadataId == 0
@@ -3627,7 +3627,7 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
     assert data.records[0].author.tags == []
-    assert data.records[0].author.added == "2021-12-06T22:23:55Z"
+    assert data.records[0].author.added == datetime(2021, 12, 6, 22, 23, 55)
     assert data.records[0].author.ratings.votes == 0
     assert data.records[0].author.ratings.value == 0
     assert data.records[0].author.ratings.popularity == 0
@@ -3648,7 +3648,7 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].statistics.totalBookCount == 0
     assert data.records[0].statistics.sizeOnDisk == 0
     assert data.records[0].statistics.percentOfBooks == 0
-    assert data.records[0].added == "2021-12-06T22:23:58Z"
+    assert data.records[0].added == datetime(2021, 12, 6, 22, 23, 58)
     assert data.records[0].editions[0].bookId == 0
     assert data.records[0].editions[0].foreignEditionId == "string"
     assert data.records[0].editions[0].titleSlug == "string"
@@ -3661,7 +3661,7 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].editions[0].disambiguation == "string"
     assert data.records[0].editions[0].publisher == "string"
     assert data.records[0].editions[0].pageCount == 0
-    assert data.records[0].editions[0].releaseDate == "2017-03-15T00:00:00Z"
+    assert data.records[0].editions[0].releaseDate == datetime(2017, 3, 15, 0, 0)
     assert data.records[0].editions[0].images[0].url == "string"
     assert data.records[0].editions[0].images[0].coverType == "unknown"
     assert data.records[0].editions[0].images[0].extension == "string"

@@ -163,8 +163,8 @@ async def test_async_get_calendar(aresponses):
         assert data[0].sizeOnDisk == 1967709785
         assert data[0].status == "released"
         assert data[0].overview == "string"
-        assert data[0].physicalRelease == "2021-12-03T00:00:00Z"
-        assert data[0].digitalRelease == "2020-08-11T00:00:00Z"
+        assert data[0].physicalRelease == datetime(2021, 12, 3, 0, 0)
+        assert data[0].digitalRelease == datetime(2020, 8, 11, 0, 0)
         assert data[0].images[0].coverType == "poster"
         assert data[0].images[0].url == "string"
         assert data[0].website == "string"
@@ -185,14 +185,14 @@ async def test_async_get_calendar(aresponses):
         assert data[0].titleSlug == "string"
         assert data[0].genres == ["Comedy", "Horror", "Music"]
         assert data[0].tags == []
-        assert data[0].added == "2020-07-16T13:25:37Z"
+        assert data[0].added == datetime(2020, 7, 16, 13, 25, 37)
         assert data[0].ratings.votes == 48
         assert data[0].ratings.value == 6.1
         assert data[0].movieFile.movieId == 0
         assert data[0].movieFile.relativePath == "string"
         assert data[0].movieFile.path == "string"
         assert data[0].movieFile.size == 1967709785
-        assert data[0].movieFile.dateAdded == "2021-06-01T04:08:20Z"
+        assert data[0].movieFile.dateAdded == datetime(2021, 6, 1, 4, 8, 20)
         assert data[0].movieFile.sceneName == "string"
         assert data[0].movieFile.indexerFlags == 1
         assert data[0].movieFile.quality.quality.id == 7
@@ -541,7 +541,7 @@ async def test_async_get_movie(aresponses):
         assert data.sizeOnDisk == 0
         assert data.overview == "string"
         assert data.inCinemas == "string"
-        assert data.physicalRelease == "string"
+        assert data.physicalRelease == datetime(2019, 3, 19, 0, 0)
         assert data.images[0].coverType == "poster"
         assert data.images[0].url == "string"
         assert data.images[0].remoteUrl == "string"
@@ -565,14 +565,14 @@ async def test_async_get_movie(aresponses):
         assert data.certification == "string"
         assert data.genres == ["string"]
         assert data.tags == [0]
-        assert data.added == "string"
+        assert data.added == datetime(2018, 12, 28, 5, 56, 49)
         assert data.ratings.votes == 0
         assert data.ratings.value == 0
         assert data.movieFile.movieId == 0
         assert data.movieFile.relativePath == "string"
         assert data.movieFile.path == "string"
         assert data.movieFile.size == 916662234
-        assert data.movieFile.dateAdded == "2020-11-26T02:00:35Z"
+        assert data.movieFile.dateAdded == datetime(2020, 11, 26, 2, 0, 35)
         assert data.movieFile.indexerFlags == 1
         assert data.movieFile.quality.quality.id == 14
         assert data.movieFile.quality.quality.name == "WEBRip-720p"
@@ -632,7 +632,7 @@ async def test_async_get_movie_file(aresponses):
         assert data.relativePath == "string"
         assert data.path == "string"
         assert data.size == 0
-        assert data.dateAdded == "string"
+        assert data.dateAdded == datetime(2018, 12, 28, 6, 35, 27)
         assert data.indexerFlags == 0
         assert data.quality.quality.id == 0
         assert data.quality.quality.name == "string"

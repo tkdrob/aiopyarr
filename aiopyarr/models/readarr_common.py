@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, datetime
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 
 
 @dataclass(init=False)
@@ -26,7 +27,6 @@ class _ReadarrCommon(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.links = [_ReadarrLink(link) for link in self.links or []]
 
 
@@ -72,8 +72,8 @@ class _ReadarrMetadataValue(BaseModel):
     disambiguation: str | None = None
     gender: str | None = None
     hometown: str | None = None
-    born: str | None = None
-    died: str | None = None
+    born: datetime | None = None
+    died: datetime | None = None
     status: str | None = None
     images: list[_ReadarrImage] | None = None
     links: list[_ReadarrLink] | None = None
@@ -82,7 +82,8 @@ class _ReadarrMetadataValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
+        self.born = get_time_from_string(self.born)
+        self.died = get_time_from_string(self.died)
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_ReadarrLink(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
@@ -97,7 +98,6 @@ class _ReadarrAuthorMetadata(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = _ReadarrMetadataValue(self.value) or {}
 
 
@@ -129,7 +129,6 @@ class _ReadarrQualityItem(_ReadarrIdName):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.quality = _ReadarrIdName(self.quality) or {}
 
 
@@ -143,7 +142,6 @@ class _ReadarrQualityProfileValue(_ReadarrIdName):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.items = [_ReadarrQualityItem(item) for item in self.items or []]
 
 
@@ -156,7 +154,6 @@ class _ReadarrQualityProfile(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = _ReadarrQualityProfileValue(self.value) or {}
 
 
@@ -184,8 +181,6 @@ class _ReadarrMetadataProfile(BaseModel):
     value: _ReadarrMetadataProfileValue | None = None
 
     def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
         self.value = _ReadarrMetadataProfileValue(self.value) or {}
 
 
@@ -213,7 +208,6 @@ class _ReadarrAuthorValueSeriesValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.books = _ReadarrAuthorValueBooks(self.books) or {}
 
 
@@ -226,7 +220,6 @@ class _ReadarrAuthorValueSeriesLinks(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = _ReadarrAuthorValueSeriesValue(self.value) or {}
 
 
@@ -239,7 +232,6 @@ class _ReadarrAuthorValueSeries(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = [_ReadarrAuthorValueSeriesValue(item) for item in self.value or []]
 
 
@@ -252,7 +244,6 @@ class _ReadarrAuthorValueMetadata(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = _ReadarrMetadataValue(self.value) or {}
 
 
@@ -264,10 +255,10 @@ class _ReadarrAuthorValue(BaseModel):
     authorMetadataId: int | None = None
     cleanName: str | None = None
     monitored: bool | None = None
-    lastInfoSync: str | None = None
+    lastInfoSync: datetime | None = None
     path: str | None = None
     rootFolderPath: str | None = None
-    added: str | None = None
+    added: datetime | None = None
     qualityProfileId: int | None = None
     metadataProfileId: int | None = None
     tags: list[int] | None = None
@@ -281,10 +272,10 @@ class _ReadarrAuthorValue(BaseModel):
     foreignAuthorId: str | None = None
 
     def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
+        self.added = get_time_from_string(self.added)
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.books = _ReadarrAuthorValueBooks(self.books) or {}
+        self.lastInfoSync = get_time_from_string(self.lastInfoSync)
         self.metadata = _ReadarrAuthorValueMetadata(self.metadata) or {}
         self.metadataProfile = _ReadarrMetadataProfile(self.metadataProfile) or {}
         self.qualityProfile = _ReadarrQualityProfile(self.qualityProfile) or {}
@@ -300,7 +291,6 @@ class _ReadarrAuthor(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = _ReadarrAuthorValue(self.value) or {}
 
 
@@ -329,7 +319,6 @@ class _ReadarrQuality(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.quality = _ReadarrIdName(self.quality) or {}
         self.revision = _ReadarrQualityRevision(self.revision) or {}
 
@@ -361,8 +350,8 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
     id: int | None = None
     path: str | None = None
     size: int | None = None
-    modified: str | None = None
-    dateAdded: str | None = None
+    modified: datetime | None = None
+    dateAdded: datetime | None = None
     sceneName: str | None = None
     releaseGroup: str | None = None
     quality: _ReadarrQuality | None = None
@@ -376,12 +365,13 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.author = _ReadarrAuthor(self.author) or {}
+        self.dateAdded = get_time_from_string(self.dateAdded)
         self.edition = _ReadarrEditionsValueBookFilesValueEdition(self.edition) or {}
         self.mediaInfo = (
             _ReadarrEditionsValueBookFilesValueMediaInfo(self.mediaInfo) or {}
         )
+        self.modified = get_time_from_string(self.modified)
         self.quality = _ReadarrQuality(self.quality) or {}
 
 
@@ -394,7 +384,6 @@ class _ReadarrEditionsValueBookFiles(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = [
             _ReadarrEditionsValueBookFilesValue(item) for item in self.value or []
         ]
@@ -418,7 +407,7 @@ class _ReadarrEditionsValue(BaseModel):
     disambiguation: str | None = None
     publisher: str | None = None
     pageCount: int | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     images: list[_ReadarrImage] | None = None
     links: list[_ReadarrLink] | None = None
     ratings: _ReadarrRating | None = None
@@ -431,12 +420,12 @@ class _ReadarrEditionsValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.book = _ReadarrEditionsValueBook(self.book) or {}
         self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_ReadarrLink(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
+        self.releaseDate = get_time_from_string(self.releaseDate)
 
 
 @dataclass(init=False)
@@ -448,7 +437,6 @@ class _ReadarrEditions(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = [_ReadarrEditionsValue(item) for item in self.value or []]
 
 
@@ -466,7 +454,6 @@ class _ReadarrSeriesLinksValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.book = _ReadarrEditionsValueBook(self.book) or {}
         self.series = _ReadarrAuthorValueSeriesLinks(self.series) or {}
 
@@ -480,7 +467,6 @@ class _ReadarrSeriesLinks(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.value = [_ReadarrSeriesLinksValue(item) for item in self.value or []]
 
 
@@ -490,14 +476,14 @@ class _ReadarrBookCommon(_ReadarrCommon):
 
     foreignBookId: str | None = None
     title: str | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     genres: list[str] | None = None
     ratings: _ReadarrRating | None = None
     cleanTitle: str | None = None
     monitored: bool | None = None
     anyEditionOk: bool | None = None
     lastInfoSync: str | None = None
-    added: str | None = None
+    added: datetime | None = None
     addOptions: _ReadarrAddOptions | None = None
     authorMetadata: _ReadarrAuthorMetadata | None = None
     bookFiles: _ReadarrEditionsValueBookFiles | None = None
@@ -506,10 +492,13 @@ class _ReadarrBookCommon(_ReadarrCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.added = get_time_from_string(self.added)
         self.addOptions = _ReadarrAddOptions(self.addOptions) or {}
         self.authorMetadata = _ReadarrAuthorMetadata(self.authorMetadata) or {}
         self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
+        self.lastInfoSync = get_time_from_string(self.lastInfoSync)
         self.ratings = _ReadarrRating(self.ratings) or {}
+        self.releaseDate = get_time_from_string(self.releaseDate)
         self.seriesLinks = _ReadarrSeriesLinks(self.seriesLinks) or {}
 
 
@@ -573,7 +562,7 @@ class _ReadarrAuthorBase(_ReadarrCommon):
     sortName: str | None = None
     sortNameLastFirst: str | None = None
     tags: list[int] | None = None
-    added: str | None = None
+    added: datetime | None = None
     addOptions: _ReadarrAuthorAddOptions | None = None
     ratings: _ReadarrRating | None = None
     statistics: _ReadarrAuthorStatistics | None = None
@@ -581,6 +570,7 @@ class _ReadarrAuthorBase(_ReadarrCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.added = get_time_from_string(self.added)
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.lastBook = _ReadarrAuthorBook(self.lastBook) or {}
@@ -606,8 +596,8 @@ class _ReadarrBlocklistRecord(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.author = _ReadarrAuthorBase(self.author) or {}
+        self.date = get_time_from_string(self.date)
         self.quality = _ReadarrQuality(self.quality) or {}
 
 
@@ -674,7 +664,6 @@ class _ReadarrAudioTags(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.country = _ReadarrCountry(self.country) or {}
         self.duration = _ReadarrDuration(self.duration) or {}
         self.mediaInfo = (

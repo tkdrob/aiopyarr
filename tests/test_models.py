@@ -2,6 +2,7 @@
 from aiopyarr.const import ATTR_DATA
 from aiopyarr.models.response import PyArrResponse
 
+from datetime import datetime
 import pytest
 import json
 
@@ -35,7 +36,7 @@ async def test_readarr_bookshelf():
     assert item.data.authors[0].books[0].anyEditionOk is True
     assert item.data.authors[0].books[0].ratings.votes == 0
     assert item.data.authors[0].books[0].ratings.value == 0
-    assert item.data.authors[0].books[0].releaseDate == "2021-12-10T10:00:06.987Z"
+    assert item.data.authors[0].books[0].releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert item.data.authors[0].books[0].pageCount == 0
     assert item.data.authors[0].books[0].genres[0] == "string"
     _value = item.data.authors[0].books[0].author
@@ -55,7 +56,7 @@ async def test_readarr_bookshelf():
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == "2021-12-10T10:00:06.987Z"
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -64,8 +65,8 @@ async def test_readarr_bookshelf():
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == "2021-12-10T10:00:06.987Z"
-    assert _value.nextBook.added == "2021-12-10T10:00:06.987Z"
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.nextBook.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.nextBook.addOptions.addType == "automatic"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = item.data.authors[0].books[0].author.nextBook.authorMetadata.value
@@ -80,8 +81,8 @@ async def test_readarr_bookshelf():
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-10T10:00:06.987Z"
-    assert _value.died == "2021-12-10T10:00:06.987Z"
+    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -95,10 +96,10 @@ async def test_readarr_bookshelf():
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-10T10:00:06.987Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-10T10:00:06.987Z"
+    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -118,8 +119,8 @@ async def test_readarr_bookshelf():
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-10T10:00:06.987Z"
-    assert _value.metadata.value.died == "2021-12-10T10:00:06.987Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -162,7 +163,7 @@ async def test_readarr_bookshelf():
     assert _book.foreignBookId == "string"
     assert _book.titleSlug == "string"
     assert _book.title == "string"
-    assert _book.releaseDate == "2021-12-10T10:00:06.987Z"
+    assert _book.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
@@ -171,8 +172,8 @@ async def test_readarr_bookshelf():
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
-    assert _book.lastInfoSync == "2021-12-10T10:00:06.987Z"
-    assert _book.added == "2021-12-10T10:00:06.987Z"
+    assert _book.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _book.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _book.addOptions.addType == "automatic"
     assert _book.addOptions.searchForNewBook is True
     _value = item.data.authors[0].books[0].author.lastBook.authorMetadata.value
@@ -187,8 +188,8 @@ async def test_readarr_bookshelf():
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == "2021-12-10T10:00:06.987Z"
-    assert _value.died == "2021-12-10T10:00:06.987Z"
+    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.status == "continuing"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "unknown"
@@ -202,10 +203,10 @@ async def test_readarr_bookshelf():
     assert _value.authorMetadataId == 0
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == "2021-12-10T10:00:06.987Z"
+    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == "2021-12-10T10:00:06.987Z"
+    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.qualityProfileId == 0
     assert _value.metadataProfileId == 0
     assert _value.tags[0] == 0
@@ -225,8 +226,8 @@ async def test_readarr_bookshelf():
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == "2021-12-10T10:00:06.987Z"
-    assert _value.metadata.value.died == "2021-12-10T10:00:06.987Z"
+    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.metadata.value.status == "continuing"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == "unknown"
@@ -276,7 +277,7 @@ async def test_readarr_bookshelf():
     assert item.data.authors[0].books[0].author.sortName == "string"
     assert item.data.authors[0].books[0].author.sortNameLastFirst == "string"
     assert item.data.authors[0].books[0].author.tags[0] == 0
-    assert item.data.authors[0].books[0].author.added == "2021-12-10T10:00:06.987Z"
+    assert item.data.authors[0].books[0].author.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert item.data.authors[0].books[0].author.addOptions.monitor == "all"
     assert item.data.authors[0].books[0].author.addOptions.booksToMonitor[0] == "string"
     assert item.data.authors[0].books[0].author.addOptions.monitored is True
@@ -296,7 +297,7 @@ async def test_readarr_bookshelf():
     assert item.data.authors[0].books[0].statistics.bookCount == 0
     assert item.data.authors[0].books[0].statistics.totalBookCount == 0
     assert item.data.authors[0].books[0].statistics.sizeOnDisk == 0
-    assert item.data.authors[0].books[0].added == "2021-12-10T10:00:06.987Z"
+    assert item.data.authors[0].books[0].added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert item.data.authors[0].books[0].addOptions.addType == "automatic"
     assert item.data.authors[0].books[0].addOptions.searchForNewBook is True
     assert item.data.authors[0].books[0].remoteCover == "string"
@@ -316,7 +317,7 @@ async def test_readarr_bookshelf():
     assert _editions.publisher == "string"
     assert _editions.pageCount == 0
     assert _editions.pageCount == 0
-    assert _editions.releaseDate == "2021-12-10T10:00:06.987Z"
+    assert _editions.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _editions.images[0].url == "string"
     assert _editions.images[0].coverType == "unknown"
     assert _editions.links[0].url == "string"

@@ -227,7 +227,7 @@ async def test_async_get_system_backup(aresponses):
     assert data[0].name == "string"
     assert data[0].path == "string"
     assert data[0].type == "scheduled"
-    assert data[0].time == "2021-12-09T13:22:49.441Z"
+    assert data[0].time == datetime(2021, 12, 9, 13, 22, 49, 441000)
 
 
 @pytest.mark.asyncio

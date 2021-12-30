@@ -62,7 +62,6 @@ class RadarrBlocklist(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [RadarrBlocklistMovie(record) for record in self.records or []]
 
 
@@ -93,7 +92,6 @@ class RadarrQueueDetail(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.customFormats = [
             _RadarrMovieCustomFormats(custForm) for custForm in self.customFormats or []
         ]
@@ -267,7 +265,6 @@ class RadarrUpdate(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.changes = _RadarrUpdateChanges(self.changes) or {}
         self.releaseDate = get_time_from_string(self.releaseDate)
 
@@ -286,7 +283,6 @@ class RadarrQualityProfile(_RadarrCommon4):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.items = [_RadarrQualityProfileItems(item) for item in self.items or []]
         self.language = _RadarrCommon4(self.language) or {}
 
@@ -304,6 +300,7 @@ class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.digitalRelease = get_time_from_string(self.digitalRelease)
         if isinstance(self.images, list):
             self.movieFile = _RadarrCalendarMovieFile(self.movieFile) or {}
 

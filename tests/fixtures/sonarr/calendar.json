@@ -13,6 +13,7 @@
     "sceneEpisodeNumber": 0,
     "sceneSeasonNumber": 0,
     "tvDbEpisodeId": 0,
+    "unverifiedSceneNumbering": false,
     "series": {
       "tvdbId": 0,
       "tvRageId": 0,

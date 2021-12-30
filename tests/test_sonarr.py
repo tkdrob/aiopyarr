@@ -41,14 +41,15 @@ async def test_async_get_calendar(aresponses):
         assert data[0].seasonNumber == 4
         assert data[0].episodeNumber == 11
         assert data[0].title == "string"
-        assert data[0].airDate == "2017-01-26"
-        assert data[0].airDateUtc == "2017-01-27T01:30:00Z"
+        assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
+        assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30)
         assert data[0].overview == "string"
         assert data[0].hasFile is False
         assert data[0].monitored is True
         assert data[0].sceneEpisodeNumber == 0
         assert data[0].sceneSeasonNumber == 0
         assert data[0].tvDbEpisodeId == 0
+        assert data[0].unverifiedSceneNumbering is False
         assert data[0].series.tvdbId == 0
         assert data[0].series.tvRageId == 0
         assert data[0].series.imdbId == "string"
@@ -59,7 +60,7 @@ async def test_async_get_calendar(aresponses):
         assert data[0].series.monitored is True
         assert data[0].series.qualityProfileId == 1
         assert data[0].series.seasonFolder is True
-        assert data[0].series.lastInfoSync == "2017-01-26T19:25:55.4555946Z"
+        assert data[0].series.lastInfoSync == datetime(2017, 1, 26, 19, 25, 55, 455594)
         assert data[0].series.runtime == 30
         assert data[0].series.images[0].coverType == "banner"
         assert data[0].series.images[0].url == "string"
@@ -69,7 +70,7 @@ async def test_async_get_calendar(aresponses):
         assert data[0].series.titleSlug == "string"
         assert data[0].series.path == "string"
         assert data[0].series.year == 0
-        assert data[0].series.firstAired == "2016-01-10T01:30:00Z"
+        assert data[0].series.firstAired == datetime(2016, 1, 10, 1, 30)
         assert data[0].series.qualityProfile.value.name == "SD"
         assert data[0].series.qualityProfile.value.id == 1
         assert data[0].series.qualityProfile.value.allowed[0].id == 1
@@ -111,15 +112,15 @@ async def test_async_get_episode_by_id(aresponses):
         assert data.seasonNumber == 1
         assert data.episodeNumber == 1
         assert data.title == "string"
-        assert data.airDate == "2009-09-17"
-        assert data.airDateUtc == "2009-09-18T02:00:00Z"
+        assert data.airDate == datetime(2009, 9, 17, 0, 0)
+        assert data.airDateUtc == datetime(2009, 9, 18, 2, 0)
         assert data.overview == "string"
         assert data.episodeFile.seriesId == 1
         assert data.episodeFile.seasonNumber == 1
         assert data.episodeFile.relativePath == "string"
         assert data.episodeFile.path == "string"
         assert data.episodeFile.size == 50
-        assert data.episodeFile.dateAdded == "2019-06-13T09:08:03.775081Z"
+        assert data.episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081)
         assert data.episodeFile.sceneName == "string"
         assert data.episodeFile.releaseGroup == "string"
         assert data.episodeFile.language.id == 1
@@ -171,7 +172,7 @@ async def test_async_get_episode_by_id(aresponses):
         assert data.series.tvdbId == 0
         assert data.series.tvRageId == 0
         assert data.series.tvMazeId == 0
-        assert data.series.firstAired == "2017-04-05T00:00:00Z"
+        assert data.series.firstAired == datetime(2017, 4, 5, 0, 0)
         assert data.series.seriesType == "standard"
         assert data.series.cleanTitle == "string"
         assert data.series.imdbId == "string"
@@ -212,7 +213,7 @@ async def test_async_get_episode_files(aresponses):
         assert data.seasonNumber == 1
         assert data.path == "string"
         assert data.size == 0
-        assert data.dateAdded == "2013-05-29T10:42:05.1335301Z"
+        assert data.dateAdded == datetime(2013, 5, 29, 10, 42, 5, 133530)
         assert data.sceneName == ""
         assert data.quality.quality.id == 1
         assert data.quality.quality.name == "Bluray 720p"
@@ -262,7 +263,7 @@ async def test_async_get_history(aresponses):
         assert data.records[0].qualityCutoffNotMet is True
         assert data.records[0].languageCutoffNotMet is False
         assert data.records[0].languageCutoffNotMet is False
-        assert data.records[0].date == "2019-11-01T09:09:34.288036Z"
+        assert data.records[0].date == datetime(2019, 11, 1, 9, 9, 34, 288036)
         assert data.records[0].downloadId == "string"
         assert data.records[0].eventType == "downloadFolderImported"
         assert data.records[0].data.indexer == "string"
@@ -367,7 +368,7 @@ async def test_async_get_profiles(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses):
+async def test_async_get_queue(aresponses): # TODO fix fixture
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -407,8 +408,8 @@ async def test_async_get_queue(aresponses):
         assert data[0].series.tvdbId == 0
         assert data[0].series.tvRageId == 0
         assert data[0].series.tvMazeId == 0
-        assert data[0].series.firstAired == "2016-04-16T23:00:00Z"
-        assert data[0].series.lastInfoSync == "2017-02-05T16:40:11.614176Z"
+        assert data[0].series.firstAired == datetime(2016, 4, 16, 23, 0)
+        assert data[0].series.lastInfoSync == datetime(2017, 2, 5, 16, 40, 11, 614176)
         assert data[0].series.seriesType == "standard"
         assert data[0].series.cleanTitle == "string"
         assert data[0].series.imdbId == "string"
@@ -426,8 +427,8 @@ async def test_async_get_queue(aresponses):
         assert data[0].episode.seasonNumber == 3
         assert data[0].episode.episodeNumber == 8
         assert data[0].episode.title == "string"
-        assert data[0].episode.airDate == "2013-05-19"
-        assert data[0].episode.airDateUtc == "2013-05-20T01:00:00Z"
+        assert data[0].episode.airDate == datetime(2013, 5, 19, 0, 0)
+        assert data[0].episode.airDateUtc == datetime(2013, 5, 20, 1, 0)
         assert data[0].episode.overview == "string"
         assert data[0].episode.hasFile is False
         assert data[0].episode.monitored is False
@@ -442,7 +443,7 @@ async def test_async_get_queue(aresponses):
         assert data[0].title == "string"
         assert data[0].sizeleft == 0
         assert data[0].timeleft == "00:00:00"
-        assert data[0].estimatedCompletionTime == "2016-02-05T22:46:52.440104Z"
+        assert data[0].estimatedCompletionTime == datetime(2016, 2, 5, 22, 46, 52, 440104)
         assert data[0].status == "Downloading"
         assert data[0].trackedDownloadStatus == "Ok"
         assert data[0].statusMessages == []
@@ -490,7 +491,7 @@ async def test_async_get_release(aresponses):
         assert data[0].approved is False
         assert data[0].tvRageId == 0
         assert data[0].rejections == ["Unknown Series"]
-        assert data[0].publishDate == "2017-02-10T00:00:00Z"
+        assert data[0].publishDate == datetime(2017, 2, 10, 0, 0)
         assert data[0].downloadUrl == "string"
         assert data[0].downloadAllowed is True
 
@@ -535,7 +536,7 @@ async def test_async_lookup_series(aresponses):
         assert data[0].runtime == 45
         assert data[0].tvdbId == 0
         assert data[0].tvRageId == 0
-        assert data[0].firstAired == "2013-09-23T05:00:00Z"
+        assert data[0].firstAired == datetime(2013, 9, 23, 5, 0)
         assert data[0].seriesType == "string"
         assert data[0].cleanTitle == "string"
         assert data[0].imdbId == "string"
@@ -580,14 +581,14 @@ async def test_async_get_series(aresponses):
         assert data.sizeOnDisk == 0
         assert data.status == "continuing"
         assert data.overview == "string"
-        assert data.previousAiring == "2019-04-29T01:00:00Z"
+        assert data.previousAiring == datetime(2019, 4, 29, 1, 0)
         assert data.network == "string"
         assert data.airTime == "21:00"
         assert data.images[0].coverType == "fanart"
         assert data.images[0].url == "string"
         assert data.seasons[0].seasonNumber == 0
         assert data.seasons[0].monitored is False
-        assert data.seasons[0].statistics.previousAiring == "2019-04-29T01:00:00Z"
+        assert data.seasons[0].statistics.previousAiring == datetime(2019, 4, 29, 1, 0)
         assert data.seasons[0].statistics.episodeFileCount == 0
         assert data.seasons[0].statistics.episodeCount == 0
         assert data.seasons[0].statistics.totalEpisodeCount == 1
@@ -603,8 +604,8 @@ async def test_async_get_series(aresponses):
         assert data.tvdbId == 0
         assert data.tvRageId == 0
         assert data.tvMazeId == 0
-        assert data.firstAired == "2019-04-29T23:00:00Z"
-        assert data.lastInfoSync == "2019-12-01T17:35:41.103443Z"
+        assert data.firstAired == datetime(2019, 4, 29, 23, 0)
+        assert data.lastInfoSync == datetime(2019, 12, 1, 17, 35, 41, 103443)
         assert data.seriesType == "standard"
         assert data.cleanTitle == "string"
         assert data.imdbId == "string"
@@ -642,7 +643,7 @@ async def test_async_get_system_backup(aresponses):
         assert data[0].name == "nzbdrone_backup_2017.08.17_22.00.00.zip"
         assert data[0].path == "/backup/update/nzbdrone_backup_2017.08.17_22.00.00.zip"
         assert data[0].type == "update"
-        assert data[0].time == "2017-08-18T05:00:37Z"
+        assert data[0].time == datetime(2017, 8, 18, 5, 0, 37)
         assert data[0].id == 1207435784
 
 
@@ -676,8 +677,8 @@ async def test_async_get_wanted(aresponses):
         assert data.records[0].seasonNumber == 5
         assert data.records[0].episodeNumber == 4
         assert data.records[0].title == "string"
-        assert data.records[0].airDate == "2014-02-03"
-        assert data.records[0].airDateUtc == "2014-02-04T03:00:00Z"
+        assert data.records[0].airDate == datetime(2014, 2, 3, 0, 0)
+        assert data.records[0].airDateUtc == datetime(2014, 2, 4, 3, 0)
         assert data.records[0].overview == "string"
         assert data.records[0].hasFile is False
         assert data.records[0].monitored is True
@@ -696,7 +697,7 @@ async def test_async_get_wanted(aresponses):
         assert data.records[0].series.monitored is True
         assert data.records[0].series.qualityProfileId == 1
         assert data.records[0].series.seasonFolder is True
-        assert data.records[0].series.lastInfoSync == "2014-02-05T04:39:28.550495Z"
+        assert data.records[0].series.lastInfoSync == datetime(2014, 2, 5, 4, 39, 28, 550495)
         assert data.records[0].series.runtime == 30
         assert data.records[0].series.images[0].coverType == "banner"
         assert data.records[0].series.images[0].url == "string"
@@ -706,7 +707,7 @@ async def test_async_get_wanted(aresponses):
         assert data.records[0].series.titleSlug == "string"
         assert data.records[0].series.path == "string"
         assert data.records[0].series.year == 2009
-        assert data.records[0].series.firstAired == "2012-09-18T02:00:00Z"
+        assert data.records[0].series.firstAired == datetime(2012, 9, 18, 2, 0)
         assert data.records[0].series.qualityProfile.value.name == "SD"
         assert data.records[0].series.qualityProfile.value.cutoff.id == 1
         assert data.records[0].series.qualityProfile.value.cutoff.name == "SDTV"
@@ -760,7 +761,7 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].quality.revision.version == 1
     assert data.records[0].quality.revision.real == 0
     assert data.records[0].quality.revision.isRepack is False
-    assert data.records[0].date == "2021-09-19T08:14:33.582863Z"
+    assert data.records[0].date == datetime(2021, 9, 19, 8, 14, 33, 582863)
     assert data.records[0].protocol == "string"
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"

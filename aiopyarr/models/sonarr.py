@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
-from .base import BaseModel
+from .base import BaseModel, get_time_from_string
 from .common import _RecordCommon
 
 from .sonarr_common import (  # isort:skip
@@ -42,6 +43,7 @@ class SonarrCalendar(_SonarrCommon5):
     sceneEpisodeNumber: int | None = None
     sceneSeasonNumber: int | None = None
     tvDbEpisodeId: int | None = None
+    unverifiedSceneNumbering: bool | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -88,7 +90,6 @@ class SonarrHistory(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [_SonarrHistoryRecord(record) for record in self.records or []]
 
 
@@ -100,7 +101,6 @@ class SonarrWantedMissing(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [
             _SonarrWantedMissingRecord(record) for record in self.records or []
         ]
@@ -112,7 +112,7 @@ class SonarrQueue(_SonarrCommon6):
 
     downloadId: str | None = None
     episode: _SonarrHistoryRecordEpisode | None = None
-    estimatedCompletionTime: str | None = None
+    estimatedCompletionTime: datetime | None = None
     protocol: str | None = None
     quality: _SonarrQualitySub | None = None
     series: _SonarrHistoryRecordSeries | None = None
@@ -126,8 +126,8 @@ class SonarrQueue(_SonarrCommon6):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.episode = _SonarrHistoryRecordEpisode(self.episode) or {}
+        self.estimatedCompletionTime = get_time_from_string(self.estimatedCompletionTime)
         self.quality = _SonarrQualitySub(self.quality) or {}
         if isinstance(self.series, dict):
             self.series = _SonarrHistoryRecordSeries(self.series) or {}
@@ -144,7 +144,6 @@ class SonarrParse(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.parsedEpisodeInfo = _SonarrParseEpisodeInfo(self.parsedEpisodeInfo) or {}
 
 
@@ -160,7 +159,11 @@ class SonarrQualityProfile(_SonarrCommon4):
 class SonarrRelease(_SonarrCommon3, _SonarrCommon7):
     """Sonarr release attributes."""
 
-    publishDate: str | None = None
+    publishDate: datetime | None = None
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.publishDate = get_time_from_string(self.publishDate)
 
 
 @dataclass(init=False)
@@ -197,20 +200,20 @@ class SonarrSeriesUpdateParams(_SonarrSeriesCommon3):
 class SonarrBlocklistSeries(BaseModel):
     """Blocklist series attributes."""
 
-    seriesId: int | None = None
+    date: datetime | None = None
     episodeIds: list[int] | None = None
-    sourceTitle: str | None = None
-    language: _SonarrBlocklistSeriesLanguage | None = None
-    quality: _SonarrQualitySub | None = None
-    date: str | None = None
-    protocol: str | None = None
-    indexer: str | None = None
-    message: str | None = None
     id: int | None = None
+    indexer: str | None = None
+    language: _SonarrBlocklistSeriesLanguage | None = None
+    message: str | None = None
+    protocol: str | None = None
+    quality: _SonarrQualitySub | None = None
+    seriesId: int | None = None
+    sourceTitle: str | None = None
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
+        self.date = get_time_from_string(self.date)
         self.language = _SonarrBlocklistSeriesLanguage(self.language) or {}
         self.quality = _SonarrQualitySub(self.quality) or {}
 
@@ -223,5 +226,4 @@ class SonarrBlocklist(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [SonarrBlocklistSeries(record) for record in self.records or []]

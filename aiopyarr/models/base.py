@@ -16,6 +16,10 @@ def get_time_from_string(string: str) -> datetime | None:
     if string is not None:
         if search(r"^\d{4}-\d{2}-\d{2}$", string):
             return datetime.strptime(string, "%Y-%m-%d")
+        if search(r".\d{7}Z$", string):
+            string = sub(r"\dZ", "Z", string)
+        #if search(r".\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", string):
+        #    string = sub(r"Z", ".000000Z", string)
         if not search(r"\.\d+Z$", string):
             string = sub("Z", ".000000Z", string)
         return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")

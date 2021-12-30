@@ -68,7 +68,6 @@ class Logs(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [_LogRecord(record) for record in self.records or []]
 
 
@@ -101,6 +100,10 @@ class SystemBackup(BaseModel):
     time: str | None = None
     type: str | None = None
 
+    def __post_init__(self):
+        """Post init."""
+        self.time = get_time_from_string(self.time)
+
 
 @dataclass(init=False)
 class _CustomFilterAttr(BaseModel):
@@ -122,7 +125,6 @@ class CustomFilter(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.filters = [_CustomFilterAttr(filter) for filter in self.filters or []]
 
 
@@ -145,7 +147,6 @@ class RootFolder(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.unmappedFolders = [
             _UnmappedRootFolder(unmap) for unmap in self.unmappedFolders or []
         ]
@@ -263,7 +264,6 @@ class Command(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.body = _CommandBody(self.body) or {}
 
 
