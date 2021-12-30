@@ -11,11 +11,15 @@ from ..const import LOGGER
 from .const import CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
 
 
-def get_time_from_string(string: str) -> datetime:
+def get_time_from_string(string: str) -> datetime | None:
     """Convert string to datetime object."""
-    if not search(r"\.[0-9]+Z$", string):
-        string = sub("Z", ".000000Z", string)
-    return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    if string is not None:
+        if search(r"^\d{4}-\d{2}-\d{2}$", string):
+            return datetime.strptime(string, "%Y-%m-%d")
+        if not search(r"\.\d+Z$", string):
+            string = sub("Z", ".000000Z", string)
+        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return None
 
 
 class ApiJSONEncoder(json.JSONEncoder):

@@ -35,12 +35,6 @@ class _CommonAttrs(BaseModel):
     videoCodec: str | None = None
     videoFps: float | None = None
 
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.lastExecutionTime = get_time_from_string(self.lastExecutionTime)
-        self.lastStartTime = get_time_from_string(self.lastStartTime)
-
 
 @dataclass(init=False)
 class _LogRecord(BaseModel):
