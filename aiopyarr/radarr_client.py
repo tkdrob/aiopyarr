@@ -558,62 +558,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
-    async def async_command_app_update(self) -> HTTPResponse:
-        """Trigger Radarr software update."""
-        return await self._async_request(
-            "command",
-            data={"name": "ApplicationUpdate"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_backup(self) -> HTTPResponse:
-        """Trigger a backup routine."""
-        return await self._async_request(
-            "command",
-            data={"name": "Backup"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_check_health(self) -> HTTPResponse:
-        """Trigger a system health check."""
-        return await self._async_request(
-            "command",
-            data={"name": "CheckHealth"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_clear_blocklist(self) -> HTTPResponse:
-        """Trigger the removal of all blocklisted movies."""
-        return await self._async_request(
-            "command",
-            data={"name": "ClearBlocklist"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_clean_recycle_bin(self) -> HTTPResponse:
-        """Trigger a recycle bin cleanup check."""
-        return await self._async_request(
-            "command",
-            data={"name": "CleanUpRecycleBin"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_delete_log_files(self) -> HTTPResponse:
-        """Trigger the removal of all Info/Debug/Trace log files."""
-        return await self._async_request(
-            "command",
-            data={"name": "DeleteLogFiles"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_delete_update_log_files(self) -> HTTPResponse:
-        """Trigger the removal of all Update log files."""
-        return await self._async_request(
-            "command",
-            data={"name": "DeleteUpdateLogFiles"},
-            method=HTTPMethod.POST,
-        )
-
     async def async_command_downloaded_movies_scan(self) -> HTTPResponse:
         """Trigger the scan of downloaded movies."""
         return await self._async_request(
@@ -627,14 +571,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "command",
             data={"name": "MissingMoviesSearch"},
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_refresh_monitored_downloads(self) -> HTTPResponse:
-        """Trigger the scan of monitored downloads."""
-        return await self._async_request(
-            "command",
-            data={"name": "RefreshMonitoredDownloads"},
             method=HTTPMethod.POST,
         )
 

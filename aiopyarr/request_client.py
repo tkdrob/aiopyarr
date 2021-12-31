@@ -29,6 +29,7 @@ from .models.common import (  # isort:skip
 
 from .exceptions import (  # isort:skip
     ArrAuthenticationException,
+    ArrCannotCancelCommand,
     ArrConnectionException,
     ArrException,
     ArrResourceNotFound,
@@ -168,8 +169,8 @@ class RequestClient:
         except ArrException as ex:
             raise ArrException(self, ex) from ex
 
-        #except (Exception, BaseException) as ex:
-        #    raise ArrException(self, ex) from ex
+        except (Exception, BaseException) as ex:
+            raise ArrException(self, ex) from ex
 
         else:
             return response.data
@@ -232,6 +233,117 @@ class RequestClient:
             f"command{f'/{cmdid}' if cmdid is not None else ''}",
             datatype=Command,
         )
+
+    @api_command(
+        "command",
+        data={"name": "ApplicationUpdate"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_app_update(self) -> Command:
+        """Trigger Radarr software update."""
+
+    @api_command(
+        "command", data={"name": "Backup"}, datatype=Command, method=HTTPMethod.POST
+    )
+    async def async_command_backup(self) -> Command:
+        """Trigger a backup routine."""
+
+    @api_command(
+        "command",
+        data={"name": "CheckHealth"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_check_health(self) -> Command:
+        """Trigger a system health check."""
+
+    @api_command(
+        "command",
+        data={"name": "CleanUpRecycleBin"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_clean_recycle_bin(self) -> Command:
+        """Trigger a recycle bin cleanup check."""
+
+    @api_command(
+        "command",
+        data={"name": "ClearBlocklist"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_clear_blocklist(self) -> Command:
+        """Trigger the removal of all blocklisted movies."""
+
+    @api_command(
+        "command",
+        data={"name": "DeleteUpdateLogFiles"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_delete_update_log_files(self) -> Command:
+        """Trigger the removal of all Update log files."""
+
+    @api_command(
+        "command",
+        data={"name": "DeleteLogFiles"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_delete_log_files(self) -> Command:
+        """Trigger the removal of all Info/Debug/Trace log files."""
+
+    @api_command(
+        "command",
+        data={"name": "Housekeeping"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_housekeeping(self) -> Command:
+        """Trigger housekeeping."""
+
+    @api_command(
+        "command",
+        data={"name": "ImportListSync"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_import_list_sync(self) -> Command:
+        """Trigger import list sync."""
+
+    @api_command(
+        "command",
+        data={"name": "MessagingCleanup"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_messaging_cleanup(self) -> Command:
+        """Trigger messaging_cleanup."""
+
+    @api_command(
+        "command",
+        data={"name": "RefreshMonitoredDownloads"},
+        datatype=Command,
+        method=HTTPMethod.POST,
+    )
+    async def async_command_refresh_monitored_downloads(self) -> Command:
+        """Trigger the scan of monitored downloads."""
+
+    @api_command(
+        "command", data={"name": "RssSync"}, datatype=Command, method=HTTPMethod.POST
+    )
+    async def async_command_rss_sync(self) -> Command:
+        """Send rss sync command."""
+
+    async def async_delete_command(self, commandid: int) -> Command:
+        """Perform any of the predetermined command routines."""
+        result = await self._async_request(
+            f"command/{commandid}", method=HTTPMethod.DELETE
+        )
+        if result["message"] == "Unable to cancel task":
+            raise ArrCannotCancelCommand
+        return result
 
     @api_command("log/file", datatype=LogFiles)
     async def async_get_log_file(self) -> list[LogFiles]:

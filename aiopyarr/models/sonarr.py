@@ -127,7 +127,9 @@ class SonarrQueue(_SonarrCommon6):
     def __post_init__(self):
         """Post init."""
         self.episode = _SonarrHistoryRecordEpisode(self.episode) or {}
-        self.estimatedCompletionTime = get_time_from_string(self.estimatedCompletionTime)
+        self.estimatedCompletionTime = get_time_from_string(
+            self.estimatedCompletionTime
+        )
         self.quality = _SonarrQualitySub(self.quality) or {}
         if isinstance(self.series, dict):
             self.series = _SonarrHistoryRecordSeries(self.series) or {}

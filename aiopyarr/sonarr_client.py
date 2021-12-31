@@ -158,9 +158,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    async def async_command_rescan_series(
-        self, seriesid: int | None = None
-    ) -> Command:
+    async def async_command_rescan_series(self, seriesid: int | None = None) -> Command:
         """Send rescan series command."""
         data = {"name": "RefreshSeries"}
         if seriesid is not None:
@@ -222,15 +220,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "command",
             data=data,
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_rss_sync(self) -> Command:
-        """Send rss sync command."""
-        return await self._async_request(
-            "command",
-            data={"name": "RssSync"},
             datatype=Command,
             method=HTTPMethod.POST,
         )

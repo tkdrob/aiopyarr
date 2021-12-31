@@ -163,16 +163,44 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
         return books[0]
 
-    async def async_post_command(self, name: str) -> HTTPResponse:
-        """Perform any of the predetermined command routines."""
+    async def async_command_check_updates(self) -> HTTPResponse:
+        """Trigger checking application updates."""
         return await self._async_request(
-            "command", data={"name": name}, method=HTTPMethod.POST
+            "command",
+            data={"name": "ApplicationUpdateCheck"},
+            method=HTTPMethod.POST,
         )
 
-    async def async_delete_command(self, commandid: int) -> HTTPResponse:
-        """Perform any of the predetermined command routines."""
+    async def async_command_backup(self) -> HTTPResponse:
+        """Trigger application backup."""
         return await self._async_request(
-            f"command/{commandid}", method=HTTPMethod.DELETE
+            "command",
+            data={"name": "Backup"},
+            method=HTTPMethod.POST,
+        )
+
+    async def async_command_check_health(self) -> HTTPResponse:
+        """Trigger a system health check."""
+        return await self._async_request(
+            "command",
+            data={"name": "CheckHealth"},
+            method=HTTPMethod.POST,
+        )
+
+    async def async_command_refresh_author(self) -> HTTPResponse:
+        """Trigger author refresh."""
+        return await self._async_request(
+            "command",
+            data={"name": "RefreshAuthor"},
+            method=HTTPMethod.POST,
+        )
+
+    async def async_command_rescan_folders(self) -> HTTPResponse:
+        """Trigger folder rescan."""
+        return await self._async_request(
+            "command",
+            data={"name": "RescanFolders"},
+            method=HTTPMethod.POST,
         )
 
     async def async_get_blocklist(
@@ -286,9 +314,14 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         }
         return await self._async_request("queue", params=params)
 
-    async def async_get_metadata_profiles(self, profileid: int | None = None) -> ReadarrMetadataProfile | list[ReadarrMetadataProfile]:
+    async def async_get_metadata_profiles(
+        self, profileid: int | None = None
+    ) -> ReadarrMetadataProfile | list[ReadarrMetadataProfile]:
         """Get metadata profiles."""
-        return await self._async_request(f"metadataprofile{f'/{profileid}' if profileid is not None else ''}", datatype=ReadarrMetadataProfile)
+        return await self._async_request(
+            f"metadataprofile{f'/{profileid}' if profileid is not None else ''}",
+            datatype=ReadarrMetadataProfile,
+        )
 
     async def async_get_book(
         self, bookid: int | None = None
@@ -423,11 +456,10 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     # /api/v1/calendar/readarr.ics not working
 
-
-    #@api_command("delayprofile", datatype=)
-    #async def async_get_delay_profiles(self):
+    # @api_command("delayprofile", datatype=)
+    # async def async_get_delay_profiles(self):
     #    """Get all delay profiles."""
 
-    #@api_command("releaseprofile", datatype=)
-    #async def async_get_release_profiles(self):
+    # @api_command("releaseprofile", datatype=)
+    # async def async_get_release_profiles(self):
     #    """Get all release profiles."""

@@ -1,4 +1,4 @@
-"""Sonarr Common Models."""
+"""Sonarr Common Models. These are only for internal module use."""
 # pylint: disable=invalid-name, too-many-instance-attributes, too-few-public-methods
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ class _SonarrCommon5(_SonarrSeriesAlternateTitle, _SonarrCommon6):
 
 
 @dataclass(init=False)
-class _SonarrCommon4(_SonarrCommon6): #TODO remove
+class _SonarrCommon4(_SonarrCommon6):  # TODO remove
     """Sonarr common attributes."""
 
     allowed: list[_SonarrQualityProfileValueAttr] | None = None
@@ -336,6 +336,7 @@ class _SonarrSeasonStatistics(BaseModel):
     def __post_init__(self):
         super().__post_init__()
         self.previousAiring = get_time_from_string(self.previousAiring)
+
 
 @dataclass(init=False)
 class _SonarrWantedMissingSeriesSeason(BaseModel):
