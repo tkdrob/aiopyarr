@@ -1,0 +1,48 @@
+[
+  {
+      "onGrab": false,
+      "onDownload": false,
+      "onUpgrade": true,
+      "onRename": false,
+      "onSeriesDelete": false,
+      "onEpisodeFileDelete": false,
+      "onEpisodeFileDeleteForUpgrade": true,
+      "onHealthIssue": true,
+      "supportsOnGrab": true,
+      "supportsOnDownload": true,
+      "supportsOnUpgrade": true,
+      "supportsOnRename": true,
+      "supportsOnSeriesDelete": true,
+      "supportsOnEpisodeFileDelete": true,
+      "supportsOnEpisodeFileDeleteForUpgrade": true,
+      "supportsOnHealthIssue": true,
+      "includeHealthWarnings": true,
+      "name": "string",
+      "fields": [
+        {
+          "order": 0,
+          "name": "string",
+          "label": "string",
+          "helpText": "string",
+          "value": [
+              0
+            ],
+          "type": "string",
+          "advanced": true,
+          "selectOptions": [
+            {
+              "value": 0,
+              "name": "string",
+              "order": 0
+            }
+          ]
+        }
+      ],
+      "implementationName": "string",
+      "implementation": "string",
+      "configContract": "string",
+      "infoLink": "string",
+      "tags": [0],
+      "id": 0
+  }
+]

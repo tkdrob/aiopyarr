@@ -1,91 +1,50 @@
-[
-  {
-    "series": {
-      "title": "string",
-      "sortTitle": "string",
-      "seasonCount": 2,
-      "status": "continuing",
-      "overview": "string",
-      "network": "string",
-      "airTime": "21:00",
-      "images": [
-        {
-          "coverType": "fanart",
-          "url": "string"
-        }
-      ],
-      "seasons": [
-        {
-          "seasonNumber": 0,
-          "monitored": false
-        }
-      ],
-      "year": 2015,
-      "path": "string",
-      "profileId": 5,
-      "seasonFolder": true,
-      "monitored": true,
-      "useSceneNumbering": false,
-      "runtime": 60,
-      "tvdbId": 0,
-      "tvRageId": 0,
-      "tvMazeId": 0,
-      "firstAired": "2016-04-16T23:00:00Z",
-      "lastInfoSync": "2017-02-05T16:40:11.614176Z",
-      "seriesType": "standard",
-      "cleanTitle": "string",
-      "imdbId": "string",
-      "titleSlug": "string",
-      "certification": "TV-MA",
-      "genres": [
-        "Adventure",
-        "Drama",
-        "Fantasy"
-      ],
-      "tags": [],
-      "added": "2015-12-28T13:44:24.204583Z",
-      "ratings": {
-        "votes": 1128,
-        "value": 9.4
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "timeleft",
+  "sortDirection": "ascending",
+  "totalRecords": 1,
+  "records": [
+    {
+      "seriesId": 0,
+      "episodeId": 0,
+      "language": {
+        "id": 0,
+        "name": "string"
       },
-      "qualityProfileId": 5,
-      "id": 17
-    },
-    "episode": {
-      "seriesId": 17,
-      "episodeFileId": 0,
-      "seasonNumber": 3,
-      "episodeNumber": 8,
-      "title": "string",
-      "airDate": "2013-05-19",
-      "airDateUtc": "2013-05-20T01:00:00Z",
-      "overview": "string",
-      "hasFile": false,
-      "monitored": false,
-      "absoluteEpisodeNumber": 28,
-      "unverifiedSceneNumbering": false,
-      "id": 889
-    },
-    "quality": {
       "quality": {
-        "id": 7,
-        "name": "Bluray-1080p"
+        "quality": {
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
       },
-      "revision": {
-        "version": 1,
-        "real": 0
-      }
-    },
-    "size": 4472186820,
-    "title": "string",
-    "sizeleft": 0,
-    "timeleft": "00:00:00",
-    "estimatedCompletionTime": "2016-02-05T22:46:52.440104Z",
-    "status": "Downloading",
-    "trackedDownloadStatus": "Ok",
-    "statusMessages": [],
-    "downloadId": "string",
-    "protocol": "string",
-    "id": 1503378561
-  }
-]
+      "size": 0.0,
+      "title": "string",
+      "sizeleft": 0.0,
+      "timeleft": "00:00:00",
+      "estimatedCompletionTime": "2020-02-09T13:14:14.379532Z",
+      "status": "string",
+      "trackedDownloadStatus": "string",
+      "trackedDownloadState": "string",
+      "statusMessages": [
+        {
+          "title": "string",
+          "messages": ["string"]
+        }
+      ],
+      "downloadId": "string",
+      "protocol": "string",
+      "downloadClient": "string",
+      "indexer": "string",
+      "outputPath": "string",
+      "id": 0
+    }
+  ]
+}

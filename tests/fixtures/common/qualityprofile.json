@@ -1,0 +1,46 @@
+[
+  {
+    "name": "string",
+    "upgradeAllowed": true,
+    "cutoff": 0,
+    "items": [
+      {
+        "quality": {
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0,
+          "modifier": "string"
+        },
+        "items": [],
+        "allowed": false
+      },
+      {
+        "name": "string",
+        "items": [
+          {
+            "quality": {
+              "id": 0,
+              "name": "string",
+              "source": "string",
+              "resolution": 0,
+              "modifier": "string"
+            },
+            "items": [],
+            "allowed": true
+          }
+        ],
+        "allowed": true,
+        "id": 0
+      }
+    ],
+    "minFormatScore": 0,
+    "cutoffFormatScore": 0,
+    "formatItems": [],
+    "language": {
+      "id": 0,
+      "name": "string"
+    },
+    "id": 0
+  }
+]

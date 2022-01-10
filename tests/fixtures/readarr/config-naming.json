@@ -1,0 +1,11 @@
+{
+  "renameBooks": false,
+  "replaceIllegalCharacters": true,
+  "standardBookFormat": "string",
+  "authorFolderFormat": "string",
+  "includeAuthorName": false,
+  "includeBookTitle": false,
+  "includeQuality": false,
+  "replaceSpaces": false,
+  "id": 1
+}

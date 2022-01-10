@@ -1,5 +1,6 @@
 # aiopyarr
 
+[![codecov](https://codecov.io/gh/tkdrob/aiopyarr/branch/master/graph/badge.svg)](https://codecov.io/gh/tkdrob/aiopyarr)
 ![python version](https://img.shields.io/badge/Python-3.8=><=3.10-blue.svg)
 [![PyPI](https://img.shields.io/pypi/v/aiopyarr)](https://pypi.org/project/aiopyarr)
 ![Actions](https://github.com/tkdrob/aiopyarr/workflows/Actions/badge.svg?branch=master)

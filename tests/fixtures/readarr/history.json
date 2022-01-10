@@ -1,0 +1,46 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "date",
+  "sortDirection": "descending",
+  "totalRecords": 5,
+  "records": [
+    {
+      "bookId": 0,
+      "authorId": 0,
+      "sourceTitle": "string",
+      "quality": {
+          "quality": {
+              "id": 3,
+              "name": "EPUB"
+          },
+          "revision": {
+              "version": 1,
+              "real": 0,
+              "isRepack": false
+          }
+      },
+      "qualityCutoffNotMet": false,
+      "date": "2021-12-31T01:13:38Z",
+      "downloadId": "string",
+      "eventType": "grabbed",
+      "data": {
+          "indexer": "string",
+          "nzbInfoUrl": "string",
+          "releaseGroup": null,
+          "age": "0.0",
+          "ageHours": "0.0",
+          "ageMinutes": "0.0",
+          "publishedDate": "2020-06-06T04:00:00Z",
+          "downloadClient": "string",
+          "size": "0",
+          "downloadUrl": "string",
+          "guid": "string",
+          "protocol": "2",
+          "downloadForced": "False",
+          "torrentInfoHash": "string"
+      },
+      "id": 0
+    }
+  ]
+}

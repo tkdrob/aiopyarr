@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "name": "string",
+    "minPopularity": 0,
+    "skipMissingDate": true,
+    "skipMissingIsbn": true,
+    "skipPartsAndSets": true,
+    "skipSeriesSecondary": true,
+    "allowedLanguages": "string",
+    "minPages": 0,
+    "ignored": "string"
+  }
+]

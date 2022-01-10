@@ -12,7 +12,7 @@
       "voteCount": 0,
       "language": {
         "id": 1,
-        "name": "English"
+        "name": "string"
       },
       "id": 1
     }
@@ -20,11 +20,11 @@
   "sortTitle": "string",
   "sizeOnDisk": 0,
   "overview": "string",
-  "inCinemas": "string",
-  "physicalRelease": "string",
+  "inCinemas": "2020-11-06T00:00:00Z",
+  "physicalRelease": "2019-03-19T00:00:00Z",
   "images": [
     {
-      "coverType": "poster",
+      "coverType": "string",
       "url": "string",
       "remoteUrl": "string"
     }
@@ -38,7 +38,7 @@
   "rootFolderPath": "string",
   "qualityProfileId": 0,
   "monitored": true,
-  "minimumAvailability": "announced",
+  "minimumAvailability": "string",
   "isAvailable": true,
   "folderName": "string",
   "runtime": 0,
@@ -47,74 +47,88 @@
   "tmdbId": 0,
   "titleSlug": "string",
   "certification": "string",
-  "genres": [
-    "string"
-  ],
-  "tags": [
-    0
-  ],
-  "added": "string",
+  "genres": ["string"],
+  "tags": [0],
+  "added": "2018-12-28T05:56:49Z",
   "ratings": {
-    "votes": 0,
-    "value": 0
+    "imdb": {
+      "votes": 0,
+      "value": 0.0,
+      "type": "string"
+    },
+    "tmdb": {
+      "votes": 0,
+      "value": 0.0,
+      "type": "string"
+    },
+    "metacritic": {
+      "votes": 0,
+      "value": 0,
+      "type": "string"
+    },
+    "rottenTomatoes": {
+      "votes": 0,
+      "value": 0,
+      "type": "string"
+    }
   },
   "movieFile": {
     "movieId": 0,
     "relativePath": "string",
     "path": "string",
-    "size": 916662234,
+    "size": 0,
     "dateAdded": "2020-11-26T02:00:35Z",
     "indexerFlags": 1,
     "quality": {
       "quality": {
-        "id": 14,
-        "name": "WEBRip-720p",
-        "source": "webrip",
-        "resolution": 720,
-        "modifier": "none"
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0,
+        "modifier": "string"
       },
       "revision": {
-        "version": 1,
+        "version": 0,
         "real": 0,
         "isRepack": false
       }
     },
     "mediaInfo": {
       "audioBitrate": 0,
-      "audioChannels": 2,
-      "audioCodec": "AAC",
-      "audioLanguages": "",
-      "audioStreamCount": 1,
-      "videoBitDepth": 8,
-      "videoBitrate": 1000000,
-      "videoCodec": "x264",
-      "videoFps": 25.000,
-      "resolution": "1280x534",
-      "runTime": "1:49:06",
-      "scanType": "Progressive",
-      "subtitles": ""
+      "audioChannels": 0.0,
+      "audioCodec": "string",
+      "audioLanguages": "string",
+      "audioStreamCount": 0,
+      "videoBitDepth": 0,
+      "videoBitrate": 0,
+      "videoCodec": "string",
+      "videoFps": 0.0,
+      "resolution": "string",
+      "runTime": "00:00:00",
+      "scanType": "string",
+      "subtitles": "string"
     },
     "originalFilePath": "string",
     "qualityCutoffNotMet": true,
     "languages": [
       {
-        "id": 26,
-        "name": "Hindi"
+        "id": 0,
+        "name": "string"
       }
     ],
-    "edition": "",
-    "id": 35361
+    "edition": "string",
+    "id": 0
   },
   "collection": {
     "name": "string",
     "tmdbId": 0,
     "images": [
       {
-        "coverType": "poster",
+        "coverType": "string",
         "url": "string",
         "remoteUrl": "string"
       }
     ]
   },
-  "status": "deleted"
+  "status": "string"
 }

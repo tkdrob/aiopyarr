@@ -60,7 +60,7 @@
     "statusMessages": [
       {
         "title": "string",
-        "messages": [{}]
+        "messages": ["string"]
       }
     ],
     "errorMessage": "string",

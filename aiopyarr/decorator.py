@@ -6,108 +6,14 @@ from typing import TYPE_CHECKING, Any
 from .const import HTTPMethod
 
 if TYPE_CHECKING:
-    from .models.common import Diskspace, Logs
     from .request_client import RequestClient
-
-    from .models.radarr import (  # isort:skip
-        RadarrBlocklist,
-        RadarrBlocklistMovie,
-        RadarrCalendar,
-        RadarrCommand,
-        RadarrCustomFilter,
-        RadarrDownloadClient,
-        RadarrHealth,
-        RadarrHostConfig,
-        RadarrImportList,
-        RadarrIndexer,
-        RadarrMetadataConfig,
-        RadarrMovie,
-        RadarrMovieEditor,
-        RadarrMovieFile,
-        RadarrMovieHistory,
-        RadarrNamingConfig,
-        RadarrNotification,
-        RadarrQualityProfile,
-        RadarrQueue,
-        RadarrQueueDetail,
-        RadarrQueueStatus,
-        RadarrRemotePathMapping,
-        RadarrRootFolder,
-        RadarrSystemStatus,
-        RadarrTag,
-        RadarrUIConfig,
-        RadarrUpdate,
-    )
-    from .models.sonarr import (  # isort:skip
-        SonarrCalendar,
-        SonarrCommand,
-        SonarrEpisode,
-        SonarrEpisodeFile,
-        SonarrHistory,
-        SonarrParse,
-        SonarrQualityProfile,
-        SonarrQueue,
-        SonarrRelease,
-        SonarrRootFolder,
-        SonarrSeries,
-        SonarrSeriesLookup,
-        SonarrSystemBackup,
-        SonarrSystemStatus,
-        SonarrTag,
-        SonarrWantedMissing,
-    )
 
 
 def api_command(
     command: str,
     params: dict | None = None,
     data: dict | None = None,
-    datatype: type[Logs]
-    | type[Diskspace]
-    | type[RadarrBlocklist]
-    | type[RadarrBlocklistMovie]
-    | type[RadarrCalendar]
-    | type[RadarrCommand]
-    | type[RadarrCustomFilter]
-    | type[RadarrDownloadClient]
-    | type[RadarrHealth]
-    | type[RadarrHostConfig]
-    | type[RadarrImportList]
-    | type[RadarrIndexer]
-    | type[RadarrMetadataConfig]
-    | type[RadarrMovie]
-    | type[RadarrMovieEditor]
-    | type[RadarrMovieFile]
-    | type[RadarrMovieHistory]
-    | type[RadarrNamingConfig]
-    | type[RadarrNotification]
-    | type[RadarrQualityProfile]
-    | type[RadarrQueue]
-    | type[RadarrQueueDetail]
-    | type[RadarrQueueStatus]
-    | type[RadarrRemotePathMapping]
-    | type[RadarrRootFolder]
-    | type[RadarrSystemStatus]
-    | type[RadarrTag]
-    | type[RadarrUIConfig]
-    | type[RadarrUpdate]
-    | type[SonarrCalendar]
-    | type[SonarrCommand]
-    | type[SonarrEpisode]
-    | type[SonarrEpisodeFile]
-    | type[SonarrHistory]
-    | type[SonarrParse]
-    | type[SonarrQualityProfile]
-    | type[SonarrQueue]
-    | type[SonarrRelease]
-    | type[SonarrRootFolder]
-    | type[SonarrSeries]
-    | type[SonarrSeriesLookup]
-    | type[SonarrSystemBackup]
-    | type[SonarrSystemStatus]
-    | type[SonarrTag]
-    | type[SonarrWantedMissing]
-    | None = None,
+    datatype: Any = None,
     method: HTTPMethod = HTTPMethod.GET,
 ):
     """Initialize decorator for PyArr API request."""

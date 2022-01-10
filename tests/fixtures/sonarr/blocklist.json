@@ -1,0 +1,36 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "date",
+  "sortDirection": "descending",
+  "totalRecords": 0,
+  "records": [
+    {
+      "seriesId": 0,
+      "episodeIds": [0],
+      "sourceTitle": "string",
+      "language": {
+        "id": 0,
+        "name": "string"
+      },
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "date": "2021-09-19T08:14:33.582863Z",
+      "protocol": "string",
+      "indexer": "string",
+      "message": "string",
+      "id": 0
+    }
+  ]
+}

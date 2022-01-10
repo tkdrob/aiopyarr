@@ -1,0 +1,9 @@
+{
+  "downloadClientWorkingFolders": "_UNPACK_|_FAILED_",
+  "checkForFinishedDownloadInterval": 10,
+  "enableCompletedDownloadHandling": true,
+  "removeCompletedDownloads": false,
+  "autoRedownloadFailed": true,
+  "removeFailedDownloads": true,
+  "id": 1
+}

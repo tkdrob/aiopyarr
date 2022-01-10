@@ -1,50 +1,19 @@
-"""Radarr Common Models."""
+"""Radarr Common Models. These are only for internal module use."""
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel
-from .common import _CommonAttrs
+from .base import BaseModel, get_datetime_from_string
 
-
-@dataclass(init=False)
-class _RadarrMovieQualityRevision(BaseModel):
-    """Movie file revision attributes."""
-
-    isRepack: bool | None = None
-    real: int | None = None
-    version: int | None = None
-
-
-@dataclass(init=False)
-class _RadarrCommon4(BaseModel):
-    """Movie file language attributes."""
-
-    id: int | None = None
-    name: str | None = None
-
-
-@dataclass(init=False)
-class _RadarrMovieQualityInfo(_RadarrCommon4):
-    """Movie file quality attributes."""
-
-    modifier: str | None = None
-    resolution: int | None = None
-    source: str | None = None
-
-
-@dataclass(init=False)
-class _RadarrMovieQuality(BaseModel):
-    """Movie file quality attributes."""
-
-    quality: _RadarrMovieQualityInfo | None = None
-    revision: _RadarrMovieQualityRevision | None = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.quality = _RadarrMovieQualityInfo(self.quality) or {}
-        self.revision = _RadarrMovieQualityRevision(self.revision) or {}
+from .request_common import (  # isort:skip
+    _Common3,
+    _Common5,
+    _CommonAttrs,
+    _MetadataFields,
+    _Quality,
+    _SelectOption,
+)
 
 
 @dataclass(init=False)
@@ -55,20 +24,35 @@ class _RadarrMovieFileMediaInfo(_CommonAttrs):
 
 
 @dataclass(init=False)
-class _RadarrMovieImages(BaseModel):
+class _RadarrMovieImages(_Common5):
     """Movie images attributes."""
 
-    coverType: str | None = None
     remoteUrl: str | None = None
-    url: str | None = None
+
+
+@dataclass(init=False)
+class _RadarrDatabaseRating(BaseModel):
+    """Radarr databade rating attributes."""
+
+    type: str | None = None
+    value: int | float | None = None
+    votes: int | None = None
 
 
 @dataclass(init=False)
 class _RadarrMovieRatings(BaseModel):
     """Movie ratings attributes."""
 
-    value: float | None = None
-    votes: int | None = None
+    imdb: _RadarrDatabaseRating | None = None
+    metacritic: _RadarrDatabaseRating | None = None
+    rottenTomatoes: _RadarrDatabaseRating | None = None
+    tmdb: _RadarrDatabaseRating | None = None
+
+    def __post_init__(self):
+        self.imdb = _RadarrDatabaseRating(self.imdb) or {}
+        self.metacritic = _RadarrDatabaseRating(self.metacritic) or {}
+        self.rottenTomatoes = _RadarrDatabaseRating(self.rottenTomatoes) or {}
+        self.tmdb = _RadarrDatabaseRating(self.tmdb) or {}
 
 
 @dataclass(init=False)
@@ -80,21 +64,22 @@ class _RadarrMovieCollection(BaseModel):
     tmdbId: int | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
 
 
 @dataclass(init=False)
-class _RadarrMovieFields(BaseModel):
+class _RadarrMovieFields(_MetadataFields, _SelectOption):
     """Movie fields attributes."""
 
-    advanced: bool | None = None
-    helpText: str | None = None
-    label: str | None = None
-    name: str | None = None
-    order: int | None = None
-    type: str | None = None
-    value: str | None = None
+
+@dataclass(init=False)
+class _RadarrNotificationFields(_MetadataFields, _SelectOption):
+    """Radarr notification fields attributes."""
+
+    selectOptions: list[_SelectOption] | None = None
+
+    def __post_init__(self):
+        self.selectOptions = [_SelectOption(x) for x in self.selectOptions or []]
 
 
 @dataclass(init=False)
@@ -108,7 +93,6 @@ class _RadarrCommon(BaseModel):
     name: str | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.fields = [_RadarrMovieFields(field) for field in self.fields or []]
 
 
@@ -121,14 +105,13 @@ class _RadarrMovieSpecifications(_RadarrCommon):
 
 
 @dataclass(init=False)
-class _RadarrMovieCustomFormats(_RadarrCommon4):
+class _RadarrMovieCustomFormats(_Common3):
     """Movie custom formats attributes."""
 
     includeCustomFormatWhenRenaming: bool | None = None
     specifications: list[_RadarrMovieSpecifications] | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.specifications = [
             _RadarrMovieSpecifications(spec) for spec in self.specifications or []
         ]
@@ -149,13 +132,12 @@ class _RadarrMovieCommon(BaseModel):
 
     edition: str | None = None
     id: int | None = None
-    languages: list[_RadarrCommon4] | None = None
-    quality: _RadarrMovieQuality | None = None
+    languages: list[_Common3] | None = None
+    quality: _Quality | None = None
 
     def __post_init__(self):
-        super().__post_init__()
-        self.languages = [_RadarrCommon4(language) for language in self.languages or []]
-        self.quality = _RadarrMovieQuality(self.quality) or {}
+        self.languages = [_Common3(language) for language in self.languages or []]
+        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -178,8 +160,8 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
 class _RadarrQueueStatusMessages(BaseModel):
     """Radarr queue status messages."""
 
+    messages: list[str] | None = None
     title: str | None = None
-    messages: list[dict] | None = None
 
 
 @dataclass(init=False)
@@ -188,93 +170,6 @@ class _RadarrNotificationMessage(BaseModel):
 
     message: str | None = None
     type: str | None = None
-
-
-@dataclass(init=False)
-class _RadarrUpdateChanges(BaseModel):
-    """Radarr recent updates changes attributes."""
-
-    fixed: list[str] | None = None
-    new: list[str] | None = None
-
-
-@dataclass(init=False)
-class _RadarrQualityProfileItems(_RadarrCommon4):
-    """Radarr quality profile items attributes."""
-
-    allowed: bool | None = None
-    items: list[_RadarrQualityProfileItems] | None = None
-    quality: _RadarrMovieQualityInfo | None = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.items = [_RadarrQualityProfileItems(item) for item in self.items or []]
-        if isinstance(self.quality, dict):
-            self.quality = _RadarrMovieQualityInfo(self.quality) or {}
-
-
-@dataclass(init=False)
-class _RadarrMovieFileCommon(_RadarrMovieCommon):
-    """Movie file attributes."""
-
-    dateAdded: str | None = None
-    indexerFlags: int | None = None
-    mediaInfo: _RadarrMovieFileMediaInfo | None = None
-    movieId: int | None = None
-    originalFilePath: str | None = None
-    path: str | None = None
-    qualityCutoffNotMet: bool | None = None
-    relativePath: str | None = None
-    releaseGroup: str | None = None
-    size: int | None = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
-
-
-@dataclass(init=False)
-class _RadarrCalendarMovieFile(_RadarrMovieFileCommon):
-    """Calendar movie file attributes."""
-
-    edition: str | None = None
-    originalFilePath: str | None = None
-    sceneName: str | None = None
-
-
-@dataclass(init=False)
-class _RadarrCustomFilterAttr(BaseModel):
-    """Radarr custom filter attributes."""
-
-    key: str | None = None
-    type: str | None = None
-    value: list[str] | None = None
-
-
-@dataclass(init=False)
-class _RadarrCommandBody(BaseModel):
-    """Radarr command body attributes."""
-
-    completionMessage: str | None = None
-    isExclusive: bool | None = None
-    isNewMovie: bool | None = None
-    isTypeExclusive: bool | None = None
-    lastExecutionTime: str | None = None
-    lastStartTime: str | None = None
-    name: str | None = None
-    requiresDiskAccess: bool | None = None
-    sendUpdatesToClient: bool | None = None
-    suppressMessages: bool | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
-
-
-@dataclass(init=False)
-class _RadarrUnmappedRootFolder(BaseModel):
-    """Radarr root unmapped folder attributes."""
-
-    name: str | None = None
-    path: str | None = None
 
 
 @dataclass(init=False)
@@ -289,7 +184,7 @@ class _RadarrMovieAlternateTitle(BaseModel):
     """Movie history alternate title attributes."""
 
     id: int | None = None
-    language: _RadarrCommon4 | None = None
+    language: _Common3 | None = None
     movieId: int | None = None
     sourceId: int | None = None
     sourceType: str | None = None
@@ -299,8 +194,7 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
-        self.language = _RadarrCommon4(self.language) or {}
+        self.language = _Common3(self.language) or {}
 
 
 @dataclass(init=False)
@@ -312,14 +206,16 @@ class _RadarrMovie(_RadarrCommon2):
     certification: str | None = None
     cleanTitle: str | None = None
     collection: _RadarrMovieCollection | None = None
+    digitalRelease: str | None = None
     folderName: str | None = None
     genres: list[str] | None = None
     hasFile: bool | None = None
-    imdbId: str | None = None
     images: list[_RadarrMovieImages] | None = None
+    imdbId: str | None = None
     inCinemas: str | None = None
     isAvailable: bool | None = None
     monitored: bool | None = None
+    movieFile: _RadarrMovieFile | None = None
     originalTitle: str | None = None
     overview: str | None = None
     path: str | None = None
@@ -327,11 +223,12 @@ class _RadarrMovie(_RadarrCommon2):
     ratings: _RadarrMovieRatings | None = None
     rootFolderPath: str | None = None
     runtime: int | None = None
+    secondaryYearSourceId: int | None = None
     sizeOnDisk: int | None = None
     sortTitle: str | None = None
     status: str | None = None
     studio: str | None = None
-    tags: list[int] | None = None
+    tags: list[int | None] | None = None
     title: str | None = None
     titleSlug: str | None = None
     tmdbId: int | None = None
@@ -347,6 +244,89 @@ class _RadarrMovie(_RadarrCommon2):
             for alternateTitle in self.alternateTitles or []
         ]
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
+        self.movieFile = _RadarrMovieFile(self.movieFile) or {}
         self.ratings = _RadarrMovieRatings(self.ratings) or {}
-        if isinstance(self.collection, dict):
-            self.collection = _RadarrMovieCollection(self.collection) or {}
+        self.collection = _RadarrMovieCollection(self.collection) or {}
+
+
+@dataclass(init=False)
+class _RadarrParsedMovieInfo(BaseModel):
+    """Radarr parsed movie info attributes."""
+
+    edition: str | None = None
+    extraInfo: dict | None = None
+    imdbId: str | None = None
+    languages: list[_Common3] | None = None
+    movieTitle: str | None = None
+    movieTitles: list[str] | None = None
+    originalTitle: str | None = None
+    primaryMovieTitle: str | None = None
+    quality: _Quality | None = None
+    releaseHash: str | None = None
+    releaseTitle: str | None = None
+    simpleReleaseTitle: str | None = None
+    tmdbId: int | None = None
+    year: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.languages = [_Common3(x) for x in self.languages or []]
+        self.quality = _Quality(self.quality)
+
+
+@dataclass(init=False)
+class _RadarrCustomFormatsSpecsFields(BaseModel):
+    """Radarr custom formats specifications fields attributes."""
+
+    value: int | None = None
+
+
+@dataclass(init=False)
+class _RadarrCustomFormatsSpecs(BaseModel):
+    """Radarr custom formats specifications attributes."""
+
+    fields: _RadarrCustomFormatsSpecsFields | None = None
+    implementation: str | None = None
+    negate: bool | None = None
+    required: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.fields = _RadarrCustomFormatsSpecsFields(self.fields) or {}
+
+
+@dataclass(init=False)
+class _RadarrCustomFormats(BaseModel):
+    """Radarr custom formats attributes."""
+
+    includeCustomFormatWhenRenaming: bool | None = None
+    name: str | None = None
+    specifications: list[_RadarrCustomFormatsSpecs] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.specifications = [
+            _RadarrCustomFormatsSpecs(x) for x in self.specifications or []
+        ]
+
+
+@dataclass(init=False)
+class _RadarrMovieFile(_RadarrMovieCommon):
+    """Movie file attributes."""
+
+    dateAdded: str | None = None
+    edition: str | None = None
+    indexerFlags: int | None = None
+    mediaInfo: _RadarrMovieFileMediaInfo | None = None
+    movieId: int | None = None
+    originalFilePath: str | None = None
+    path: str | None = None
+    qualityCutoffNotMet: bool | None = None
+    relativePath: str | None = None
+    sceneName: str | None = None
+    size: int | None = None
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.dateAdded = get_datetime_from_string(self.dateAdded)
+        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}

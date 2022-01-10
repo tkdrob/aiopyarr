@@ -1,0 +1,18 @@
+{
+  "renameEpisodes": true,
+  "replaceIllegalCharacters": true,
+  "multiEpisodeStyle": 0,
+  "standardEpisodeFormat": "string",
+  "dailyEpisodeFormat": "string",
+  "animeEpisodeFormat": "string",
+  "seriesFolderFormat": "string",
+  "seasonFolderFormat": "string",
+  "specialsFolderFormat": "string",
+  "includeSeriesTitle": false,
+  "includeEpisodeTitle": false,
+  "includeQuality": false,
+  "replaceSpaces": true,
+  "separator": "string",
+  "numberStyle": "string",
+  "id": 1
+}

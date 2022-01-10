@@ -1,0 +1,97 @@
+{
+  "id": 0,
+  "authorId": 0,
+  "bookId": 0,
+  "path": "string",
+  "size": 0,
+  "dateAdded": "2021-12-09T20:39:08.079Z",
+  "quality": {
+    "quality": {
+      "id": 0,
+      "name": "string"
+    },
+    "revision": {
+      "version": 0,
+      "real": 0,
+      "isRepack": true
+    }
+  },
+  "qualityWeight": 0,
+  "mediaInfo": {
+    "id": 0,
+    "audioChannels": 0.0,
+    "audioBitRate": 0,
+    "audioCodec": "string",
+    "audioBits": 0,
+    "audioSampleRate": "string"
+  },
+  "qualityCutoffNotMet": true,
+  "audioTags": {
+    "title": "string",
+    "cleanTitle": "string",
+    "authors": [
+      "string"
+    ],
+    "authorTitle": "string",
+    "bookTitle": "string",
+    "seriesTitle": "string",
+    "seriesIndex": "string",
+    "isbn": "string",
+    "asin": "string",
+    "goodreadsId": "string",
+    "authorMBId": "string",
+    "bookMBId": "string",
+    "releaseMBId": "string",
+    "recordingMBId": "string",
+    "trackMBId": "string",
+    "discNumber": 0,
+    "discCount": 0,
+    "country": {
+      "twoLetterCode": "string",
+      "name": "string"
+    },
+    "year": 0,
+    "publisher": "string",
+    "label": "string",
+    "source": "string",
+    "catalogNumber": "string",
+    "disambiguation": "string",
+    "duration": {
+      "ticks": 0,
+      "days": 0,
+      "hours": 0,
+      "milliseconds": 0,
+      "minutes": 0,
+      "seconds": 0,
+      "totalDays": 0,
+      "totalHours": 0,
+      "totalMilliseconds": 0,
+      "totalMinutes": 0,
+      "totalSeconds": 0
+    },
+    "quality": {
+      "quality": {
+        "id": 0,
+        "name": "string"
+      },
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": true
+      }
+    },
+    "mediaInfo": {
+      "audioFormat": "string",
+      "audioBitrate": 0,
+      "audioChannels": 0.0,
+      "audioBits": 0,
+      "audioSampleRate": "string"
+    },
+    "trackNumbers": [
+      0
+    ],
+    "language": "string",
+    "releaseGroup": "string",
+    "releaseHash": "string"
+  }
+}

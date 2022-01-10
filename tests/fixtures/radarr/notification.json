@@ -3,13 +3,11 @@
   "onDownload": true,
   "onUpgrade": true,
   "onRename": true,
-  "onDelete": true,
   "onHealthIssue": true,
   "supportsOnGrab": true,
   "supportsOnDownload": true,
   "supportsOnUpgrade": true,
   "supportsOnRename": true,
-  "supportsOnDelete": true,
   "supportsOnHealthIssue": true,
   "includeHealthWarnings": true,
   "name": "string",
@@ -21,7 +19,15 @@
       "helpText": "string",
       "value": "string",
       "type": "string",
-      "advanced": true
+      "advanced": true,
+      "selectOptions": [
+        {
+            "value": 0,
+            "name": "string",
+            "order": 0,
+            "dividerAfter": false
+        }
+    ]
     }
   ],
   "implementationName": "string",

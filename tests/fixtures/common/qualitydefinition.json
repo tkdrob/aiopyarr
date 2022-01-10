@@ -1,0 +1,15 @@
+{
+  "quality": {
+      "id": 0,
+      "name": "string",
+      "source": "string",
+      "resolution": 0,
+      "modifier": "string"
+  },
+  "title": "string",
+  "weight": 0,
+  "minSize": 0,
+  "maxSize": 0.0,
+  "preferredSize": 0,
+  "id": 0
+}

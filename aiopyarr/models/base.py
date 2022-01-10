@@ -2,62 +2,32 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
-
+from re import search, sub
+from typing import Any
 
 from ..const import LOGGER
-from .const import CONVERT_TO_BOOL, CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
 
-if TYPE_CHECKING:
-    from .sonarr import (
-        SonarrCalendar,
-        SonarrCommand,
-        SonarrEpisode,
-        SonarrEpisodeFile,
-        SonarrHistory,
-        SonarrParse,
-        SonarrRelease,
-        SonarrSeries,
-        SonarrSeriesLookup,
-        SonarrTag,
-        SonarrWantedMissing,
-        SonarrQualityProfile,
-        SonarrQueue,
-        SonarrRootFolder,
-        SonarrSystemBackup,
-        SonarrSystemStatus,
-    )
-    from .radarr import (
-        RadarrMovieEditor,
-        RadarrBlocklist,
-        RadarrBlocklistMovie,
-        RadarrCalendar,
-        RadarrDownloadClient,
-        RadarrHostConfig,
-        RadarrImportList,
-        RadarrIndexer,
-        RadarrMovie,
-        RadarrMovieFile,
-        RadarrMovieHistory,
-        RadarrNamingConfig,
-        RadarrNotification,
-        RadarrQueue,
-        RadarrQueueDetail,
-        RadarrTag,
-        RadarrUIConfig,
-        RadarrCommand,
-        RadarrCustomFilter,
-        RadarrHealth,
-        RadarrMetadataConfig,
-        RadarrQualityProfile,
-        RadarrQueueStatus,
-        RadarrRemotePathMapping,
-        RadarrRootFolder,
-        RadarrSystemStatus,
-        RadarrUpdate,
-    )
-    from .common import Diskspace, Logs
+from .const import (  # isort:skip
+    CONVERT_TO_BOOL,
+    CONVERT_TO_DATETIME,
+    CONVERT_TO_FLOAT,
+    CONVERT_TO_INTEGER,
+)
+
+
+def get_datetime_from_string(string: str) -> datetime | None:
+    """Convert string to datetime object."""
+    if string is not None:
+        if search(r"^\d{4}-\d{2}-\d{2}$", string):
+            return datetime.strptime(string, "%Y-%m-%d")
+        if search(r".\d{7}Z$", string):
+            string = sub(r"\dZ", "Z", string)
+        elif not search(r"\.\d+Z$", string):
+            string = sub("Z", ".000000Z", string)
+        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return None
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -80,75 +50,12 @@ class ApiJSONEncoder(json.JSONEncoder):
 class BaseModel:
     """BaseModel."""
 
-    # fmt: off
-    _datatype: (type[Logs] | type[Diskspace] | type[RadarrBlocklist]
-                | type[RadarrBlocklistMovie] | type[RadarrCalendar] | type[RadarrCommand]
-                | type[RadarrCustomFilter] | type[RadarrDownloadClient] | type[RadarrHealth]
-                | type[RadarrHostConfig] | type[RadarrImportList] | type[RadarrIndexer]
-                | type[RadarrMetadataConfig] | type[RadarrMovie] | type[RadarrMovieEditor]
-                | type[RadarrMovieFile] | type[RadarrMovieHistory] | type[RadarrNamingConfig]
-                | type[RadarrNotification] | type[RadarrQualityProfile] | type[RadarrQueue]
-                | type[RadarrQueueDetail] | type[RadarrQueueStatus] | type[RadarrRemotePathMapping]
-                | type[RadarrRootFolder] | type[RadarrSystemStatus] | type[RadarrTag]
-                | type[RadarrUIConfig] | type[RadarrUpdate] | type[SonarrCalendar]
-                | type[SonarrCommand] | type[SonarrEpisode] | type[SonarrEpisodeFile]
-                | type[SonarrHistory] | type[SonarrParse] | type[SonarrQualityProfile]
-                | type[SonarrQueue] | type[SonarrRelease] | type[SonarrRootFolder]
-                | type[SonarrSeries] | type[SonarrSeriesLookup] | type[SonarrSystemBackup]
-                | type[SonarrSystemStatus] | type[SonarrTag] | type[SonarrWantedMissing]
-                | None
-                ) = None
-    # fmt: on
+    _datatype: Any = None
 
     def __init__(
         self,
         data: dict[str, Any] | list[dict[str, Any]],
-        datatype: type[Logs]
-        | type[Diskspace]
-        | type[RadarrBlocklist]
-        | type[RadarrBlocklistMovie]
-        | type[RadarrCalendar]
-        | type[RadarrCommand]
-        | type[RadarrCustomFilter]
-        | type[RadarrDownloadClient]
-        | type[RadarrHealth]
-        | type[RadarrHostConfig]
-        | type[RadarrImportList]
-        | type[RadarrIndexer]
-        | type[RadarrMetadataConfig]
-        | type[RadarrMovie]
-        | type[RadarrMovieEditor]
-        | type[RadarrMovieFile]
-        | type[RadarrMovieHistory]
-        | type[RadarrNamingConfig]
-        | type[RadarrNotification]
-        | type[RadarrQualityProfile]
-        | type[RadarrQueue]
-        | type[RadarrQueueDetail]
-        | type[RadarrQueueStatus]
-        | type[RadarrRemotePathMapping]
-        | type[RadarrRootFolder]
-        | type[RadarrSystemStatus]
-        | type[RadarrTag]
-        | type[RadarrUIConfig]
-        | type[RadarrUpdate]
-        | type[SonarrCalendar]
-        | type[SonarrCommand]
-        | type[SonarrEpisode]
-        | type[SonarrEpisodeFile]
-        | type[SonarrHistory]
-        | type[SonarrParse]
-        | type[SonarrQualityProfile]
-        | type[SonarrQueue]
-        | type[SonarrRelease]
-        | type[SonarrRootFolder]
-        | type[SonarrSeries]
-        | type[SonarrSeriesLookup]
-        | type[SonarrSystemBackup]
-        | type[SonarrSystemStatus]
-        | type[SonarrTag]
-        | type[SonarrWantedMissing]
-        | None = None,
+        datatype: Any = None,
     ) -> None:
         """Init."""
         self._datatype = datatype
@@ -170,16 +77,21 @@ class BaseModel:
         ]
         return f"{self.__class__.__name__}({', '.join(attrs)})"
 
-    def __post_init__(self):
+    def __post_init__(self):  # pylint: disable=too-many-branches
         """Post init."""
+        if hasattr(self, "completionMessage") and (
+            not hasattr(self, "clientUserAgent") or not hasattr(self, "lastStartTime")
+        ):
+            if self.__getattribute__("isNewMovie") is None:
+                self.__setattr__("isNewMovie", False)
+            else:
+                LOGGER.debug("isNewMovie is now always included by API")
         for key in CONVERT_TO_BOOL:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
-                self.__setattr__(key, bool(self.__getattribute__(key)))
-            if hasattr(self, "completionMessage"):
-                if self.__getattribute__("isNewMovie") is None:
-                    self.__setattr__("isNewMovie", False)
+                if self.__getattribute__(key) == "False":
+                    self.__setattr__(key, False)
                 else:
-                    LOGGER.debug("isNewMovie is now always included by API")
+                    self.__setattr__(key, bool(self.__getattribute__(key)))
         for key in CONVERT_TO_FLOAT:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
                 self.__setattr__(key, float(self.__getattribute__(key)))
@@ -189,6 +101,11 @@ class BaseModel:
                     self.__setattr__(key, int(self.__getattribute__(key)))
                 except ValueError:
                     pass
+        for key in CONVERT_TO_DATETIME:
+            if hasattr(self, key) and self.__getattribute__(key) is not None:
+                self.__setattr__(
+                    key, get_datetime_from_string(self.__getattribute__(key))
+                )
 
     @property
     def attributes(self) -> dict[str, Any]:

@@ -1,0 +1,32 @@
+[
+  {
+      "enableAutomaticAdd": true,
+      "shouldMonitor": "string",
+      "rootFolderPath": "string",
+      "qualityProfileId": 0,
+      "languageProfileId": 0,
+      "seriesType": "string",
+      "seasonFolder": true,
+      "listType": "string",
+      "listOrder": 0,
+      "name": "string",
+      "fields": [
+          {
+              "order": 0,
+              "name": "string",
+              "label": "string",
+              "helpText": "string",
+              "value": "string",
+              "type": "string",
+              "advanced": false,
+              "hidden": "string"
+          }
+      ],
+      "implementationName": "string",
+      "implementation": "string",
+      "configContract": "string",
+      "infoLink": "string",
+      "tags": [0],
+      "id": 0
+  }
+]

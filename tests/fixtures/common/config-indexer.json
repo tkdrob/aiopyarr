@@ -1,0 +1,11 @@
+{
+  "minimumAge": 0,
+  "maximumSize": 0,
+  "retention": 0,
+  "rssSyncInterval": 360,
+  "preferIndexerFlags": true,
+  "availabilityDelay": 0,
+  "allowHardcodedSubs": false,
+  "whitelistedHardcodedSubs": "",
+  "id": 1
+}

@@ -3,32 +3,67 @@
     "guid": "string",
     "quality": {
       "quality": {
-        "id": 4,
-        "name": "HDTV-720p"
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0
       },
-      "proper": false
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
     },
+    "qualityWeight": 0,
     "age": 0,
+    "ageHours": 0.0,
+    "ageMinutes": 0.0,
     "size": 0,
-    "indexerId": 5,
+    "indexerId": 0,
     "indexer": "string",
     "releaseGroup": "string",
+    "releaseHash": "string",
     "title": "string",
     "fullSeason": false,
     "sceneSource": false,
-    "seasonNumber": 3,
-    "language": "english",
+    "seasonNumber": 0,
+    "language": {
+      "id": 0,
+      "name": "string"
+    },
+    "languageWeight": 0,
     "seriesTitle": "string",
-    "episodeNumbers": [
-      1
-    ],
+    "episodeNumbers": [0],
+    "absoluteEpisodeNumbers": [0],
+    "mappedSeasonNumber": 0,
+    "mappedEpisodeNumbers": [0],
+    "mappedAbsoluteEpisodeNumbers": [0],
     "approved": false,
+    "temporarilyRejected": false,
+    "rejected": true,
+    "tvdbId": 0,
     "tvRageId": 0,
-    "rejections": [
-      "Unknown Series"
-    ],
-    "publishDate": "2017-02-10T00:00:00Z",
+    "rejections": ["string"],
+    "publishDate": "2020-01-08T15:31:03Z",
+    "commentUrl": "string",
     "downloadUrl": "string",
-    "downloadAllowed": true
+    "infoUrl": "string",
+    "episodeRequested": false,
+    "downloadAllowed": true,
+    "releaseWeight": 0,
+    "preferredWordScore": 0,
+    "sceneMapping": {
+      "title": "string",
+      "seasonNumber": 0
+    },
+    "magnetUrl": "string",
+    "infoHash": "string",
+    "seeders": 0,
+    "leechers": 0,
+    "protocol": "string",
+    "isDaily": false,
+    "isAbsoluteNumbering": false,
+    "isPossibleSpecialEpisode": false,
+    "special": false
   }
 ]

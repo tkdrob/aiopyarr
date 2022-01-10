@@ -3,7 +3,8 @@
   "relativePath": "string",
   "path": "string",
   "size": 0,
-  "dateAdded": "string",
+  "dateAdded": "2018-12-28T06:35:27Z",
+  "sceneName": "string",
   "indexerFlags": 0,
   "quality": {
     "quality": {
@@ -22,7 +23,7 @@
   "mediaInfo": {
     "audioAdditionalFeatures": "string",
     "audioBitrate": 0,
-    "audioChannels": 0,
+    "audioChannels": 0.0,
     "audioCodec": "string",
     "audioLanguages": "string",
     "audioStreamCount": 0,
@@ -42,6 +43,6 @@
       "name": "string"
     }
   ],
-  "releaseGroup": "string",
+  "edition": "string",
   "id": 0
 }

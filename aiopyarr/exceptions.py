@@ -32,8 +32,12 @@ class ArrAuthenticationException(ArrException):
 
 
 class ArrResourceNotFound(ArrException):
-    """Arr resoruce not found exception."""
+    """Arr resource not found exception."""
 
 
 class ArrInvalidCommand(ArrException):
-    """Arr resoruce not found exception."""
+    """Arr invalid command exception."""
+
+
+class ArrCannotCancelCommand(ArrException):
+    """Arr cannot cancel command exception."""

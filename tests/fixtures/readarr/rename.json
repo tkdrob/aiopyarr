@@ -1,0 +1,9 @@
+[
+  {
+  "authorId": 0,
+  "bookId": 0,
+  "bookFileId": 0,
+  "existingPath": "string",
+  "newPath": "string"
+  }
+]
