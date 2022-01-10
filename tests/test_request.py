@@ -8,8 +8,7 @@ from aiopyarr.radarr_client import RadarrClient
 from aiopyarr.readarr_client import ReadarrClient
 from aiopyarr.sonarr_client import SonarrClient
 
-from . import (RADARR_API, READARR_API, SONARR_API, TEST_HOST_CONFIGURATION,
-               load_fixture)
+from . import RADARR_API, READARR_API, SONARR_API, TEST_HOST_CONFIGURATION, load_fixture
 
 from aiopyarr.models.request import (  # isort:skip
     Command,
@@ -25,10 +24,6 @@ from aiopyarr.models.request import (  # isort:skip
     SystemStatus,
     Update,
 )
-
-
-
-
 
 
 @pytest.mark.asyncio

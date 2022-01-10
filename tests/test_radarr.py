@@ -622,15 +622,25 @@ async def test_async_get_queue(aresponses):
     assert data.records[0].customFormats[0].includeCustomFormatWhenRenaming is True
     assert data.records[0].customFormats[0].specifications[0].name == "string"
     assert data.records[0].customFormats[0].specifications[0].implementation == "string"
-    assert data.records[0].customFormats[0].specifications[0].implementationName == "string"
+    assert (
+        data.records[0].customFormats[0].specifications[0].implementationName
+        == "string"
+    )
     assert data.records[0].customFormats[0].specifications[0].infoLink == "string"
     assert data.records[0].customFormats[0].specifications[0].negate is True
     assert data.records[0].customFormats[0].specifications[0].required is True
     assert data.records[0].customFormats[0].specifications[0].fields[0].order == 0
     assert data.records[0].customFormats[0].specifications[0].fields[0].name == "string"
-    assert data.records[0].customFormats[0].specifications[0].fields[0].label == "string"
-    assert data.records[0].customFormats[0].specifications[0].fields[0].helpText == "string"
-    assert data.records[0].customFormats[0].specifications[0].fields[0].value == "string"
+    assert (
+        data.records[0].customFormats[0].specifications[0].fields[0].label == "string"
+    )
+    assert (
+        data.records[0].customFormats[0].specifications[0].fields[0].helpText
+        == "string"
+    )
+    assert (
+        data.records[0].customFormats[0].specifications[0].fields[0].value == "string"
+    )
     assert data.records[0].customFormats[0].specifications[0].fields[0].type == "string"
     assert data.records[0].customFormats[0].specifications[0].fields[0].advanced is True
     assert data.records[0].size == 0

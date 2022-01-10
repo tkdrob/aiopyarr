@@ -17,9 +17,8 @@ from aiopyarr.models.readarr_common import (  # isort:skip
     _ReadarrAuthorValueSeries,
     _ReadarrEditions,
     _ReadarrEditionsValueBookFiles,
-    _ReadarrSeriesLinks
+    _ReadarrSeriesLinks,
 )
-
 
 
 @pytest.mark.asyncio
