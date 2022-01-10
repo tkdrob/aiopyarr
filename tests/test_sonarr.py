@@ -4,16 +4,10 @@ from datetime import datetime
 import pytest
 from aiohttp.client import ClientSession
 
+from aiopyarr.models.sonarr import SonarrNamingConfig
 from aiopyarr.sonarr_client import SonarrClient
 
 from . import SONARR_API, TEST_HOST_CONFIGURATION, load_fixture
-
-from aiopyarr.models.sonarr import (  # isort:skip
-    SonarrNamingConfig,
-    SonarrQueue,
-)
-
-
 
 
 @pytest.mark.asyncio
