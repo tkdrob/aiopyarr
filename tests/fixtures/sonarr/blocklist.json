@@ -7,23 +7,21 @@
   "records": [
     {
       "seriesId": 0,
-      "episodeIds": [
-        0
-      ],
+      "episodeIds": [0],
       "sourceTitle": "string",
       "language": {
-        "id": 1,
-        "name": "English"
+        "id": 0,
+        "name": "string"
       },
       "quality": {
         "quality": {
-          "id": 14,
+          "id": 0,
           "name": "string",
           "source": "string",
-          "resolution": 720
+          "resolution": 0
         },
         "revision": {
-          "version": 1,
+          "version": 0,
           "real": 0,
           "isRepack": false
         }

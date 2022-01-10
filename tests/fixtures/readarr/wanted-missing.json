@@ -18,17 +18,15 @@
       "anyEditionOk": true,
       "ratings": {
         "votes": 0,
-        "value": 0,
-        "popularity": 0
+        "value": 0.0,
+        "popularity": 0.0
       },
       "releaseDate": "2021-12-11T09:30:28.339Z",
       "pageCount": 0,
-      "genres": [
-        "string"
-      ],
+      "genres": ["string"],
       "author": {
         "authorMetadataId": 0,
-        "status": "continuing",
+        "status": "string",
         "ended": false,
         "authorName": "string",
         "authorNameLastFirst": "string",
@@ -44,7 +42,7 @@
         "images": [
           {
             "url": "string",
-            "coverType": "unknown",
+            "coverType": "string",
             "extension": "string"
           }
         ],
@@ -52,7 +50,7 @@
         "qualityProfileId": 0,
         "metadataProfileId": 0,
         "monitored": true,
-        "monitorNewItems": "all",
+        "monitorNewItems": "string",
         "genres": [],
         "cleanName": "string",
         "sortName": "string",
@@ -61,8 +59,8 @@
         "added": "2021-12-06T22:23:55Z",
         "ratings": {
           "votes": 0,
-          "value": 0,
-          "popularity": 0
+          "value": 0.0,
+          "popularity": 0.0
         },
         "statistics": {
           "bookFileCount": 0,
@@ -70,14 +68,14 @@
           "availableBookCount": 0,
           "totalBookCount": 0,
           "sizeOnDisk": 0,
-          "percentOfBooks": 0
+          "percentOfBooks": 0.0
         },
         "id": 0
       },
       "images": [
         {
           "url": "string",
-          "coverType": "unknown",
+          "coverType": "string",
           "extension": "string"
         }
       ],
@@ -92,7 +90,7 @@
         "bookCount": 0,
         "totalBookCount": 0,
         "sizeOnDisk": 0,
-        "percentOfBooks": 0
+        "percentOfBooks": 0.0
       },
       "added": "2021-12-06T22:23:58Z",
       "editions": [
@@ -113,7 +111,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "unknown",
+              "coverType": "string",
               "extension": "string"
             }
           ],
@@ -125,8 +123,8 @@
           ],
           "ratings": {
             "votes": 0,
-            "value": 0,
-            "popularity": 0
+            "value": 0.0,
+            "popularity": 0.0
           },
           "monitored": false,
           "manualAdd": false,

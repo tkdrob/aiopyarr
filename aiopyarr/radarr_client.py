@@ -2,35 +2,29 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from .const import HTTPMethod
 from .decorator import api_command
-from .models.common import Tag, UIConfig
 from .request_client import RequestClient
 
 from .models.radarr import (  # isort:skip
     RadarrBlocklist,
     RadarrBlocklistMovie,
     RadarrCalendar,
-    RadarrDownloadClient,
-    RadarrHealth,
     RadarrImportList,
-    RadarrIndexer,
-    RadarrMetadataConfig,
     RadarrMovie,
     RadarrMovieEditor,
     RadarrMovieFile,
     RadarrMovieHistory,
     RadarrNamingConfig,
     RadarrNotification,
-    RadarrQualityProfile,
+    RadarrParse,
     RadarrQueue,
     RadarrQueueDetail,
-    RadarrQueueStatus,
-    RadarrRemotePathMapping,
+    RadarrRelease,
+    RadarrRename,
     RadarrTagDetails,
-    RadarrUpdate,
 )
 
 if TYPE_CHECKING:
@@ -116,11 +110,10 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "movie",
             params=movie_json,
-            datatype=RadarrMovie,
             method=HTTPMethod.POST,
         )
 
-    async def async_update_movies(
+    async def async_edit_movies(
         self, data: RadarrMovieEditor, move_files: bool = False
     ) -> RadarrMovie | list[RadarrMovie]:
         """Edit movie properties of multiple movies at once."""
@@ -244,18 +237,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrMovieHistory,
         )
 
-    async def async_get_download_clients(
-        self, clientid: int | None = None
-    ) -> RadarrDownloadClient | list[RadarrDownloadClient]:
-        """Get information about download client.
-
-        id: Get downloadclient matching id. Leave blank for all.
-        """
-        return await self._async_request(
-            f"downloadclient{f'/{clientid}' if clientid is not None else ''}",
-            datatype=RadarrDownloadClient,
-        )
-
     async def async_get_import_lists(
         self, listid: int | None = None
     ) -> RadarrImportList | list[RadarrImportList]:
@@ -268,33 +249,37 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrImportList,
         )
 
-    async def async_update_ui_config(self, data: UIConfig) -> HTTPResponse:
-        """Edit one or many UI settings and save to to the database."""
+    async def async_edit_import_list(
+        self, listid: int, data: RadarrImportList
+    ) -> RadarrImportList:
+        """Edit an importlist."""
         return await self._async_request(
-            "config/ui",
+            f"importlist/{listid}",
             data=data,
-            datatype=UIConfig,
+            datatype=RadarrImportList,
             method=HTTPMethod.PUT,
+        )
+
+    async def async_add_import_list(self, data: RadarrImportList) -> RadarrImportList:
+        """Add import list."""
+        return await self._async_request(
+            "importlist", data=data, datatype=RadarrImportList, method=HTTPMethod.POST
         )
 
     @api_command("config/naming", datatype=RadarrNamingConfig)
     async def async_get_naming_config(self) -> RadarrNamingConfig:
         """Get information about naming configuration."""
 
-    async def async_update_naming_config(
+    async def async_edit_naming_config(
         self, data: RadarrNamingConfig
-    ) -> HTTPResponse:
-        """Edit Settings for movie file and folder naming."""
+    ) -> RadarrNamingConfig:
+        """Edit Settings for file and folder naming."""
         return await self._async_request(
             "config/naming",
             data=data,
             datatype=RadarrNamingConfig,
             method=HTTPMethod.PUT,
         )
-
-    @api_command("metadata", datatype=RadarrMetadataConfig)
-    async def async_get_metadata_config(self) -> list[RadarrMetadataConfig]:
-        """Get information about metadata configuration."""
 
     async def async_get_tags_details(
         self, tagid: int | None = None
@@ -362,18 +347,15 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
-    @api_command("queue/status", datatype=RadarrQueueStatus)
-    async def async_get_queue_status(self) -> RadarrQueueStatus:
-        """Get information about download queue status."""
-
     async def async_get_queue(  # pylint: disable=too-many-arguments
         self,
         page: int = 1,
         page_size: int = 20,
         sort_direction: str = "ascending",
         sort_key: str = "timeLeft",
-        include_unknown_movie_items: bool = True,
-    ) -> list[RadarrQueue]:
+        include_unknown_movie_items: bool = False,
+        include_movie: bool = False,
+    ) -> RadarrQueue:
         """Return a json object list of items in the queue.
 
         Args:
@@ -388,114 +370,25 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "pageSize": page_size,
             "sortDirection": sort_direction,
             "sortKey": sort_key,
-            "includeUnknownMovieItems": include_unknown_movie_items,
+            "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
+            "includeMovie": str(include_movie),
         }
         return await self._async_request("queue", params=params, datatype=RadarrQueue)
 
     async def async_get_queue_details(
         self,
+        include_unknown_movie_items: bool = False,
         include_movie: bool = True,
     ) -> list[RadarrQueueDetail]:
         """Get details of all items in queue."""
+        params = {
+            "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
+            "includeMovie": str(include_movie),
+        }
         return await self._async_request(
             "queue/details",
-            params={"includeMovie": str(include_movie)},
+            params=params,
             datatype=RadarrQueueDetail,
-        )
-
-    async def async_force_grab_queue_item(self, queueid: int) -> HTTPResponse:
-        """Perform a Radarr "force grab" on a pending queue item by its ID."""
-        return await self._async_request(
-            f"queue/grab/{queueid}", method=HTTPMethod.POST
-        )
-
-    async def async_delete_queue(
-        self,
-        ids: int | list[int],
-        remove_from_client: bool = True,
-        blocklist: bool = True,
-    ) -> HTTPResponse:
-        """Remove an item from the queue and optionally blocklist it.
-
-        Args:
-            ids: id of the item to be removed or mass deletion with a list
-            remove_from_client: Remove the item from the client.
-            blocklist: Add the item to the blocklist.
-        """
-        return await self._async_request(
-            "queue/bulk" if isinstance(ids, list) else f"queue/{ids}",
-            params={"removeFromClient": remove_from_client, "blocklist": blocklist},
-            data=ids if isinstance(ids, list) else None,
-            method=HTTPMethod.DELETE,
-        )
-
-    async def async_get_indexers(
-        self, indexerid: int | None = None
-    ) -> RadarrIndexer | list[RadarrIndexer]:
-        """Get all indexers or a single indexer by its database id.
-
-        id: Get indexer matching id. Leave blank for all.
-        """
-        return await self._async_request(
-            f"indexer{f'/{indexerid}' if indexerid is not None else ''}",
-            datatype=RadarrIndexer,
-        )
-
-    async def async_update_indexer(
-        self, indexerid: int, data: RadarrIndexer
-    ) -> HTTPResponse:
-        """Edit an indexer."""
-        return await self._async_request(
-            f"indexer/{indexerid}",
-            data=data,
-            method=HTTPMethod.PUT,
-        )
-
-    async def async_delete_indexer(self, indexerid: int) -> HTTPResponse:
-        """Delete indexer by database id."""
-        return await self._async_request(
-            f"indexer/{indexerid}", method=HTTPMethod.DELETE
-        )
-
-    async def async_update_download_client(
-        self, clientid: int, data: RadarrDownloadClient
-    ) -> HTTPResponse:
-        """Edit a download client by database id.
-
-        Args:
-            id: Download client database id
-            data: data to be updated within download client
-        """
-        return await self._async_request(
-            f"downloadclient/{clientid}",
-            data=data,
-            datatype=RadarrDownloadClient,
-            method=HTTPMethod.PUT,
-        )
-
-    async def async_delete_download_client(self, clientid: int) -> HTTPResponse:
-        """Delete a download client."""
-        return await self._async_request(
-            f"downloadclient/{clientid}", method=HTTPMethod.DELETE
-        )
-
-    async def async_update_import_list(
-        self, listid: int, data: RadarrImportList
-    ) -> HTTPResponse:
-        """Edit an importlist."""
-        return await self._async_request(
-            f"importlist/{listid}",
-            data=data,
-            datatype=RadarrImportList,
-            method=HTTPMethod.PUT,
-        )
-
-    async def async_delete_import_list(self, listid: int) -> HTTPResponse:
-        """Delete an import list."""
-        return await self._async_request(
-            f"importlist/{listid}",
-            datatype=RadarrIndexer,
-            method=HTTPMethod.DELETE,
         )
 
     async def async_get_notifications(
@@ -510,53 +403,40 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrNotification,
         )
 
-    async def async_update_notification(
-        self, notifyid: int, data: RadarrNotification
-    ) -> HTTPResponse:
+    async def async_edit_notification(
+        self, data: RadarrNotification
+    ) -> RadarrNotification:
         """Edit a notification."""
         return await self._async_request(
-            f"notification/{notifyid}",
+            f"notification/{data.id}",
             data=data,
             datatype=RadarrNotification,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_notification(self, notifyid: int) -> HTTPResponse:
-        """Delete a notification."""
+    async def async_add_notification(
+        self, data: RadarrNotification
+    ) -> RadarrNotification:
+        """Add a notification."""
         return await self._async_request(
-            f"notification/{notifyid}",
+            "notification",
+            data=data,
             datatype=RadarrNotification,
-            method=HTTPMethod.DELETE,
-        )
-
-    async def async_create_tag(self, label: str) -> HTTPResponse:
-        """Create a new tag.
-
-        Can be assigned to a movie, list, delay profile, notification, or restriction.
-        """
-        return await self._async_request(
-            "tag",
-            data={"id": 0, "label": label},
-            datatype=Tag,
             method=HTTPMethod.POST,
         )
 
-    async def async_update_tag(self, tagid: int, label: str) -> HTTPResponse:
-        """Edit a tag by its database id."""
+    async def async_test_notification(self, data: RadarrNotification) -> HTTPResponse:
+        """Test a notification configuration."""
         return await self._async_request(
-            f"tag/{tagid}",
-            data={"id": tagid, "label": label},
-            datatype=Tag,
-            method=HTTPMethod.PUT,
+            "notification/test",
+            data=data,
+            method=HTTPMethod.POST,
         )
 
-    async def async_delete_tag(self, tagid: int) -> HTTPResponse:
-        """Delete a tag."""
-        return await self._async_request(
-            f"tag/{tagid}",
-            datatype=Tag,
-            method=HTTPMethod.DELETE,
-        )
+    async def async_parse(self, title: str) -> RadarrParse:
+        """Return the movie with matching file name."""
+        params = {"title": title}
+        return await self._async_request("parse", params=params, datatype=RadarrParse)
 
     async def async_command_downloaded_movies_scan(self) -> HTTPResponse:
         """Trigger the scan of downloaded movies."""
@@ -597,21 +477,50 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrCalendar,
         )
 
-    @api_command("health", datatype=RadarrHealth)
-    async def async_get_failed_health_checks(self) -> RadarrHealth:
-        """Get information about failed health checks."""
+    async def async_get_release(
+        self, movieid: int | None = None
+    ) -> list[RadarrRelease]:
+        """Search indexers for specified fields."""
+        return await self._async_request(
+            "release",
+            params={"movieId": movieid} if movieid is not None else None,
+            datatype=RadarrRelease,
+        )
 
-    @api_command("update", datatype=RadarrUpdate)
-    async def async_get_software_update_info(self) -> RadarrUpdate:
-        """Get information about software updates."""
+    async def async_download_release(
+        self, guid: str, indexerid: int
+    ) -> list[RadarrRelease]:
+        """Add a previously searched release to the download client.
 
-    @api_command("qualityProfile", datatype=RadarrQualityProfile)
-    async def async_get_quality_profiles(self) -> list[RadarrQualityProfile]:
-        """Get information about quality profiles."""
+        If the release is
+        still in the search cache (30 minute cache). If the release is not found
+        in the cache it will return a 404.
 
-    @api_command("remotePathMapping", datatype=RadarrRemotePathMapping)
-    async def async_get_remote_path_mappings(self) -> list[RadarrRemotePathMapping]:
-        """Get information about remote path mappings."""
+        guid: Recently searched result guid
+        """
+        return await self._async_request(
+            "release",
+            data={"guid": guid, "indexerId": indexerid},
+            datatype=RadarrRelease,
+            method=HTTPMethod.POST,
+        )
+
+    # Only works if an id is associated with the release
+    async def async_get_pushed_release(self, releaseid: str) -> RadarrRelease:
+        """Get release previously pushed by below method."""
+        return await self._async_request(
+            "release/push",
+            params={"id": releaseid},
+            datatype=RadarrRelease,
+        )
+
+    async def async_get_rename(self, movieid: int) -> list[RadarrRename]:
+        """Get files matching specified id that are not properly renamed yet."""
+        return await self._async_request(
+            "rename",
+            params={"movieId": movieid},
+            datatype=RadarrRename,
+        )
 
     async def _async_construct_movie_json(  # pylint: disable=too-many-arguments
         self,
@@ -646,3 +555,37 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "monitored": monitored,
             "addOptions": {"searchForMovie": search_for_movie},
         }
+
+    async def async_get_import_list_exclusions(
+        self, clientid: int | None = None
+    ) -> Any:
+        """Get import list exclusions."""
+        raise NotImplementedError()
+
+    async def async_delete_import_list_exclusion(self, clientid: int) -> Any:
+        """Delete import list exclusion."""
+        raise NotImplementedError()
+
+    async def async_add_import_list_exclusion(self, data: Any) -> Any:
+        """Add import list exclusion."""
+        raise NotImplementedError()
+
+    async def async_get_release_profiles(self, profileid: int | None = None) -> Any:
+        """Get release profiles."""
+        raise NotImplementedError()
+
+    async def async_edit_release_profile(self, data: Any) -> Any:
+        """Edit release profile."""
+        raise NotImplementedError()
+
+    async def async_delete_release_profile(self, profileid: int) -> Any:
+        """Delete release profiles."""
+        raise NotImplementedError()
+
+    async def async_add_release_profiles(self, data: Any) -> Any:
+        """Add release profile."""
+        raise NotImplementedError()
+
+    async def async_edit_import_list_exclusion(self, data: Any) -> Any:
+        """Edit import list exclusion."""
+        raise NotImplementedError()

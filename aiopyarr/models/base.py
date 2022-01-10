@@ -2,23 +2,29 @@
 from __future__ import annotations
 
 import json
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 from re import search, sub
 from typing import Any
 
 from ..const import LOGGER
-from .const import CONVERT_TO_FLOAT, CONVERT_TO_INTEGER
+
+from .const import (  # isort:skip
+    CONVERT_TO_BOOL,
+    CONVERT_TO_DATETIME,
+    CONVERT_TO_FLOAT,
+    CONVERT_TO_INTEGER,
+)
 
 
-def get_time_from_string(string: str) -> datetime | None:
+def get_datetime_from_string(string: str) -> datetime | None:
     """Convert string to datetime object."""
     if string is not None:
         if search(r"^\d{4}-\d{2}-\d{2}$", string):
             return datetime.strptime(string, "%Y-%m-%d")
         if search(r".\d{7}Z$", string):
             string = sub(r"\dZ", "Z", string)
-        if not search(r"\.\d+Z$", string):
+        elif not search(r"\.\d+Z$", string):
             string = sub("Z", ".000000Z", string)
         return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
     return None
@@ -71,7 +77,7 @@ class BaseModel:
         ]
         return f"{self.__class__.__name__}({', '.join(attrs)})"
 
-    def __post_init__(self):
+    def __post_init__(self):  # pylint: disable=too-many-branches
         """Post init."""
         if hasattr(self, "completionMessage") and (
             not hasattr(self, "clientUserAgent") or not hasattr(self, "lastStartTime")
@@ -80,6 +86,12 @@ class BaseModel:
                 self.__setattr__("isNewMovie", False)
             else:
                 LOGGER.debug("isNewMovie is now always included by API")
+        for key in CONVERT_TO_BOOL:
+            if hasattr(self, key) and self.__getattribute__(key) is not None:
+                if self.__getattribute__(key) == "False":
+                    self.__setattr__(key, False)
+                else:
+                    self.__setattr__(key, bool(self.__getattribute__(key)))
         for key in CONVERT_TO_FLOAT:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
                 self.__setattr__(key, float(self.__getattribute__(key)))
@@ -89,6 +101,11 @@ class BaseModel:
                     self.__setattr__(key, int(self.__getattribute__(key)))
                 except ValueError:
                     pass
+        for key in CONVERT_TO_DATETIME:
+            if hasattr(self, key) and self.__getattribute__(key) is not None:
+                self.__setattr__(
+                    key, get_datetime_from_string(self.__getattribute__(key))
+                )
 
     @property
     def attributes(self) -> dict[str, Any]:

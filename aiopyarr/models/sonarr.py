@@ -3,71 +3,52 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
 
-from .base import BaseModel, get_time_from_string
-from .common import _RecordCommon
+from .base import BaseModel
+from .request import _RecordCommon
+
+from .request_common import (  # isort:skip
+    _Common3,
+    _Common4,
+    _Notification,
+    _Quality,
+    _ReleaseCommon,
+    _Rename,
+    _TagDetails,
+)
 
 from .sonarr_common import (  # isort:skip
-    _FileEpisodeQuality,
-    _SonarrBlocklistSeriesLanguage,
-    _SonarrCommon3,
-    _SonarrCommon4,
-    _SonarrCommon5,
-    _SonarrCommon6,
-    _SonarrCommon7,
-    _SonarrCutoff,
+    _SonarrCommon,
+    _SonarrCommon2,
     _SonarrEpisodeFile,
+    _SonarrFields,
     _SonarrHistoryRecord,
-    _SonarrHistoryRecordEpisode,
-    _SonarrHistoryRecordSeries,
     _SonarrParseEpisodeInfo,
-    _SonarrQualityProfileValueItems,
-    _SonarrQualitySub,
-    _SonarrSeasonStatistics,
-    _SonarrSeries2,
     _SonarrSeriesAlternateTitle,
     _SonarrSeriesCommon,
-    _SonarrSeriesCommon3,
+    _SonarrSeries2,
+    _SonarrStatusMesssage,
     _SonarrWantedMissingRecord,
-    _SonarrWantedMissingSeriesSeason,
 )
 
 
 @dataclass(init=False)
-class SonarrCalendar(_SonarrCommon5):
+class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
     """Sonarr calendar attributes."""
 
-    downloading: bool | None = None
-    series: SonarrSeries | None = None
-    sceneEpisodeNumber: int | None = None
-    sceneSeasonNumber: int | None = None
-    tvDbEpisodeId: int | None = None
     unverifiedSceneNumbering: bool | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.series = SonarrSeries(self.series) or {}
 
 
 @dataclass(init=False)
-class SonarrEpisode(_SonarrCommon5):
+class SonarrEpisode(_SonarrCommon):
     """Sonarr episode attributes."""
 
-    absoluteEpisodeNumber: int | None = None
-    episodeFile: _SonarrEpisodeFile | None = None
-    sceneEpisodeNumber: int | None = None
-    sceneSeasonNumber: int | None = None
-    series: _SonarrHistoryRecordSeries | None = None
-    tvDbEpisodeId: int | None = None
-    unverifiedSceneNumbering: bool | None = None
+    series: _SonarrSeriesCommon | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.episodeFile = _SonarrEpisodeFile(self.episodeFile) or {}
-        self.series = _SonarrHistoryRecordSeries(self.series) or {}
+        self.series = _SonarrSeriesCommon(self.series) or {}
 
 
 @dataclass(init=False)
@@ -76,10 +57,11 @@ class SonarrEpisodeFile(_SonarrEpisodeFile):
 
 
 @dataclass(init=False)
-class SonarrEpisodeFileQuailty(_SonarrCommon6):
+class SonarrEpisodeFileQuailty(BaseModel):
     """Required input for updating episode file quality."""
 
-    quality: _FileEpisodeQuality | None = None
+    id: int | None = None
+    quality: _Quality | None = None
 
 
 @dataclass(init=False)
@@ -107,32 +89,15 @@ class SonarrWantedMissing(_RecordCommon):
 
 
 @dataclass(init=False)
-class SonarrQueue(_SonarrCommon6):
+class SonarrQueue(_RecordCommon):
     """Sonarr queue attributes."""
 
-    downloadId: str | None = None
-    episode: _SonarrHistoryRecordEpisode | None = None
-    estimatedCompletionTime: datetime | None = None
-    protocol: str | None = None
-    quality: _SonarrQualitySub | None = None
-    series: _SonarrHistoryRecordSeries | None = None
-    size: int | None = None
-    sizeleft: int | None = None
-    status: str | None = None
-    statusMessages: list[str] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadStatus: str | None = None
+    records: list[SonarrQueueDetail] | None = None
 
     def __post_init__(self):
         """Post init."""
-        self.episode = _SonarrHistoryRecordEpisode(self.episode) or {}
-        self.estimatedCompletionTime = get_time_from_string(
-            self.estimatedCompletionTime
-        )
-        self.quality = _SonarrQualitySub(self.quality) or {}
-        if isinstance(self.series, dict):
-            self.series = _SonarrHistoryRecordSeries(self.series) or {}
+        super().__post_init__()
+        self.records = [SonarrQueueDetail(record) for record in self.records or []]
 
 
 @dataclass(init=False)
@@ -146,34 +111,63 @@ class SonarrParse(BaseModel):
 
     def __post_init__(self):
         """Post init."""
+        self.episodes = [SonarrEpisode(episode) for episode in self.episodes or []]
         self.parsedEpisodeInfo = _SonarrParseEpisodeInfo(self.parsedEpisodeInfo) or {}
+        self.series = _SonarrSeries2(self.series) or {}
 
 
 @dataclass(init=False)
-class SonarrQualityProfile(_SonarrCommon4):
-    """Sonarr quality profile attributes."""
+class _SonarrSceneMapping(BaseModel):
+    """Sonarr scene mapping attributes."""
 
-    cutoff: _SonarrCutoff | None = None
-    items: list[_SonarrQualityProfileValueItems] | None = None
+    title: str | None = None
+    seasonNumber: int | None = None
 
 
 @dataclass(init=False)
-class SonarrRelease(_SonarrCommon3, _SonarrCommon7):
+class SonarrRelease(_ReleaseCommon):
     """Sonarr release attributes."""
 
-    publishDate: datetime | None = None
+    absoluteEpisodeNumbers: list[int] | None = None
+    episodeNumbers: list[int] | None = None
+    episodeRequested: bool | None = None
+    fullSeason: bool | None = None
+    isAbsoluteNumbering: bool | None = None
+    isDaily: bool | None = None
+    isPossibleSpecialEpisode: bool | None = None
+    language: _Common3 | None = None
+    languageWeight: int | None = None
+    mappedAbsoluteEpisodeNumbers: list[int] | None = None
+    mappedEpisodeNumbers: list[int] | None = None
+    mappedSeasonNumber: int | None = None
+    preferredWordScore: int | None = None
+    quality: _Quality | None = None
+    rejected: bool | None = None
+    releaseGroup: str | None = None
+    releaseHash: str | None = None
+    releaseWeight: int | None = None
+    sceneMapping: _SonarrSceneMapping | None = None
+    seasonNumber: int | None = None
+    seriesTitle: str | None = None
+    special: bool | None = None
+    tvdbId: int | None = None
+    tvRageId: int | None = None
 
     def __post_init__(self):
+        """Post init."""
         super().__post_init__()
-        self.publishDate = get_time_from_string(self.publishDate)
+        self.language = _Common3(self.language) or {}
+        self.quality = _Quality(self.quality) or {}
+        self.sceneMapping = _SonarrSceneMapping(self.sceneMapping) or {}
 
 
 @dataclass(init=False)
-class SonarrSeries(_SonarrSeasonStatistics, _SonarrHistoryRecordSeries):
+class SonarrSeries(_SonarrSeriesCommon):
     """Sonarr series attributes."""
 
     alternateTitles: list[_SonarrSeriesAlternateTitle] | None = None
-    languageProfileId: int | None = None
+    rootFolderPath: str | None = None
+    previousAiring: str | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -187,37 +181,37 @@ class SonarrSeries(_SonarrSeasonStatistics, _SonarrHistoryRecordSeries):
 class SonarrSeriesLookup(_SonarrSeriesCommon):
     """Sonarr series lookup attributes."""
 
-    remotePoster: str | None = None
-
 
 @dataclass(init=False)
-class SonarrSeriesUpdateParams(_SonarrSeriesCommon3):
+class SonarrSeriesUpdateParams(BaseModel):
     """Sonarr series update parameters."""
 
     profileId: int | None = None
-    seasons: list[_SonarrWantedMissingSeriesSeason] | None = None
+    title: str | None = None
+    titleSlug: str | None = None
+    tvdbId: int | None = None
 
 
 @dataclass(init=False)
 class SonarrBlocklistSeries(BaseModel):
     """Blocklist series attributes."""
 
-    date: datetime | None = None
+    date: str | None = None
     episodeIds: list[int] | None = None
     id: int | None = None
     indexer: str | None = None
-    language: _SonarrBlocklistSeriesLanguage | None = None
+    language: _Common3 | None = None
     message: str | None = None
     protocol: str | None = None
-    quality: _SonarrQualitySub | None = None
+    quality: _Quality | None = None
     seriesId: int | None = None
     sourceTitle: str | None = None
 
     def __post_init__(self):
         """Post init."""
-        self.date = get_time_from_string(self.date)
-        self.language = _SonarrBlocklistSeriesLanguage(self.language) or {}
-        self.quality = _SonarrQualitySub(self.quality) or {}
+        super().__post_init__()
+        self.language = _Common3(self.language) or {}
+        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -229,3 +223,118 @@ class SonarrBlocklist(_RecordCommon):
     def __post_init__(self):
         """Post init."""
         self.records = [SonarrBlocklistSeries(record) for record in self.records or []]
+
+
+@dataclass(init=False)
+class SonarrNamingConfig(BaseModel):
+    """Sonarr naming config attributes."""
+
+    animeEpisodeFormat: str | None = None
+    dailyEpisodeFormat: str | None = None
+    id: int | None = None
+    includeEpisodeTitle: bool | None = None
+    includeQuality: bool | None = None
+    includeSeriesTitle: bool | None = None
+    multiEpisodeStyle: int | None = None
+    numberStyle: str | None = None
+    renameEpisodes: bool | None = None
+    replaceIllegalCharacters: bool | None = None
+    replaceSpaces: bool | None = None
+    seasonFolderFormat: str | None = None
+    separator: str | None = None
+    seriesFolderFormat: str | None = None
+    specialsFolderFormat: str | None = None
+    standardEpisodeFormat: str | None = None
+
+
+@dataclass(init=False)
+class SonarrNotification(_Common3, _Notification):
+    """Sonarr notification attributes."""
+
+    fields: list[_SonarrFields] | None = None
+    onEpisodeFileDelete: bool | None = None
+    onEpisodeFileDeleteForUpgrade: bool | None = None
+    onSeriesDelete: bool | None = None
+    supportsOnEpisodeFileDelete: bool | None = None
+    supportsOnEpisodeFileDeleteForUpgrade: bool | None = None
+    supportsOnSeriesDelete: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.fields = [_SonarrFields(field) for field in self.fields or []]
+
+
+@dataclass(init=False)
+class SonarrQueueDetail(_Common4):
+    """Sonarr queue detail attributes."""
+
+    episode: _SonarrCommon | None = None
+    episodeId: int | None = None
+    id: int | None = None
+    language: _Common3 | None = None
+    protocol: str | None = None
+    quality: _Quality | None = None
+    series: _SonarrSeries2 | None = None
+    seriesId: int | None = None
+    size: float | None = None
+    sizeleft: float | None = None
+    status: str | None = None
+    statusMessages: list[_SonarrStatusMesssage] | None = None
+    timeleft: str | None = None
+    title: str | None = None
+    trackedDownloadState: str | None = None
+    trackedDownloadStatus: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.episode = _SonarrCommon(self.episode) or {}
+        self.language = _Common3(self.language) or {}
+        self.quality = _Quality(self.quality) or {}
+        self.series = _SonarrSeries2(self.series) or {}
+        self.statusMessages = [
+            _SonarrStatusMesssage(x) for x in self.statusMessages or []
+        ]
+
+
+@dataclass(init=False)
+class SonarrRename(_Rename):
+    """Sonarr rename attributes."""
+
+    episodeFileId: int | None = None
+    episodeNumbers: list[int] | None = None
+    seasonNumber: int | None = None
+    seriesId: int | None = None
+
+
+@dataclass(init=False)
+class SonarrTagDetails(_TagDetails):
+    """Sonarr tag details attributes."""
+
+    indexerIds: list[int] | None = None
+    seriesIds: list[int] | None = None
+
+
+@dataclass(init=False)
+class SonarrImportList(_Common3):
+    """Sonarr importlist attributes."""
+
+    configContract: str | None = None
+    enableAutomaticAdd: bool | None = None
+    fields: list[_SonarrFields] | None = None
+    implementation: str | None = None
+    implementationName: str | None = None
+    infoLink: str | None = None
+    languageProfileId: int | None = None
+    listOrder: int | None = None
+    listType: str | None = None
+    qualityProfileId: int | None = None
+    rootFolderPath: str | None = None
+    seasonFolder: bool | None = None
+    seriesType: str | None = None
+    shouldMonitor: str | None = None
+    tags: list[int | None] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.fields = [_SonarrFields(field) for field in self.fields or []]

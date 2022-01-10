@@ -1,0 +1,16 @@
+[
+  {
+    "title": "string",
+    "description": "string",
+    "links": [
+      {
+        "position": "string",
+        "seriesPosition": 0,
+        "seriesId": 0,
+        "bookId": 0,
+        "id": 0
+      }
+    ],
+    "id": 0
+  }
+]

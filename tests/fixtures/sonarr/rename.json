@@ -1,0 +1,10 @@
+[
+  {
+    "seriesId": 0,
+    "seasonNumber": 0,
+    "episodeNumbers": [0],
+    "episodeFileId": 0,
+    "existingPath": "string",
+    "newPath": "string"
+  }
+]

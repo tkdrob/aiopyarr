@@ -1,0 +1,8 @@
+[
+  {
+    "movieId": 0,
+    "movieFileId": 0,
+    "existingPath": "string",
+    "newPath": "string"
+  }
+]

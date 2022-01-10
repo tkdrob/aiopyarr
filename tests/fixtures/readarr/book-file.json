@@ -19,7 +19,7 @@
   "qualityWeight": 0,
   "mediaInfo": {
     "id": 0,
-    "audioChannels": 0,
+    "audioChannels": 0.0,
     "audioBitRate": 0,
     "audioCodec": "string",
     "audioBits": 0,
@@ -83,7 +83,7 @@
     "mediaInfo": {
       "audioFormat": "string",
       "audioBitrate": 0,
-      "audioChannels": 0,
+      "audioChannels": 0.0,
       "audioBits": 0,
       "audioSampleRate": "string"
     },

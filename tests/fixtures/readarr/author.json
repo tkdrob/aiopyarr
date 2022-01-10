@@ -1,7 +1,7 @@
 {
   "id": 0,
   "authorMetadataId": 0,
-  "status": "continuing",
+  "status": "string",
   "ended": true,
   "authorName": "string",
   "authorNameLastFirst": "string",
@@ -42,7 +42,7 @@
     "lastInfoSync": "2021-12-06T22:12:47.067Z",
     "added": "2021-12-06T22:12:47.067Z",
     "addOptions": {
-      "addType": "automatic",
+      "addType": "string",
       "searchForNewBook": true
     },
     "authorMetadata": {
@@ -63,11 +63,11 @@
         "hometown": "string",
         "born": "2021-12-06T22:12:47.067Z",
         "died": "2021-12-06T22:12:47.067Z",
-        "status": "continuing",
+        "status": "string",
         "images": [
           {
             "url": "string",
-            "coverType": "unknown",
+            "coverType": "string",
             "extension": "string"
           }
         ],
@@ -104,7 +104,7 @@
           0
         ],
         "addOptions": {
-          "monitor": "all",
+          "monitor": "string",
           "booksToMonitor": [
             "string"
           ],
@@ -129,11 +129,11 @@
             "hometown": "string",
             "born": "2021-12-06T22:12:47.067Z",
             "died": "2021-12-06T22:12:47.067Z",
-            "status": "continuing",
+            "status": "string",
             "images": [
               {
                 "url": "string",
-                "coverType": "unknown",
+                "coverType": "string",
                 "extension": "string"
               }
             ],
@@ -245,7 +245,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "unknown",
+              "coverType": "string",
               "extension": "string"
             }
           ],
@@ -289,7 +289,7 @@
                 "mediaInfo": {
                   "audioFormat": "string",
                   "audioBitrate": 0,
-                  "audioChannels": 0,
+                  "audioChannels": 0.0,
                   "audioBits": 0,
                   "audioSampleRate": "string"
                 },
@@ -312,7 +312,7 @@
                       0
                     ],
                     "addOptions": {
-                      "monitor": "all",
+                      "monitor": "string",
                       "booksToMonitor": [
                         "string"
                       ],
@@ -337,11 +337,11 @@
                         "hometown": "string",
                         "born": "2021-12-06T22:12:47.067Z",
                         "died": "2021-12-06T22:12:47.067Z",
-                        "status": "continuing",
+                        "status": "string",
                         "images": [
                           {
                             "url": "string",
-                            "coverType": "unknown",
+                            "coverType": "string",
                             "extension": "string"
                           }
                         ],
@@ -468,7 +468,7 @@
           "mediaInfo": {
             "audioFormat": "string",
             "audioBitrate": "string",
-            "audioChannels": 0,
+            "audioChannels": 0.0,
             "audioBits": 0,
             "audioSampleRate": "string"
           },
@@ -491,7 +491,7 @@
                 0
               ],
               "addOptions": {
-                "monitor": "all",
+                "monitor": "string",
                 "booksToMonitor": [
                   "string"
                 ],
@@ -516,11 +516,11 @@
                   "hometown": "string",
                   "born": "2021-12-06T22:12:47.067Z",
                   "died": "2021-12-06T22:12:47.067Z",
-                  "status": "continuing",
+                  "status": "string",
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "unknown",
+                      "coverType": "string",
                       "extension": "string"
                     }
                   ],
@@ -681,7 +681,7 @@
     "lastInfoSync": "2021-12-06T22:12:47.067Z",
     "added": "2021-12-06T22:12:47.067Z",
     "addOptions": {
-      "addType": "automatic",
+      "addType": "string",
       "searchForNewBook": true
     },
     "authorMetadata": {
@@ -702,11 +702,11 @@
         "hometown": "string",
         "born": "2021-12-06T22:12:47.067Z",
         "died": "2021-12-06T22:12:47.067Z",
-        "status": "continuing",
+        "status": "string",
         "images": [
           {
             "url": "string",
-            "coverType": "unknown",
+            "coverType": "string",
             "extension": "string"
           }
         ],
@@ -743,7 +743,7 @@
           0
         ],
         "addOptions": {
-          "monitor": "all",
+          "monitor": "string",
           "booksToMonitor": [
             "string"
           ],
@@ -768,11 +768,11 @@
             "hometown": "string",
             "born": "2021-12-06T22:12:47.067Z",
             "died": "2021-12-06T22:12:47.067Z",
-            "status": "continuing",
+            "status": "string",
             "images": [
               {
                 "url": "string",
-                "coverType": "unknown",
+                "coverType": "string",
                 "extension": "string"
               }
             ],
@@ -884,7 +884,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "unknown",
+              "coverType": "string",
               "extension": "string"
             }
           ],
@@ -928,7 +928,7 @@
                 "mediaInfo": {
                   "audioFormat": "string",
                   "audioBitrate": 0,
-                  "audioChannels": 0,
+                  "audioChannels": 0.0,
                   "audioBits": 0,
                   "audioSampleRate": "string"
                 },
@@ -951,7 +951,7 @@
                       0
                     ],
                     "addOptions": {
-                      "monitor": "all",
+                      "monitor": "string",
                       "booksToMonitor": [
                         "string"
                       ],
@@ -976,11 +976,11 @@
                         "hometown": "string",
                         "born": "2021-12-06T22:12:47.067Z",
                         "died": "2021-12-06T22:12:47.067Z",
-                        "status": "continuing",
+                        "status": "string",
                         "images": [
                           {
                             "url": "string",
-                            "coverType": "unknown",
+                            "coverType": "string",
                             "extension": "string"
                           }
                         ],
@@ -1107,7 +1107,7 @@
           "mediaInfo": {
             "audioFormat": "string",
             "audioBitrate": 0,
-            "audioChannels": 0,
+            "audioChannels": 0.0,
             "audioBits": 0,
             "audioSampleRate": "string"
           },
@@ -1130,7 +1130,7 @@
                 0
               ],
               "addOptions": {
-                "monitor": "all",
+                "monitor": "string",
                 "booksToMonitor": [
                   "string"
                 ],
@@ -1155,11 +1155,11 @@
                   "hometown": "string",
                   "born": "2021-12-06T22:12:47.067Z",
                   "died": "2021-12-06T22:12:47.067Z",
-                  "status": "continuing",
+                  "status": "string",
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "unknown",
+                      "coverType": "string",
                       "extension": "string"
                     }
                   ],
@@ -1296,7 +1296,7 @@
   "images": [
     {
       "url": "string",
-      "coverType": "unknown",
+      "coverType": "string",
       "extension": "string"
     }
   ],
@@ -1317,7 +1317,7 @@
   ],
   "added": "2021-12-06T22:12:47.068Z",
   "addOptions": {
-    "monitor": "all",
+    "monitor": "string",
     "booksToMonitor": [
       "string"
     ],
@@ -1335,6 +1335,6 @@
     "availableBookCount": 0,
     "totalBookCount": 0,
     "sizeOnDisk": 0,
-    "percentOfBooks": 0
+    "percentOfBooks": 0.0
   }
 }

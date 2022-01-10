@@ -28,7 +28,7 @@
           "author": {
             "id": 0,
             "authorMetadataId": 0,
-            "status": "continuing",
+            "status": "string",
             "authorName": "string",
             "authorNameLastFirst": "string",
             "foreignAuthorId": "string",
@@ -67,7 +67,7 @@
               "lastInfoSync": "2021-12-10T10:00:06.987Z",
               "added": "2021-12-10T10:00:06.987Z",
               "addOptions": {
-                "addType": "automatic",
+                "addType": "string",
                 "searchForNewBook": true
               },
               "authorMetadata": {
@@ -88,11 +88,11 @@
                   "hometown": "string",
                   "born": "2021-12-10T10:00:06.987Z",
                   "died": "2021-12-10T10:00:06.987Z",
-                  "status": "continuing",
+                  "status": "string",
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "unknown"
+                      "coverType": "string"
                     }
                   ],
                   "links": [
@@ -126,7 +126,7 @@
                     0
                   ],
                   "addOptions": {
-                    "monitor": "all",
+                    "monitor": "string",
                     "booksToMonitor": [
                       "string"
                     ],
@@ -151,11 +151,11 @@
                       "hometown": "string",
                       "born": "2021-12-10T10:00:06.987Z",
                       "died": "2021-12-10T10:00:06.987Z",
-                      "status": "continuing",
+                      "status": "string",
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "unknown"
+                          "coverType": "string"
                         }
                       ],
                       "links": [
@@ -245,7 +245,7 @@
               "lastInfoSync": "2021-12-10T10:00:06.987Z",
               "added": "2021-12-10T10:00:06.987Z",
               "addOptions": {
-                "addType": "automatic",
+                "addType": "string",
                 "searchForNewBook": true
               },
               "authorMetadata": {
@@ -266,11 +266,11 @@
                   "hometown": "string",
                   "born": "2021-12-10T10:00:06.987Z",
                   "died": "2021-12-10T10:00:06.987Z",
-                  "status": "continuing",
+                  "status": "string",
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "unknown"
+                      "coverType": "string"
                     }
                   ],
                   "links": [
@@ -304,7 +304,7 @@
                     0
                   ],
                   "addOptions": {
-                    "monitor": "all",
+                    "monitor": "string",
                     "booksToMonitor": [
                       "string"
                     ],
@@ -329,11 +329,11 @@
                       "hometown": "string",
                       "born": "2021-12-10T10:00:06.987Z",
                       "died": "2021-12-10T10:00:06.987Z",
-                      "status": "continuing",
+                      "status": "string",
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "unknown"
+                          "coverType": "string"
                         }
                       ],
                       "links": [
@@ -400,7 +400,7 @@
             "images": [
               {
                 "url": "string",
-                "coverType": "unknown"
+                "coverType": "string"
               }
             ],
             "remotePoster": "string",
@@ -420,7 +420,7 @@
             ],
             "added": "2021-12-10T10:00:06.987Z",
             "addOptions": {
-              "monitor": "all",
+              "monitor": "string",
               "booksToMonitor": [
                 "string"
               ],
@@ -442,7 +442,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "unknown"
+              "coverType": "string"
             }
           ],
           "links": [
@@ -459,7 +459,7 @@
           },
           "added": "2021-12-10T10:00:06.987Z",
           "addOptions": {
-            "addType": "automatic",
+            "addType": "string",
             "searchForNewBook": true
           },
           "remoteCover": "string",
@@ -483,7 +483,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "unknown"
+                  "coverType": "string"
                 }
               ],
               "links": [
@@ -508,7 +508,7 @@
     }
   ],
   "monitoringOptions": {
-    "monitor": "all",
+    "monitor": "string",
     "booksToMonitor": [
       "string"
     ],

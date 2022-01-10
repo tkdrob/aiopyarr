@@ -1,108 +1,105 @@
 {
-  "seriesId": 1,
+  "seriesId": 0,
   "episodeFileId": 0,
-  "seasonNumber": 1,
-  "episodeNumber": 1,
+  "seasonNumber": 0,
+  "episodeNumber": 0,
   "title": "string",
   "airDate": "2009-09-17",
   "airDateUtc": "2009-09-18T02:00:00Z",
   "overview": "string",
   "episodeFile": {
-    "seriesId": 1,
-    "seasonNumber": 1,
+    "seriesId": 0,
+    "seasonNumber": 0,
     "relativePath": "string",
     "path": "string",
-    "size": 50,
+    "size": 0,
     "dateAdded": "2019-06-13T09:08:03.775081Z",
-    "sceneName": "string",
     "releaseGroup": "string",
     "language": {
-      "id": 1,
-      "name": "English"
+      "id": 0,
+      "name": "string"
     },
     "quality": {
       "quality": {
-        "id": 4,
-        "name": "HDTV-720p",
-        "source": "television",
-        "resolution": 720
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0
       },
       "revision": {
-        "version": 1,
+        "version": 0,
         "real": 0,
         "isRepack": false
       }
     },
     "mediaInfo": {
-      "audioBitrate": 384000,
-      "audioChannels": 5.1,
-      "audioCodec": "AC3",
-      "audioLanguages": "English",
-      "audioStreamCount": 1,
-      "videoBitDepth": 8,
-      "videoBitrate": 3055382,
-      "videoCodec": "x264",
-      "videoFps": 23.976,
-      "resolution": "1280x714",
-      "runTime": "22:01",
-      "scanType": "Progressive",
-      "subtitles": "English"
+      "audioBitrate": 0,
+      "audioChannels": 0.0,
+      "audioCodec": "string",
+      "audioLanguages": "string",
+      "audioStreamCount": 0,
+      "videoBitDepth": 0,
+      "videoBitrate": 0,
+      "videoCodec": "string",
+      "videoFps": 0.0,
+      "resolution": "string",
+      "runTime": "00:00",
+      "scanType": "string",
+      "subtitles": "string"
     },
     "qualityCutoffNotMet": false,
     "languageCutoffNotMet": false,
-    "id": 18429
+    "id": 0
   },
   "hasFile": true,
   "monitored": true,
-  "absoluteEpisodeNumber": 3,
+  "absoluteEpisodeNumber": 0,
   "unverifiedSceneNumbering": false,
   "series": {
     "title": "string",
     "sortTitle": "string",
-    "status": "ended",
+    "status": "string",
     "ended": true,
     "overview": "string",
     "network": "string",
-    "airTime": "22:00",
+    "airTime": "00:00",
+    "images": [
+      {
+        "coverType": "string",
+        "url": "string"
+      }
+    ],
     "seasons": [
       {
         "seasonNumber": 0,
         "monitored": false
       }
     ],
-    "year": 2017,
+    "year": 0,
     "path": "string",
-    "qualityProfileId": 6,
-    "languageProfileId": 1,
+    "qualityProfileId": 0,
+    "languageProfileId": 0,
     "seasonFolder": true,
     "monitored": true,
     "useSceneNumbering": false,
-    "runtime": 21,
+    "runtime": 0,
     "tvdbId": 0,
     "tvRageId": 0,
     "tvMazeId": 0,
     "firstAired": "2017-04-05T00:00:00Z",
-    "seriesType": "standard",
+    "seriesType": "string",
     "cleanTitle": "string",
     "imdbId": "string",
     "titleSlug": "string",
-    "certification": "TV-MA",
-    "genres": [
-      "Comedy"
-    ],
-    "tags": [],
+    "certification": "string",
+    "genres": ["string"],
+    "tags": [0],
     "added": "2019-05-19T05:33:42.24392Z",
     "ratings": {
-      "votes": 80,
-      "value": 8.7
+      "votes": 0,
+      "value": 0.0
     },
-    "id": 15,
-    "images": [
-      {
-        "coverType": "banner",
-        "url": "string"
-      }
-    ]
+    "id": 0
   },
-  "id": 1
+  "id": 0
 }

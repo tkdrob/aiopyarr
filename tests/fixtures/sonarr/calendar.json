@@ -1,9 +1,9 @@
 [
   {
-    "seriesId": 3,
+    "seriesId": 0,
     "episodeFileId": 0,
-    "seasonNumber": 4,
-    "episodeNumber": 11,
+    "seasonNumber": 0,
+    "episodeNumber": 0,
     "title": "string",
     "airDate": "2017-01-26",
     "airDateUtc": "2017-01-27T01:30:00Z",
@@ -14,61 +14,7 @@
     "sceneSeasonNumber": 0,
     "tvDbEpisodeId": 0,
     "unverifiedSceneNumbering": false,
-    "series": {
-      "tvdbId": 0,
-      "tvRageId": 0,
-      "imdbId": "string",
-      "title": "string",
-      "cleanTitle": "string",
-      "status": "continuing",
-      "overview": "string",
-      "airTime": "5:30pm",
-      "monitored": true,
-      "qualityProfileId": 1,
-      "seasonFolder": true,
-      "lastInfoSync": "2017-01-26T19:25:55.4555946Z",
-      "runtime": 30,
-      "images": [
-        {
-          "coverType": "banner",
-          "url": "string"
-        }
-      ],
-      "seriesType": "standard",
-      "network": "string",
-      "useSceneNumbering": false,
-      "titleSlug": "string",
-      "path": "string",
-      "year": 0,
-      "firstAired": "2016-01-10T01:30:00Z",
-      "qualityProfile": {
-        "value": {
-          "name": "SD",
-          "allowed": [
-            {
-              "id": 1,
-              "name": "SDTV",
-              "weight": 1
-            }
-          ],
-          "cutoff": {
-            "id": 1,
-            "name": "SDTV",
-            "weight": 1
-          },
-          "id": 1
-        },
-        "isLoaded": true
-      },
-      "seasons": [
-        {
-          "seasonNumber": 0,
-          "monitored": false
-        }
-      ],
-      "id": 66
-    },
     "downloading": false,
-    "id": 14402
+    "id": 0
   }
 ]

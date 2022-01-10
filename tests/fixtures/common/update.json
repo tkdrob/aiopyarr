@@ -1,0 +1,18 @@
+[
+  {
+    "version": "string",
+    "branch": "string",
+    "releaseDate": "2020-09-02T05:36:13.047313Z",
+    "fileName": "string",
+    "url": "string",
+    "installed": false,
+    "installedOn": "2020-10-01T05:01:04.521117Z",
+    "installable": false,
+    "latest": false,
+    "changes": {
+      "new": ["string"],
+      "fixed": ["string"]
+    },
+    "hash": "string"
+  }
+]

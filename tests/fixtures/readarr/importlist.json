@@ -1,0 +1,33 @@
+[
+  {
+    "enableAutomaticAdd": true,
+    "shouldMonitor": "entireAuthor",
+    "shouldMonitorExisting": false,
+    "shouldSearch": false,
+    "rootFolderPath": "/books/",
+    "monitorNewItems": "string",
+    "qualityProfileId": 1,
+    "metadataProfileId": 1,
+    "listType": "string",
+    "listOrder": 1,
+    "name": "string",
+    "fields": [
+        {
+            "order": 0,
+            "name": "accessToken",
+            "label": "Access Token",
+            "helpText": "string",
+            "value": ["string", "string"],
+            "type": "string",
+            "advanced": false,
+            "hidden": "hidden"
+        }
+    ],
+    "implementationName": "string",
+    "implementation": "string",
+    "configContract": "string",
+    "infoLink": "string",
+    "tags": [],
+    "id": 1
+  }
+]

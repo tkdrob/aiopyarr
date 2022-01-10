@@ -3,25 +3,25 @@
   "pageSize": 10,
   "sortKey": "date",
   "sortDirection": "descending",
-  "totalRecords": 8094,
+  "totalRecords": 1,
   "records": [
     {
-      "episodeId": 75118,
-      "seriesId": 22,
+      "episodeId": 0,
+      "seriesId": 0,
       "sourceTitle": "string",
       "language": {
-        "id": 1,
-        "name": "English"
+        "id": 0,
+        "name": "string"
       },
       "quality": {
         "quality": {
-          "id": 5,
-          "name": "WEBDL-720p",
-          "source": "web",
-          "resolution": 720
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0
         },
         "revision": {
-          "version": 1,
+          "version": 0,
           "real": 0,
           "isRepack": false
         }
@@ -30,7 +30,7 @@
       "languageCutoffNotMet": false,
       "date": "2019-11-01T09:09:34.288036Z",
       "downloadId": "string",
-      "eventType": "downloadFolderImported",
+      "eventType": "string",
       "data": {
         "indexer": "string",
         "nzbInfoUrl": "string",
@@ -38,22 +38,22 @@
         "age": "0",
         "ageHours": "0.0",
         "ageMinutes": "0.0",
-        "publishedDate": "string",
-        "fileId": "53153",
+        "publishedDate": "2020-02-08T13:30:37Z",
+        "fileId": "0",
         "droppedPath": "string",
         "importedPath": "string",
         "downloadClient": "string",
         "downloadClientName": "string",
         "preferredWordScore": "0",
-        "size": "184576954",
+        "size": "0",
         "downloadUrl": "string",
         "guid": "string",
         "tvdbId": "0",
         "tvRageId": "0",
-        "protocol": "2",
+        "protocol": "0",
         "torrentInfoHash": "string"
       },
-      "id": 76400
+      "id": 0
     }
   ]
 }

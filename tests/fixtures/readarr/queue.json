@@ -1,0 +1,93 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "timeleft",
+  "sortDirection": "ascending",
+  "totalRecords": 1,
+  "records": [
+    {
+      "authorId": 0,
+      "bookId": 0,
+      "author": {
+        "authorMetadataId": 0,
+        "status": "string",
+        "ended": false,
+        "authorName": "string",
+        "authorNameLastFirst": "string",
+        "foreignAuthorId": "0",
+        "titleSlug": "0",
+        "overview": "string",
+        "links": [
+          {
+            "url": "string",
+            "name": "string"
+          }
+        ],
+        "images": [
+          {
+            "url": "string",
+            "coverType": "string",
+            "extension": "string"
+          }
+        ],
+        "path": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": true,
+        "monitorNewItems": "string",
+        "genres": ["string"],
+        "cleanName": "string",
+        "sortName": "string",
+        "sortNameLastFirst": "string",
+        "tags": [0],
+        "added": "2020-11-06T23:38:03Z",
+        "ratings": {
+          "votes": 0,
+          "value": 0.0,
+          "popularity": 0.0
+        },
+        "statistics": {
+          "bookFileCount": 0,
+          "bookCount": 0,
+          "availableBookCount": 0,
+          "totalBookCount": 0,
+          "sizeOnDisk": 0,
+          "percentOfBooks": 0
+        },
+        "id": 72
+      },
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "size": 0,
+      "title": "string",
+      "sizeleft": 0,
+      "timeleft": "00:00:00",
+      "estimatedCompletionTime": "2020-02-09T23:22:30Z",
+      "status": "string",
+      "trackedDownloadStatus": "string",
+      "trackedDownloadState": "string",
+      "statusMessages": [
+        {
+          "title": "string",
+          "messages": ["string"]
+        }
+      ],
+      "downloadId": "string",
+      "protocol": "string",
+      "downloadClient": "string",
+      "indexer": "string",
+      "outputPath": "string",
+      "downloadForced": false,
+      "id": 0
+    }
+  ]
+}

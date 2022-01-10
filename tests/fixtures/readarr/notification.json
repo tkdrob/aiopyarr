@@ -1,0 +1,39 @@
+[
+  {
+      "onGrab": true,
+      "onReleaseImport": true,
+      "onUpgrade": true,
+      "onRename": true,
+      "onHealthIssue": true,
+      "onDownloadFailure": true,
+      "onImportFailure": true,
+      "onBookRetag": true,
+      "supportsOnGrab": true,
+      "supportsOnReleaseImport": true,
+      "supportsOnUpgrade": true,
+      "supportsOnRename": true,
+      "supportsOnHealthIssue": true,
+      "includeHealthWarnings": false,
+      "supportsOnDownloadFailure": true,
+      "supportsOnImportFailure": true,
+      "supportsOnBookRetag": true,
+      "name": "string",
+      "fields": [
+          {
+              "order": 0,
+              "name": "string",
+              "label": "string",
+              "helpText": "string",
+              "value": "string",
+              "type": "string",
+              "advanced": false
+          }
+      ],
+      "implementationName": "string",
+      "implementation": "string",
+      "configContract": "string",
+      "infoLink": "string",
+      "tags": [0],
+      "id": 0
+  }
+]

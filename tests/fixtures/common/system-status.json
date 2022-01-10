@@ -18,7 +18,7 @@
   "isDocker": false,
   "mode": "console",
   "branch": "nightly",
-  "authentication": "none",
+  "authentication": "string",
   "sqliteVersion": "3.32.1",
   "migrationVersion": 180,
   "urlBase": "",

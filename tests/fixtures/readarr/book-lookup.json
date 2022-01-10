@@ -20,7 +20,7 @@
     "genres": [],
     "author": {
       "authorMetadataId": 0,
-      "status": "continuing",
+      "status": "string",
       "ended": false,
       "authorName": "string",
       "authorNameLastFirst": "string",
@@ -30,14 +30,14 @@
       "images": [
         {
           "url": "string",
-          "coverType": "poster",
+          "coverType": "string",
           "extension": "string"
         }
       ],
       "qualityProfileId": 0,
       "metadataProfileId": 0,
       "monitored": false,
-      "monitorNewItems": "all",
+      "monitorNewItems": "string",
       "genres": [],
       "cleanName": "string",
       "sortName": "string",
@@ -55,7 +55,7 @@
         "availableBookCount": 0,
         "totalBookCount": 0,
         "sizeOnDisk": 0,
-        "percentOfBooks": 0
+        "percentOfBooks": 0.0
       }
     },
     "images": [

@@ -3,41 +3,47 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
 
-from .base import BaseModel, get_time_from_string
-from .common import Tag, _RecordCommon
+from .base import BaseModel
+from .request import _RecordCommon
+
+from .request_common import (  # isort:skip
+    _Common2,
+    _Common3,
+    _Common4,
+    _Notification,
+    _Quality,
+    _ReleaseCommon,
+    _Rename,
+    _TagDetails,
+)
 
 from .radarr_common import (  # isort:skip
-    _RadarrCalendarMovieFile,
     _RadarrCommon,
     _RadarrCommon2,
-    _RadarrCommon4,
-    _RadarrMovieCustomFormats,
+    _RadarrCustomFormats,
     _RadarrMovie,
-    _RadarrMovieFileCommon,
+    _RadarrMovieCustomFormats,
+    _RadarrMovieFile,
     _RadarrMovieHistoryBlocklistBase,
     _RadarrMovieHistoryData,
-    _RadarrMovieQuality,
+    _RadarrNotificationFields,
     _RadarrNotificationMessage,
-    _RadarrQualityProfileItems,
+    _RadarrParsedMovieInfo,
     _RadarrQueueStatusMessages,
-    _RadarrUpdateChanges,
 )
 
 
 @dataclass(init=False)
-class RadarrMovieFile(_RadarrMovieFileCommon):
-    """Movie file attributes."""
+class RadarrMovieFile(_RadarrMovieFile):
+    """Radarr movie file attributes."""
 
 
 @dataclass(init=False)
-class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase):
+class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
     """Movie file quality attributes."""
 
     data: _RadarrMovieHistoryData | None = None
-    downloadId: str | None = None
-    eventType: str | None = None
     qualityCutoffNotMet: bool | None = None
 
     def __post_init__(self):
@@ -66,40 +72,35 @@ class RadarrBlocklist(_RecordCommon):
 
 
 @dataclass(init=False)
-class RadarrQueueDetail(BaseModel):
+class RadarrQueueDetail(_Common4):
     """Radarr queue details attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
-    downloadClient: str | None = None
-    downloadId: str | None = None
     errorMessage: str | None = None
-    estimatedCompletionTime: str | None = None
     id: int | None = None
-    indexer: str | None = None
-    languages: list[_RadarrCommon4] | None = None
+    languages: list[_Common3] | None = None
     movieId: int | None = None
-    outputPath: str | None = None
     protocol: str | None = None
-    quality: _RadarrMovieQuality | None = None
+    quality: _Quality | None = None
     size: int | None = None
     sizeleft: int | None = None
     status: str | None = None
     statusMessages: list[_RadarrQueueStatusMessages] | None = None
     timeleft: str | None = None
     title: str | None = None
-    trackedDownloadStatus: str | None = None
     trackedDownloadState: str | None = None
+    trackedDownloadStatus: str | None = None
 
     def __post_init__(self):
         """Post init."""
         self.customFormats = [
             _RadarrMovieCustomFormats(custForm) for custForm in self.customFormats or []
         ]
-        self.languages = [_RadarrCommon4(language) for language in self.languages or []]
+        self.languages = [_Common3(language) for language in self.languages or []]
         self.statusMessages = [
             _RadarrQueueStatusMessages(statMsg) for statMsg in self.statusMessages or []
         ]
-        self.quality = _RadarrMovieQuality(self.quality) or {}
+        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -108,46 +109,9 @@ class RadarrQueue(_RecordCommon):
 
     records: list[RadarrQueueDetail] | None = None
 
-
-@dataclass(init=False)
-class RadarrQueueStatus(BaseModel):
-    """Radarr queue status attributes."""
-
-    totalCount: int | None = None
-    count: int | None = None
-    unknownCount: int | None = None
-    errors: bool | None = None
-    warnings: bool | None = None
-    unknownErrors: bool | None = None
-    unknownWarnings: bool | None = None
-
-
-@dataclass(init=False)
-class RadarrIndexer(_RadarrCommon):
-    """Radarr indexers attributes."""
-
-    configContract: str | None = None
-    enableAutomaticSearch: bool | None = None
-    enableInteractiveSearch: bool | None = None
-    enableRss: bool | None = None
-    id: int | None = None
-    protocol: str | None = None
-    priority: int | None = None
-    supportsRss: bool | None = None
-    supportsSearch: bool | None = None
-    tags: list[int] | None = None
-
-
-@dataclass(init=False)
-class RadarrDownloadClient(_RadarrCommon):
-    """Radarr indexers attributes."""
-
-    configContract: str | None = None
-    enable: bool | None = None
-    id: int | None = None
-    priority: int | None = None
-    protocol: str | None = None
-    tags: list[int] | None = None
+    def __post_init__(self):
+        """Post init."""
+        self.records = [RadarrQueueDetail(record) for record in self.records or []]
 
 
 @dataclass(init=False)
@@ -162,45 +126,28 @@ class RadarrImportList(_RadarrCommon, _RadarrCommon2):
     rootFolderPath: str | None = None
     searchOnAdd: bool | None = None
     shouldMonitor: bool | None = None
-    tags: list[int] | None = None
+    tags: list[int | None] | None = None
 
 
 @dataclass(init=False)
-class RadarrNotification(_RadarrCommon):
+class RadarrNotification(_Common3, _Notification):
     """Radarr notification attributes."""
 
-    configContract: str | None = None
-    id: int | None = None
-    includeHealthWarnings: bool | None = None
+    fields: list[_RadarrNotificationFields] | None = None
     message: _RadarrNotificationMessage | None = None
-    onDelete: bool | None = None
-    onDownload: bool | None = None
-    onGrab: bool | None = None
-    onHealthIssue: bool | None = None
-    onRename: bool | None = None
-    onUpgrade: bool | None = None
-    supportsOnDelete: bool | None = None
-    supportsOnDownload: bool | None = None
-    supportsOnGrab: bool | None = None
-    supportsOnHealthIssue: bool | None = None
-    supportsOnRename: bool | None = None
-    supportsOnUpgrade: bool | None = None
-    tags: list[int] | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.fields = [_RadarrNotificationFields(field) for field in self.fields or []]
         self.message = _RadarrNotificationMessage(self.message) or {}
 
 
 @dataclass(init=False)
-class RadarrTagDetails(Tag):
+class RadarrTagDetails(_TagDetails):
     """Radarr tag details attributes."""
 
-    delayProfileIds: list[int] | None = None
-    notificationIds: list[int] | None = None
-    restrictionIds: list[int] | None = None
-    netImportIds: list[int] | None = None
+    indexerIds: list[int] | None = None
     movieIds: list[int] | None = None
 
 
@@ -229,90 +176,13 @@ class RadarrNamingConfig(BaseModel):
 
 
 @dataclass(init=False)
-class RadarrMetadataConfig(_RadarrCommon, BaseModel):
-    """Radarr metadata consumer config attributes."""
-
-    configContract: str | None = None
-    enable: bool | None = None
-    id: int | None = None
-    tags: list[int] | None = None
-
-
-@dataclass(init=False)
-class RadarrHealth(BaseModel):
-    """Radarr failed health check attributes."""
-
-    message: str | None = None
-    source: str | None = None
-    type: str | None = None
-    wikiUrl: str | None = None
-
-
-@dataclass(init=False)
-class RadarrUpdate(BaseModel):
-    """Radarr recent updates attributes."""
-
-    branch: str | None = None
-    changes: _RadarrUpdateChanges | None = None
-    fileName: str | None = None
-    hash: str | None = None
-    installable: bool | None = None
-    installed: bool | None = None
-    latest: bool | None = None
-    releaseDate: datetime | None = None
-    url: str | None = None
-    version: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.changes = _RadarrUpdateChanges(self.changes) or {}
-        self.releaseDate = get_time_from_string(self.releaseDate)
-
-
-@dataclass(init=False)
-class RadarrQualityProfile(_RadarrCommon4):
-    """Radarr quality profile attributes."""
-
-    cutoff: int | None = None
-    cutoffFormatScore: int | None = None
-    formatItems: list | None = None
-    items: list[_RadarrQualityProfileItems] | None = None
-    language: _RadarrCommon4 | None = None
-    minFormatScore: int | None = None
-    upgradeAllowed: bool | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.items = [_RadarrQualityProfileItems(item) for item in self.items or []]
-        self.language = _RadarrCommon4(self.language) or {}
-
-
-@dataclass(init=False)
 class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
     digitalRelease: str | None = None
     minimumAvailability: str | None = None
-    movieFile: _RadarrCalendarMovieFile | None = None
     qualityProfileId: int | None = None
     secondaryYearSourceId: int | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.digitalRelease = get_time_from_string(self.digitalRelease)
-        if isinstance(self.images, list):
-            self.movieFile = _RadarrCalendarMovieFile(self.movieFile) or {}
-
-
-@dataclass(init=False)
-class RadarrRemotePathMapping(BaseModel):
-    """Radarr remote path mapping attributes."""
-
-    id: int | None = None
-    host: str | None = None
-    localPath: str | None = None
-    remotePath: str | None = None
 
 
 @dataclass(init=False)
@@ -326,16 +196,55 @@ class RadarrMovieEditor(BaseModel):
     movieIds: list[int] | None = None
     qualityProfileId: int | None = None
     rootFolderPath: str | None = None
-    tags: list[int] | None = None
+    tags: list[int | None] | None = None
 
 
 @dataclass(init=False)
 class RadarrMovie(_RadarrMovie):
     """Movie attributes."""
 
-    movieFile: RadarrMovieFile | None = None
+
+@dataclass(init=False)
+class RadarrParse(BaseModel):
+    """Radarr parse attributes."""
+
+    movie: _RadarrMovie | None = None
+    parsedMovieInfo: _RadarrParsedMovieInfo | None = None
+    title: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.movie = _RadarrMovie(self.movie) or {}
+        self.parsedMovieInfo = _RadarrParsedMovieInfo(self.parsedMovieInfo) or {}
+
+
+@dataclass(init=False)
+class RadarrRelease(_ReleaseCommon):
+    """Radarr release attributes."""
+
+    customFormats: list[_RadarrCustomFormats] | None = None
+    customFormatScore: int | None = None
+    edition: str | None = None
+    imdbId: int | None = None
+    indexerFlags: list[str] | None = None
+    languages: list[_Common3] | None = None
+    movieTitles: list[str] | None = None
+    quality: _Quality | None = None
+    releaseGroup: str | None = None
+    releaseHash: str | None = None
+    tmdbId: int | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.movieFile = RadarrMovieFile(self.movieFile) or {}
+        self.customFormats = [_RadarrCustomFormats(x) for x in self.customFormats or []]
+        self.languages = [_Common3(x) for x in self.languages or []]
+        self.quality = _Quality(self.quality) or {}
+
+
+@dataclass(init=False)
+class RadarrRename(_Rename):
+    """Radarr rename attributes."""
+
+    movieFileId: int | None = None
+    movieId: int | None = None

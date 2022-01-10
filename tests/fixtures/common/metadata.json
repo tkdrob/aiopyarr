@@ -10,7 +10,8 @@
         "helpText": "string",
         "value": "string",
         "type": "string",
-        "advanced": true
+        "advanced": true,
+        "section": "metadata"
       }
     ],
     "implementationName": "string",

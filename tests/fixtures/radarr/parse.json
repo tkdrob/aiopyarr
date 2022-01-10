@@ -1,0 +1,171 @@
+{
+  "title": "string",
+  "parsedMovieInfo": {
+    "movieTitles": ["string"],
+    "originalTitle": "string",
+    "releaseTitle": "string",
+    "simpleReleaseTitle": "string",
+    "quality": {
+      "quality": {
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0,
+        "modifier": "string"
+      },
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "languages": [
+      {
+        "id": 0,
+        "name": "string"
+      }
+    ],
+    "releaseHash": "",
+    "edition": "",
+    "year": 0,
+    "imdbId": "",
+    "tmdbId": 0,
+    "extraInfo": {},
+    "movieTitle": "string",
+    "primaryMovieTitle": "string"
+  },
+  "movie": {
+    "title": "string",
+    "originalTitle": "string",
+    "alternateTitles": [
+      {
+        "sourceType": "string",
+        "movieId": 0,
+        "title": "string",
+        "sourceId": 0,
+        "votes": 0,
+        "voteCount": 0,
+        "language": {
+          "id": 0,
+          "name": "string"
+        },
+        "id": 0
+      }
+    ],
+    "secondaryYearSourceId": 0,
+    "sortTitle": "string",
+    "sizeOnDisk": 0,
+    "status": "string",
+    "overview": "string",
+    "inCinemas": "2000-04-25T00:00:00Z",
+    "physicalRelease": "2000-07-08T00:00:00Z",
+    "digitalRelease": "2000-02-01T00:00:00Z",
+    "images": [
+      {
+        "coverType": "string",
+        "url": "string"
+      }
+    ],
+    "website": "string",
+    "year": 0,
+    "hasFile": true,
+    "youTubeTrailerId": "string",
+    "studio": "string",
+    "path": "string",
+    "qualityProfileId": 0,
+    "monitored": false,
+    "minimumAvailability": "string",
+    "isAvailable": true,
+    "folderName": "string",
+    "runtime": 0,
+    "cleanTitle": "string",
+    "imdbId": "string",
+    "tmdbId": 0,
+    "titleSlug": "string",
+    "certification": "string",
+    "genres": ["string"],
+    "tags": [0],
+    "added": "2020-11-28T06:34:25Z",
+    "ratings": {
+      "imdb": {
+        "votes": 0,
+        "value": 0.0,
+        "type": "string"
+      },
+      "tmdb": {
+        "votes": 0,
+        "value": 0.0,
+        "type": "string"
+      },
+      "metacritic": {
+        "votes": 0,
+        "value": 0,
+        "type": "string"
+      },
+      "rottenTomatoes": {
+        "votes": 0,
+        "value": 0,
+        "type": "string"
+      }
+    },
+    "movieFile": {
+      "movieId": 0,
+      "relativePath": "string",
+      "path": "string",
+      "size": 0,
+      "dateAdded": "2020-02-23T12:00:46Z",
+      "indexerFlags": 0,
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string",
+          "source": "string",
+          "resolution": 0,
+          "modifier": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "mediaInfo": {
+        "audioBitrate": 0,
+        "audioChannels": 0.0,
+        "audioCodec": "string",
+        "audioLanguages": "string",
+        "audioStreamCount": 0,
+        "videoBitDepth": 0,
+        "videoBitrate": 0,
+        "videoCodec": "string",
+        "videoDynamicRangeType": "string",
+        "videoFps": 0.0,
+        "resolution": "string",
+        "runTime": "00:00:00",
+        "scanType": "string",
+        "subtitles": "string"
+      },
+      "qualityCutoffNotMet": false,
+      "languages": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
+      "edition": "string",
+      "id": 0
+    },
+    "collection": {
+      "name": "string",
+      "tmdbId": 0,
+      "images": [
+        {
+          "coverType": "string",
+          "remoteUrl": "string",
+          "url": "string"
+        }
+      ]
+    },
+    "id": 0
+  }
+}

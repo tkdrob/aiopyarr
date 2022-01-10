@@ -1,0 +1,58 @@
+[
+  {
+    "seriesId": 0,
+    "episodeId": 0,
+    "episode": {
+      "seriesId": 0,
+      "episodeFileId": 0,
+      "seasonNumber": 0,
+      "episodeNumber": 0,
+      "title": "string",
+      "airDate": "2020-07-09",
+      "airDateUtc": "2020-07-10T02:00:00Z",
+      "overview": "string",
+      "hasFile": false,
+      "monitored": true,
+      "absoluteEpisodeNumber": 0,
+      "unverifiedSceneNumbering": false,
+      "id": 0
+    },
+    "language": {
+      "id": 0,
+      "name": "string"
+    },
+    "quality": {
+      "quality": {
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0
+      },
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "size": 0.0,
+    "title": "string",
+    "sizeleft": 0.0,
+    "timeleft": "00:00:00",
+    "estimatedCompletionTime": "2022-01-07T10:40:32.56084Z",
+    "status": "string",
+    "trackedDownloadStatus": "string",
+    "trackedDownloadState": "string",
+    "statusMessages": [
+      {
+        "title": "string",
+        "messages": ["string"]
+      }
+    ],
+    "downloadId": "string",
+    "protocol": "string",
+    "downloadClient": "string",
+    "indexer": "string",
+    "outputPath": "string",
+    "id": 0
+  }
+]

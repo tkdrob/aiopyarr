@@ -1,0 +1,55 @@
+[
+  {
+    "foreignId": "0",
+    "author": {
+      "authorMetadataId": 0,
+      "status": "string",
+      "ended": false,
+      "authorName": "string",
+      "authorNameLastFirst": "string",
+      "foreignAuthorId": "0",
+      "titleSlug": "0",
+      "overview": "string",
+      "links": [
+        {
+          "url": "string",
+          "name": "string"
+        }
+      ],
+      "images": [
+        {
+          "url": "string",
+          "coverType": "string",
+          "extension": "string"
+        }
+      ],
+      "remotePoster": "string",
+      "path": "string",
+      "qualityProfileId": 0,
+      "metadataProfileId": 0,
+      "monitored": true,
+      "monitorNewItems": "string",
+      "genres": ["string"],
+      "cleanName": "string",
+      "sortName": "string",
+      "sortNameLastFirst": "string",
+      "tags": [0],
+      "added": "2021-10-06T23:38:49Z",
+      "ratings": {
+        "votes": 0,
+        "value": 0.0,
+        "popularity": 0.0
+      },
+      "statistics": {
+        "bookFileCount": 0,
+        "bookCount": 0,
+        "availableBookCount": 0,
+        "totalBookCount": 0,
+        "sizeOnDisk": 0,
+        "percentOfBooks": 0.0
+      },
+      "id": 0
+    },
+    "id": 0
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "string",
+    "taskName": "string",
+    "interval": 0,
+    "lastExecution": "2020-02-08T14:24:40.993044Z",
+    "lastStartTime": "2020-02-08T14:24:40.993044Z",
+    "nextExecution": "2020-02-08T20:24:40.993044Z",
+    "lastDuration": "00:00:00.1976902",
+    "id": 0
+  }
+]
