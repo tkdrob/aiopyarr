@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
+from json import dumps
 from typing import Any, Text
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
@@ -138,12 +139,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Send API request."""
         command = args[0] if isinstance(args[0], str) else args[1]
         url = self._host.api_url(command)
+        json = dumps(data, default=lambda o: o.__dict__, sort_keys=True, indent=2)
         try:
             request = await self._session.request(
                 method=method.value,
                 url=url,
                 params=params,
-                json=data,
+                json=json,
                 verify_ssl=self._host.verify_ssl,
                 timeout=ClientTimeout(self._request_timeout),
             )
