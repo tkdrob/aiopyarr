@@ -39,7 +39,5 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
         if self.url is not None:
             return self.url
         protocol = f"http{'s' if self.ssl else ''}"
-        host = self.hostname or self.ipaddress
-        if self.port:
-            host = f"{host}:{self.port}"
+        host = f"{self.hostname or self.ipaddress}:{self.port}"
         return f"{protocol}://{host}{self.base_api_path or ''}"

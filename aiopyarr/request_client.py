@@ -80,15 +80,17 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Initialize."""
         if host_configuration is None:
             host_configuration = PyArrHostConfiguration(
+                api_token=api_token,
                 hostname=hostname,
                 ipaddress=ipaddress,
+                port=port,
                 url=url,
-                api_token=api_token,
                 api_ver=api_ver,
             )
         else:
             host_configuration = copy(host_configuration)
-        host_configuration.port = port
+        if host_configuration.port is None:
+            host_configuration.port = port
         if ssl is not None:
             host_configuration.ssl = ssl
         if verify_ssl is not None:
