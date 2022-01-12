@@ -532,7 +532,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         monitored: bool = True,
         search_for_movie: bool = True,
         tmdb: bool = True,
-    ) -> dict[str, str | int | dict[str, bool] | list[_RadarrMovieImages]] | None:
+    ) -> dict[str, str | int | dict[str, str] | list[_RadarrMovieImages]] | None:
         """Search for movie on tmdb and returns Movie json to add.
 
         Args:
