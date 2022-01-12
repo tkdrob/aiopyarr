@@ -128,8 +128,8 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             import_list_exclusion: Add an exclusion so author doesn't get re-added
         """
         params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
+            "deleteFiles": str(delete_files),
+            "addImportListExclusion": str(import_list_exclusion),
         }
         return await self._async_request(
             f"author/{authorid}", params=params, method=HTTPMethod.DELETE
@@ -391,8 +391,8 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             import_list_exclusion: Add an exclusion so book doesn't get re-added
         """
         params = {
-            "deleteFiles": delete_files,
-            "addImportListExclusion": import_list_exclusion,
+            "deleteFiles": str(delete_files),
+            "addImportListExclusion": str(import_list_exclusion),
         }
         return await self._async_request(
             f"book/{bookid}", params=params, method=HTTPMethod.DELETE
