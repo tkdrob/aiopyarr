@@ -4,7 +4,7 @@ from datetime import datetime
 import pytest
 from aiohttp.client import ClientSession
 
-from aiopyarr.models.radarr import RadarrNamingConfig
+from aiopyarr.models.radarr import RadarrMovie, RadarrNamingConfig
 from aiopyarr.radarr_client import RadarrClient
 
 from . import RADARR_API, TEST_HOST_CONFIGURATION, load_fixture
@@ -988,3 +988,24 @@ async def test_async_get_rename(aresponses):
     assert data[0].movieFileId == 0
     assert data[0].existingPath == "string"
     assert data[0].newPath == "string"
+
+
+@pytest.mark.asyncio
+async def test_async_edit_movies(aresponses):
+    """Test getting rename details."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/movie?apikey=ur1234567-0abc12de3f456gh7ij89k012&moveFiles=False",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/movie.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession() as session:
+        client = RadarrClient(
+            session=session, host_configuration=TEST_HOST_CONFIGURATION
+        )
+        await client.async_edit_movies(RadarrMovie("test"))
