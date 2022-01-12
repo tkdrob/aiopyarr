@@ -119,7 +119,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Edit movie properties of multiple movies at once."""
         return await self._async_request(
             "movie/editor" if hasattr(data, "movieIds") else "movie",
-            params=None if hasattr(data, "movieIds") else {"moveFiles": move_files},
+            params=None if hasattr(data, "movieIds") else {"moveFiles": str(move_files)},
             data=data,
             datatype=RadarrMovieEditor,
             method=HTTPMethod.PUT,
@@ -552,8 +552,8 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "tmdbId": movie[0].tmdbId or "",
             "images": movie[0].images or [],
             "titleSlug": movie[0].titleSlug or "",
-            "monitored": monitored,
-            "addOptions": {"searchForMovie": search_for_movie},
+            "monitored": str(monitored),
+            "addOptions": {"searchForMovie": str(search_for_movie)},
         }
 
     async def async_get_import_list_exclusions(
