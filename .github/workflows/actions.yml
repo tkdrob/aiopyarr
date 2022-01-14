@@ -59,7 +59,7 @@ jobs:
         run:  make requirements
 
       - name: 🏃 Run tests
-        run:  make test
+        run:  make coverage
 
   coverage:
     name: Upload coverage to Codecov
