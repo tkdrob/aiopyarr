@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .base import BaseModel
-from .request import _RecordCommon
+from .request_common import _Fields
 
 from .request_common import (  # isort:skip
     _Common3,
     _Common4,
     _Notification,
     _Quality,
+    _RecordCommon,
     _ReleaseCommon,
     _Rename,
     _TagDetails,
@@ -28,7 +30,6 @@ from .readarr_common import (  # isort:skip
     _ReadarrBookCommon,
     _ReadarrBookFileMediaInfo,
     _ReadarrEditionsValue,
-    _ReadarrFields,
     _ReadarrHistoryRecord,
     _ReadarrImage,
     _ReadarrLink,
@@ -40,6 +41,22 @@ from .readarr_common import (  # isort:skip
     _ReadarrSeriesLinks2,
     _ReadarrStatusMessages,
 )
+
+
+class ReadarrCommands(str, Enum):
+    """Readarr commands."""
+
+    APP_UPDATE_CHECK = "ApplicationUpdateCheck"
+    REFRESH_AUTHOR = "RefreshAuthor"
+    RESCAN_FOLDERS = "RescanFolders"
+
+
+class ReadarrBookTypes(str, Enum):
+    """Readarr book types."""
+
+    ASIN = "asin"
+    GOODREADS = "goodreads"
+    ISBN = "isbn"
 
 
 @dataclass(init=False)
@@ -297,12 +314,12 @@ class ReadarrHistory(_RecordCommon):
 
 
 @dataclass(init=False)
-class ReadarrImportlist(_Common3):
+class ReadarrImportList(_Common3):
     """Readarr importlist attributes."""
 
     configContract: str | None = None
     enableAutomaticAdd: bool | None = None
-    fields: list[_ReadarrFields] | None = None
+    fields: list[_Fields] | None = None
     implementation: str | None = None
     implementationName: str | None = None
     infoLink: str | None = None
@@ -319,7 +336,7 @@ class ReadarrImportlist(_Common3):
 
     def __post_init__(self):
         """Post init."""
-        self.fields = [_ReadarrFields(field) for field in self.fields or []]
+        self.fields = [_Fields(field) for field in self.fields or []]
 
 
 @dataclass(init=False)
@@ -353,7 +370,7 @@ class ReadarrNamingConfig(BaseModel):
 class ReadarrNotification(_Common3, _Notification):
     """Readarr notification attributes."""
 
-    fields: list[_ReadarrFields] | None = None
+    fields: list[_Fields] | None = None
     onBookRetag: bool | None = None
     onDownloadFailure: bool | None = None
     onImportFailure: bool | None = None
@@ -365,7 +382,7 @@ class ReadarrNotification(_Common3, _Notification):
 
     def __post_init__(self):
         """Post init."""
-        self.fields = [_ReadarrFields(field) for field in self.fields or []]
+        self.fields = [_Fields(field) for field in self.fields or []]
 
 
 @dataclass(init=False)

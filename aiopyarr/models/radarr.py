@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .base import BaseModel
-from .request import _RecordCommon
 
 from .request_common import (  # isort:skip
     _Common2,
     _Common3,
     _Common4,
+    _MetadataFields,
     _Notification,
     _Quality,
+    _RecordCommon,
     _ReleaseCommon,
     _Rename,
     _TagDetails,
@@ -27,11 +29,27 @@ from .radarr_common import (  # isort:skip
     _RadarrMovieFile,
     _RadarrMovieHistoryBlocklistBase,
     _RadarrMovieHistoryData,
-    _RadarrNotificationFields,
     _RadarrNotificationMessage,
     _RadarrParsedMovieInfo,
     _RadarrQueueStatusMessages,
 )
+
+
+class RadarrCommands(str, Enum):
+    """Radarr commands."""
+
+    DOWNLOADED_MOVIES_SCAN = "DownloadedMoviesScan"
+    MISSING_MOVIES_SEARCH = "MissingMoviesSearch"
+    REFRESH_MOVIE = "RefreshMovie"
+
+
+class RadarrEventType(str, Enum):
+    """Radarr event types."""
+
+    DELETED = "movieFileDeleted"
+    FAILED = "downloadFailed"
+    GRABBED = "grabbed"
+    IMPORTED = "downloadFolderImported"
 
 
 @dataclass(init=False)
@@ -40,8 +58,10 @@ class RadarrMovieFile(_RadarrMovieFile):
 
 
 @dataclass(init=False)
-class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
-    """Movie file quality attributes."""
+class RadarrMovieHistory(
+    _RadarrMovieHistoryBlocklistBase, _Common2
+):  # TODO maybe consolidate with RadarrMovie
+    """Radarr movie history attributes."""
 
     data: _RadarrMovieHistoryData | None = None
     qualityCutoffNotMet: bool | None = None
@@ -50,6 +70,18 @@ class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
         """Post init."""
         super().__post_init__()
         self.data = _RadarrMovieHistoryData(self.data) or {}
+
+
+@dataclass(init=False)
+class RadarrHistory(_RecordCommon):
+    """Radarr history attributes."""
+
+    records: list[RadarrMovieHistory] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.records = [RadarrMovieHistory(record) for record in self.records or []]
 
 
 @dataclass(init=False)
@@ -133,13 +165,13 @@ class RadarrImportList(_RadarrCommon, _RadarrCommon2):
 class RadarrNotification(_Common3, _Notification):
     """Radarr notification attributes."""
 
-    fields: list[_RadarrNotificationFields] | None = None
+    fields: list[_MetadataFields] | None = None
     message: _RadarrNotificationMessage | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.fields = [_RadarrNotificationFields(field) for field in self.fields or []]
+        self.fields = [_MetadataFields(field) for field in self.fields or []]
         self.message = _RadarrNotificationMessage(self.message) or {}
 
 

@@ -18,9 +18,7 @@ class ArrException(Exception):
         message: str | BaseException | ClientResponse | Exception = "",
     ) -> None:
         """Initialize."""
-        super().__init__(
-            client.redact_string(str(message)) if client is not None else message
-        )
+        super().__init__(str(message) if client is not None else message)
 
 
 class ArrConnectionException(ArrException):
@@ -37,7 +35,3 @@ class ArrResourceNotFound(ArrException):
 
 class ArrInvalidCommand(ArrException):
     """Arr invalid command exception."""
-
-
-class ArrCannotCancelCommand(ArrException):
-    """Arr cannot cancel command exception."""

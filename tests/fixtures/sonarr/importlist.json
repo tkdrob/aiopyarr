@@ -1,32 +1,40 @@
 [
   {
-      "enableAutomaticAdd": true,
-      "shouldMonitor": "string",
-      "rootFolderPath": "string",
-      "qualityProfileId": 0,
-      "languageProfileId": 0,
-      "seriesType": "string",
-      "seasonFolder": true,
-      "listType": "string",
-      "listOrder": 0,
-      "name": "string",
-      "fields": [
+    "enableAutomaticAdd": true,
+    "shouldMonitor": "string",
+    "rootFolderPath": "string",
+    "qualityProfileId": 0,
+    "languageProfileId": 0,
+    "seriesType": "string",
+    "seasonFolder": true,
+    "listType": "string",
+    "listOrder": 0,
+    "name": "string",
+    "fields": [
+      {
+        "order": 0,
+        "name": "string",
+        "label": "string",
+        "helpText": "string",
+        "value": "string",
+        "type": "string",
+        "advanced": false,
+        "hidden": "string",
+        "selectOptions": [
           {
-              "order": 0,
-              "name": "string",
-              "label": "string",
-              "helpText": "string",
-              "value": "string",
-              "type": "string",
-              "advanced": false,
-              "hidden": "string"
+            "value": 0,
+            "name": "string",
+            "order": 0,
+            "dividerAfter": false
           }
-      ],
-      "implementationName": "string",
-      "implementation": "string",
-      "configContract": "string",
-      "infoLink": "string",
-      "tags": [0],
-      "id": 0
+        ]
+      }
+    ],
+    "implementationName": "string",
+    "implementation": "string",
+    "configContract": "string",
+    "infoLink": "string",
+    "tags": [0],
+    "id": 0
   }
 ]
