@@ -32,13 +32,13 @@ jobs:
         run:  isort .
 
       - name: 🧹 Lint files with pylint
-        run:  pylint aiopyarr
+        run:  pylint aiopyarr tests
 
       - name: 🧹 Lint files with flake8
-        run:  flake8 aiopyarr
+        run:  flake8 aiopyarr tests
 
       - name: 🔍 Inspect with mypy
-        run: mypy aiopyarr
+        run: mypy aiopyarr tests
   test:
     name: Test with Python ${{ matrix.python-version }}
     needs: lint
@@ -59,7 +59,7 @@ jobs:
         run:  make requirements
 
       - name: 🏃 Run tests
-        run:  make test
+        run:  make coverage
 
   coverage:
     name: Upload coverage to Codecov

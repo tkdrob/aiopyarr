@@ -1,9 +1,9 @@
 """Tests for Readarr object models."""
+# pylint:disable=line-too-long, too-many-lines, too-many-statements
 import json
 from datetime import datetime
 
 import pytest
-from aiohttp import ClientResponse
 from aiohttp.client import ClientSession
 
 from aiopyarr.const import ATTR_DATA
@@ -28,8 +28,6 @@ from aiopyarr.models.request import Command, RootFolder
 from aiopyarr.models.response import PyArrResponse
 from aiopyarr.readarr_client import ReadarrClient
 
-from . import READARR_API, TEST_HOST_CONFIGURATION, load_fixture
-
 from aiopyarr.models.readarr_common import (  # isort:skip
     _ReadarrAuthorValueBooks,
     _ReadarrAuthorValueSeries,
@@ -37,6 +35,8 @@ from aiopyarr.models.readarr_common import (  # isort:skip
     _ReadarrEditionsValueBookFiles,
     _ReadarrSeriesLinks,
 )
+
+from . import READARR_API, TEST_HOST_CONFIGURATION, load_fixture  # isort:skip
 
 
 @pytest.mark.asyncio
@@ -195,7 +195,7 @@ async def test_async_get_author(aresponses):
     assert item.name == "string"
     assert item.quality.id == 0
     assert item.quality.name == "string"
-    assert item.items[0] == None
+    assert item.items[0] is None
     assert item.allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -209,7 +209,7 @@ async def test_async_get_author(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -606,7 +606,7 @@ async def test_async_get_author(aresponses):
     assert _value.items[0].name == "string"
     assert _value.items[0].quality.id == 0
     assert _value.items[0].quality.name == "string"
-    assert _value.items[0].items[0] == None
+    assert _value.items[0].items[0] is None
     assert _value.items[0].allowed is True
     assert data.lastBook.author.value.qualityProfile.isLoaded is True
     assert data.lastBook.author.value.metadataProfile.value.id == 0
@@ -620,7 +620,7 @@ async def test_async_get_author(aresponses):
     assert data.lastBook.author.value.metadataProfile.value.minPages == 0
     assert data.lastBook.author.value.metadataProfile.value.ignored == "string"
     assert data.lastBook.author.value.metadataProfile.isLoaded is True
-    assert data.lastBook.author.value.books.value[0] == None
+    assert data.lastBook.author.value.books.value[0] is None
     assert data.lastBook.author.value.books.isLoaded is True
     assert data.lastBook.author.value.series.value[0].id == 0
     assert data.lastBook.author.value.series.value[0].foreignSeriesId == "string"
@@ -1150,7 +1150,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.qualityProfile.value.items[0].name == "string"
     assert _value.qualityProfile.value.items[0].quality.id == 0
     assert _value.qualityProfile.value.items[0].quality.name == "string"
-    assert _value.qualityProfile.value.items[0].items[0] == None
+    assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -1164,7 +1164,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -1563,7 +1563,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.qualityProfile.value.items[0].name == "string"
     assert _value.qualityProfile.value.items[0].quality.id == 0
     assert _value.qualityProfile.value.items[0].quality.name == "string"
-    assert _value.qualityProfile.value.items[0].items[0] == None
+    assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -1577,7 +1577,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -6224,7 +6224,6 @@ async def test_readarr_bookshelf():
     assert isinstance(_book.editions, _ReadarrEditions)
     assert isinstance(_book.bookFiles, _ReadarrEditionsValueBookFiles)
     assert isinstance(_book.seriesLinks, _ReadarrSeriesLinks)
-    _book = _book
     assert _book.id == 0
     assert _book.authorMetadataId == 0
     assert _book.foreignBookId == "string"

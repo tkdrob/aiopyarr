@@ -1,4 +1,5 @@
 """Tests for Sonarr object models."""
+# pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
 
 import pytest
@@ -1393,7 +1394,7 @@ async def test_async_add_notification(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_test_notifications(aresponses):  # TODO normalize all notify test
+async def test_async_test_notifications(aresponses):
     """Test notification testing."""
     aresponses.add(
         "127.0.0.1:8989",

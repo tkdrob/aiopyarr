@@ -1,4 +1,5 @@
 """Tests for common methods."""
+# pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
 
 import pytest
@@ -8,14 +9,6 @@ from aiopyarr.exceptions import ArrConnectionException
 from aiopyarr.radarr_client import RadarrClient
 from aiopyarr.readarr_client import ReadarrClient
 from aiopyarr.sonarr_client import SonarrClient
-
-from . import (  # isort:skip
-    RADARR_API,
-    READARR_API,
-    SONARR_API,
-    TEST_HOST_CONFIGURATION,
-    load_fixture,
-)
 
 from aiopyarr.models.request import (  # isort:skip
     Command,
@@ -44,6 +37,14 @@ from aiopyarr.models.request import (  # isort:skip
     UIConfig,
     SystemStatus,
     Update,
+)
+
+from . import (  # isort:skip
+    RADARR_API,
+    READARR_API,
+    SONARR_API,
+    TEST_HOST_CONFIGURATION,
+    load_fixture,
 )
 
 
@@ -683,7 +684,7 @@ async def test_async_get_indexer_configs(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_list_exclusions(aresponses):
+async def test_async_get_languages(aresponses):
     """Test getting import list exclusions."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3093,54 +3094,6 @@ async def test_async_delete_import_list(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_test_download_clients(aresponses):
-    """Test download client testing."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/api/{RADARR_API}/downloadclient/test",
-        "POST",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_download_clients(DownloadClient("test")) is True
-
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/api/{RADARR_API}/downloadclient/testall",
-        "POST",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/validation.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_download_clients() is True
-
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/api/{RADARR_API}/downloadclient/testall",
-        "POST",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/validation-failed.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_download_clients() is False
-
-
-@pytest.mark.asyncio
 async def test_async_edit_import_list_exclusion(aresponses):
     """Test editing import list exclusion."""
     aresponses.add(
@@ -3587,9 +3540,7 @@ async def test_async_delete_queue(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_delete_blocklists(
-    aresponses,
-):  # TODO check common, move to request_client, test all apis
+async def test_async_delete_blocklists(aresponses):
     """Test deleting blocklists."""
     aresponses.add(
         "127.0.0.1:7878",
