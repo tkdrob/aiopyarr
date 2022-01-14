@@ -58,9 +58,7 @@ class RadarrMovieFile(_RadarrMovieFile):
 
 
 @dataclass(init=False)
-class RadarrMovieHistory(
-    _RadarrMovieHistoryBlocklistBase, _Common2
-):  # TODO maybe consolidate with RadarrMovie
+class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
     """Radarr movie history attributes."""
 
     data: _RadarrMovieHistoryData | None = None

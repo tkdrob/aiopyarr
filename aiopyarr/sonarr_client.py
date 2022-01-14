@@ -159,7 +159,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "calendar", params=params, datatype=SonarrCalendar
         )
 
-    async def async_sonarr_command(
+    async def async_sonarr_command(  # pylint: disable=too-many-arguments
         self,
         command: SonarrCommands,
         clientid: int | None = None,
