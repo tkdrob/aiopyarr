@@ -1,10 +1,13 @@
 """Tests for PyArr."""
 import pathlib
 
+from aiohttp.client import ClientSession
+
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
 
+API_TOKEN = "ur1234567-0abc12de3f456gh7ij89k012"
 TEST_HOST_CONFIGURATION = PyArrHostConfiguration(
-    ipaddress="127.0.0.1", api_token="ur1234567-0abc12de3f456gh7ij89k012"
+    api_token=API_TOKEN, ipaddress="127.0.0.1"
 )
 RADARR_API = "v3"
 READARR_API = "v1"

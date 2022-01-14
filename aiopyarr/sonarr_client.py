@@ -14,9 +14,9 @@ from .request_client import RequestClient
 from .models.sonarr import (  # isort:skip
     SonarrBlocklist,
     SonarrCalendar,
+    SonarrCommands,
     SonarrEpisode,
     SonarrEpisodeFile,
-    SonarrEpisodeFileQuailty,
     SonarrHistory,
     SonarrImportList,
     SonarrNamingConfig,
@@ -36,7 +36,6 @@ from .models.sonarr import (  # isort:skip
 if TYPE_CHECKING:
     from aiohttp.client import ClientSession
 
-    from .const import HTTPResponse
     from .models.host_configuration import PyArrHostConfiguration
 
 
@@ -57,15 +56,14 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         base_api_path: str | None = None,
         request_timeout: float = 30,
         raw_response: bool = False,
-        redact: bool = True,
         api_ver: str | None = None,
+        user_agent: str | None = None,
     ) -> None:
         """Initialize Sonarr API."""
         super().__init__(
             port,
             request_timeout,
             raw_response,
-            redact,
             host_configuration,
             session,
             hostname,
@@ -76,18 +74,20 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             verify_ssl,
             base_api_path,
             api_ver,
+            user_agent,
         )
 
     async def async_get_episode_files(
-        self, seriesid: int, episodeid: int | None = None
+        self, entryid: int, series: bool = False
     ) -> SonarrEpisodeFile | list[SonarrEpisodeFile]:
-        """Get information about episode files from series.
+        """Get information about an episode file.
 
-        episodeId: Get episode files matching series. Leave blank for all episodes.
+        episodeId: Get episode files matching id.
+        series: Make True to search by series.
         """
         return await self._async_request(
-            f"episodefile{f'/{episodeid}' if episodeid is not None else ''}",
-            params={"seriesId": seriesid},
+            f"episodefile{'' if series else f'/{entryid}'}",
+            params={"seriesId": entryid} if series else None,
             datatype=SonarrEpisodeFile,
         )
 
@@ -95,17 +95,24 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        sort_direction: str = "ascending",
+        ascending: bool = True,
         sort_key: str = "timeLeft",
         include_unknown_series_items: bool = False,
         include_series: bool = False,
         include_episode: bool = False,
     ) -> SonarrQueue:
-        """Get information about download queue."""
+        """Get information about download queue.
+
+        ascending: Sort items in ascending order.
+        sort_key: series.Title, id, date, airDateUtc, or title.
+        page: Page number to return.
+        page_size: Number of items per page.
+        id: Filter to a specific episode ID.
+        """
         params = {
             "page": page,
             "pageSize": page_size,
-            "sortDirection": sort_direction,
+            "sortDirection": "ascending" if ascending else "descending",
             "sortKey": sort_key,
             "includeUnknownSeriesItems": str(
                 include_unknown_series_items
@@ -152,79 +159,49 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "calendar", params=params, datatype=SonarrCalendar
         )
 
-    async def async_command_refresh_series(
-        self, seriesid: int | None = None
-    ) -> Command:
-        """Send refresh series command."""
-        data = {"name": "RefreshSeries"}
-        if seriesid is not None:
-            data["seriesId"] = str(seriesid)
-        return await self._async_request(
-            "command",
-            data=data,
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_rescan_series(self, seriesid: int | None = None) -> Command:
-        """Send rescan series command."""
-        data = {"name": "RefreshSeries"}
-        if seriesid is not None:
-            data["seriesId"] = str(seriesid)
-        return await self._async_request(
-            "command",
-            data=data,
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_episode_search(self, episodeids: int) -> Command:
-        """Send episode search command."""
-        return await self._async_request(
-            "command",
-            data={"name": "EpisodeSearch", "episodeIds": episodeids},
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_season_search(
-        self, seriesid: int, seasonnumber: int
-    ) -> Command:
-        """Send season search command."""
-        return await self._async_request(
-            "command",
-            data={
-                "name": "SeasonSearch",
-                "seriesId": seriesid,
-                "seasonNumber": seasonnumber,
-            },
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_series_search(self, seriesid: int) -> Command:
-        """Send series search command."""
-        return await self._async_request(
-            "command",
-            data={"name": "SeriesSearch", "seriesId": seriesid},
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_downloaded_episode_scan(
+    async def async_sonarr_command(  # pylint: disable=too-many-arguments
         self,
-        path: str,
-        clientid: str | None = None,
-        importmode: str = "Copy",
+        command: SonarrCommands,
+        clientid: int | None = None,
+        copymode: bool = True,
+        episodeids: list[int] | None = None,
+        files: list[int] | None = None,
+        path: str | None = None,
+        season: int | None = None,
+        seriesid: int | list[int] | None = None,
     ) -> Command:
-        """Send series search command.
+        """Send a command to Sonarr.
 
-        importMode: Copy or Hardlink depending on Sonarr configuration
+        Specify clientid for DownloadedEpisodesScan (Optional)
+        Specify episodeIds for EpisodeSearch
+        Specify files for RenameFiles
+        Specify path for DownloadedEpisodesScan (Optional)
+        Specify season for SeasonSearch
+        Specify seriesId for:
+            RefreshSeries (Optional),
+            RenameSeries (list[int]),
+            RescanSeries (Optional),
+            SeasonSearch,
+            SeriesSearch
         """
-        data = {"name": "DownloadedEpisodesScan", "path": path}
-        data["importMode"] = importmode
+        data: dict[str, str | int | list[int]] = {"name": command}
         if clientid is not None:
             data["downloadClientId"] = clientid
+        if episodeids is not None:
+            data["episodeIds"] = episodeids
+        if files is not None:
+            data["files"] = files
+        if path is not None:
+            data["path"] = path
+        if seriesid is not None:
+            if command == SonarrCommands.RENAME_SERIES:
+                data["seriesIds"] = seriesid
+            else:
+                data["seriesId"] = seriesid
+        if command is SonarrCommands.DOWNLOADED_EPISODES_SCAN:
+            data["importMode"] = "Copy" if copymode else "Move"
+        if season is not None:
+            data["seasonNumber"] = season
         return await self._async_request(
             "command",
             data=data,
@@ -232,68 +209,41 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    async def async_command_rename_files(self, files: list[int]) -> Command:
-        """Send rename files command."""
+    async def async_get_episodes(
+        self, entryid: int, series: bool = False
+    ) -> SonarrEpisode | list[SonarrEpisode]:
+        """Get all episodes from a given series or episode id."""
         return await self._async_request(
-            "command",
-            data={"name": "RenameFiles", "files": files},
-            datatype=Command,
-            method=HTTPMethod.POST,
+            f"episode{'' if series else f'/{entryid}'}",
+            params={"seriesId": entryid} if series else None,
+            datatype=SonarrEpisode,
         )
-
-    async def async_command_rename_series(self, seriesids: list[int]) -> Command:
-        """Send rename series command."""
-        return await self._async_request(
-            "command",
-            data={"name": "RenameSeries", "seriesIds": seriesids},
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_backup(self) -> Command:
-        """Send backup command."""
-        return await self._async_request(
-            "command",
-            data={"name": "Backup"},
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_command_missing_search(self) -> Command:
-        """Send missing episode search command."""
-        return await self._async_request(
-            "command",
-            data={"name": "missingEpisodeSearch"},
-            datatype=Command,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_get_episodes_by_series_id(self, seriesid: int) -> SonarrEpisode:
-        """Get all episodes from a given series ID."""
-        return await self._async_request("episode", params={"seriesId": seriesid})
-
-    async def async_get_episode_by_id(self, episodeid: int) -> SonarrEpisode:
-        """Get a specific episode by database id."""
-        return await self._async_request(f"episode/{episodeid}", datatype=SonarrEpisode)
 
     async def async_edit_episode(self, data: SonarrEpisode) -> SonarrEpisode:
         """Edit given episodes, currently only monitored is changed."""
         return await self._async_request(
-            "episode", data=data, datatype=SonarrEpisode, method=HTTPMethod.PUT
+            f"episode/{data.id}",
+            data=data,
+            datatype=SonarrEpisode,
+            method=HTTPMethod.PUT,
         )
 
     async def async_edit_episode_file_quality(
-        self, fileid: int, data: SonarrEpisodeFileQuailty
+        self, data: SonarrEpisodeFile
     ) -> SonarrEpisodeFile:
-        """Edit the quality of the episode file and returns the episode file."""
+        """Edit an episode file quality.
+
+        Quality only works, currently.
+        Quality.id and Revision.version
+        """
         return await self._async_request(
-            f"episodefile/{fileid}",
+            "episodefile",
             data=data,
             datatype=SonarrEpisodeFile,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_episode_file(self, fileid: int) -> dict:
+    async def async_delete_episode_file(self, fileid: int) -> None:
         """Delete the episode file with corresponding id."""
         return await self._async_request(
             f"episodefile/{fileid}", method=HTTPMethod.DELETE
@@ -301,28 +251,25 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_history(  # pylint: disable=too-many-arguments
         self,
-        sort_date: bool = True,
         page: int = 1,
         page_size: int = 10,
-        sort_asc: bool = False,
+        sort_key: str = "date",
         recordid: int | None = None,
     ) -> SonarrHistory:
         """Get history (grabs/failures/completed).
 
         Args:
-            sort_date: date or series.title.
+            sort_key: id, date, or series.Title.
             page: Page number to return.
             page_size: Number of items per page.
-            sort_asc: Sort items in ascending order.
             id: Filter to a specific episode ID.
         """
         params = {
             "page": page,
             "pageSize": page_size,
-            "sortDir": "asc" if sort_asc is True else "desc",
-            "sortKey": "date" if sort_date is True else "series.title",
+            "sortKey": sort_key,
         }
-        if recordid:
+        if recordid is not None:
             params["episodeId"] = recordid
         return await self._async_request(
             "history", datatype=SonarrHistory, params=params
@@ -330,24 +277,24 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_wanted(
         self,
-        sort_date: bool = True,
         page: int = 1,
         page_size: int = 10,
-        sort_asc: bool = True,
+        sort_key: str = "airDateUtc",
+        ascending: bool = True,
     ) -> SonarrWantedMissing:
         """Get missing episode (episodes without files).
 
         Args:
-            sort_date: airDateUtc or series.title.
+            sort_date: airDateUtc, id, series.Title, or title.
             page: Page number to return.
             page_size: Number of items per page.
-            sort_asc: Sort items in ascending order.
+            ascending: Sort items in ascending order.
         """
         params = {
-            "sortKey": "airDateUtc" if sort_date is True else "series.title",
+            "sortKey": sort_key,
             "page": page,
             "pageSize": page_size,
-            "sortDir": "asc" if sort_asc is True else "desc",
+            "sortDirection": "ascending" if ascending else "descending",
         }
         return await self._async_request(
             "wanted/missing",
@@ -377,39 +324,46 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params["path"] = path
         return await self._async_request("parse", params=params, datatype=SonarrParse)
 
-    async def async_get_release(self, episodeid: int) -> list[SonarrRelease]:
-        """Get a release with a specific episode ID."""
+    async def async_get_release(
+        self, episodeid: int | None = None
+    ) -> list[SonarrRelease]:
+        """Query indexers for latest releases.
+
+        episodeid: included in API docs but does not seem to do anything
+        """
         return await self._async_request(
             "release",
-            params={"episodeId": episodeid},
+            params=None if episodeid is None else {"episodeId": episodeid},
             datatype=SonarrRelease,
         )
 
-    async def async_download_release(
-        self, guid: str, indexerid: int
-    ) -> list[SonarrRelease]:
+    async def async_download_release(self, data: SonarrRelease) -> SonarrRelease:
         """Add a previously searched release to the download client.
 
         If the release is
         still in the search cache (30 minute cache). If the release is not found
         in the cache it will return a 404.
 
-        guid: Recently searched result guid
+        Only the guid and indexerId are required
+        but a full SonarrRelease object will work
         """
         return await self._async_request(
             "release",
-            data={"guid": guid, "indexerId": indexerid},
+            data=data,
             datatype=SonarrRelease,
             method=HTTPMethod.POST,
         )
 
-    # Only works if an id is associated with the release
-    async def async_get_pushed_release(self, releaseid: str) -> SonarrRelease:
-        """Get release previously pushed by below method."""
+    async def async_push_release(self, data: SonarrRelease) -> list[SonarrRelease]:
+        """Add a release.
+
+        If the title is wanted, Sonarr will grab it.
+        """
         return await self._async_request(
             "release/push",
-            params={"id": releaseid},
+            data=data,
             datatype=SonarrRelease,
+            method=HTTPMethod.POST,
         )
 
     async def async_get_series(
@@ -420,24 +374,9 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         series ID if one is found.
         """
         return await self._async_request(
-            f"series{f'/{seriesid}' if seriesid is not None else ''}",
+            f"series{'' if seriesid is None else f'/{seriesid}'}",
             datatype=SonarrSeries,
         )
-
-    async def async_get_series_episodes(
-        self, seriesid: int, episodeid: int | None = None
-    ) -> list[SonarrEpisode]:
-        """Get information about episodes from series."""
-        response = await self._async_request(
-            f"episode{f'/{episodeid}' if episodeid is not None else ''}",
-            params={"seriesId": seriesid},
-            datatype=SonarrEpisode,
-        )
-        if "message" in response and response["message"] == "NotFound":
-            raise ArrResourceNotFound
-        if "seriesId" in response and response["seriesId"] != seriesid:
-            raise ArrResourceNotFound
-        return response
 
     async def async_add_series(  # pylint: disable=too-many-arguments
         self,
@@ -497,7 +436,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """
         return await self._async_request(
             f"series/{seriesid}",
-            params={"id": seriesid, "deleteFiles": str(delete_files)},
+            params={"deleteFiles": str(delete_files)},
             method=HTTPMethod.DELETE,
         )
 
@@ -524,17 +463,14 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         id: Get import list matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"importlist{f'/{listid}' if listid is not None else ''}",
+            f"importlist{'' if listid is None else f'/{listid}'}",
             datatype=SonarrImportList,
         )
 
     async def async_edit_import_list(self, data: SonarrImportList) -> SonarrImportList:
         """Edit import list."""
         return await self._async_request(
-            f"importlist{data.id}",
-            data=data,
-            datatype=SonarrImportList,
-            method=HTTPMethod.PUT,
+            "importlist", data=data, datatype=SonarrImportList, method=HTTPMethod.PUT
         )
 
     async def async_add_import_list(self, data: SonarrImportList) -> SonarrImportList:
@@ -543,11 +479,26 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "importlist", data=data, datatype=SonarrImportList, method=HTTPMethod.POST
         )
 
+    async def async_test_import_lists(
+        self, data: SonarrImportList | None = None
+    ) -> bool:
+        """Test all import lists."""
+        _res = await self._async_request(
+            f"importlist/test{'all' if data is None else ''}",
+            data=None if data is None else data,
+            method=HTTPMethod.POST,
+        )
+        if data is None:
+            for item in _res:
+                if item["isValid"] is False:
+                    return False
+        return True
+
     async def async_get_blocklist(
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_direction: str = "descending",
+        ascending: bool = False,
         sort_key: str = "date",
     ) -> SonarrBlocklist:
         """Return blocklisted releases.
@@ -555,13 +506,13 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            sort_direction: Direction to sort items.
-            sort_key: Field to sort by.
+            ascending: Direction to sort items.
+            sort_key: id, date, or series.Title.
         """
         params = {
             "page": page,
             "pageSize": page_size,
-            "sortDirection": sort_direction,
+            "sortDirection": "ascending" if ascending else "descending",
             "sortKey": sort_key,
         }
         return await self._async_request(
@@ -593,7 +544,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         id: Get notification matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"notification{f'/{notifyid}' if notifyid is not None else ''}",
+            f"notification{'' if notifyid is None else f'/{notifyid}'}",
             datatype=SonarrNotification,
         )
 
@@ -602,7 +553,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> SonarrNotification:
         """Edit a notification."""
         return await self._async_request(
-            f"notification/{data.id}",
+            "notification",
             data=data,
             datatype=SonarrNotification,
             method=HTTPMethod.PUT,
@@ -619,13 +570,20 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    async def async_test_notification(self, data: SonarrNotification) -> HTTPResponse:
+    async def async_test_notifications(
+        self, data: SonarrNotification | None = None
+    ) -> bool:
         """Test a notification configuration."""
-        return await self._async_request(
-            "notification/test",
-            data=data,
+        _res = await self._async_request(
+            f"notification/test{'all' if data is None else ''}",
+            data=None if data is None else data,
             method=HTTPMethod.POST,
         )
+        if data is None:
+            for item in _res:
+                if item["isValid"] is False:
+                    return False
+        return True
 
     async def async_get_rename(self, seriesid: int) -> list[SonarrRename]:
         """Get files matching specified id that are not properly renamed yet."""
@@ -643,7 +601,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         id: Get tag details matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"tag/detail{f'/{tagid}' if tagid is not None else ''}",
+            f"tag/detail{'' if tagid is None else f'/{tagid}'}",
             datatype=SonarrTagDetails,
         )
 

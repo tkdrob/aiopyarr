@@ -8,17 +8,50 @@ from .base import BaseModel
 
 
 @dataclass(init=False)
+class _SelectOption(BaseModel):
+    """Select options attributes."""
+
+    name: str | None = None
+    order: int | None = None
+    value: str | list[str] | int | None = None
+
+
+@dataclass(init=False)
+class _SelectOptionExtended(_SelectOption):
+    """Select options extended attributes."""
+
+    dividerAfter: bool | None = None
+
+
+@dataclass(init=False)
+class _Fields(_SelectOption):
+    """Fields attributes."""
+
+    advanced: bool | None = None
+    helpText: str | None = None
+    label: str | None = None
+    type: str | None = None
+    hidden: str | None = None
+    selectOptions: list[_SelectOptionExtended] | None = None
+
+    def __post_init__(self):
+        self.selectOptions = [
+            _SelectOptionExtended(opt) for opt in self.selectOptions or []
+        ]
+
+
+@dataclass(init=False)
 class _Common(BaseModel):
     """Common attributes."""
 
-    fields: list[_DownloadClientFields] | None = None
+    fields: list[_Fields] | None = None
     implementation: str | None = None
     implementationName: str | None = None
     infoLink: str | None = None
     name: str | None = None
 
     def __post_init__(self):
-        self.fields = [_DownloadClientFields(field) for field in self.fields or []]
+        self.fields = [_Fields(field) for field in self.fields or []]
 
 
 @dataclass(init=False)
@@ -104,41 +137,10 @@ class _CustomFilterAttr(BaseModel):
 
 
 @dataclass(init=False)
-class _SelectOption(BaseModel):
-    """Select options attributes."""
-
-    name: str | None = None
-    order: int | None = None
-    value: str | list[str] | int | None = None
-
-
-@dataclass(init=False)
-class _Fields(_SelectOption):
-    """Fields attributes."""
-
-    advanced: bool | None = None
-    helpText: str | None = None
-    label: str | None = None
-    type: str | None = None
-
-
-@dataclass(init=False)
 class _MetadataFields(_Fields):
     """Metadata fields attributes."""
 
     section: str | None = None
-
-
-@dataclass(init=False)
-class _DownloadClientFields(_Fields):
-    """Download client fields attributes."""
-
-    selectOptions: list[_SelectOptionExtended] | None = None
-
-    def __post_init__(self):
-        self.selectOptions = [
-            _SelectOptionExtended(opt) for opt in self.selectOptions or []
-        ]
 
 
 @dataclass(init=False)
@@ -1758,13 +1760,6 @@ class _Rename(BaseModel):
 
     existingPath: str | None = None
     newPath: str | None = None
-
-
-@dataclass(init=False)
-class _SelectOptionExtended(_SelectOption):
-    """Select options attributes."""
-
-    dividerAfter: bool | None = None
 
 
 @dataclass(init=False)

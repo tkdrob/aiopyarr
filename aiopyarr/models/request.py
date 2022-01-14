@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .base import BaseModel
 
@@ -24,6 +25,24 @@ from .request_common import (  # isort:skip
     _UnmappedRootFolder,
     _UpdateChanges,
 )
+
+
+class Commands(str, Enum):
+    """Commands."""
+
+    APPLICATION_UPDATE = "ApplicationUpdate"
+    BACKUP = "Backup"
+    CHECK_HEALTH = "CheckHealth"
+    CLEAN_RECYCLE_BIN = "CleanUpRecycleBin"
+    CLEAR_BLOCKLIST = "ClearBlocklist"
+    DELETE_LOGS = "DeleteLogFiles"
+    DELETE_UPDATE_LOGS = "DeleteUpdateLogFiles"
+    HOUSEKEEPING = "Housekeeping"
+    IMPORT_LIST_SYNC = "ImportListSync"
+    MESSAGING_CLEANUP = "MessagingCleanup"
+    REFRESH_MONITORED_DOWNLOADS = "RefreshMonitoredDownloads"
+    RENAME_FILES = "RenameFiles"
+    RSS_SYNC = "RssSync"
 
 
 @dataclass(init=False)

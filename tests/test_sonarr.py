@@ -4,7 +4,17 @@ from datetime import datetime
 import pytest
 from aiohttp.client import ClientSession
 
-from aiopyarr.models.sonarr import SonarrNamingConfig
+from aiopyarr.models.request import Command
+from aiopyarr.models.sonarr import (
+    SonarrCommands,
+    SonarrEpisode,
+    SonarrEpisodeFile,
+    SonarrImportList,
+    SonarrNamingConfig,
+    SonarrNotification,
+    SonarrRelease,
+    SonarrSeries,
+)
 from aiopyarr.sonarr_client import SonarrClient
 
 from . import SONARR_API, TEST_HOST_CONFIGURATION, load_fixture
@@ -15,7 +25,7 @@ async def test_async_get_calendar(aresponses):
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/calendar?apikey=ur1234567-0abc12de3f456gh7ij89k012&start=2020-11-30&end=2020-12-01",
+        f"/api/{SONARR_API}/calendar?start=2020-11-30&end=2020-12-01",
         "GET",
         aresponses.Response(
             status=200,
@@ -26,10 +36,8 @@ async def test_async_get_calendar(aresponses):
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_calendar(start_date=start, end_date=end)
 
     assert data[0].seriesId == 0
@@ -51,11 +59,11 @@ async def test_async_get_calendar(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_episode_by_id(aresponses):
-    """Test getting episode by ID."""
+async def test_async_get_episodes(aresponses):
+    """Test getting episodes."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/episode/1?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/episode/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -64,11 +72,9 @@ async def test_async_get_episode_by_id(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_episode_by_id(episodeid=1)
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_episodes(0)
 
     assert data.seriesId == 0
     assert data.episodeFileId == 0
@@ -150,13 +156,28 @@ async def test_async_get_episode_by_id(aresponses):
     assert data.series.id == 0
     assert data.id == 0
 
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episode?seriesId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_episodes(0, series=True)
+    assert isinstance(data, SonarrEpisode)
+
 
 @pytest.mark.asyncio
 async def test_async_get_episode_files(aresponses):
     """Test getting episode files."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/episodefile/1?apikey=ur1234567-0abc12de3f456gh7ij89k012&seriesId=1",
+        f"/api/{SONARR_API}/episodefile/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -165,11 +186,9 @@ async def test_async_get_episode_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_episode_files(1, 1)
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_episode_files(0)
 
     assert data.seriesId == 0
     assert data.seasonNumber == 0
@@ -204,13 +223,28 @@ async def test_async_get_episode_files(aresponses):
     assert data.languageCutoffNotMet is False
     assert data.id == 0
 
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episodefile?seriesId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/episodefile.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_episode_files(0, series=True)
+
 
 @pytest.mark.asyncio
 async def test_async_get_history(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/history?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortDir=desc&sortKey=date",
+        f"/api/{SONARR_API}/history?page=1&pageSize=10&sortKey=date&episodeId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -219,11 +253,9 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_history()
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_history(recordid=0)
 
     assert data.page == 1
     assert data.pageSize == 10
@@ -276,7 +308,7 @@ async def test_async_parse_title_or_path(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/parse?apikey=ur1234567-0abc12de3f456gh7ij89k012&title=Series.Title.S01E01.720p.HDTV-Sonarr&path=/",
+        f"/api/{SONARR_API}/parse?title=Series.Title.S01E01.720p.HDTV-Sonarr&path=/",
         "GET",
         aresponses.Response(
             status=200,
@@ -285,10 +317,8 @@ async def test_async_parse_title_or_path(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_parse_title_or_path(
             title="Series.Title.S01E01.720p.HDTV-Sonarr", path="/"
         )
@@ -378,7 +408,7 @@ async def test_async_get_queue(aresponses):
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/queue?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=20&sortDirection=ascending&sortKey=timeLeft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        f"/api/{SONARR_API}/queue?page=1&pageSize=20&sortDirection=ascending&sortKey=timeLeft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
         "GET",
         aresponses.Response(
             status=200,
@@ -387,10 +417,8 @@ async def test_async_get_queue(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_queue()
 
     assert data.page == 1
@@ -436,7 +464,7 @@ async def test_async_get_release(aresponses):
     """Test getting release."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/release?apikey=ur1234567-0abc12de3f456gh7ij89k012&episodeId=0",
+        f"/api/{SONARR_API}/release",
         "GET",
         aresponses.Response(
             status=200,
@@ -445,11 +473,9 @@ async def test_async_get_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_release(episodeid=0)
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_release()
 
     assert data[0].guid == "string"
     assert data[0].quality.quality.id == 0
@@ -513,7 +539,7 @@ async def test_async_lookup_series(aresponses):
     """Test getting series lookup data."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/series/lookup?apikey=ur1234567-0abc12de3f456gh7ij89k012&term=string",
+        f"/api/{SONARR_API}/series/lookup?term=string",
         "GET",
         aresponses.Response(
             status=200,
@@ -522,10 +548,8 @@ async def test_async_lookup_series(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_lookup_series(term="string")
 
     assert data[0].title == "string"
@@ -578,7 +602,7 @@ async def test_async_get_import_lists(aresponses):
     """Test getting importlist."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/importlist?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/importlist",
         "GET",
         aresponses.Response(
             status=200,
@@ -587,10 +611,8 @@ async def test_async_get_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_import_lists()
 
     assert data[0].enableAutomaticAdd is True
@@ -611,6 +633,10 @@ async def test_async_get_import_lists(aresponses):
     assert data[0].fields[0].type == "string"
     assert data[0].fields[0].advanced is False
     assert data[0].fields[0].hidden == "string"
+    assert data[0].fields[0].selectOptions[0].value == 0
+    assert data[0].fields[0].selectOptions[0].name == "string"
+    assert data[0].fields[0].selectOptions[0].order == 0
+    assert data[0].fields[0].selectOptions[0].dividerAfter is False
     assert data[0].implementationName == "string"
     assert data[0].implementation == "string"
     assert data[0].configContract == "string"
@@ -624,7 +650,7 @@ async def test_async_get_series(aresponses):
     """Test getting series lookup data."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/series/3?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/series/3",
         "GET",
         aresponses.Response(
             status=200,
@@ -633,10 +659,8 @@ async def test_async_get_series(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_series(seriesid=3)
 
     assert data.title == "string"
@@ -697,7 +721,7 @@ async def test_async_get_wanted(aresponses):
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/wanted/missing?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=airDateUtc&page=1&pageSize=10&sortDir=asc",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=ascending",
         "GET",
         aresponses.Response(
             status=200,
@@ -706,10 +730,8 @@ async def test_async_get_wanted(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_wanted()
 
     assert data.page == 1
@@ -737,7 +759,7 @@ async def test_async_get_blocklist(aresponses):
     """Test getting blocklist."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/blocklist?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortDirection=descending&sortKey=date",
+        f"/api/{SONARR_API}/blocklist?page=1&pageSize=10&sortDirection=descending&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
@@ -746,10 +768,8 @@ async def test_async_get_blocklist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_blocklist()
 
     assert data.page == 1
@@ -781,7 +801,7 @@ async def test_async_get_naming_config(aresponses):
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/config/naming?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/config/naming",
         "GET",
         aresponses.Response(
             status=200,
@@ -790,10 +810,8 @@ async def test_async_get_naming_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: SonarrNamingConfig = await client.async_get_naming_config()
 
     assert data.renameEpisodes is True
@@ -819,7 +837,7 @@ async def test_async_get_notifications(aresponses):
     """Test getting notifications."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/notification?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/notification",
         "GET",
         aresponses.Response(
             status=200,
@@ -828,10 +846,8 @@ async def test_async_get_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_notifications()
 
     assert data[0].onGrab is False
@@ -875,7 +891,7 @@ async def test_async_get_queue_details(aresponses):
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/queue/details?apikey=ur1234567-0abc12de3f456gh7ij89k012&includeUnknownSeriesItems=False&includeSeries=True&includeEpisode=True",
+        f"/api/{SONARR_API}/queue/details?includeUnknownSeriesItems=False&includeSeries=True&includeEpisode=True",
         "GET",
         aresponses.Response(
             status=200,
@@ -884,10 +900,8 @@ async def test_async_get_queue_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_queue_details()
     assert data[0].seriesId == 0
     assert data[0].episodeId == 0
@@ -937,7 +951,7 @@ async def test_async_get_rename(aresponses):
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/rename?apikey=ur1234567-0abc12de3f456gh7ij89k012&seriesId=0",
+        f"/api/{SONARR_API}/rename?seriesId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -946,10 +960,8 @@ async def test_async_get_rename(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_rename(0)
     assert data[0].seriesId == 0
     assert data[0].seasonNumber == 0
@@ -963,7 +975,7 @@ async def test_async_get_tag_details(aresponses):
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/tag/detail/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/tag/detail/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -972,10 +984,8 @@ async def test_async_get_tag_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_tags_details(tagid=0)
 
     assert data.id == 0
@@ -986,3 +996,446 @@ async def test_async_get_tag_details(aresponses):
     assert data.indexerIds == [0]
     assert data.importListIds == [0]
     assert data.seriesIds == [0]
+
+
+@pytest.mark.asyncio
+async def test_async_sonarr_commands(aresponses):
+    """Test Sonarr commands."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_sonarr_command(
+            SonarrCommands.DOWNLOADED_EPISODES_SCAN, clientid=0, path="test"
+        )
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.EPISODE_SEARCH, episodeids=[0])
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.REFRESH_SERIES)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.RENAME_FILES, files=[0])
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.RENAME_SERIES, seriesid=[0])
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.RESCAN_SERIES)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.SEASON_SEARCH, season=0)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_sonarr_command(SonarrCommands.SERIES_SEARCH, seriesid=0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_episode(aresponses):
+    """Test editing episode."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episode/0",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_episode(SonarrEpisode({"id": 0}))
+    assert isinstance(data, SonarrEpisode)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_episode_file_quality(aresponses):
+    """Test editing episode file."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episodefile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_episode_file_quality(SonarrEpisodeFile("test"))
+    assert isinstance(data, SonarrEpisodeFile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_episode_file(aresponses):
+    """Test deleting episode file."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episodefile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_episode_file(0)
+
+
+@pytest.mark.asyncio
+async def test_async_download_release(aresponses):
+    """Test downloading release."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/release",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_download_release(SonarrRelease("test"))
+    assert isinstance(data, SonarrRelease)
+
+
+@pytest.mark.asyncio
+async def test_async_push_release(aresponses):
+    """Test downloading release."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/release/push",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_push_release(SonarrRelease("test"))
+    assert isinstance(data, SonarrRelease)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_series(aresponses):
+    """Test editing series."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/series",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_series(SonarrSeries({"id": 0}))
+    assert isinstance(data, SonarrSeries)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_series(aresponses):
+    """Test deleting series."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/series/0?deleteFiles=False",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_series(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_import_list(aresponses):
+    """Test editing import list."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/importlist",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_import_list(SonarrImportList({"id": 0}))
+    assert isinstance(data, SonarrImportList)
+
+
+@pytest.mark.asyncio
+async def test_async_add_import_list(aresponses):
+    """Test adding import list."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/importlist",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_import_list(SonarrImportList("test"))
+    assert isinstance(data, SonarrImportList)
+
+
+@pytest.mark.asyncio
+async def test_async_test_import_lists(aresponses):
+    """Test import list testing."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/importlist/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists(SonarrImportList("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/importlist/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists() is True
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/importlist/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists() is False
+
+
+@pytest.mark.asyncio
+async def test_async_edit_naming_config(aresponses):
+    """Test editing naming config."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/config/naming",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_naming_config(SonarrNamingConfig("test"))
+    assert isinstance(data, SonarrNamingConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_notification(aresponses):
+    """Test editing notification."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/notification",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_notification(SonarrNotification("test"))
+    assert isinstance(data, SonarrNotification)
+
+
+@pytest.mark.asyncio
+async def test_async_add_notification(aresponses):
+    """Test adding notification."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/notification",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_notification(SonarrNotification("test"))
+    assert isinstance(data, SonarrNotification)
+
+
+@pytest.mark.asyncio
+async def test_async_test_notifications(aresponses):  # TODO normalize all notify test
+    """Test notification testing."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/notification/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications(SonarrNotification("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications() is True
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications() is False

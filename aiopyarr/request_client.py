@@ -9,13 +9,14 @@ from typing import Any, Text
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
 
-from .const import ATTR_DATA, LOGGER, HTTPMethod, HTTPResponse
+from .const import ATTR_DATA, HEADERS, LOGGER, HTTPMethod
 from .decorator import api_command
 from .models.host_configuration import PyArrHostConfiguration
 from .models.response import PyArrResponse
 
 from .models.request import (  # isort:skip
     Command,
+    Commands,
     CustomFilter,
     Diskspace,
     DownloadClient,
@@ -48,7 +49,6 @@ from .models.request import (  # isort:skip
 
 from .exceptions import (  # isort:skip
     ArrAuthenticationException,
-    ArrCannotCancelCommand,
     ArrConnectionException,
     ArrException,
     ArrResourceNotFound,
@@ -66,7 +66,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         port: int,
         request_timeout: float,
         raw_response: bool,
-        redact: bool,
         host_configuration: PyArrHostConfiguration | None = None,
         session: ClientSession | None = None,
         hostname: str | None = None,
@@ -77,6 +76,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
         api_ver: str | None = None,
+        user_agent: str | None = None,
     ) -> None:
         """Initialize."""
         if host_configuration is None:
@@ -102,14 +102,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             host_configuration.api_ver = api_ver
 
         if session is None:
-            session = ClientSession()
+            if user_agent:
+                HEADERS["User-Agent"] = user_agent
+            session = ClientSession(headers=HEADERS)
             self._close_session = True
 
         self._host = host_configuration
         self._session = session
         self._request_timeout = request_timeout
         self._raw_response = raw_response
-        self._redact = redact
 
     async def __aenter__(self) -> RequestClient:
         """Async enter."""
@@ -120,13 +121,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Async exit."""
         if self._session and self._close_session:
             await self._session.close()
-
-    def redact_string(self, string: str) -> str:
-        """Redact a api token from a string if needed."""
-        if not self._redact or not self._host.api_token:
-            return string
-
-        return string.replace(self._host.api_token, "[REDACTED_API_TOKEN]")
 
     async def _async_request(
         self,
@@ -168,7 +162,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 datatype=datatype,
             )
 
-            LOGGER.debug("Requesting %s returned %s", self.redact_string(url), _result)
+            LOGGER.debug("Requesting %s returned %s", url, _result)
 
             if self._raw_response:
                 return _result
@@ -206,20 +200,11 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> RootFolder | list[RootFolder]:
         """Get information about root folders."""
         return await self._async_request(
-            f"rootfolder{f'/{folderid}' if folderid is not None else ''}",
+            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
             datatype=RootFolder,
         )
 
-    async def async_edit_root_folder(self, data: RootFolder) -> RootFolder:
-        """Edit information about root folders."""
-        return await self._async_request(
-            f"rootfolder/{data.id}",
-            data=data,
-            datatype=RootFolder,
-            method=HTTPMethod.PUT,
-        )
-
-    async def async_delete_root_folder(self, folderid: int) -> HTTPResponse:
+    async def async_delete_root_folder(self, folderid: int) -> None:
         """Delete information about root folders."""
         return await self._async_request(
             f"rootfolder/{folderid}", method=HTTPMethod.DELETE
@@ -262,15 +247,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         page: int = 1,
         page_size: int = 10,
         sort_key: str = "time",
-        sort_asc: bool = False,
+        ascending: bool = False,
     ) -> Logs:
         """Get logs.
 
         Args:
             page: Specifiy page to return.
             page_size: Number of items per page.
-            sort_key: Field to sort by. id, level, logger, time
-            sort_asc: Sort items in ascending order.
+            sort_key: Field to sort by id, level, logger, time, or message
+            ascending: Sort items in ascending order.
             filter_key: Key to filter by.
             filter_value: Value of the filter.
         """
@@ -278,7 +263,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             "page": page,
             "pageSize": page_size,
             "sortKey": sort_key,
-            "sortDir": "ascending" if sort_asc is True else "descending",
+            "sortDir": "ascending" if ascending is True else "descending",
         }
         return await self._async_request("log", params=params, datatype=Logs)
 
@@ -287,121 +272,24 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> Command | list[Command]:
         """Query the status of a previously started command, or all currently started commands."""
         return await self._async_request(
-            f"command{f'/{cmdid}' if cmdid is not None else ''}",
+            f"command{'' if cmdid is None else f'/{cmdid}'}",
             datatype=Command,
         )
 
-    # Commands only seem to work with Sonarr
-    @api_command(
-        "command",
-        data={"name": "ApplicationUpdate"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_app_update(self) -> Command:
-        """Trigger Radarr software update."""
+    async def async_command(self, command: Commands) -> Command:
+        """Send a command to the API."""
+        return await self._async_request(
+            "command",
+            data={"name": command},
+            datatype=Command,
+            method=HTTPMethod.POST,
+        )
 
-    @api_command(
-        "command", data={"name": "Backup"}, datatype=Command, method=HTTPMethod.POST
-    )
-    async def async_command_backup(self) -> Command:
-        """Trigger a backup routine."""
-
-    @api_command(
-        "command",
-        data={"name": "CheckHealth"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_check_health(self) -> Command:
-        """Trigger a system health check."""
-
-    @api_command(
-        "command",
-        data={"name": "CleanUpRecycleBin"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_clean_recycle_bin(self) -> Command:
-        """Trigger a recycle bin cleanup check."""
-
-    @api_command(
-        "command",
-        data={"name": "ClearBlocklist"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_clear_blocklist(self) -> Command:
-        """Trigger the removal of all blocklisted movies."""
-
-    @api_command(
-        "command",
-        data={"name": "DeleteUpdateLogFiles"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_delete_update_log_files(self) -> Command:
-        """Trigger the removal of all Update log files."""
-
-    @api_command(
-        "command",
-        data={"name": "DeleteLogFiles"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_delete_log_files(self) -> Command:
-        """Trigger the removal of all Info/Debug/Trace log files."""
-
-    @api_command(
-        "command",
-        data={"name": "Housekeeping"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_housekeeping(self) -> Command:
-        """Trigger housekeeping."""
-
-    @api_command(
-        "command",
-        data={"name": "ImportListSync"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_import_list_sync(self) -> Command:
-        """Trigger import list sync."""
-
-    @api_command(
-        "command",
-        data={"name": "MessagingCleanup"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_messaging_cleanup(self) -> Command:
-        """Trigger messaging_cleanup."""
-
-    @api_command(
-        "command",
-        data={"name": "RefreshMonitoredDownloads"},
-        datatype=Command,
-        method=HTTPMethod.POST,
-    )
-    async def async_command_refresh_monitored_downloads(self) -> Command:
-        """Trigger the scan of monitored downloads."""
-
-    @api_command(
-        "command", data={"name": "RssSync"}, datatype=Command, method=HTTPMethod.POST
-    )
-    async def async_command_rss_sync(self) -> Command:
-        """Send rss sync command."""
-
-    async def async_delete_command(self, commandid: int) -> Command:
-        """Perform any of the predetermined command routines."""
-        result = await self._async_request(
+    async def async_delete_command(self, commandid: int) -> None:
+        """Cancel a pending command."""
+        return await self._async_request(
             f"command/{commandid}", method=HTTPMethod.DELETE
         )
-        if result["message"] == "Unable to cancel task":
-            raise ArrCannotCancelCommand
-        return result
 
     @api_command("log/file", datatype=LogFile)
     async def async_get_log_file(self) -> list[LogFile]:
@@ -427,7 +315,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_get_system_backup(self) -> list[SystemBackup]:
         """Get information about system backup."""
 
-    async def async_restore_system_backup(self, backupid: int) -> HTTPResponse:
+    async def async_restore_system_backup(self, backupid: int) -> None:
         """Restore from a system backup."""
         return await self._async_request(
             f"system/backup/restore/{backupid}", method=HTTPMethod.POST
@@ -435,7 +323,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # Upload system backup not working
 
-    async def async_delete_system_backup(self, backupid: int) -> HTTPResponse:
+    async def async_delete_system_backup(self, backupid: int) -> None:
         """Delete a system backup."""
         return await self._async_request(
             f"system/backup/{backupid}", method=HTTPMethod.DELETE
@@ -447,7 +335,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         id: Get tag matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"tag{f'/{tagid}' if tagid is not None else ''}",
+            f"tag{'' if tagid is None else f'/{tagid}'}",
             datatype=Tag,
         )
 
@@ -456,13 +344,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_edit_tag(self, data: Tag) -> Tag:
         """Edit a tag by its database id."""
         return await self._async_request(
-            f"tag/{data.id}",
+            "tag",
             data=data,
             datatype=Tag,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_tag(self, tagid: int) -> HTTPResponse:
+    async def async_delete_tag(self, tagid: int) -> None:
         """Delete a tag."""
         return await self._async_request(
             f"tag/{tagid}",
@@ -488,7 +376,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> CustomFilter | list[CustomFilter]:
         """Get information about custom filters."""
         return await self._async_request(
-            f"customfilter{f'/{filterid}' if filterid is not None else ''}",
+            f"customfilter{'' if filterid is None else f'/{filterid}'}",
             datatype=CustomFilter,
         )
 
@@ -498,18 +386,16 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             "customfilter", data=data, datatype=CustomFilter, method=HTTPMethod.POST
         )
 
-    async def async_edit_custom_filter(
-        self, filterid: int, data: CustomFilter
-    ) -> CustomFilter:
+    async def async_edit_custom_filter(self, data: CustomFilter) -> CustomFilter:
         """Edit a custom filter."""
         return await self._async_request(
-            f"customfilter/{filterid}",
+            "customfilter",
             data=data,
             datatype=CustomFilter,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_custom_filter(self, filterid: int) -> HTTPResponse:
+    async def async_delete_custom_filter(self, filterid: int) -> None:
         """Delete a custom filter."""
         return await self._async_request(
             f"customfilter/{filterid}", method=HTTPMethod.DELETE
@@ -523,14 +409,14 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         clientid: Get downloadclient matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"downloadclient{f'/{clientid}' if clientid is not None else ''}",
+            f"downloadclient{'' if clientid is None else f'/{clientid}'}",
             datatype=DownloadClient,
         )
 
     async def async_add_download_client(self, data: DownloadClient) -> DownloadClient:
         """Add download client."""
         return await self._async_request(
-            f"downloadclient/{data.id}",
+            "downloadclient",
             data=data,
             datatype=DownloadClient,
             method=HTTPMethod.POST,
@@ -539,13 +425,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_edit_download_client(self, data: DownloadClient) -> DownloadClient:
         """Edit download client."""
         return await self._async_request(
-            f"downloadclient/{data.id}",
+            "downloadclient",
             data=data,
             datatype=DownloadClient,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_download_client(self, clientid: int) -> HTTPResponse:
+    async def async_delete_download_client(self, clientid: int) -> None:
         """Delete download client."""
         return await self._async_request(
             f"downloadclient/{clientid}",
@@ -554,20 +440,19 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # downloadclient/schema, not that useful
 
-    async def async_test_download_client(self, data: DownloadClient) -> bool:
-        """Test download client configuration."""
-        return await self._async_request(
-            "downloadclient/test", data=data, method=HTTPMethod.POST
-        )
-
-    async def async_test_all_download_clients(self) -> bool:
-        """Test all download clients."""
+    async def async_test_download_clients(
+        self, data: DownloadClient | None = None
+    ) -> bool:
+        """Test download client configurations."""
         _res = await self._async_request(
-            "downloadclient/testall", method=HTTPMethod.POST
+            f"downloadclient/test{'all' if data is None else ''}",
+            data=None if data is None else data,
+            method=HTTPMethod.POST,
         )
-        for item in _res:
-            if item["isValid"] is False:
-                return False
+        if data is None:
+            for item in _res:
+                if item["isValid"] is False:
+                    return False
         return True
 
     # downloadclient/action/{name}
@@ -577,7 +462,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> DownloadClientConfig | list[DownloadClientConfig]:
         """Get download client config."""
         return await self._async_request(
-            f"config/downloadclient{f'/{clientid}' if clientid is not None else ''}",
+            f"config/downloadclient{'' if clientid is None else f'/{clientid}'}",
             datatype=DownloadClientConfig,
         )
 
@@ -586,7 +471,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> DownloadClientConfig:
         """Edit download client config."""
         return await self._async_request(
-            f"config/downloadclient/{data.id}",
+            "config/downloadclient",
             data=data,
             datatype=DownloadClientConfig,
             method=HTTPMethod.PUT,
@@ -602,9 +487,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_get_failed_health_checks(self) -> Health:
         """Get information about failed health checks."""
 
-    # health/{id} might be obsolete
-
-    async def async_delete_import_list(self, listid: int) -> HTTPResponse:
+    async def async_delete_import_list(self, listid: int) -> None:
         """Delete an import list."""
         return await self._async_request(
             f"importlist/{listid}",
@@ -613,20 +496,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # importlist/schema, not that useful
 
-    async def async_test_import_list(self, data: DownloadClient) -> bool:
-        """Test an import list configuration."""
-        return await self._async_request(
-            "importlist/test", data=data, method=HTTPMethod.POST
-        )
-
-    async def async_test_all_import_lists(self) -> bool:
-        """Test all import lists."""
-        _res = await self._async_request("importlist/testall", method=HTTPMethod.POST)
-        for item in _res:
-            if item["isValid"] is False:
-                return False
-        return True
-
     # importlist/action/{name} cannot get working
 
     async def async_get_import_list_exclusions(
@@ -634,7 +503,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> ImportListExclusion | list[ImportListExclusion]:
         """Get import list exclusions."""
         return await self._async_request(
-            f"importlistexclusion{f'/{clientid}' if clientid is not None else ''}",
+            f"importlistexclusion{'' if clientid is None else f'/{clientid}'}",
             datatype=ImportListExclusion,
         )
 
@@ -643,13 +512,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> ImportListExclusion:
         """Edit import list exclusion."""
         return await self._async_request(
-            f"importlistexclusion/{data.id}",
+            "importlistexclusion",
             data=data,
             datatype=ImportListExclusion,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_import_list_exclusion(self, clientid: int) -> HTTPResponse:
+    async def async_delete_import_list_exclusion(self, clientid: int) -> None:
         """Delete import list exclusion."""
         return await self._async_request(
             f"importlistexclusion/{clientid}",
@@ -661,7 +530,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> ImportListExclusion:
         """Add import list exclusion."""
         return await self._async_request(
-            f"importlistexclusion/{data.id}",
+            "importlistexclusion",
+            data=data,
             datatype=ImportListExclusion,
             method=HTTPMethod.POST,
         )
@@ -674,20 +544,20 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         id: Get indexer matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"indexer{f'/{indexerid}' if indexerid is not None else ''}",
+            f"indexer{'' if indexerid is None else f'/{indexerid}'}",
             datatype=Indexer,
         )
 
     async def async_edit_indexer(self, data: Indexer) -> Indexer:
         """Edit an indexer."""
         return await self._async_request(
-            f"indexer/{data.id}",
+            "indexer",
             data=data,
             datatype=Indexer,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_indexer(self, indexerid: int) -> HTTPResponse:
+    async def async_delete_indexer(self, indexerid: int) -> None:
         """Delete indexer by database id."""
         return await self._async_request(
             f"indexer/{indexerid}", method=HTTPMethod.DELETE
@@ -704,20 +574,17 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # indexer/schema, not that useful
 
-    async def async_test_indexer(self, data: Indexer) -> HTTPResponse:
+    async def async_test_indexers(self, data: Indexer | None = None) -> bool:
         """Test an indexer configuration."""
-        return await self._async_request(
-            "indexer/test",
-            data=data,
+        _res = await self._async_request(
+            f"indexer/test{'all' if data is None else ''}",
+            data=None if data is None else data,
             method=HTTPMethod.POST,
         )
-
-    async def async_test_all_indexers(self) -> bool:
-        """Test all indexers."""
-        _res = await self._async_request("indexer/testall", method=HTTPMethod.POST)
-        for item in _res:
-            if item["isValid"] is False:
-                return False
+        if data is None:
+            for item in _res:
+                if item["isValid"] is False:
+                    return False
         return True
 
     # indexer/action/{name} cannot get working
@@ -730,14 +597,14 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         id: Get indexer matching id. Leave blank for all.
         """
         return await self._async_request(
-            f"config/indexer{f'/{indexerid}' if indexerid is not None else ''}",
+            f"config/indexer{'' if indexerid is None else f'/{indexerid}'}",
             datatype=IndexerConfig,
         )
 
     async def async_edit_indexer_config(self, data: IndexerConfig) -> IndexerConfig:
         """Edit an indexer config."""
         return await self._async_request(
-            f"config/indexer/{data.id}",
+            "config/indexer",
             data=data,
             datatype=IndexerConfig,
             method=HTTPMethod.PUT,
@@ -750,7 +617,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> Language | list[Language]:
         """Get import list exclusions."""
         return await self._async_request(
-            f"language{f'/{langid}' if langid is not None else ''}",
+            f"language{'' if langid is None else f'/{langid}'}",
             datatype=Language,
         )
 
@@ -781,7 +648,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             for key, value in {"poster": 250, "banner": 35, "fanart": 180}.items()
             if imagetype == key
         ][0]
-        _val = "author/" if author else "book/" if hasattr(self, "async_author") else ""
+        _val = (
+            "author/"
+            if author
+            else "book/"
+            if hasattr(self, "async_get_author")
+            else ""
+        )
         _imgsize = f"-{value}" if size != "large" else ""
 
         cmd = f"mediacover/{_val}{imageid}/{imagetype}{_imgsize}.jpg"
@@ -792,7 +665,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> MediaManagementConfig | list[MediaManagementConfig]:
         """Get media management configs."""
         return await self._async_request(
-            f"config/mediamanagement{f'/{configid}' if configid is not None else ''}",
+            f"config/mediamanagement{'' if configid is None else f'/{configid}'}",
             datatype=MediaManagementConfig,
         )
 
@@ -801,7 +674,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> MediaManagementConfig:
         """Edit media management config."""
         return await self._async_request(
-            f"config/mediamanagement/{data.id}",
+            "config/mediamanagement",
+            data=data,
             datatype=MediaManagementConfig,
             method=HTTPMethod.PUT,
         )
@@ -811,20 +685,20 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> MetadataConfig | list[MetadataConfig]:
         """Get metadata configurations."""
         return await self._async_request(
-            f"metadata{f'/{metadataid}' if metadataid is not None else ''}",
+            f"metadata{'' if metadataid is None else f'/{metadataid}'}",
             datatype=MetadataConfig,
         )
 
     async def async_edit_metadata_config(self, data: MetadataConfig) -> MetadataConfig:
         """Edit metadata configurations."""
         return await self._async_request(
-            f"metadata/{data.id}",
+            "metadata",
             data=data,
             datatype=MetadataConfig,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_metadata_config(self, metadataid: int) -> HTTPResponse:
+    async def async_delete_metadata_config(self, metadataid: int) -> None:
         """Get metadata configurations."""
         return await self._async_request(
             f"metadata/{metadataid}", method=HTTPMethod.DELETE
@@ -838,32 +712,29 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # metadata/schema, not that useful
 
-    async def async_test_metadata(self, data: MetadataConfig) -> HTTPResponse:
+    async def async_test_metadata(self, data: MetadataConfig | None = None) -> bool:
         """Test a metadata configuration."""
-        return await self._async_request(
-            "metadata/test",
-            data=data,
+        _res = await self._async_request(
+            f"metadata/test{'all' if data is None else ''}",
+            data=None if data is None else data,
             method=HTTPMethod.POST,
         )
-
-    async def async_test_all_metadata(self) -> bool:
-        """Test all metadata configurations."""
-        _res = await self._async_request("metadata/testall", method=HTTPMethod.POST)
-        for item in _res:
-            if item["isValid"] is False:
-                return False
+        if data is None:
+            for item in _res:
+                if item["isValid"] is False:
+                    return False
         return True
 
     # metadata/action/{name} cannot get working
 
-    async def async_delete_notification(self, notifyid: int) -> HTTPResponse:
+    async def async_delete_notification(self, notifyid: int) -> None:
         """Delete a notification."""
         return await self._async_request(
             f"notification/{notifyid}",
             method=HTTPMethod.DELETE,
         )
 
-    # notification/schema, not that useful
+    # notification/schema, not that useful TODO try consolidating notifications
 
     async def async_test_all_notifications(self) -> bool:
         """Test all notification configurations."""
@@ -880,7 +751,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> QualityDefinition | list[QualityDefinition]:
         """Get quality definitions."""
         return await self._async_request(
-            f"qualitydefinition{f'/{qualityid}' if qualityid is not None else ''}",
+            f"qualitydefinition{'' if qualityid is None else f'/{qualityid}'}",
             datatype=QualityDefinition,
         )
 
@@ -889,7 +760,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> QualityDefinition:
         """Edit quality definition."""
         return await self._async_request(
-            f"qualitydefinition/{data.id}",
+            "qualitydefinition",
             data=data,
             datatype=QualityDefinition,
             method=HTTPMethod.PUT,
@@ -902,11 +773,11 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> QualityProfile | list[QualityProfile]:
         """Get quality profiles."""
         return await self._async_request(
-            f"qualityprofile{f'/{profileid}' if profileid is not None else ''}",
+            f"qualityprofile{'' if profileid is None else f'/{profileid}'}",
             datatype=QualityProfile,
         )
 
-    async def async_delete_quality_profile(self, profileid: int) -> HTTPResponse:
+    async def async_delete_quality_profile(self, profileid: int) -> None:
         """Delete quality profile."""
         return await self._async_request(
             f"qualityprofile/{profileid}",
@@ -916,7 +787,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_edit_quality_profile(self, data: QualityProfile) -> QualityProfile:
         """Edit quality profile."""
         return await self._async_request(
-            f"qualityprofile/{data.id}",
+            "qualityprofile",
             data=data,
             datatype=QualityProfile,
             method=HTTPMethod.PUT,
@@ -929,7 +800,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         ids: int | list[int],
         remove_from_client: bool = True,
         blocklist: bool = False,
-    ) -> HTTPResponse:
+    ) -> None:
         """Remove an item from the queue and optionally blocklist it.
 
         Args:
@@ -943,15 +814,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 "removeFromClient": str(remove_from_client),
                 "blocklist": str(blocklist),
             },
-            data=ids if isinstance(ids, list) else None,
+            data={"ids": ids} if isinstance(ids, list) else None,
             method=HTTPMethod.DELETE,
         )
 
-    async def async_queue_grab(self, ids: int | list[int]) -> HTTPResponse:
+    async def async_queue_grab(self, ids: int | list[int]) -> None:
         """Grab items in queue matching specified ids."""
         return await self._async_request(
             f"queue/grab/{'bulk' if isinstance(ids, list) else ids}",
-            data=ids if isinstance(ids, list) else None,
+            data={"ids": ids} if isinstance(ids, list) else None,
             method=HTTPMethod.POST,
         )
 
@@ -959,35 +830,44 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_get_queue_status(self) -> QueueStatus:
         """Get information about download queue status."""
 
+    async def async_delete_blocklists(self, ids: int | list[int]) -> None:
+        """Delete blocklisted releases."""
+        return await self._async_request(
+            f"blocklist/{'bulk' if isinstance(ids, list) else ids}",
+            params=None if isinstance(ids, list) else {"id": ids},
+            data={"ids": ids} if isinstance(ids, list) else None,
+            method=HTTPMethod.DELETE,
+        )
+
     async def async_get_release_profiles(
         self, profileid: int | None = None
     ) -> ReleaseProfile | list[ReleaseProfile]:
         """Get release profiles."""
         return await self._async_request(
-            f"releaseprofile{f'/{profileid}' if profileid is not None else ''}",
+            f"releaseprofile{'' if profileid is None else f'/{profileid}'}",
             datatype=ReleaseProfile,
         )
 
     async def async_edit_release_profile(self, data: ReleaseProfile) -> ReleaseProfile:
         """Edit release profile."""
         return await self._async_request(
-            f"releaseprofile/{data.id}",
+            "releaseprofile",
             data=data,
             datatype=ReleaseProfile,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_release_profile(self, profileid: int) -> HTTPResponse:
+    async def async_delete_release_profile(self, profileid: int) -> None:
         """Delete release profiles."""
         return await self._async_request(
             f"releaseprofile/{profileid}",
             method=HTTPMethod.DELETE,
         )
 
-    async def async_add_release_profiles(self, data: ReleaseProfile) -> ReleaseProfile:
+    async def async_add_release_profile(self, data: ReleaseProfile) -> ReleaseProfile:
         """Add release profile."""
         return await self._async_request(
-            "releaseprofile/",
+            "releaseprofile",
             data=data,
             datatype=ReleaseProfile,
             method=HTTPMethod.POST,
@@ -998,11 +878,11 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> RemotePathMapping | list[RemotePathMapping]:
         """Get information about remote path mappings."""
         return await self._async_request(
-            f"remotepathmapping{f'/{pathid}' if pathid is not None else ''}",
+            f"remotepathmapping{'' if pathid is None else f'/{pathid}'}",
             datatype=RemotePathMapping,
         )
 
-    async def async_delete_remote_path_mappings(self, pathid: int) -> HTTPResponse:
+    async def async_delete_remote_path_mapping(self, pathid: int) -> None:
         """Delete information about remote path mappings."""
         return await self._async_request(
             f"remotepathmapping/{pathid}", method=HTTPMethod.DELETE
@@ -1013,7 +893,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> RemotePathMapping:
         """Edit information about remote path mappings."""
         return await self._async_request(
-            f"remotepathmapping/{data.id}",
+            "remotepathmapping",
             data=data,
             datatype=RemotePathMapping,
             method=HTTPMethod.PUT,
@@ -1049,7 +929,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> SystemTask | list[SystemTask]:
         """Get system tasks."""
         return await self._async_request(
-            f"system/task{f'/{taskid}' if taskid is not None else ''}",
+            f"system/task{'' if taskid is None else f'/{taskid}'}",
             datatype=SystemTask,
         )
 

@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .base import BaseModel
-from .request import _RecordCommon
 
 from .request_common import (  # isort:skip
     _Common3,
     _Common4,
+    _Fields,
     _Notification,
     _Quality,
+    _RecordCommon,
     _ReleaseCommon,
     _Rename,
     _TagDetails,
@@ -21,7 +23,6 @@ from .sonarr_common import (  # isort:skip
     _SonarrCommon,
     _SonarrCommon2,
     _SonarrEpisodeFile,
-    _SonarrFields,
     _SonarrHistoryRecord,
     _SonarrParseEpisodeInfo,
     _SonarrSeriesAlternateTitle,
@@ -30,6 +31,19 @@ from .sonarr_common import (  # isort:skip
     _SonarrStatusMesssage,
     _SonarrWantedMissingRecord,
 )
+
+
+class SonarrCommands(str, Enum):
+    """Sonarr commands."""
+
+    REFRESH_SERIES = "RefreshSeries"
+    RENAME_FILES = "RenameFiles"
+    RENAME_SERIES = "RenameSeries"
+    RESCAN_SERIES = "RescanSeries"
+    EPISODE_SEARCH = "EpisodeSearch"
+    SEASON_SEARCH = "SeasonSearch"
+    SERIES_SEARCH = "SeriesSearch"
+    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
 
 
 @dataclass(init=False)
@@ -54,14 +68,6 @@ class SonarrEpisode(_SonarrCommon):
 @dataclass(init=False)
 class SonarrEpisodeFile(_SonarrEpisodeFile):
     """Sonarr episode file attributes."""
-
-
-@dataclass(init=False)
-class SonarrEpisodeFileQuailty(BaseModel):
-    """Required input for updating episode file quality."""
-
-    id: int | None = None
-    quality: _Quality | None = None
 
 
 @dataclass(init=False)
@@ -251,7 +257,7 @@ class SonarrNamingConfig(BaseModel):
 class SonarrNotification(_Common3, _Notification):
     """Sonarr notification attributes."""
 
-    fields: list[_SonarrFields] | None = None
+    fields: list[_Fields] | None = None
     onEpisodeFileDelete: bool | None = None
     onEpisodeFileDeleteForUpgrade: bool | None = None
     onSeriesDelete: bool | None = None
@@ -261,7 +267,7 @@ class SonarrNotification(_Common3, _Notification):
 
     def __post_init__(self):
         """Post init."""
-        self.fields = [_SonarrFields(field) for field in self.fields or []]
+        self.fields = [_Fields(field) for field in self.fields or []]
 
 
 @dataclass(init=False)
@@ -321,7 +327,7 @@ class SonarrImportList(_Common3):
 
     configContract: str | None = None
     enableAutomaticAdd: bool | None = None
-    fields: list[_SonarrFields] | None = None
+    fields: list[_Fields] | None = None
     implementation: str | None = None
     implementationName: str | None = None
     infoLink: str | None = None
@@ -337,4 +343,4 @@ class SonarrImportList(_Common3):
 
     def __post_init__(self):
         """Post init."""
-        self.fields = [_SonarrFields(field) for field in self.fields or []]
+        self.fields = [_Fields(field) for field in self.fields or []]

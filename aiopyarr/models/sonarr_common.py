@@ -12,9 +12,7 @@ from .request_common import (  # isort:skip
     _Common4,
     _Common5,
     _CommonAttrs,
-    _Fields,
     _Quality,
-    _SelectOption,
     _TitleInfo,
 )
 
@@ -317,18 +315,6 @@ class _SonarrParseEpisodeInfo(BaseModel):
         self.language = _Common3(self.language) or {}
         self.quality = _Quality(self.quality) or {}
         self.seriesTitleInfo = _TitleInfo(self.seriesTitleInfo) or {}
-
-
-@dataclass(init=False)
-class _SonarrFields(_Fields, _SelectOption):
-    """Sonarr fields attributes."""
-
-    hidden: str | None = None
-    selectOptions: list[_SelectOption] | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.selectOptions = [_SelectOption(x) for x in self.selectOptions or []]
 
 
 @dataclass(init=False)

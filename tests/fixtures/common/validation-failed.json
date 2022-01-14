@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "isValid": false,
+    "validationFailures": [
+      {
+        "isWarning": false,
+        "propertyName": "string",
+        "errorMessage": "string",
+        "severity": "string"
+      }
+    ]
+  }
+]
