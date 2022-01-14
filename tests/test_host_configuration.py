@@ -1,4 +1,5 @@
 """Tests for host configuration."""
+# pylint:disable=protected-access
 import pytest
 from aiohttp.client import ClientSession
 
@@ -22,11 +23,11 @@ async def test_host_configuration(aresponses):
         ),
         match_querystring=True,
     )
-    HOST_CONFIGURATION = PyArrHostConfiguration(
+    host_config = PyArrHostConfiguration(
         api_token=API_TOKEN, ipaddress="127.0.0.1", port=7000
     )
     async with ClientSession():
-        client = RadarrClient(host_configuration=HOST_CONFIGURATION, user_agent="test")
+        client = RadarrClient(host_configuration=host_config, user_agent="test")
         await client.async_get_system_status()
     assert client._host.api_token == API_TOKEN
     assert client._host.hostname is None
@@ -39,6 +40,6 @@ async def test_host_configuration(aresponses):
     assert client._host.api_ver == RADARR_API
     assert client._host.base_api_path is None
     url = client._host.api_url("test")
-    assert url == f"http://127.0.0.1:7000/api/v3/test"
+    assert url == "http://127.0.0.1:7000/api/v3/test"
     assert client._session.headers["X-Api-Key"] == API_TOKEN
     assert client._session.headers["User-Agent"] == "test"
