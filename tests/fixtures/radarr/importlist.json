@@ -9,7 +9,7 @@
   "listType": "string",
   "listOrder": 0,
   "name": "string",
- "fields": [
+  "fields": [
     {
       "order": 0,
       "name": "string",
@@ -17,15 +17,22 @@
       "helpText": "string",
       "value": "string",
       "type": "string",
-      "advanced": true
+      "advanced": true,
+      "hidden": "string",
+      "selectOptions": [
+        {
+          "value": 0,
+          "name": "string",
+          "order": 0,
+          "dividerAfter": false
+        }
+      ]
     }
   ],
   "implementationName": "string",
   "implementation": "string",
   "configContract": "string",
   "infoLink": "string",
-  "tags": [
-     0
-  ],
+  "tags": [0],
   "id": 0
 }

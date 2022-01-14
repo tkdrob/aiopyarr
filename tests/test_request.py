@@ -1,12 +1,43 @@
 """Tests for common methods."""
+# pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
 
 import pytest
 from aiohttp.client import ClientSession
 
+from aiopyarr.exceptions import ArrConnectionException
 from aiopyarr.radarr_client import RadarrClient
 from aiopyarr.readarr_client import ReadarrClient
 from aiopyarr.sonarr_client import SonarrClient
+
+from aiopyarr.models.request import (  # isort:skip
+    Command,
+    Commands,
+    CustomFilter,
+    Diskspace,
+    DownloadClient,
+    DownloadClientConfig,
+    Filesystem,
+    Health,
+    HostConfig,
+    ImportListExclusion,
+    Indexer,
+    IndexerConfig,
+    LogFile,
+    MediaManagementConfig,
+    MetadataConfig,
+    QualityDefinition,
+    QualityProfile,
+    QueueStatus,
+    ReleaseProfile,
+    RemotePathMapping,
+    RootFolder,
+    SystemBackup,
+    Tag,
+    UIConfig,
+    SystemStatus,
+    Update,
+)
 
 from . import (  # isort:skip
     RADARR_API,
@@ -16,28 +47,13 @@ from . import (  # isort:skip
     load_fixture,
 )
 
-from aiopyarr.models.request import (  # isort:skip
-    Command,
-    Diskspace,
-    Filesystem,
-    Health,
-    HostConfig,
-    LogFile,
-    MetadataConfig,
-    QueueStatus,
-    SystemBackup,
-    UIConfig,
-    SystemStatus,
-    Update,
-)
-
 
 @pytest.mark.asyncio
 async def test_async_get_diskspace(aresponses):
     """Test getting diskspace."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/diskspace?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/diskspace",
         "GET",
         aresponses.Response(
             status=200,
@@ -46,10 +62,8 @@ async def test_async_get_diskspace(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[Diskspace] = await client.async_get_diskspace()
 
     assert data[0].freeSpace == 16187217043456
@@ -63,7 +77,7 @@ async def test_async_get_root_folders(aresponses):
     """Test getting root folders."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/rootfolder?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/rootfolder",
         "GET",
         aresponses.Response(
             status=200,
@@ -72,10 +86,8 @@ async def test_async_get_root_folders(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_root_folders()
 
     assert data[0].path == "C:\\Downloads\\Movies"
@@ -90,7 +102,7 @@ async def test_async_get_host_config(aresponses):
     """Test getting host configuration."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/config/host?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/config/host",
         "GET",
         aresponses.Response(
             status=200,
@@ -99,10 +111,8 @@ async def test_async_get_host_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: HostConfig = await client.async_get_host_config()
 
     assert data.analyticsEnabled is True
@@ -145,7 +155,7 @@ async def test_async_get_ui_config(aresponses):
     """Test getting ui configuration."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/config/ui?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/config/ui",
         "GET",
         aresponses.Response(
             status=200,
@@ -154,10 +164,8 @@ async def test_async_get_ui_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: UIConfig = await client.async_get_ui_config()
 
     assert data.calendarWeekColumnHeader == "ddd M/D"
@@ -178,7 +186,7 @@ async def test_async_get_system_status(aresponses):
     """Test getting system status."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/system/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/system/status",
         "GET",
         aresponses.Response(
             status=200,
@@ -187,10 +195,8 @@ async def test_async_get_system_status(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: SystemStatus = await client.async_get_system_status()
 
     assert data.appData == "C:\\ProgramData\\Radarr"
@@ -227,7 +233,7 @@ async def test_async_get_system_backup(aresponses):
     """Test getting author info."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/system/backup?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/system/backup",
         "GET",
         aresponses.Response(
             status=200,
@@ -236,10 +242,8 @@ async def test_async_get_system_backup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_system_backup()
     assert isinstance(data, list) and isinstance(data[0], SystemBackup)
     assert data[0].id == 0
@@ -254,7 +258,7 @@ async def test_async_get_tags(aresponses):
     """Test getting tags."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/tag/1?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/tag/1",
         "GET",
         aresponses.Response(
             status=200,
@@ -263,10 +267,8 @@ async def test_async_get_tags(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_tags(tagid=1)
 
     assert data.label == "amzn"
@@ -278,7 +280,7 @@ async def test_async_get_logs(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/log?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortKey=time&sortDir=descending",
+        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDir=descending",
         "GET",
         aresponses.Response(
             status=200,
@@ -287,10 +289,8 @@ async def test_async_get_logs(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_logs()
 
     assert data.page == 1
@@ -312,7 +312,7 @@ async def test_get_log_file(aresponses):
     """Test getting log file info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/log/file?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/log/file",
         "GET",
         aresponses.Response(
             status=200,
@@ -321,10 +321,8 @@ async def test_get_log_file(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[LogFile] = await client.async_get_log_file()
     assert data[0].filename == "string"
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
@@ -338,7 +336,7 @@ async def test_get_log_file_content(aresponses):
     """Test getting log file content."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/log/file/file.txt?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/log/file/file.txt",
         "GET",
         aresponses.Response(
             status=200,
@@ -347,10 +345,8 @@ async def test_get_log_file_content(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_log_file_content("file.txt")
 
 
@@ -359,7 +355,7 @@ async def test_get_log_file_update(aresponses):
     """Test getting log file update info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/log/file/update?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/log/file/update",
         "GET",
         aresponses.Response(
             status=200,
@@ -368,10 +364,8 @@ async def test_get_log_file_update(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[LogFile] = await client.async_get_log_file_updates()
     assert data[0].filename == "string"
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
@@ -385,7 +379,7 @@ async def test_get_log_file_update_content(aresponses):
     """Test getting log file update content."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/log/file/update/file.txt?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/log/file/update/file.txt",
         "GET",
         aresponses.Response(
             status=200,
@@ -394,10 +388,8 @@ async def test_get_log_file_update_content(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_log_file_update_content("file.txt")
 
 
@@ -406,7 +398,7 @@ async def test_async_get_custom_filters(aresponses):
     """Test getting blocklisted movie."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/customfilter?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/customfilter",
         "GET",
         aresponses.Response(
             status=200,
@@ -415,10 +407,8 @@ async def test_async_get_custom_filters(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_custom_filters()
     assert data[0].id == 10
     assert data[0].type == "string"
@@ -433,19 +423,17 @@ async def test_async_get_command(aresponses):
     """Test getting commands."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/command?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/command",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("common/command.json"),
+            text=load_fixture("common/commands.json"),
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[Command] = await client.async_get_commands()
 
     assert data[0].name == "MessagingCleanup"
@@ -482,7 +470,7 @@ async def test_async_get_download_client(aresponses):
     """Test getting download client."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/downloadclient/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/downloadclient/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -491,10 +479,8 @@ async def test_async_get_download_client(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_download_clients(clientid=0)
     assert data.configContract == "string"
     assert data.enable is True
@@ -524,7 +510,7 @@ async def test_async_get_download_client_config(aresponses):
     """Test getting download client config."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/config/downloadclient?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/config/downloadclient",
         "GET",
         aresponses.Response(
             status=200,
@@ -533,10 +519,8 @@ async def test_async_get_download_client_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_download_client_config()
     assert data.downloadClientWorkingFolders == "_UNPACK_|_FAILED_"
     assert data.checkForFinishedDownloadInterval == 10
@@ -552,7 +536,7 @@ async def test_async_get_filesystem(aresponses):
     """Test getting filesystem attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/filesystem?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/filesystem",
         "GET",
         aresponses.Response(
             status=200,
@@ -561,10 +545,8 @@ async def test_async_get_filesystem(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: Filesystem = await client.async_get_filesystem()
     assert data.directories[0].type == "folder"
     assert data.directories[0].name == "app"
@@ -579,7 +561,7 @@ async def test_async_get_failed_health_checks(aresponses):
     """Test getting failed health checks."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/health?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/health",
         "GET",
         aresponses.Response(
             status=200,
@@ -588,10 +570,8 @@ async def test_async_get_failed_health_checks(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[Health] = await client.async_get_failed_health_checks()
 
     assert data[0].message == "Enable Completed Download Handling"
@@ -608,7 +588,7 @@ async def test_async_get_import_list_exclusions(aresponses):
     """Test getting import list exclusions."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/importlistexclusion?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/importlistexclusion",
         "GET",
         aresponses.Response(
             status=200,
@@ -617,10 +597,8 @@ async def test_async_get_import_list_exclusions(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_import_list_exclusions()
     assert data.authorName == "string"
     assert data.foreignId == "string"
@@ -628,10 +606,8 @@ async def test_async_get_import_list_exclusions(aresponses):
     assert data.title == "string"
     assert data.tvdbId == 0
 
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
 
     with pytest.raises(NotImplementedError):
         await client.async_get_import_list_exclusions()
@@ -642,7 +618,7 @@ async def test_async_get_indexer(aresponses):
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/indexer/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/indexer/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -651,10 +627,8 @@ async def test_async_get_indexer(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_indexers(indexerid=0)
 
     assert data.enableRss is True
@@ -685,7 +659,7 @@ async def test_async_get_indexer_configs(aresponses):
     """Test getting indexer configs."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/config/indexer?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/config/indexer",
         "GET",
         aresponses.Response(
             status=200,
@@ -694,10 +668,8 @@ async def test_async_get_indexer_configs(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_indexer_configs()
 
     assert data.minimumAge == 0
@@ -712,11 +684,11 @@ async def test_async_get_indexer_configs(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_list_exclusions(aresponses):
+async def test_async_get_languages(aresponses):
     """Test getting import list exclusions."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/language?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/language",
         "GET",
         aresponses.Response(
             status=200,
@@ -725,30 +697,26 @@ async def test_async_get_import_list_exclusions(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_languages()
     assert data.id == -1
     assert data.name == "Any"
     assert data.nameLower == "any"
 
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
 
     with pytest.raises(NotImplementedError):
         await client.async_get_languages()
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_list_exclusions(aresponses):
-    """Test getting import list exclusions."""
+async def test_async_get_localization(aresponses):
+    """Test getting localization."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/localization?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/localization",
         "GET",
         aresponses.Response(
             status=200,
@@ -757,10 +725,8 @@ async def test_async_get_import_list_exclusions(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_localization()
     data = data.Strings
     assert data.About == "string"
@@ -2263,10 +2229,8 @@ async def test_async_get_import_list_exclusions(aresponses):
     assert data.Yesterday == "string"
     assert data.YouCanAlsoSearch == "string"
 
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
 
     with pytest.raises(NotImplementedError):
         await client.async_get_localization()
@@ -2277,7 +2241,7 @@ async def test_async_get_image(aresponses):
     """Test getting image."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/mediacover/0/poster-250.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/mediacover/0/poster-250.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2285,15 +2249,13 @@ async def test_async_get_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(imageid=0, size="small")
 
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/mediacover/0/poster-500.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/mediacover/0/poster-500.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2301,15 +2263,13 @@ async def test_async_get_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(imageid=0, size="medium")
 
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/mediacover/0/poster.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{SONARR_API}/mediacover/0/poster.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2317,10 +2277,8 @@ async def test_async_get_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = SonarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(imageid=0)
 
 
@@ -2329,7 +2287,7 @@ async def test_async_get_author_image(aresponses):
     """Test getting author image."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/author/0/poster-250.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/author/0/poster-250.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2337,15 +2295,13 @@ async def test_async_get_author_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0, size="small", author=True)
 
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/author/0/poster-500.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/author/0/poster-500.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2353,15 +2309,13 @@ async def test_async_get_author_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0, size="medium", author=True)
 
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/author/0/poster.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/author/0/poster.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2369,10 +2323,8 @@ async def test_async_get_author_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0, author=True)
 
 
@@ -2381,7 +2333,7 @@ async def test_async_get_book_image(aresponses):
     """Test getting book image."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/book/0/poster-250.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/book/0/poster-250.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2389,15 +2341,13 @@ async def test_async_get_book_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0, size="small")
 
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/book/0/poster-500.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/book/0/poster-500.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2405,15 +2355,13 @@ async def test_async_get_book_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0, size="medium")
 
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/mediacover/book/0/poster.jpg?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/mediacover/book/0/poster.jpg",
         "GET",
         aresponses.Response(
             status=200,
@@ -2421,10 +2369,8 @@ async def test_async_get_book_image(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(0)
 
 
@@ -2433,7 +2379,7 @@ async def test_async_get_media_management_configs(aresponses):
     """Test getting media management configs."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/config/mediamanagement?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/config/mediamanagement",
         "GET",
         aresponses.Response(
             status=200,
@@ -2442,10 +2388,8 @@ async def test_async_get_media_management_configs(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_media_management_configs()
 
     assert data.allowFingerprinting == "newFiles"
@@ -2482,7 +2426,7 @@ async def test_async_get_metadata_config(aresponses):
     """Test getting metadata config."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/metadata?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/metadata",
         "GET",
         aresponses.Response(
             status=200,
@@ -2491,10 +2435,8 @@ async def test_async_get_metadata_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[MetadataConfig] = await client.async_get_metadata_configs()
 
     assert data[0].enable is True
@@ -2520,7 +2462,7 @@ async def test_async_get_quality_definitions(aresponses):
     """Test getting quality definitions."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/qualitydefinition?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/qualitydefinition",
         "GET",
         aresponses.Response(
             status=200,
@@ -2529,10 +2471,8 @@ async def test_async_get_quality_definitions(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_quality_definitions()
     assert data.quality.id == 0
     assert data.quality.name == "string"
@@ -2552,7 +2492,7 @@ async def test_async_get_quality_profiles(aresponses):
     """Test getting quality profiles."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/qualityprofile?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/qualityprofile",
         "GET",
         aresponses.Response(
             status=200,
@@ -2561,10 +2501,8 @@ async def test_async_get_quality_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_quality_profiles()
 
     assert data[0].name == "string"
@@ -2600,7 +2538,7 @@ async def test_async_get_queue_status(aresponses):
     """Test getting queue status."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/queue/status?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/queue/status",
         "GET",
         aresponses.Response(
             status=200,
@@ -2609,10 +2547,8 @@ async def test_async_get_queue_status(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: QueueStatus = await client.async_get_queue_status()
     assert data.totalCount == 0
     assert data.count == 0
@@ -2628,7 +2564,7 @@ async def test_async_get_release_profiles(aresponses):
     """Test getting release profiles."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/releaseprofile?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/releaseprofile",
         "GET",
         aresponses.Response(
             status=200,
@@ -2637,10 +2573,8 @@ async def test_async_get_release_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_release_profiles()
     assert data[0].enabled is True
     assert data[0].required == "string"
@@ -2652,10 +2586,8 @@ async def test_async_get_release_profiles(aresponses):
     assert data[0].tags == [0]
     assert data[0].id == 0
 
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
 
     with pytest.raises(NotImplementedError):
         await client.async_get_release_profiles()
@@ -2666,7 +2598,7 @@ async def test_async_get_remote_path_mappings(aresponses):
     """Test getting remote path mappings."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/remotepathmapping?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/remotepathmapping",
         "GET",
         aresponses.Response(
             status=200,
@@ -2675,10 +2607,8 @@ async def test_async_get_remote_path_mappings(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_remote_path_mappings()
 
     assert data[0].host == "localhost"
@@ -2692,7 +2622,7 @@ async def test_async_get_system_tasks(aresponses):
     """Test getting system tasks."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/system/task?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/system/task",
         "GET",
         aresponses.Response(
             status=200,
@@ -2701,10 +2631,8 @@ async def test_async_get_system_tasks(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_system_tasks()
 
     assert data[0].name == "string"
@@ -2722,7 +2650,7 @@ async def test_async_get_software_update_info(aresponses):
     """Test getting software update info."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/update?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{RADARR_API}/update",
         "GET",
         aresponses.Response(
             status=200,
@@ -2731,10 +2659,8 @@ async def test_async_get_software_update_info(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = RadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[Update] = await client.async_get_software_update_info()
 
     assert data[0].version == "string"
@@ -2749,3 +2675,1079 @@ async def test_async_get_software_update_info(aresponses):
     assert data[0].changes.new == ["string"]
     assert data[0].changes.fixed == ["string"]
     assert data[0].hash == "string"
+
+
+@pytest.mark.asyncio
+async def test_async_delete_root_folder(aresponses):
+    """Test deleting root folder."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/rootfolder/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_root_folder(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_root_folder(aresponses):
+    """Test adding root folder."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/rootfolder",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_root_folder(RootFolder("test"))
+    assert isinstance(data, RootFolder)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_host_config(aresponses):
+    """Test editing host config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/config/host",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_host_config(HostConfig("test"))
+    assert isinstance(data, HostConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_ui_config(aresponses):
+    """Test editing ui config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/config/ui",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_ui_config(UIConfig("test"))
+    assert isinstance(data, UIConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_command(aresponses):
+    """Test editing ui config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_command(Commands.APPLICATION_UPDATE)
+    assert isinstance(data, Command)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_command(aresponses):
+    """Test canceling command."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/command/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_command(0)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/command/0",
+        "DELETE",
+        aresponses.Response(
+            status=409,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrConnectionException):
+        await client.async_delete_command(0)
+
+
+@pytest.mark.asyncio
+async def test_async_restore_system_backup(aresponses):
+    """Test restoring system backup."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/system/backup/restore/0",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_restore_system_backup(0)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_system_backup(aresponses):
+    """Test restoring system backup."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/system/backup/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_system_backup(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_tag(aresponses):
+    """Test editing tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/tag",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_tag(Tag("test"))
+    assert isinstance(data, Tag)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_tag(aresponses):
+    """Test deleting tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/tag/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_tag(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_tag(aresponses):
+    """Test adding tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/tag",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_tag(Tag("test"))
+    assert isinstance(data, Tag)
+
+
+@pytest.mark.asyncio
+async def test_async_add_custom_filter(aresponses):
+    """Test adding tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/customfilter",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_custom_filter(CustomFilter("test"))
+    assert isinstance(data, CustomFilter)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_custom_filter(aresponses):
+    """Test editing tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/customfilter",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_custom_filter(CustomFilter("test"))
+    assert isinstance(data, CustomFilter)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_custom_filter(aresponses):
+    """Test deleting tag."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/customfilter/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_custom_filter(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_download_client(aresponses):
+    """Test adding download client."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_download_client(DownloadClient({"id": 0}))
+    assert isinstance(data, DownloadClient)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_download_client(aresponses):
+    """Test editing download client."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_download_client(DownloadClient("test"))
+    assert isinstance(data, DownloadClient)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_download_client(aresponses):
+    """Test deleting download client."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_download_client(0)
+
+
+@pytest.mark.asyncio
+async def test_async_test_download_clients(aresponses):
+    """Test download client testing."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_download_clients(DownloadClient("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_download_clients() is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/downloadclient/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_download_clients() is False
+
+
+@pytest.mark.asyncio
+async def test_async_edit_download_client_config(aresponses):
+    """Test editing download client config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/config/downloadclient",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_download_client_config(
+            DownloadClientConfig("test")
+        )
+    assert isinstance(data, DownloadClientConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_import_list(aresponses):
+    """Test deleting import list."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/importlist/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_import_list(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_import_list_exclusion(aresponses):
+    """Test editing import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlistexclusion",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_import_list_exclusion(
+            ImportListExclusion("test")
+        )
+    assert isinstance(data, ImportListExclusion)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_import_list_exclusion(aresponses):
+    """Test deleting import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlistexclusion/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_import_list_exclusion(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_import_list_exclusion(aresponses):
+    """Test adding import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlistexclusion",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_import_list_exclusion(ImportListExclusion("test"))
+    assert isinstance(data, ImportListExclusion)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_indexer(aresponses):
+    """Test editing import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/indexer",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_indexer(Indexer("test"))
+    assert isinstance(data, Indexer)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_indexer(aresponses):
+    """Test deleting import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/indexer/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_indexer(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_indexer(aresponses):
+    """Test adding import list exclusion."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/indexer",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_indexer(Indexer("test"))
+    assert isinstance(data, Indexer)
+
+
+@pytest.mark.asyncio
+async def test_async_test_indexers(aresponses):
+    """Test indexer testing."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/indexer/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_indexers(Indexer("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/indexer/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_indexers() is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/indexer/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_indexers() is False
+
+
+@pytest.mark.asyncio
+async def test_async_edit_indexer_config(aresponses):
+    """Test editing indexer config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/config/indexer",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_indexer_config(IndexerConfig("test"))
+    assert isinstance(data, IndexerConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_media_management_config(aresponses):
+    """Test editing media management config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/config/mediamanagement",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_media_management_config(
+            MediaManagementConfig("test")
+        )
+    assert isinstance(data, MediaManagementConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_metadata_config(aresponses):
+    """Test editing metadata config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_metadata_config(MetadataConfig("test"))
+    assert isinstance(data, MetadataConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_metadata_config(aresponses):
+    """Test deleting metadata config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_metadata_config(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_metadata_config(aresponses):
+    """Test deleting metadata config."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_metadata_config(MetadataConfig("test"))
+    assert isinstance(data, MetadataConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_test_metadata(aresponses):
+    """Test metadata testing."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_metadata(MetadataConfig("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_metadata() is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/metadata/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_metadata() is False
+
+
+@pytest.mark.asyncio
+async def test_async_delete_notification(aresponses):
+    """Test deleting notification."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/notification/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_notification(0)
+
+
+@pytest.mark.asyncio
+async def test_async_test_all_notifications(aresponses):
+    """Test notification testing."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_all_notifications() is True
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_all_notifications() is False
+
+
+@pytest.mark.asyncio
+async def test_async_edit_quality_definition(aresponses):
+    """Test editing quality definition."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/qualitydefinition",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_quality_definition(QualityDefinition("test"))
+    assert isinstance(data, QualityDefinition)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_quality_profile(aresponses):
+    """Test deleting quality profile."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/qualityprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_quality_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_quality_profile(aresponses):
+    """Test editing quality profile."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/qualityprofile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_quality_profile(QualityProfile("test"))
+    assert isinstance(data, QualityProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_queue(aresponses):
+    """Test deleting from queue."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/queue/0?removeFromClient=True&blocklist=False",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_queue(0)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/queue/bulk?removeFromClient=True&blocklist=False",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_queue([0])
+
+
+@pytest.mark.asyncio
+async def test_async_delete_blocklists(aresponses):
+    """Test deleting blocklists."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/blocklist/0?id=0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_blocklists(0)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/blocklist/bulk",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_blocklists([0, 1])
+
+
+@pytest.mark.asyncio
+async def test_async_queue_grab(aresponses):
+    """Test grabbing queue."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/queue/grab/0",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_queue_grab(0)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/queue/grab/bulk",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_queue_grab([0])
+
+
+@pytest.mark.asyncio
+async def test_async_edit_release_profile(aresponses):
+    """Test editing release profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/releaseprofile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_release_profile(ReleaseProfile("test"))
+    assert isinstance(data, ReleaseProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_release_profile(aresponses):
+    """Test deleting release profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/releaseprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_release_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_release_profile(aresponses):
+    """Test deleting release profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/releaseprofile",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_release_profile(ReleaseProfile("test"))
+    assert isinstance(data, ReleaseProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_remote_path_mapping(aresponses):
+    """Test deleting remote path mapping."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/remotepathmapping/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_remote_path_mapping(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_remote_path_mapping(aresponses):
+    """Test editing remote path mapping."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/remotepathmapping",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_remote_path_mapping(RemotePathMapping("test"))
+    assert isinstance(data, RemotePathMapping)
+
+
+@pytest.mark.asyncio
+async def test_async_add_remote_path_mapping(aresponses):
+    """Test editing remote path mapping."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/remotepathmapping",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_remote_path_mapping(RemotePathMapping("test"))
+    assert isinstance(data, RemotePathMapping)
+
+
+@pytest.mark.asyncio
+async def test_async_system_shutdown(aresponses):
+    """Test system shutdown."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/system/shutdown",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/shutdown.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_system_shutdown() is True
+
+
+@pytest.mark.asyncio
+async def test_async_system_restart(aresponses):
+    """Test system restart."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/system/restart",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/restart.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_system_restart() is True

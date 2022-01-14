@@ -11,9 +11,7 @@ from .request_common import (  # isort:skip
     _Common3,
     _Common4,
     _Common5,
-    _Fields,
     _Quality,
-    _SelectOption,
     _TitleInfo,
 )
 
@@ -101,10 +99,16 @@ class _ReadarrMetadataValue(_ReadarrCommon2, _Common3):
 
 
 @dataclass(init=False)
-class _ReadarrAuthorMetadata(BaseModel):
-    """Author Metadata attributes."""
+class _ReadarrIsLoaded(BaseModel):
+    """Readarr is loaded attribute."""
 
     isLoaded: bool | None = None
+
+
+@dataclass(init=False)
+class _ReadarrAuthorMetadata(_ReadarrIsLoaded):
+    """Author Metadata attributes."""
+
     value: _ReadarrMetadataValue | None = None
 
     def __post_init__(self):
@@ -149,10 +153,9 @@ class _ReadarrQualityProfileValue(_Common3):
 
 
 @dataclass(init=False)
-class _ReadarrQualityProfile(BaseModel):
+class _ReadarrQualityProfile(_ReadarrIsLoaded):
     """Quality profile attributes."""
 
-    isLoaded: bool | None = None
     value: _ReadarrQualityProfileValue | None = None
 
     def __post_init__(self):
@@ -175,10 +178,9 @@ class _ReadarrMetadataProfileValue(_Common3):
 
 
 @dataclass(init=False)
-class _ReadarrMetadataProfile(BaseModel):
+class _ReadarrMetadataProfile(_ReadarrIsLoaded):
     """Metadata profile attributes."""
 
-    isLoaded: bool | None = None
     value: _ReadarrMetadataProfileValue | None = None
 
     def __post_init__(self):
@@ -186,10 +188,9 @@ class _ReadarrMetadataProfile(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrAuthorValueBooks(BaseModel):
+class _ReadarrAuthorValueBooks(_ReadarrIsLoaded):
     """Author value books attributes."""
 
-    isLoaded: bool | None = None
     value: list | None = None  # Currently unknown contents
 
 
@@ -213,10 +214,9 @@ class _ReadarrAuthorValueSeriesValue(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrAuthorValueSeriesLinks(BaseModel):
+class _ReadarrAuthorValueSeriesLinks(_ReadarrIsLoaded):
     """Author value series links attributes."""
 
-    isLoaded: bool | None = None
     value: _ReadarrAuthorValueSeriesValue | None = None
 
     def __post_init__(self):
@@ -225,27 +225,14 @@ class _ReadarrAuthorValueSeriesLinks(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrAuthorValueSeries(BaseModel):
+class _ReadarrAuthorValueSeries(_ReadarrIsLoaded):
     """Author value series attributes."""
 
-    isLoaded: bool | None = None
     value: list[_ReadarrAuthorValueSeriesValue] | None = None
 
     def __post_init__(self):
         """Post init."""
         self.value = [_ReadarrAuthorValueSeriesValue(item) for item in self.value or []]
-
-
-@dataclass(init=False)
-class _ReadarrAuthorValueMetadata(BaseModel):
-    """Author value metadata attributes."""
-
-    isLoaded: bool | None = None
-    value: _ReadarrMetadataValue | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.value = _ReadarrMetadataValue(self.value) or {}
 
 
 @dataclass(init=False)
@@ -270,7 +257,7 @@ class _ReadarrAuthorValue(_Common3, _ReadarrCommon3):
     books: _ReadarrAuthorValueBooks | None = None
     foreignAuthorId: str | None = None
     lastInfoSync: str | None = None
-    metadata: _ReadarrAuthorValueMetadata | None = None
+    metadata: _ReadarrAuthorMetadata | None = None
     metadataProfile: _ReadarrMetadataProfile | None = None
     qualityProfile: _ReadarrQualityProfile | None = None
     rootFolderPath: str | None = None
@@ -280,29 +267,21 @@ class _ReadarrAuthorValue(_Common3, _ReadarrCommon3):
         super().__post_init__()
         self.addOptions = _ReadarrAuthorAddOptions(self.addOptions) or {}
         self.books = _ReadarrAuthorValueBooks(self.books) or {}
-        self.metadata = _ReadarrAuthorValueMetadata(self.metadata) or {}
+        self.metadata = _ReadarrAuthorMetadata(self.metadata) or {}
         self.metadataProfile = _ReadarrMetadataProfile(self.metadataProfile) or {}
         self.qualityProfile = _ReadarrQualityProfile(self.qualityProfile) or {}
         self.series = _ReadarrAuthorValueSeries(self.series) or {}
 
 
 @dataclass(init=False)
-class _ReadarrAuthor(BaseModel):
+class _ReadarrAuthor(_ReadarrIsLoaded):
     """Author attributes."""
 
-    isLoaded: bool | None = None
     value: _ReadarrAuthorValue | None = None
 
     def __post_init__(self):
         """Post init."""
         self.value = _ReadarrAuthorValue(self.value) or {}
-
-
-@dataclass(init=False)
-class _ReadarrEditionsValueBook(BaseModel):
-    """Editions value book attributes."""
-
-    isLoaded: bool | None = None
 
 
 @dataclass(init=False)
@@ -319,20 +298,13 @@ class _ReadarrEditionsValueBookFilesValueMediaInfo(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrEditionsValueBookFilesValueEdition(BaseModel):
-    """Editions value book files value edition attributes."""
-
-    isLoaded: bool | None = None
-
-
-@dataclass(init=False)
 class _ReadarrEditionsValueBookFilesValue(BaseModel):
     """Editions value book files value attributes."""
 
     author: _ReadarrAuthor | None = None
     calibreId: int | None = None
     dateAdded: str | None = None
-    edition: _ReadarrEditionsValueBookFilesValueEdition | None = None
+    edition: _ReadarrIsLoaded | None = None
     editionId: int | None = None
     id: int | None = None
     mediaInfo: _ReadarrEditionsValueBookFilesValueMediaInfo | None = None
@@ -349,7 +321,7 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
         """Post init."""
         super().__post_init__()
         self.author = _ReadarrAuthor(self.author) or {}
-        self.edition = _ReadarrEditionsValueBookFilesValueEdition(self.edition) or {}
+        self.edition = _ReadarrIsLoaded(self.edition) or {}
         self.mediaInfo = (
             _ReadarrEditionsValueBookFilesValueMediaInfo(self.mediaInfo) or {}
         )
@@ -357,10 +329,9 @@ class _ReadarrEditionsValueBookFilesValue(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrEditionsValueBookFiles(BaseModel):
+class _ReadarrEditionsValueBookFiles(_ReadarrIsLoaded):
     """Editions value book files attributes."""
 
-    isLoaded: bool | None = None
     value: list[_ReadarrEditionsValueBookFilesValue] | None = None
 
     def __post_init__(self):
@@ -375,7 +346,7 @@ class _ReadarrEditionsValue(BaseModel):
     """Editions value attributes."""
 
     asin: str | None = None
-    book: _ReadarrEditionsValueBook | None = None
+    book: _ReadarrIsLoaded | None = None
     bookFiles: _ReadarrEditionsValueBookFiles | None = None
     bookId: int | None = None
     disambiguation: str | None = None
@@ -402,7 +373,7 @@ class _ReadarrEditionsValue(BaseModel):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.book = _ReadarrEditionsValueBook(self.book) or {}
+        self.book = _ReadarrIsLoaded(self.book) or {}
         self.bookFiles = _ReadarrEditionsValueBookFiles(self.bookFiles) or {}
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_ReadarrLink(link) for link in self.links or []]
@@ -410,10 +381,9 @@ class _ReadarrEditionsValue(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrEditions(BaseModel):
+class _ReadarrEditions(_ReadarrIsLoaded):
     """Editions attributes."""
 
-    isLoaded: bool | None = None
     value: list[_ReadarrEditionsValue] | None = None
 
     def __post_init__(self):
@@ -425,7 +395,7 @@ class _ReadarrEditions(BaseModel):
 class _ReadarrSeriesLinksValue(BaseModel):
     """Series links value attributes."""
 
-    book: _ReadarrEditionsValueBook | None = None
+    book: _ReadarrIsLoaded | None = None
     bookId: int | None = None
     id: int | None = None
     isPrimary: bool | None = None
@@ -435,15 +405,14 @@ class _ReadarrSeriesLinksValue(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        self.book = _ReadarrEditionsValueBook(self.book) or {}
+        self.book = _ReadarrIsLoaded(self.book) or {}
         self.series = _ReadarrAuthorValueSeriesLinks(self.series) or {}
 
 
 @dataclass(init=False)
-class _ReadarrSeriesLinks(BaseModel):
+class _ReadarrSeriesLinks(_ReadarrIsLoaded):
     """Series links attributes."""
 
-    isLoaded: bool | None = None
     value: list[_ReadarrSeriesLinksValue] | None = None
 
     def __post_init__(self):
@@ -717,13 +686,6 @@ class _ReadarrHistoryRecord(_Common2):
         super().__post_init__()
         self.data = _ReadarrHistoryRecordData(self.data) or {}
         self.quality = _Quality(self.quality) or {}
-
-
-@dataclass(init=False)
-class _ReadarrFields(_Fields, _SelectOption):
-    """Readarr fields attributes."""
-
-    hidden: str | None = None
 
 
 @dataclass(init=False)

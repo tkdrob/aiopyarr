@@ -12,16 +12,16 @@
     "listOrder": 1,
     "name": "string",
     "fields": [
-        {
-            "order": 0,
-            "name": "accessToken",
-            "label": "Access Token",
-            "helpText": "string",
-            "value": ["string", "string"],
-            "type": "string",
-            "advanced": false,
-            "hidden": "hidden"
-        }
+      {
+        "order": 0,
+        "name": "accessToken",
+        "label": "Access Token",
+        "helpText": "string",
+        "value": ["string", "string"],
+        "type": "string",
+        "advanced": false,
+        "hidden": "hidden"
+      }
     ],
     "implementationName": "string",
     "implementation": "string",

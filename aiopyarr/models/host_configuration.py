@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from aiopyarr.const import HEADERS
+
 from .. import ArrException
 
 
@@ -28,10 +30,11 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
             raise ArrException(
                 message="No url, hostname or ipaddress to the server was provided"
             )
+        HEADERS["X-Api-Key"] = self.api_token
 
     def api_url(self, command: str) -> str:
         """Return the generated base URL based on host configuration."""
-        return f"{self.base_url}/api/{self.api_ver}/{command}?apikey={self.api_token}"
+        return f"{self.base_url}/api/{self.api_ver}/{command}"
 
     @property
     def base_url(self) -> str:

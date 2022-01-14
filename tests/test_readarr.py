@@ -1,4 +1,5 @@
 """Tests for Readarr object models."""
+# pylint:disable=line-too-long, too-many-lines, too-many-statements
 import json
 from datetime import datetime
 
@@ -6,11 +7,26 @@ import pytest
 from aiohttp.client import ClientSession
 
 from aiopyarr.const import ATTR_DATA
-from aiopyarr.models.readarr import ReadarrBookshelf, ReadarrNamingConfig
+from aiopyarr.models.readarr import (
+    ReadarrAuthor,
+    ReadarrAuthorEditor,
+    ReadarrBook,
+    ReadarrBookFile,
+    ReadarrBookFileEditor,
+    ReadarrBookshelf,
+    ReadarrCommands,
+    ReadarrDelayProfile,
+    ReadarrDevelopmentConfig,
+    ReadarrImportList,
+    ReadarrMetadataProfile,
+    ReadarrMetadataProviderConfig,
+    ReadarrNamingConfig,
+    ReadarrNotification,
+    ReadarrRelease,
+)
+from aiopyarr.models.request import Command, RootFolder
 from aiopyarr.models.response import PyArrResponse
 from aiopyarr.readarr_client import ReadarrClient
-
-from . import READARR_API, TEST_HOST_CONFIGURATION, load_fixture
 
 from aiopyarr.models.readarr_common import (  # isort:skip
     _ReadarrAuthorValueBooks,
@@ -20,13 +36,15 @@ from aiopyarr.models.readarr_common import (  # isort:skip
     _ReadarrSeriesLinks,
 )
 
+from . import READARR_API, TEST_HOST_CONFIGURATION, load_fixture  # isort:skip
+
 
 @pytest.mark.asyncio
-async def test_async_author(aresponses):
+async def test_async_get_author(aresponses):
     """Test getting author info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/author/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/author/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -35,11 +53,9 @@ async def test_async_author(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_author(authorid=0)
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_author(authorid=0)
     assert data.id == 0
     assert data.authorMetadataId == 0
     assert data.status == "string"
@@ -179,7 +195,7 @@ async def test_async_author(aresponses):
     assert item.name == "string"
     assert item.quality.id == 0
     assert item.quality.name == "string"
-    assert item.items[0] == None
+    assert item.items[0] is None
     assert item.allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -193,7 +209,7 @@ async def test_async_author(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -590,7 +606,7 @@ async def test_async_author(aresponses):
     assert _value.items[0].name == "string"
     assert _value.items[0].quality.id == 0
     assert _value.items[0].quality.name == "string"
-    assert _value.items[0].items[0] == None
+    assert _value.items[0].items[0] is None
     assert _value.items[0].allowed is True
     assert data.lastBook.author.value.qualityProfile.isLoaded is True
     assert data.lastBook.author.value.metadataProfile.value.id == 0
@@ -604,7 +620,7 @@ async def test_async_author(aresponses):
     assert data.lastBook.author.value.metadataProfile.value.minPages == 0
     assert data.lastBook.author.value.metadataProfile.value.ignored == "string"
     assert data.lastBook.author.value.metadataProfile.isLoaded is True
-    assert data.lastBook.author.value.books.value[0] == None
+    assert data.lastBook.author.value.books.value[0] is None
     assert data.lastBook.author.value.books.isLoaded is True
     assert data.lastBook.author.value.series.value[0].id == 0
     assert data.lastBook.author.value.series.value[0].foreignSeriesId == "string"
@@ -909,7 +925,7 @@ async def test_async_author_lookup(aresponses):
     """Test getting author lookup info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/author/lookup?apikey=ur1234567-0abc12de3f456gh7ij89k012&term=string",
+        f"/api/{READARR_API}/author/lookup?term=string",
         "GET",
         aresponses.Response(
             status=200,
@@ -918,10 +934,8 @@ async def test_async_author_lookup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_author_lookup(term="string")
     assert data[0].authorMetadataId == 1
     assert data[0].status == "string"
@@ -965,7 +979,7 @@ async def test_async_get_blocklist(aresponses):
     """Test getting blocklist info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/blocklist?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=20&sortDirection=descending&sortKey=date",
+        f"/api/{READARR_API}/blocklist?page=1&pageSize=20&sortDirection=descending&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
@@ -974,10 +988,8 @@ async def test_async_get_blocklist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_blocklist()
     assert data.page == 0
     assert data.pageSize == 0
@@ -1138,7 +1150,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.qualityProfile.value.items[0].name == "string"
     assert _value.qualityProfile.value.items[0].quality.id == 0
     assert _value.qualityProfile.value.items[0].quality.name == "string"
-    assert _value.qualityProfile.value.items[0].items[0] == None
+    assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -1152,7 +1164,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -1551,7 +1563,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.qualityProfile.value.items[0].name == "string"
     assert _value.qualityProfile.value.items[0].quality.id == 0
     assert _value.qualityProfile.value.items[0].quality.name == "string"
-    assert _value.qualityProfile.value.items[0].items[0] == None
+    assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
     assert _value.metadataProfile.value.id == 0
@@ -1565,7 +1577,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadataProfile.value.minPages == 0
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
-    assert _value.books.value[0] == None
+    assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
     assert _value.series.value[0].id == 0
     assert _value.series.value[0].foreignSeriesId == "string"
@@ -1871,7 +1883,7 @@ async def test_async_get_book(aresponses):
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/book/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/book/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -1880,10 +1892,8 @@ async def test_async_get_book(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_book(bookid=0)
     assert data[0].id == 0
     assert data[0].title == "string"
@@ -2541,7 +2551,7 @@ async def test_async_get_book_file(aresponses):
     """Test getting book file info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/bookfile/0?apikey=ur1234567-0abc12de3f456gh7ij89k012&unmapped=False",
+        f"/api/{READARR_API}/bookfile?unmapped=False&bookFileIds=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -2550,11 +2560,9 @@ async def test_async_get_book_file(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_book_file(fileid=0)
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_book_file(fileid=[0])
     assert data.id == 0
     assert data.authorId == 0
     assert data.bookId == 0
@@ -2628,7 +2636,7 @@ async def test_async_get_book_file(aresponses):
 
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/bookfile?apikey=ur1234567-0abc12de3f456gh7ij89k012&unmapped=False&authorId=0&bookId=0",
+        f"/api/{READARR_API}/bookfile?unmapped=False&authorId=0&bookId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -2637,10 +2645,8 @@ async def test_async_get_book_file(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_book_file(authorid=0, bookid=0)
 
 
@@ -2649,7 +2655,7 @@ async def test_async_book_lookup(aresponses):
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/book/lookup?apikey=ur1234567-0abc12de3f456gh7ij89k012&term=isbn:test",
+        f"/api/{READARR_API}/book/lookup?term=isbn:test",
         "GET",
         aresponses.Response(
             status=200,
@@ -2658,10 +2664,8 @@ async def test_async_book_lookup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_lookup_book(term="test")
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
@@ -2747,7 +2751,7 @@ async def test_async_get_calendar(aresponses):
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/calendar?apikey=ur1234567-0abc12de3f456gh7ij89k012&start=2020-11-30&end=2020-12-01&unmonitored=False&includeAuthor=False",
+        f"/api/{READARR_API}/calendar?start=2020-11-30&end=2020-12-01&unmonitored=False&includeAuthor=False",
         "GET",
         aresponses.Response(
             status=200,
@@ -2758,10 +2762,8 @@ async def test_async_get_calendar(aresponses):
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_calendar(start, end)
     assert data[0].id == 0
     assert data[0].title == "string"
@@ -3609,7 +3611,7 @@ async def test_async_get_wanted_missing(aresponses):
     """Test getting wanted and missing books."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/wanted/missing?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=title&page=1&pageSize=10",
+        f"/api/{READARR_API}/wanted/missing?sortKey=title&page=1&pageSize=10",
         "GET",
         aresponses.Response(
             status=200,
@@ -3618,10 +3620,8 @@ async def test_async_get_wanted_missing(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_wanted_missing()
     assert data.page == 1
     assert data.pageSize == 10
@@ -3723,7 +3723,7 @@ async def test_async_get_wanted_cutoff(aresponses):
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/wanted/cutoff?apikey=ur1234567-0abc12de3f456gh7ij89k012&sortKey=title&page=1&pageSize=10",
+        f"/api/{READARR_API}/wanted/cutoff?sortKey=title&page=1&pageSize=10",
         "GET",
         aresponses.Response(
             status=200,
@@ -3732,10 +3732,8 @@ async def test_async_get_wanted_cutoff(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_wanted_cutoff()
     assert data.filters[0].key == "string"
     assert data.filters[0].value == "string"
@@ -3746,7 +3744,7 @@ async def test_async_get_delay_profiles(aresponses):
     """Test getting delay profile."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/delayprofile",
         "GET",
         aresponses.Response(
             status=200,
@@ -3755,10 +3753,8 @@ async def test_async_get_delay_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_delay_profiles()
     assert data[0].enableUsenet is True
     assert data[0].enableTorrent is True
@@ -3775,7 +3771,7 @@ async def test_async_get_history(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/history?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/history",
         "GET",
         aresponses.Response(
             status=200,
@@ -3784,10 +3780,8 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_history()
     assert data.page == 1
     assert data.pageSize == 10
@@ -3828,7 +3822,7 @@ async def test_async_get_import_lists(aresponses):
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/importlist?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/importlist",
         "GET",
         aresponses.Response(
             status=200,
@@ -3837,10 +3831,8 @@ async def test_async_get_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_import_lists()
     assert data[0].enableAutomaticAdd is True
     assert data[0].shouldMonitor == "entireAuthor"
@@ -3872,7 +3864,7 @@ async def test_async_get_metadata_profiles(aresponses):
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/metadataprofile?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/metadataprofile",
         "GET",
         aresponses.Response(
             status=200,
@@ -3881,10 +3873,8 @@ async def test_async_get_metadata_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_metadata_profiles()
     assert data[0].id == 0
     assert data[0].name == "string"
@@ -3903,7 +3893,7 @@ async def test_async_get_metadata_provider_configs(aresponses):
     """Test getting metadata provider configs."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/metadataprovider?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/metadataprovider",
         "GET",
         aresponses.Response(
             status=200,
@@ -3912,10 +3902,8 @@ async def test_async_get_metadata_provider_configs(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_metadata_provider_configs()
     assert data.writeAudioTags == "no"
     assert data.scrubAudioTags is False
@@ -3930,7 +3918,7 @@ async def test_async_get_naming_config(aresponses):
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/config/naming?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/config/naming",
         "GET",
         aresponses.Response(
             status=200,
@@ -3939,10 +3927,8 @@ async def test_async_get_naming_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: ReadarrNamingConfig = await client.async_get_naming_config()
 
     assert data.renameBooks is False
@@ -3961,7 +3947,7 @@ async def test_async_get_notifications(aresponses):
     """Test getting notifications."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/notification?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/notification",
         "GET",
         aresponses.Response(
             status=200,
@@ -3970,10 +3956,8 @@ async def test_async_get_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_notifications()
 
     assert data[0].onGrab is True
@@ -4014,7 +3998,7 @@ async def test_async_parse(aresponses):
     """Test parsing book file name."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/parse?apikey=ur1234567-0abc12de3f456gh7ij89k012&title=test",
+        f"/api/{READARR_API}/parse?title=test",
         "GET",
         aresponses.Response(
             status=200,
@@ -4023,10 +4007,8 @@ async def test_async_parse(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_parse("test")
 
     assert data.id == 0
@@ -5691,7 +5673,7 @@ async def test_async_get_queue(aresponses):
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/queue?apikey=ur1234567-0abc12de3f456gh7ij89k012&page=1&pageSize=10&sortDirection=ascending&sortKey=timeleft&includeUnknownAuthorItems=False&includeAuthor=False&includeBook=False",
+        f"/api/{READARR_API}/queue?page=1&pageSize=10&sortKey=timeleft&includeUnknownAuthorItems=False&includeAuthor=False&includeBook=False",
         "GET",
         aresponses.Response(
             status=200,
@@ -5700,10 +5682,8 @@ async def test_async_get_queue(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_queue()
     assert data.page == 1
     assert data.pageSize == 10
@@ -5743,7 +5723,7 @@ async def test_async_get_queue_details(aresponses):
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/queue/details?apikey=ur1234567-0abc12de3f456gh7ij89k012&includeUnknownAuthorItems=False&includeAuthor=False&includeBook=True",
+        f"/api/{READARR_API}/queue/details?includeUnknownAuthorItems=False&includeAuthor=False&includeBook=True&authorId=0&bookIds=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -5752,11 +5732,9 @@ async def test_async_get_queue_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
-        data = await client.async_get_queue_details()
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_queue_details(authorid=0, bookids=[0])
     assert data[0].authorId == 0
     assert data[0].bookId == 0
     assert data[0].author
@@ -5873,7 +5851,7 @@ async def test_async_get_release(aresponses):
     """Test searching indexers for specified fields."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/release?apikey=ur1234567-0abc12de3f456gh7ij89k012&authorId=0&bookId=0",
+        f"/api/{READARR_API}/release?authorId=0&bookId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -5882,10 +5860,8 @@ async def test_async_get_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_release(authorid=0, bookid=0)
     assert data[0].guid == "string"
     assert data[0].quality.quality.id == 0
@@ -5924,11 +5900,30 @@ async def test_async_get_release(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_async_get_pushed_release(aresponses):
+    """Test getting pushed release."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/release/push?id=test",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_pushed_release("test")
+    assert isinstance(data, ReadarrRelease)
+
+
+@pytest.mark.asyncio
 async def test_async_get_rename(aresponses):
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/rename?apikey=ur1234567-0abc12de3f456gh7ij89k012&authorId=0&bookId=0",
+        f"/api/{READARR_API}/rename?authorId=0&bookId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -5937,10 +5932,8 @@ async def test_async_get_rename(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_rename()
     assert data[0].authorId == 0
     assert data[0].bookId == 0
@@ -5954,7 +5947,7 @@ async def test_async_get_retag(aresponses):
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/retag?apikey=ur1234567-0abc12de3f456gh7ij89k012&authorId=0&bookId=0",
+        f"/api/{READARR_API}/retag?authorId=0&bookId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -5963,10 +5956,8 @@ async def test_async_get_retag(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_retag()
     assert data[0].authorId == 0
     assert data[0].bookId == 0
@@ -5983,7 +5974,7 @@ async def test_async_search(aresponses):
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/search?apikey=ur1234567-0abc12de3f456gh7ij89k012&term=test",
+        f"/api/{READARR_API}/search?term=test",
         "GET",
         aresponses.Response(
             status=200,
@@ -5992,10 +5983,8 @@ async def test_async_search(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_search("test")
     assert data[0].foreignId == "0"
     assert data[0].author.authorMetadataId == 0
@@ -6041,7 +6030,7 @@ async def test_async_get_series(aresponses):
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/series?apikey=ur1234567-0abc12de3f456gh7ij89k012&authorId=0",
+        f"/api/{READARR_API}/series?authorId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -6050,10 +6039,8 @@ async def test_async_get_series(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_series(0)
     assert data[0].title == "string"
     assert data[0].description == "string"
@@ -6070,7 +6057,7 @@ async def test_async_get_tag_details(aresponses):
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/tag/detail/0?apikey=ur1234567-0abc12de3f456gh7ij89k012",
+        f"/api/{READARR_API}/tag/detail/0",
         "GET",
         aresponses.Response(
             status=200,
@@ -6079,10 +6066,8 @@ async def test_async_get_tag_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession() as session:
-        client = ReadarrClient(
-            session=session, host_configuration=TEST_HOST_CONFIGURATION
-        )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_tags_details(tagid=0)
 
     assert data.id == 0
@@ -6239,7 +6224,6 @@ async def test_readarr_bookshelf():
     assert isinstance(_book.editions, _ReadarrEditions)
     assert isinstance(_book.bookFiles, _ReadarrEditionsValueBookFiles)
     assert isinstance(_book.seriesLinks, _ReadarrSeriesLinks)
-    _book = _book
     assert _book.id == 0
     assert _book.authorMetadataId == 0
     assert _book.foreignBookId == "string"
@@ -6415,3 +6399,684 @@ async def test_readarr_bookshelf():
     assert item.data.monitoringOptions.monitor == "string"
     assert item.data.monitoringOptions.booksToMonitor[0] == "string"
     assert item.data.monitoringOptions.monitored is True
+
+
+@pytest.mark.asyncio
+async def test_async_add_author(aresponses):
+    """Test adding author."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/author",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_author(ReadarrAuthor("test"))
+    assert isinstance(data, ReadarrAuthor)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_authors(aresponses):
+    """Test editing authors."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/author",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/author.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_authors(ReadarrAuthor("test"))
+    assert isinstance(data, ReadarrAuthor)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/author/editor",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_edit_authors(ReadarrAuthorEditor("test"))
+
+
+@pytest.mark.asyncio
+async def test_async_delete_authors(aresponses):
+    """Test editing authors."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/author/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_authors(0)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/author/editor",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_authors([0, 1])
+
+
+@pytest.mark.asyncio
+async def test_async_readarr_commands(aresponses):
+    """Test Readarr commands."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.APP_UPDATE_CHECK)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.REFRESH_AUTHOR)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.RESCAN_FOLDERS)
+    assert isinstance(data, Command)
+
+
+@pytest.mark.asyncio
+async def test_async_commands(aresponses):
+    """Test commands."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.APP_UPDATE_CHECK)
+    assert isinstance(data, Command)
+
+
+@pytest.mark.asyncio
+async def test_async_add_book(aresponses):
+    """Test adding book."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/book",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_book(ReadarrBook("test"))
+    assert isinstance(data, ReadarrBook)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_book(aresponses):
+    """Test editing book."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/book",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_book(ReadarrBook("test"))
+    assert isinstance(data, ReadarrBook)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_book(aresponses):
+    """Test deleting book."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/book/0?deleteFiles=False&addImportListExclusion=True",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_book(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_book_files(aresponses):
+    """Test editing book files."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/bookfile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_book_files(ReadarrBookFile("test"))
+    assert isinstance(data, ReadarrBookFile)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/bookfile/editor",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_edit_book_files(ReadarrBookFileEditor("test"))
+
+
+@pytest.mark.asyncio
+async def test_async_delete_book_files(aresponses):
+    """Test deleting book files."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/bookfile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_book_files(0)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/bookfile/bulk",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_book_files([0])
+
+
+@pytest.mark.asyncio
+async def test_async_add_bookshelf(aresponses):
+    """Test adding bookshelf."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/bookshelf",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_add_bookshelf(ReadarrBookshelf("test"))
+
+
+@pytest.mark.asyncio
+async def test_async_add_delay_profile(aresponses):
+    """Test adding delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_delay_profile(ReadarrDelayProfile("test"))
+    assert isinstance(data, ReadarrDelayProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_delay_profile(aresponses):
+    """Test editing delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_delay_profile(ReadarrDelayProfile({"id": 0}))
+    assert isinstance(data, ReadarrDelayProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_delay_profile(aresponses):
+    """Test deleting delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_delay_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_delay_profile_reorder(aresponses):
+    """Test delay profile reorder."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile/reorder/0?afterId=1",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delay_profile_reorder(0, afterid=1)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_development_config(aresponses):
+    """Test editing development config."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/config/development",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_development_config(
+            ReadarrDevelopmentConfig("test")
+        )
+    assert isinstance(data, ReadarrDevelopmentConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_import_list(aresponses):
+    """Test editing import list."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlist",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_import_list(ReadarrImportList("test"))
+    assert isinstance(data, ReadarrImportList)
+
+
+@pytest.mark.asyncio
+async def test_async_add_import_list(aresponses):
+    """Test adding import list."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlist",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_import_list(ReadarrImportList("test"))
+    assert isinstance(data, ReadarrImportList)
+
+
+@pytest.mark.asyncio
+async def test_async_test_import_lists(aresponses):
+    """Test import list testing."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlist/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists(ReadarrImportList("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlist/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists() is True
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/importlist/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_import_lists() is False
+
+
+@pytest.mark.asyncio
+async def test_async_delete_metadata_profile(aresponses):
+    """Test deleting metadata profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/metadataprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_metadata_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_metadata_profile(aresponses):
+    """Test editing metadata profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/metadataprofile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_metadata_profile(ReadarrMetadataProfile("test"))
+    assert isinstance(data, ReadarrMetadataProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_metadata_provider_config(aresponses):
+    """Test editing metadata profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/metadataprovider/0",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_metadata_provider_config(
+            ReadarrMetadataProviderConfig({"id": 0})
+        )
+    assert isinstance(data, ReadarrMetadataProviderConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_naming_config(aresponses):
+    """Test editing naming config."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/config/naming",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_naming_config(ReadarrNamingConfig("test"))
+    assert isinstance(data, ReadarrNamingConfig)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_notification(aresponses):
+    """Test editing notification."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/notification",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_notification(ReadarrNotification("test"))
+    assert isinstance(data, ReadarrNotification)
+
+
+@pytest.mark.asyncio
+async def test_async_add_notification(aresponses):
+    """Test adding notification."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/notification",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_notification(ReadarrNotification("test"))
+    assert isinstance(data, ReadarrNotification)
+
+
+@pytest.mark.asyncio
+async def test_async_test_notifications(aresponses):
+    """Test notification testing."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/notification/test",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications(ReadarrNotification("test")) is True
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications() is True
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/notification/testall",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/validation-failed.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+    assert await client.async_test_notifications() is False
+
+
+@pytest.mark.asyncio
+async def test_async_download_release(aresponses):
+    """Test download release."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/release",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_download_release("test", 0)
+    assert isinstance(data, ReadarrRelease)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_root_folder(aresponses):
+    """Test editing root folder."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/rootfolder",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_root_folder(RootFolder("test"))
+    assert isinstance(data, RootFolder)

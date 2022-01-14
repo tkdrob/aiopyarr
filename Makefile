@@ -8,16 +8,15 @@ help: ## Shows this help message
 requirements: ## Install requirements
 	@python3 -m pip --disable-pip-version-check install -r requirements.txt
 
-test: ## Run all tests
-	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml
-
-lint: ## Lint all files black
+lint: ## Lint all files
 	@isort .
 	@python3 -m black --fast .
+	@python3 -m pylint aiopyarr tests
+	@python3 -m flake8 aiopyarr tests
+	@python3 -m mypy aiopyarr tests
 
 coverage: ## Check the coverage of the package
-	@python3 -m pytest tests -rxf -x -v -l --cov=./ --cov-report=xml > /dev/null
-	@coverage report
+	@python3 -m pytest tests --cov=aiopyarr --cov-report term-missing -vv
 
 setup: ## Setup the package
 	@python3 setup.py develop

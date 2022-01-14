@@ -73,16 +73,6 @@ class _RadarrMovieFields(_MetadataFields, _SelectOption):
 
 
 @dataclass(init=False)
-class _RadarrNotificationFields(_MetadataFields, _SelectOption):
-    """Radarr notification fields attributes."""
-
-    selectOptions: list[_SelectOption] | None = None
-
-    def __post_init__(self):
-        self.selectOptions = [_SelectOption(x) for x in self.selectOptions or []]
-
-
-@dataclass(init=False)
 class _RadarrCommon(BaseModel):
     """Radarr indexers attributes."""
 
