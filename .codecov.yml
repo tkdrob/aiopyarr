@@ -8,7 +8,7 @@ coverage:
     patch: off
     project:
       default:
-        target: 99%
+        target: 98.55%
 
 parsers:
   gcov:
