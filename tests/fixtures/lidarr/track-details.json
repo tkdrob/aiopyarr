@@ -1,0 +1,63 @@
+{
+  "artistId": 0,
+  "trackFileId": 0,
+  "albumId": 0,
+  "explicit": false,
+  "absoluteTrackNumber": 0,
+  "trackNumber": "0",
+  "title": "string",
+  "duration": 0,
+  "mediumNumber": 0,
+  "hasFile": false,
+  "artist": {
+    "status": "string",
+    "ended": true,
+    "artistName": "string",
+    "foreignArtistId": "string",
+    "tadbId": 0,
+    "discogsId": 0,
+    "overview": "string",
+    "artistType": "string",
+    "disambiguation": "string",
+    "links": [
+      {
+        "url": "string",
+        "name": "string"
+      }
+    ],
+    "images": [
+      {
+        "url": "string",
+        "coverType": "string",
+        "extension": "string"
+      }
+    ],
+    "path": "string",
+    "qualityProfileId": 0,
+    "metadataProfileId": 0,
+    "monitored": true,
+    "genres": ["string"],
+    "cleanName": "string",
+    "sortName": "string",
+    "tags": [0],
+    "added": "2021-08-21T15:35:54.398878Z",
+    "ratings": {
+      "votes": 0,
+      "value": 0.0
+    },
+    "statistics": {
+      "albumCount": 0,
+      "trackFileCount": 0,
+      "trackCount": 0,
+      "totalTrackCount": 0,
+      "sizeOnDisk": 0,
+      "percentOfTracks": 0.0
+    },
+    "id": 0
+  },
+  "ratings": {
+    "votes": 0,
+    "value": 0.0
+  },
+  "id": 0
+}

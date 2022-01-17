@@ -15,7 +15,6 @@ from aiopyarr.models.readarr import (
     ReadarrBookFileEditor,
     ReadarrBookshelf,
     ReadarrCommands,
-    ReadarrDelayProfile,
     ReadarrDevelopmentConfig,
     ReadarrImportList,
     ReadarrMetadataProfile,
@@ -23,8 +22,9 @@ from aiopyarr.models.readarr import (
     ReadarrNamingConfig,
     ReadarrNotification,
     ReadarrRelease,
+    ReadarrWantedCutoff,
 )
-from aiopyarr.models.request import Command, RootFolder
+from aiopyarr.models.request import Command, RootFolder, DelayProfile
 from aiopyarr.models.response import PyArrResponse
 from aiopyarr.readarr_client import ReadarrClient
 
@@ -56,8 +56,8 @@ async def test_async_get_author(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_author(authorid=0)
-    assert data.id == 0
-    assert data.authorMetadataId == 0
+    assert isinstance(data.id, int)
+    assert isinstance(data.authorMetadataId, int)
     assert data.status == "string"
     assert data.ended is True
     assert data.authorName == "string"
@@ -68,8 +68,8 @@ async def test_async_get_author(aresponses):
     assert data.disambiguation == "string"
     assert data.links[0].url == "string"
     assert data.links[0].name == "string"
-    assert data.nextBook.id == 0
-    assert data.nextBook.authorMetadataId == 0
+    assert isinstance(data.nextBook.id, int)
+    assert isinstance(data.nextBook.authorMetadataId, int)
     assert data.nextBook.foreignBookId == "string"
     assert data.nextBook.titleSlug == "string"
     assert data.nextBook.title == "string"
@@ -77,9 +77,9 @@ async def test_async_get_author(aresponses):
     assert data.nextBook.links[0].url == "string"
     assert data.nextBook.links[0].name == "string"
     assert data.nextBook.genres[0] == "string"
-    assert data.nextBook.ratings.votes == 0
-    assert data.nextBook.ratings.value == 0.0
-    assert data.nextBook.ratings.popularity == 0.0
+    assert isinstance(data.nextBook.ratings.votes, int)
+    assert isinstance(data.nextBook.ratings.value, float)
+    assert isinstance(data.nextBook.ratings.popularity, int)
     assert data.nextBook.cleanTitle == "string"
     assert data.nextBook.monitored is True
     assert data.nextBook.anyEditionOk is True
@@ -88,7 +88,7 @@ async def test_async_get_author(aresponses):
     assert data.nextBook.addOptions.addType == "string"
     assert data.nextBook.addOptions.searchForNewBook is True
     _value = data.nextBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -109,27 +109,27 @@ async def test_async_get_author(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data.nextBook.authorMetadata.isLoaded is True
     _value = data.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -150,18 +150,18 @@ async def test_async_get_author(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -182,42 +182,42 @@ async def test_async_get_author(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
     item = _value.qualityProfile.value.items[0]
-    assert item.id == 0
+    assert isinstance(item.id, int)
     assert item.name == "string"
-    assert item.quality.id == 0
+    assert isinstance(item.quality.id, int)
     assert item.quality.name == "string"
     assert item.items[0] is None
     assert item.allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int) #TODO check
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value == [None]
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -225,8 +225,8 @@ async def test_async_get_author(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data.nextBook.author.isLoaded is True
     _value = data.nextBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -238,57 +238,57 @@ async def test_async_get_author(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _value = _value.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
-    assert _value.quality.revision.real == 0
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -309,48 +309,48 @@ async def test_async_get_author(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int) #TODO
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value[0] is None
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -359,44 +359,44 @@ async def test_async_get_author(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert data.nextBook.editions.isLoaded is True
     _value = data.nextBook.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
+    assert isinstance(_value.quality.revision.version, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
     assert _value.mediaInfo.audioBitrate == "string"
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
     _value = _value.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -417,40 +417,40 @@ async def test_async_get_author(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance( _value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value[0] is None
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -459,28 +459,28 @@ async def test_async_get_author(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data.nextBook.bookFiles.value[0].author.isLoaded is True
     assert data.nextBook.bookFiles.value[0].edition.isLoaded is True
-    assert data.nextBook.bookFiles.value[0].partCount == 0
+    assert isinstance(data.nextBook.bookFiles.value[0].partCount, int)
     assert data.nextBook.bookFiles.isLoaded is True
-    assert data.nextBook.seriesLinks.value[0].id == 0
+    assert isinstance(data.nextBook.seriesLinks.value[0].id, int)
     assert data.nextBook.seriesLinks.value[0].position == "string"
-    assert data.nextBook.seriesLinks.value[0].seriesId == 0
-    assert data.nextBook.seriesLinks.value[0].bookId == 0
+    assert isinstance(data.nextBook.seriesLinks.value[0].seriesId, int)
+    assert isinstance(data.nextBook.seriesLinks.value[0].bookId, int)
     assert data.nextBook.seriesLinks.value[0].isPrimary is True
-    assert data.nextBook.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(data.nextBook.seriesLinks.value[0].series.value.id, int)
     assert data.nextBook.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert data.nextBook.seriesLinks.value[0].series.value.title == "string"
     assert data.nextBook.seriesLinks.value[0].series.value.description == "string"
     assert data.nextBook.seriesLinks.value[0].series.value.numbered is True
-    assert data.nextBook.seriesLinks.value[0].series.value.workCount == 0
-    assert data.nextBook.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(data.nextBook.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(data.nextBook.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert data.nextBook.seriesLinks.value[0].series.value.books.value[0] is None
     assert data.nextBook.seriesLinks.value[0].series.value.books.isLoaded is True
     assert data.nextBook.seriesLinks.value[0].series.value.foreignAuthorId == "string"
     assert data.nextBook.seriesLinks.value[0].series.isLoaded is True
     assert data.nextBook.seriesLinks.value[0].book.isLoaded is True
     assert data.nextBook.seriesLinks.isLoaded is True
-    assert data.lastBook.id == 0
-    assert data.lastBook.authorMetadataId == 0
+    assert isinstance(data.lastBook.id, int)
+    assert isinstance(data.lastBook.authorMetadataId, int)
     assert data.lastBook.foreignBookId == "string"
     assert data.lastBook.titleSlug == "string"
     assert data.lastBook.title == "string"
@@ -488,9 +488,9 @@ async def test_async_get_author(aresponses):
     assert data.lastBook.links[0].url == "string"
     assert data.lastBook.links[0].name == "string"
     assert data.lastBook.genres[0] == "string"
-    assert data.lastBook.ratings.votes == 0
-    assert data.lastBook.ratings.value == 0.0
-    assert data.lastBook.ratings.popularity == 0.0
+    assert isinstance(data.lastBook.ratings.votes, int)
+    assert isinstance(data.lastBook.ratings.value, int)
+    assert isinstance(data.lastBook.ratings.popularity, int)
     assert data.lastBook.cleanTitle == "string"
     assert data.lastBook.monitored is True
     assert data.lastBook.anyEditionOk is True
@@ -499,7 +499,7 @@ async def test_async_get_author(aresponses):
     assert data.lastBook.addOptions.addType == "string"
     assert data.lastBook.addOptions.searchForNewBook is True
     _value = data.lastBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -520,27 +520,27 @@ async def test_async_get_author(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data.lastBook.authorMetadata.isLoaded is True
     _value = data.lastBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -561,18 +561,18 @@ async def test_async_get_author(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -593,42 +593,42 @@ async def test_async_get_author(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
     _value = _value.qualityProfile.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.name == "string"
     assert _value.upgradeAllowed is True
-    assert _value.cutoff == 0
-    assert _value.items[0].id == 0
+    assert isinstance(_value.cutoff, int)
+    assert isinstance(_value.items[0].id, int)
     assert _value.items[0].name == "string"
-    assert _value.items[0].quality.id == 0
+    assert isinstance(_value.items[0].quality.id, int)
     assert _value.items[0].quality.name == "string"
     assert _value.items[0].items[0] is None
     assert _value.items[0].allowed is True
     assert data.lastBook.author.value.qualityProfile.isLoaded is True
-    assert data.lastBook.author.value.metadataProfile.value.id == 0
+    assert isinstance(data.lastBook.author.value.metadataProfile.value.id, int)
     assert data.lastBook.author.value.metadataProfile.value.name == "string"
-    assert data.lastBook.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(data.lastBook.author.value.metadataProfile.value.minPopularity, int)
     assert data.lastBook.author.value.metadataProfile.value.skipMissingDate is True
     assert data.lastBook.author.value.metadataProfile.value.skipMissingIsbn is True
     assert data.lastBook.author.value.metadataProfile.value.skipPartsAndSets is True
     assert data.lastBook.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert data.lastBook.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert data.lastBook.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(data.lastBook.author.value.metadataProfile.value.minPages, int)
     assert data.lastBook.author.value.metadataProfile.value.ignored == "string"
     assert data.lastBook.author.value.metadataProfile.isLoaded is True
     assert data.lastBook.author.value.books.value[0] is None
     assert data.lastBook.author.value.books.isLoaded is True
-    assert data.lastBook.author.value.series.value[0].id == 0
+    assert isinstance(data.lastBook.author.value.series.value[0].id, int)
     assert data.lastBook.author.value.series.value[0].foreignSeriesId == "string"
     assert data.lastBook.author.value.series.value[0].title == "string"
     assert data.lastBook.author.value.series.value[0].description == "string"
     assert data.lastBook.author.value.series.value[0].numbered is True
-    assert data.lastBook.author.value.series.value[0].workCount == 0
-    assert data.lastBook.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(data.lastBook.author.value.series.value[0].workCount, int)
+    assert isinstance(data.lastBook.author.value.series.value[0].primaryWorkCount, int)
     assert data.lastBook.author.value.series.value[0].books.value == [None]
     assert data.lastBook.author.value.series.value[0].books.isLoaded is True
     assert data.lastBook.author.value.series.value[0].foreignAuthorId == "string"
@@ -636,8 +636,8 @@ async def test_async_get_author(aresponses):
     assert data.lastBook.author.value.foreignAuthorId == "string"
     assert data.lastBook.author.isLoaded is True
     _value = data.lastBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -649,57 +649,57 @@ async def test_async_get_author(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _value = _value.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
-    assert _value.quality.revision.real == 0
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -720,48 +720,48 @@ async def test_async_get_author(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value[0] is None
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -770,44 +770,44 @@ async def test_async_get_author(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert data.lastBook.editions.isLoaded is True
     _value = data.lastBook.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
+    assert isinstance(_value.quality.revision.version, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -828,40 +828,40 @@ async def test_async_get_author(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items[0] is None
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value[0] is None
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -870,20 +870,20 @@ async def test_async_get_author(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert data.lastBook.bookFiles.isLoaded is True
-    assert data.lastBook.seriesLinks.value[0].id == 0
+    assert isinstance(data.lastBook.seriesLinks.value[0].id, int)
     assert data.lastBook.seriesLinks.value[0].position == "string"
-    assert data.lastBook.seriesLinks.value[0].seriesId == 0
-    assert data.lastBook.seriesLinks.value[0].bookId == 0
+    assert isinstance(data.lastBook.seriesLinks.value[0].seriesId, int)
+    assert isinstance(data.lastBook.seriesLinks.value[0].bookId, int)
     assert data.lastBook.seriesLinks.value[0].isPrimary is True
-    assert data.lastBook.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(data.lastBook.seriesLinks.value[0].series.value.id, int)
     assert data.lastBook.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert data.lastBook.seriesLinks.value[0].series.value.title == "string"
     assert data.lastBook.seriesLinks.value[0].series.value.description == "string"
     assert data.lastBook.seriesLinks.value[0].series.value.numbered is True
-    assert data.lastBook.seriesLinks.value[0].series.value.workCount == 0
-    assert data.lastBook.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(data.lastBook.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(data.lastBook.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert data.lastBook.seriesLinks.value[0].series.value.books.value[0] is None
     assert data.lastBook.seriesLinks.value[0].series.value.books.isLoaded is True
     assert data.lastBook.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -895,29 +895,29 @@ async def test_async_get_author(aresponses):
     assert data.images[0].extension == "string"
     assert data.remotePoster == "string"
     assert data.path == "string"
-    assert data.qualityProfileId == 0
-    assert data.metadataProfileId == 0
+    assert isinstance(data.qualityProfileId, int)
+    assert isinstance(data.metadataProfileId, int)
     assert data.monitored is True
     assert data.rootFolderPath == "string"
     assert data.genres[0] == "string"
     assert data.cleanName == "string"
     assert data.sortName == "string"
     assert data.sortNameLastFirst == "string"
-    assert data.tags[0] == 0
+    assert isinstance(data.tags[0], int)
     assert data.added == datetime(2021, 12, 6, 22, 12, 47, 68000)
     assert data.addOptions.monitor == "string"
     assert data.addOptions.booksToMonitor[0] == "string"
     assert data.addOptions.monitored is True
     assert data.addOptions.searchForMissingBooks is True
-    assert data.ratings.votes == 0
-    assert data.ratings.value == 0.0
-    assert data.ratings.popularity == 0.0
-    assert data.statistics.bookFileCount == 0
-    assert data.statistics.bookCount == 0
-    assert data.statistics.availableBookCount == 0
-    assert data.statistics.totalBookCount == 0
-    assert data.statistics.sizeOnDisk == 0
-    assert data.statistics.percentOfBooks == 0.0
+    assert isinstance(data.ratings.votes, int)
+    assert isinstance(data.ratings.value, int)
+    assert isinstance(data.ratings.popularity, int)
+    assert isinstance(data.statistics.bookFileCount, int)
+    assert isinstance(data.statistics.bookCount, int)
+    assert isinstance(data.statistics.availableBookCount, int)
+    assert isinstance(data.statistics.totalBookCount, int)
+    assert isinstance(data.statistics.sizeOnDisk, int)
+    assert isinstance(data.statistics.percentOfBooks, float)
 
 
 @pytest.mark.asyncio
@@ -937,7 +937,7 @@ async def test_async_author_lookup(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_author_lookup(term="string")
-    assert data[0].authorMetadataId == 1
+    assert isinstance(data[0].authorMetadataId, int)
     assert data[0].status == "string"
     assert data[0].ended is False
     assert data[0].authorName == "string"
@@ -952,26 +952,26 @@ async def test_async_author_lookup(aresponses):
     assert data[0].images[0].extension == ".jpg"
     assert data[0].remotePoster == "string"
     assert data[0].path == "string"
-    assert data[0].qualityProfileId == 1
-    assert data[0].metadataProfileId == 1
+    assert isinstance(data[0].qualityProfileId, int)
+    assert isinstance(data[0].metadataProfileId, int)
     assert data[0].monitored is True
     assert data[0].monitorNewItems == "string"
-    assert data[0].genres == []
+    assert data[0].genres == ["string"]
     assert data[0].cleanName == "string"
     assert data[0].sortName == "string"
     assert data[0].sortNameLastFirst == "string"
-    assert data[0].tags == []
+    assert isinstance(data[0].tags[0], int)
     assert data[0].added == datetime(2021, 12, 6, 22, 23, 55)
-    assert data[0].ratings.votes == 16374205
-    assert data[0].ratings.value == 4.05
-    assert data[0].ratings.popularity == 66315530.25
-    assert data[0].statistics.bookFileCount == 0
-    assert data[0].statistics.bookCount == 0
-    assert data[0].statistics.availableBookCount == 0
-    assert data[0].statistics.totalBookCount == 0
-    assert data[0].statistics.sizeOnDisk == 0
-    assert data[0].statistics.percentOfBooks == 0.0
-    assert data[0].id == 1
+    assert isinstance(data[0].ratings.votes, int)
+    assert isinstance(data[0].ratings.value, float)
+    assert isinstance(data[0].ratings.popularity, float)
+    assert isinstance(data[0].statistics.bookFileCount, int)
+    assert isinstance(data[0].statistics.bookCount, int)
+    assert isinstance(data[0].statistics.availableBookCount, int)
+    assert isinstance(data[0].statistics.totalBookCount, int)
+    assert isinstance(data[0].statistics.sizeOnDisk, int)
+    assert isinstance(data[0].statistics.percentOfBooks, float)
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -991,29 +991,29 @@ async def test_async_get_blocklist(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_blocklist()
-    assert data.page == 0
-    assert data.pageSize == 0
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
     assert data.sortKey == "string"
     assert data.sortDirection == "default"
     assert data.filters[0].key == "string"
     assert data.filters[0].value == "string"
-    assert data.totalRecords == 0
-    assert data.records[0].id == 0
-    assert data.records[0].authorId == 0
-    assert data.records[0].bookIds[0] == 0
+    assert isinstance(data.totalRecords, int)
+    assert isinstance(data.records[0].id, int)
+    assert isinstance(data.records[0].authorId, int)
+    assert isinstance(data.records[0].bookIds[0], int)
     assert data.records[0].sourceTitle == "string"
-    assert data.records[0].quality.quality.id == 0
+    assert isinstance(data.records[0].quality.quality.id, int)
     assert data.records[0].quality.quality.name == "string"
-    assert data.records[0].quality.revision.version == 0
-    assert data.records[0].quality.revision.real == 0
+    assert isinstance(data.records[0].quality.revision.version, int)
+    assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is True
     assert data.records[0].date == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert data.records[0].protocol == "string"
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
     _author = data.records[0].author
-    assert _author.id == 0
-    assert _author.authorMetadataId == 0
+    assert isinstance(_author.id, int)
+    assert isinstance(_author.authorMetadataId, int)
     assert _author.status == "string"
     assert _author.ended is True
     assert _author.authorName == "string"
@@ -1024,8 +1024,8 @@ async def test_async_get_blocklist(aresponses):
     assert _author.disambiguation == "string"
     assert _author.links[0].url == "string"
     assert _author.links[0].name == "string"
-    assert _author.nextBook.id == 0
-    assert _author.nextBook.authorMetadataId == 0
+    assert isinstance(_author.nextBook.id, int)
+    assert isinstance(_author.nextBook.authorMetadataId, int)
     assert _author.nextBook.foreignBookId == "string"
     assert _author.nextBook.titleSlug == "string"
     assert _author.nextBook.title == "string"
@@ -1033,9 +1033,9 @@ async def test_async_get_blocklist(aresponses):
     assert _author.nextBook.links[0].url == "string"
     assert _author.nextBook.links[0].name == "string"
     assert _author.nextBook.genres[0] == "string"
-    assert _author.nextBook.ratings.votes == 0
-    assert _author.nextBook.ratings.value == 0.0
-    assert _author.nextBook.ratings.popularity == 0.0
+    assert isinstance(_author.nextBook.ratings.votes, int)
+    assert isinstance(_author.nextBook.ratings.value, int)
+    assert isinstance(_author.nextBook.ratings.popularity, int)
     assert _author.nextBook.cleanTitle == "string"
     assert _author.nextBook.monitored is True
     assert _author.nextBook.anyEditionOk is True
@@ -1044,7 +1044,7 @@ async def test_async_get_blocklist(aresponses):
     assert _author.nextBook.addOptions.addType == "string"
     assert _author.nextBook.addOptions.searchForNewBook is True
     _value = _author.nextBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -1065,27 +1065,27 @@ async def test_async_get_blocklist(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data.records[0].author.nextBook.authorMetadata.isLoaded is True
     _value = data.records[0].author.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -1106,18 +1106,18 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -1138,41 +1138,41 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value == [None]
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -1180,8 +1180,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data.records[0].author.nextBook.author.isLoaded is True
     _value = data.records[0].author.nextBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -1193,58 +1193,58 @@ async def test_async_get_blocklist(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _val = _value.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
     assert _val.mediaInfo.audioSampleRate == "string"
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags[0] == 0
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor[0] == "string"
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _val = _value.bookFiles.value[0]
     _valu = _val.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -1265,48 +1265,48 @@ async def test_async_get_blocklist(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value[0] is None
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -1315,44 +1315,44 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert data.records[0].author.nextBook.editions.isLoaded is True
     _value = data.records[0].author.nextBook.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
+    assert isinstance(_value.quality.revision.version, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -1373,40 +1373,40 @@ async def test_async_get_blocklist(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items[0] is None
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value[0] is None
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -1415,21 +1415,21 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert data.records[0].author.nextBook.bookFiles.isLoaded is True
     _value = data.records[0].author.nextBook.seriesLinks.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.position == "string"
-    assert _value.seriesId == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.seriesId, int)
+    assert isinstance(_value.bookId, int)
     assert _value.isPrimary is True
-    assert _value.series.value.id == 0
+    assert isinstance(_value.series.value.id, int)
     assert _value.series.value.foreignSeriesId == "string"
     assert _value.series.value.title == "string"
     assert _value.series.value.description == "string"
     assert _value.series.value.numbered is True
-    assert _value.series.value.workCount == 0
-    assert _value.series.value.primaryWorkCount == 0
+    assert isinstance(_value.series.value.workCount, int)
+    assert isinstance(_value.series.value.primaryWorkCount, int)
     assert _value.series.value.books.value[0] is None
     assert _value.series.value.books.isLoaded is True
     assert _value.series.value.foreignAuthorId == "string"
@@ -1437,8 +1437,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.book.isLoaded is True
     assert data.records[0].author.nextBook.seriesLinks.isLoaded is True
     _value = data.records[0].author.lastBook
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.foreignBookId == "string"
     assert _value.titleSlug == "string"
     assert _value.title == "string"
@@ -1446,9 +1446,9 @@ async def test_async_get_blocklist(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.cleanTitle == "string"
     assert _value.monitored is True
     assert _value.anyEditionOk is True
@@ -1457,7 +1457,7 @@ async def test_async_get_blocklist(aresponses):
     assert _value.addOptions.addType == "string"
     assert _value.addOptions.searchForNewBook is True
     _value = _value.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -1478,27 +1478,27 @@ async def test_async_get_blocklist(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data.records[0].author.lastBook.authorMetadata.isLoaded is True
     _value = data.records[0].author.lastBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -1519,18 +1519,18 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -1551,41 +1551,41 @@ async def test_async_get_blocklist(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value == [None]
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -1593,8 +1593,8 @@ async def test_async_get_blocklist(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data.records[0].author.lastBook.author.isLoaded is True
     _value = data.records[0].author.lastBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -1606,57 +1606,57 @@ async def test_async_get_blocklist(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _val = _value.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
     assert _val.mediaInfo.audioSampleRate == "string"
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags[0] == 0
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor[0] == "string"
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _valu = _val.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -1677,48 +1677,48 @@ async def test_async_get_blocklist(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value[0] is None
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -1727,44 +1727,44 @@ async def test_async_get_blocklist(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert data.records[0].author.lastBook.editions.isLoaded is True
     _value = data.records[0].author.lastBook.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
+    assert isinstance(_value.quality.revision.version, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
     assert _value.mediaInfo.audioSampleRate == "string"
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -1785,40 +1785,40 @@ async def test_async_get_blocklist(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items[0] is None
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value[0] is None
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value[0] is None
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -1827,21 +1827,21 @@ async def test_async_get_blocklist(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert data.records[0].author.lastBook.bookFiles.isLoaded is True
     _value = data.records[0].author.lastBook.seriesLinks.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.position == "string"
-    assert _value.seriesId == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.seriesId, int)
+    assert isinstance(_value.bookId, int)
     assert _value.isPrimary is True
-    assert _value.series.value.id == 0
+    assert isinstance(_value.series.value.id, int)
     assert _value.series.value.foreignSeriesId == "string"
     assert _value.series.value.title == "string"
     assert _value.series.value.description == "string"
     assert _value.series.value.numbered is True
-    assert _value.series.value.workCount == 0
-    assert _value.series.value.primaryWorkCount == 0
+    assert isinstance(_value.series.value.workCount, int)
+    assert isinstance(_value.series.value.primaryWorkCount, int)
     assert _value.series.value.books.value[0] is None
     assert _value.series.value.books.isLoaded is True
     assert _value.series.value.foreignAuthorId == "string"
@@ -1853,29 +1853,29 @@ async def test_async_get_blocklist(aresponses):
     assert data.records[0].author.images[0].extension == "string"
     assert data.records[0].author.remotePoster == "string"
     assert data.records[0].author.path == "string"
-    assert data.records[0].author.qualityProfileId == 0
-    assert data.records[0].author.metadataProfileId == 0
+    assert isinstance(data.records[0].author.qualityProfileId, int)
+    assert isinstance(data.records[0].author.metadataProfileId, int)
     assert data.records[0].author.monitored is True
     assert data.records[0].author.rootFolderPath == "string"
     assert data.records[0].author.genres[0] == "string"
     assert data.records[0].author.cleanName == "string"
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
-    assert data.records[0].author.tags[0] == 0
+    assert isinstance(data.records[0].author.tags[0], int)
     assert data.records[0].author.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
     assert data.records[0].author.addOptions.monitor == "string"
     assert data.records[0].author.addOptions.booksToMonitor[0] == "string"
     assert data.records[0].author.addOptions.monitored is True
     assert data.records[0].author.addOptions.searchForMissingBooks is True
-    assert data.records[0].author.ratings.votes == 0
-    assert data.records[0].author.ratings.value == 0.0
-    assert data.records[0].author.ratings.popularity == 0.0
-    assert data.records[0].author.statistics.bookFileCount == 0
-    assert data.records[0].author.statistics.bookCount == 0
-    assert data.records[0].author.statistics.availableBookCount == 0
-    assert data.records[0].author.statistics.totalBookCount == 0
-    assert data.records[0].author.statistics.sizeOnDisk == 0
-    assert data.records[0].author.statistics.percentOfBooks == 0.0
+    assert isinstance(data.records[0].author.ratings.votes, int)
+    assert isinstance(data.records[0].author.ratings.value, int)
+    assert isinstance(data.records[0].author.ratings.popularity, int)
+    assert isinstance(data.records[0].author.statistics.bookFileCount, int)
+    assert isinstance(data.records[0].author.statistics.bookCount, int)
+    assert isinstance(data.records[0].author.statistics.availableBookCount, int)
+    assert isinstance(data.records[0].author.statistics.totalBookCount, int)
+    assert isinstance(data.records[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data.records[0].author.statistics.percentOfBooks, float)
 
 
 @pytest.mark.asyncio
@@ -1895,25 +1895,25 @@ async def test_async_get_book(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_book(bookid=0)
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
     assert data[0].seriesTitle == "string"
     assert data[0].disambiguation == "string"
     assert data[0].overview == "string"
-    assert data[0].authorId == 0
+    assert isinstance(data[0].authorId, int)
     assert data[0].foreignBookId == "string"
     assert data[0].titleSlug == "string"
     assert data[0].monitored is True
     assert data[0].anyEditionOk is True
-    assert data[0].ratings.votes == 0
-    assert data[0].ratings.value == 0
-    assert data[0].ratings.popularity == 0
+    assert isinstance(data[0].ratings.votes, int)
+    assert isinstance(data[0].ratings.value, int)
+    assert isinstance(data[0].ratings.popularity, int)
     assert data[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000)
-    assert data[0].pageCount == 0
+    assert isinstance(data[0].pageCount, int)
     assert data[0].genres[0] == "string"
-    assert data[0].author.id == 0
-    assert data[0].author.authorMetadataId == 0
+    assert isinstance(data[0].author.id, int)
+    assert isinstance(data[0].author.authorMetadataId, int)
     assert data[0].author.status == "string"
     assert data[0].author.ended is True
     assert data[0].author.authorName == "string"
@@ -1925,8 +1925,8 @@ async def test_async_get_book(aresponses):
     assert data[0].author.links[0].url == "string"
     assert data[0].author.links[0].name == "string"
     _book = data[0].author.nextBook
-    assert _book.id == 0
-    assert _book.authorMetadataId == 0
+    assert isinstance(_book.id, int)
+    assert isinstance(_book.authorMetadataId, int)
     assert _book.foreignBookId == "string"
     assert _book.titleSlug == "string"
     assert _book.title == "string"
@@ -1934,9 +1934,9 @@ async def test_async_get_book(aresponses):
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
-    assert _book.ratings.votes == 0
-    assert _book.ratings.value == 0.0
-    assert _book.ratings.popularity == 0.0
+    assert isinstance(_book.ratings.votes, int)
+    assert isinstance(_book.ratings.value, int)
+    assert isinstance(_book.ratings.popularity, int)
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
@@ -1945,7 +1945,7 @@ async def test_async_get_book(aresponses):
     assert _book.addOptions.addType == "string"
     assert _book.addOptions.searchForNewBook is True
     _value = _book.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -1966,27 +1966,27 @@ async def test_async_get_book(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data[0].author.nextBook.authorMetadata.isLoaded is True
     _value = data[0].author.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -2007,41 +2007,41 @@ async def test_async_get_book(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value[0] is None
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -2050,8 +2050,8 @@ async def test_async_get_book(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data[0].author.nextBook.author.isLoaded is True
     _value = data[0].author.nextBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -2063,57 +2063,57 @@ async def test_async_get_book(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _valu = _value.bookFiles.value[0]
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.path == "string"
-    assert _valu.size == 0
+    assert isinstance(_valu.size, int)
     assert _valu.modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _valu.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
-    assert _valu.quality.quality.id == 0
+    assert isinstance(_valu.quality.quality.id, int)
     assert _valu.quality.quality.name == "string"
-    assert _valu.quality.revision.version == 0
-    assert _valu.quality.revision.real == 0
+    assert isinstance(_valu.quality.revision.version, int)
+    assert isinstance(_valu.quality.revision.real, int)
     assert _valu.quality.revision.isRepack is True
     assert _valu.mediaInfo.audioFormat == "string"
-    assert _valu.mediaInfo.audioBitrate == 0
-    assert _valu.mediaInfo.audioChannels == 0.0
-    assert _valu.mediaInfo.audioBits == 0
+    assert isinstance(_valu.mediaInfo.audioBitrate, int)
+    assert isinstance(_valu.mediaInfo.audioChannels, float)
+    assert isinstance(_valu.mediaInfo.audioBits, int)
     assert _valu.mediaInfo.audioSampleRate == "string"
-    assert _valu.editionId == 0
-    assert _valu.calibreId == 0
-    assert _valu.part == 0
+    assert isinstance(_valu.editionId, int)
+    assert isinstance(_valu.calibreId, int)
+    assert isinstance(_valu.part, int)
     _val = _valu.author.value
-    assert _val.id == 0
-    assert _val.authorMetadataId == 0
+    assert isinstance(_val.id, int)
+    assert isinstance(_val.authorMetadataId, int)
     assert _val.cleanName == "string"
     assert _val.monitored is True
     assert _val.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.path == "string"
     assert _val.rootFolderPath == "string"
     assert _val.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _val.qualityProfileId == 0
-    assert _val.metadataProfileId == 0
-    assert _val.tags[0] == 0
+    assert isinstance(_val.qualityProfileId, int)
+    assert isinstance(_val.metadataProfileId, int)
+    assert isinstance(_val.tags[0], int)
     assert _val.addOptions.monitor == "string"
     assert _val.addOptions.booksToMonitor[0] == "string"
     assert _val.addOptions.monitored is True
     assert _val.addOptions.searchForMissingBooks is True
-    assert _val.metadata.value.id == 0
+    assert isinstance(_val.metadata.value.id, int)
     assert _val.metadata.value.foreignAuthorId == "string"
     assert _val.metadata.value.titleSlug == "string"
     assert _val.metadata.value.name == "string"
@@ -2134,42 +2134,42 @@ async def test_async_get_book(aresponses):
     assert _val.metadata.value.links[0].url == "string"
     assert _val.metadata.value.links[0].name == "string"
     assert _val.metadata.value.genres[0] == "string"
-    assert _val.metadata.value.ratings.votes == 0
-    assert _val.metadata.value.ratings.value == 0.0
-    assert _val.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_val.metadata.value.ratings.votes, int)
+    assert isinstance(_val.metadata.value.ratings.value, int)
+    assert isinstance(_val.metadata.value.ratings.popularity, int)
     assert _val.metadata.isLoaded is True
-    assert _val.qualityProfile.value.id == 0
+    assert isinstance(_val.qualityProfile.value.id, int)
     assert _val.qualityProfile.value.name == "string"
     assert _val.qualityProfile.value.upgradeAllowed is True
-    assert _val.qualityProfile.value.cutoff == 0
-    assert _val.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.qualityProfile.value.items[0].id, int)
     assert _val.qualityProfile.value.items[0].name == "string"
     assert _val.qualityProfile.value.items[0].name == "string"
-    assert _val.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.qualityProfile.value.items[0].quality.id, int)
     assert _val.qualityProfile.value.items[0].quality.name == "string"
     assert _val.qualityProfile.value.items[0].items[0] is None
     assert _val.qualityProfile.value.items[0].allowed is True
     assert _val.qualityProfile.isLoaded is True
-    assert _val.metadataProfile.value.id == 0
+    assert isinstance(_val.metadataProfile.value.id, int)
     assert _val.metadataProfile.value.name == "string"
-    assert _val.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.metadataProfile.value.minPopularity, int)
     assert _val.metadataProfile.value.skipMissingDate is True
     assert _val.metadataProfile.value.skipMissingIsbn is True
     assert _val.metadataProfile.value.skipPartsAndSets is True
     assert _val.metadataProfile.value.skipSeriesSecondary is True
     assert _val.metadataProfile.value.allowedLanguages == "string"
-    assert _val.metadataProfile.value.minPages == 0
+    assert isinstance(_val.metadataProfile.value.minPages, int)
     assert _val.metadataProfile.value.ignored == "string"
     assert _val.metadataProfile.isLoaded is True
     assert _val.books.value[0] is None
     assert _val.books.isLoaded is True
-    assert _val.series.value[0].id == 0
+    assert isinstance(_val.series.value[0].id, int)
     assert _val.series.value[0].foreignSeriesId == "string"
     assert _val.series.value[0].title == "string"
     assert _val.series.value[0].description == "string"
     assert _val.series.value[0].numbered is True
-    assert _val.series.value[0].workCount == 0
-    assert _val.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.series.value[0].workCount, int)
+    assert isinstance(_val.series.value[0].primaryWorkCount, int)
     assert _val.series.value[0].books.value[0] is None
     assert _val.series.value[0].books.isLoaded is True
     assert _val.series.value[0].foreignAuthorId == "string"
@@ -2178,21 +2178,21 @@ async def test_async_get_book(aresponses):
     assert _val.foreignAuthorId == "string"
     assert _value.bookFiles.value[0].author.isLoaded is True
     assert _value.bookFiles.value[0].edition.isLoaded is True
-    assert _value.bookFiles.value[0].partCount == 0
+    assert isinstance(_value.bookFiles.value[0].partCount, int)
     assert _value.bookFiles.isLoaded is True
     value = data[0].author.nextBook
-    assert value.seriesLinks.value[0].id == 0
+    assert isinstance(value.seriesLinks.value[0].id, int)
     assert value.seriesLinks.value[0].position == "string"
-    assert value.seriesLinks.value[0].seriesId == 0
-    assert value.seriesLinks.value[0].bookId == 0
+    assert isinstance(value.seriesLinks.value[0].seriesId, int)
+    assert isinstance(value.seriesLinks.value[0].bookId, int)
     assert value.seriesLinks.value[0].isPrimary is True
-    assert value.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(value.seriesLinks.value[0].series.value.id, int)
     assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert value.seriesLinks.value[0].series.value.title == "string"
     assert value.seriesLinks.value[0].series.value.description == "string"
     assert value.seriesLinks.value[0].series.value.numbered is True
-    assert value.seriesLinks.value[0].series.value.workCount == 0
-    assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(value.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(value.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert value.seriesLinks.value[0].series.value.books.value[0] is None
     assert value.seriesLinks.value[0].series.value.books.isLoaded is True
     assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -2200,8 +2200,8 @@ async def test_async_get_book(aresponses):
     assert value.seriesLinks.value[0].book.isLoaded is True
     assert value.seriesLinks.isLoaded is True
     _book = data[0].author.lastBook
-    assert _book.id == 0
-    assert _book.authorMetadataId == 0
+    assert isinstance(_book.id, int)
+    assert isinstance(_book.authorMetadataId, int)
     assert _book.foreignBookId == "string"
     assert _book.titleSlug == "string"
     assert _book.title == "string"
@@ -2209,9 +2209,9 @@ async def test_async_get_book(aresponses):
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
-    assert _book.ratings.votes == 0
-    assert _book.ratings.value == 0.0
-    assert _book.ratings.popularity == 0.0
+    assert isinstance(_book.ratings.votes, int)
+    assert isinstance(_book.ratings.value, int)
+    assert isinstance(_book.ratings.popularity, int)
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
@@ -2220,7 +2220,7 @@ async def test_async_get_book(aresponses):
     assert _book.addOptions.addType == "string"
     assert _book.addOptions.searchForNewBook is True
     _value = _book.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -2241,27 +2241,27 @@ async def test_async_get_book(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert data[0].author.lastBook.authorMetadata.isLoaded is True
     _value = data[0].author.lastBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -2282,41 +2282,41 @@ async def test_async_get_book(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0.0
-    assert _value.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.metadata.value.ratings.popularity, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items[0] is None
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value[0] is None
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value[0] is None
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -2325,8 +2325,8 @@ async def test_async_get_book(aresponses):
     assert _value.foreignAuthorId == "string"
     assert data[0].author.lastBook.author.isLoaded is True
     _value = data[0].author.lastBook.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -2338,57 +2338,57 @@ async def test_async_get_book(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _val = _value.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
     assert _val.mediaInfo.audioSampleRate == "string"
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags[0] == 0
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor[0] == "string"
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _valu = _val.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -2409,42 +2409,42 @@ async def test_async_get_book(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items[0] is None
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
     assert _val.author.value.qualityProfile.isLoaded is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value[0] is None
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -2453,21 +2453,21 @@ async def test_async_get_book(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert _value.bookFiles.isLoaded is True
     value = data[0].author.lastBook
-    assert value.seriesLinks.value[0].id == 0
+    assert isinstance(value.seriesLinks.value[0].id, int)
     assert value.seriesLinks.value[0].position == "string"
-    assert value.seriesLinks.value[0].seriesId == 0
-    assert value.seriesLinks.value[0].bookId == 0
+    assert isinstance(value.seriesLinks.value[0].seriesId, int)
+    assert isinstance(value.seriesLinks.value[0].bookId, int)
     assert value.seriesLinks.value[0].isPrimary is True
-    assert value.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(value.seriesLinks.value[0].series.value.id, int)
     assert value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert value.seriesLinks.value[0].series.value.title == "string"
     assert value.seriesLinks.value[0].series.value.description == "string"
     assert value.seriesLinks.value[0].series.value.numbered is True
-    assert value.seriesLinks.value[0].series.value.workCount == 0
-    assert value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(value.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(value.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert value.seriesLinks.value[0].series.value.books.value[0] is None
     assert value.seriesLinks.value[0].series.value.books.isLoaded is True
     assert value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -2479,45 +2479,45 @@ async def test_async_get_book(aresponses):
     assert data[0].author.images[0].extension == "string"
     assert data[0].author.remotePoster == "string"
     assert data[0].author.path == "string"
-    assert data[0].author.qualityProfileId == 0
-    assert data[0].author.metadataProfileId == 0
+    assert isinstance(data[0].author.qualityProfileId, int)
+    assert isinstance(data[0].author.metadataProfileId, int)
     assert data[0].author.monitored is True
     assert data[0].author.rootFolderPath == "string"
     assert data[0].author.genres[0] == "string"
     assert data[0].author.cleanName == "string"
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
-    assert data[0].author.tags[0] == 0
+    assert isinstance(data[0].author.tags[0], int)
     assert data[0].author.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].author.addOptions.monitor == "string"
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
     assert data[0].author.addOptions.searchForMissingBooks is True
-    assert data[0].author.ratings.votes == 0
-    assert data[0].author.ratings.value == 0.0
-    assert data[0].author.ratings.popularity == 0.0
-    assert data[0].author.statistics.bookFileCount == 0
-    assert data[0].author.statistics.bookCount == 0
-    assert data[0].author.statistics.availableBookCount == 0
-    assert data[0].author.statistics.totalBookCount == 0
-    assert data[0].author.statistics.sizeOnDisk == 0
-    assert data[0].author.statistics.percentOfBooks == 0.0
+    assert isinstance(data[0].author.ratings.votes, int)
+    assert isinstance(data[0].author.ratings.value, int)
+    assert isinstance(data[0].author.ratings.popularity, int)
+    assert isinstance(data[0].author.statistics.bookFileCount, int)
+    assert isinstance(data[0].author.statistics.bookCount, int)
+    assert isinstance(data[0].author.statistics.availableBookCount, int)
+    assert isinstance(data[0].author.statistics.totalBookCount, int)
+    assert isinstance(data[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].author.statistics.percentOfBooks, float)
     assert data[0].images[0].url == "string"
     assert data[0].images[0].coverType == "string"
     assert data[0].images[0].extension == "string"
     assert data[0].links[0].url == "string"
     assert data[0].links[0].name == "string"
-    assert data[0].statistics.bookFileCount == 0
-    assert data[0].statistics.bookCount == 0
-    assert data[0].statistics.totalBookCount == 0
-    assert data[0].statistics.sizeOnDisk == 0
-    assert data[0].statistics.percentOfBooks == 0.0
+    assert isinstance(data[0].statistics.bookFileCount, int)
+    assert isinstance(data[0].statistics.bookCount, int)
+    assert isinstance(data[0].statistics.totalBookCount, int)
+    assert isinstance(data[0].statistics.sizeOnDisk, int)
+    assert isinstance(data[0].statistics.percentOfBooks, float)
     assert data[0].added == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].addOptions.addType == "string"
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
-    assert data[0].editions[0].id == 0
-    assert data[0].editions[0].bookId == 0
+    assert isinstance(data[0].editions[0].id, int)
+    assert isinstance(data[0].editions[0].bookId, int)
     assert data[0].editions[0].foreignEditionId == "string"
     assert data[0].editions[0].titleSlug == "string"
     assert data[0].editions[0].isbn13 == "string"
@@ -2529,16 +2529,16 @@ async def test_async_get_book(aresponses):
     assert data[0].editions[0].isEbook is True
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
-    assert data[0].editions[0].pageCount == 0
+    assert isinstance(data[0].editions[0].pageCount, int)
     assert data[0].editions[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 510000)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "string"
     assert data[0].editions[0].images[0].extension == "string"
     assert data[0].editions[0].links[0].url == "string"
     assert data[0].editions[0].links[0].name == "string"
-    assert data[0].editions[0].ratings.votes == 0
-    assert data[0].editions[0].ratings.value == 0
-    assert data[0].editions[0].ratings.popularity == 0
+    assert isinstance(data[0].editions[0].ratings.votes, int)
+    assert isinstance(data[0].editions[0].ratings.value, int)
+    assert isinstance(data[0].editions[0].ratings.popularity, int)
     assert data[0].editions[0].monitored is True
     assert data[0].editions[0].manualAdd is True
     assert data[0].editions[0].remoteCover == "string"
@@ -2563,23 +2563,23 @@ async def test_async_get_book_file(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_book_file(fileid=[0])
-    assert data.id == 0
-    assert data.authorId == 0
-    assert data.bookId == 0
+    assert isinstance(data.id, int)
+    assert isinstance(data.authorId, int)
+    assert isinstance(data.bookId, int)
     assert data.path == "string"
-    assert data.size == 0
+    assert isinstance(data.size, int)
     assert data.dateAdded == datetime(2021, 12, 9, 20, 39, 8, 79000)
-    assert data.quality.quality.id == 0
+    assert isinstance(data.quality.quality.id, int)
     assert data.quality.quality.name == "string"
-    assert data.quality.revision.version == 0
-    assert data.quality.revision.real == 0
+    assert isinstance(data.quality.revision.version, int)
+    assert isinstance(data.quality.revision.real, int)
     assert data.quality.revision.isRepack is True
-    assert data.qualityWeight == 0
-    assert data.mediaInfo.id == 0
-    assert data.mediaInfo.audioChannels == 0.0
-    assert data.mediaInfo.audioBitRate == 0
+    assert isinstance(data.qualityWeight, int)
+    assert isinstance(data.mediaInfo.id, int)
+    assert isinstance(data.mediaInfo.audioChannels, float)
+    assert isinstance(data.mediaInfo.audioBitRate, int)
     assert data.mediaInfo.audioCodec == "string"
-    assert data.mediaInfo.audioBits == 0
+    assert isinstance(data.mediaInfo.audioBits, int)
     assert data.mediaInfo.audioSampleRate == "string"
     assert data.qualityCutoffNotMet is True
     assert data.audioTags.title == "string"
@@ -2597,39 +2597,39 @@ async def test_async_get_book_file(aresponses):
     assert data.audioTags.releaseMBId == "string"
     assert data.audioTags.recordingMBId == "string"
     assert data.audioTags.trackMBId == "string"
-    assert data.audioTags.trackNumbers[0] == 0
-    assert data.audioTags.discNumber == 0
-    assert data.audioTags.discCount == 0
+    assert isinstance(data.audioTags.trackNumbers[0], int)
+    assert isinstance(data.audioTags.discNumber, int)
+    assert isinstance(data.audioTags.discCount, int)
     assert data.audioTags.country.twoLetterCode == "string"
     assert data.audioTags.country.name == "string"
-    assert data.audioTags.year == 0
+    assert isinstance(data.audioTags.year, int)
     assert data.audioTags.publisher == "string"
     assert data.audioTags.label == "string"
     assert data.audioTags.source == "string"
     assert data.audioTags.catalogNumber == "string"
     assert data.audioTags.disambiguation == "string"
-    assert data.audioTags.duration.ticks == 0
-    assert data.audioTags.duration.days == 0
-    assert data.audioTags.duration.hours == 0
-    assert data.audioTags.duration.milliseconds == 0
-    assert data.audioTags.duration.minutes == 0
-    assert data.audioTags.duration.seconds == 0
-    assert data.audioTags.duration.totalDays == 0
-    assert data.audioTags.duration.totalHours == 0
-    assert data.audioTags.duration.totalMilliseconds == 0
-    assert data.audioTags.duration.totalMinutes == 0
-    assert data.audioTags.duration.totalSeconds == 0
-    assert data.audioTags.quality.quality.id == 0
+    assert isinstance(data.audioTags.duration.ticks, int)
+    assert isinstance(data.audioTags.duration.days, int)
+    assert isinstance(data.audioTags.duration.hours, int)
+    assert isinstance(data.audioTags.duration.milliseconds, int)
+    assert isinstance(data.audioTags.duration.minutes, int)
+    assert isinstance(data.audioTags.duration.seconds, int)
+    assert isinstance(data.audioTags.duration.totalDays, int)
+    assert isinstance(data.audioTags.duration.totalHours, int)
+    assert isinstance(data.audioTags.duration.totalMilliseconds, int)
+    assert isinstance(data.audioTags.duration.totalMinutes, int)
+    assert isinstance(data.audioTags.duration.totalSeconds, int)
+    assert isinstance(data.audioTags.quality.quality.id, int)
     assert data.audioTags.quality.quality.name == "string"
-    assert data.audioTags.quality.revision.version == 0
-    assert data.audioTags.quality.revision.real == 0
+    assert isinstance(data.audioTags.quality.revision.version, int)
+    assert isinstance(data.audioTags.quality.revision.real, int)
     assert data.audioTags.quality.revision.isRepack is True
     assert data.audioTags.mediaInfo.audioFormat == "string"
-    assert data.audioTags.mediaInfo.audioBitrate == 0
-    assert data.audioTags.mediaInfo.audioChannels == 0.0
-    assert data.audioTags.mediaInfo.audioBits == 0
+    assert isinstance(data.audioTags.mediaInfo.audioBitrate, int)
+    assert isinstance(data.audioTags.mediaInfo.audioChannels, float)
+    assert isinstance(data.audioTags.mediaInfo.audioBits, int)
     assert data.audioTags.mediaInfo.audioSampleRate == "string"
-    assert data.audioTags.trackNumbers[0] == 0
+    assert isinstance(data.audioTags.trackNumbers[0], int)
     assert data.audioTags.language == "string"
     assert data.audioTags.releaseGroup == "string"
     assert data.audioTags.releaseHash == "string"
@@ -2672,47 +2672,48 @@ async def test_async_book_lookup(aresponses):
     assert data[0].seriesTitle == "string"
     assert data[0].disambiguation == "string"
     assert data[0].overview == "string"
-    assert data[0].authorId == 0
+    assert isinstance(data[0].authorId, int)
     assert data[0].foreignBookId == "string"
     assert data[0].titleSlug == "string"
     assert data[0].monitored is False
     assert data[0].anyEditionOk is True
-    assert data[0].ratings.votes == 0
-    assert data[0].ratings.value == 0.0
-    assert data[0].ratings.popularity == 0.0
+    assert isinstance(data[0].ratings.votes, int)
+    assert isinstance(data[0].ratings.value, float)
+    assert isinstance(data[0].ratings.popularity, float)
     assert data[0].releaseDate == datetime(1869, 1, 1, 0, 0)
-    assert data[0].pageCount == 0
-    assert data[0].genres == []
-    assert data[0].author.authorMetadataId == 0
+    assert isinstance(data[0].pageCount, int)
+    assert data[0].genres == ["string"]
+    assert isinstance(data[0].author.authorMetadataId, int)
     assert data[0].author.status == "string"
     assert data[0].author.ended is False
     assert data[0].author.authorName == "string"
     assert data[0].author.authorNameLastFirst == "string"
     assert data[0].author.foreignAuthorId == "string"
     assert data[0].author.titleSlug == "string"
-    assert data[0].author.links == []
+    assert data[0].author.links[0].url == "string"
+    assert data[0].author.links[0].name == "string"
     assert data[0].author.images[0].url == "string"
     assert data[0].author.images[0].coverType == "string"
     assert data[0].author.images[0].extension == "string"
-    assert data[0].author.qualityProfileId == 0
-    assert data[0].author.metadataProfileId == 0
+    assert isinstance(data[0].author.qualityProfileId, int)
+    assert isinstance(data[0].author.metadataProfileId, int)
     assert data[0].author.monitored is False
     assert data[0].author.monitorNewItems == "string"
-    assert data[0].author.genres == []
+    assert data[0].author.genres[0] == "string"
     assert data[0].author.cleanName == "string"
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
-    assert data[0].author.tags == []
+    assert isinstance(data[0].author.tags[0], int)
     assert data[0].author.added == datetime(1, 1, 1, 4, 57)
-    assert data[0].author.ratings.votes == 0
-    assert data[0].author.ratings.value == 0.0
-    assert data[0].author.ratings.popularity == 0.0
-    assert data[0].author.statistics.bookFileCount == 0
-    assert data[0].author.statistics.bookCount == 0
-    assert data[0].author.statistics.availableBookCount == 0
-    assert data[0].author.statistics.totalBookCount == 0
-    assert data[0].author.statistics.sizeOnDisk == 0
-    assert data[0].author.statistics.percentOfBooks == 0.0
+    assert isinstance(data[0].author.ratings.votes, int)
+    assert isinstance(data[0].author.ratings.value, float)
+    assert isinstance(data[0].author.ratings.popularity, float)
+    assert isinstance(data[0].author.statistics.bookFileCount, int)
+    assert isinstance(data[0].author.statistics.bookCount, int)
+    assert isinstance(data[0].author.statistics.availableBookCount, int)
+    assert isinstance(data[0].author.statistics.totalBookCount, int)
+    assert isinstance(data[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].author.statistics.percentOfBooks, float)
     assert data[0].images[0].url == "string"
     assert data[0].images[0].coverType == "cover"
     assert data[0].images[0].extension == ".jpg"
@@ -2720,7 +2721,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].links[0].name == "string"
     assert data[0].added == datetime(1, 1, 1, 4, 57)
     assert data[0].remoteCover == "string"
-    assert data[0].editions[0].bookId == 0
+    assert isinstance(data[0].editions[0].bookId, int)
     assert data[0].editions[0].foreignEditionId == "string"
     assert data[0].editions[0].titleSlug == "string"
     assert data[0].editions[0].title == "string"
@@ -2729,7 +2730,7 @@ async def test_async_book_lookup(aresponses):
     assert data[0].editions[0].isEbook is False
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
-    assert data[0].editions[0].pageCount == 0
+    assert isinstance(data[0].editions[0].pageCount, int)
     assert data[0].editions[0].releaseDate == datetime(1998, 6, 25, 0, 0)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "cover"
@@ -2737,9 +2738,9 @@ async def test_async_book_lookup(aresponses):
     assert data[0].editions[0].images[0].extension == ".jpg"
     assert data[0].editions[0].links[0].url == "string"
     assert data[0].editions[0].links[0].name == "string"
-    assert data[0].editions[0].ratings.votes == 0
-    assert data[0].editions[0].ratings.value == 0.0
-    assert data[0].editions[0].ratings.popularity == 0.0
+    assert isinstance(data[0].editions[0].ratings.votes, int)
+    assert isinstance(data[0].editions[0].ratings.value, float)
+    assert isinstance(data[0].editions[0].ratings.popularity, float)
     assert data[0].editions[0].monitored is True
     assert data[0].editions[0].manualAdd is False
     assert data[0].editions[0].grabbed is False
@@ -2765,25 +2766,25 @@ async def test_async_get_calendar(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_calendar(start, end)
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
     assert data[0].seriesTitle == "string"
     assert data[0].disambiguation == "string"
     assert data[0].overview == "string"
-    assert data[0].authorId == 0
+    assert isinstance(data[0].authorId, int)
     assert data[0].foreignBookId == "string"
     assert data[0].titleSlug == "string"
     assert data[0].monitored is True
     assert data[0].anyEditionOk is True
-    assert data[0].ratings.votes == 0
-    assert data[0].ratings.value == 0
+    assert isinstance(data[0].ratings.votes, int)
+    assert isinstance(data[0].ratings.value, int)
     assert data[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert data[0].pageCount == 0
+    assert isinstance(data[0].pageCount, int)
     assert data[0].genres[0] == "string"
     _value = data[0].author
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.status == "string"
     assert _value.authorName == "string"
     assert _value.authorNameLastFirst == "string"
@@ -2793,8 +2794,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.disambiguation == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.nextBook.id == 0
-    assert _value.nextBook.authorMetadataId == 0
+    assert isinstance(_value.nextBook.id, int)
+    assert isinstance(_value.nextBook.authorMetadataId, int)
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
@@ -2802,8 +2803,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
-    assert _value.nextBook.ratings.votes == 0
-    assert _value.nextBook.ratings.value == 0
+    assert isinstance(_value.nextBook.ratings.votes, int)
+    assert isinstance(_value.nextBook.ratings.value, int)
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
@@ -2812,7 +2813,7 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.addOptions.addType == "string"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -2831,26 +2832,26 @@ async def test_async_get_calendar(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
     assert data[0].author.nextBook.authorMetadata.isLoaded is True
     _value = data[0].author.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -2870,40 +2871,40 @@ async def test_async_get_calendar(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items == [None]
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value == [None]
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value == [None]
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -2912,8 +2913,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.foreignAuthorId == "string"
     _book = data[0].author.nextBook
     _valu = _book.editions.value[0]
-    assert _valu.id == 0
-    assert _valu.bookId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.bookId, int)
     assert _valu.foreignEditionId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.isbn13 == "string"
@@ -2925,57 +2926,57 @@ async def test_async_get_calendar(aresponses):
     assert _valu.isEbook is True
     assert _valu.disambiguation == "string"
     assert _valu.publisher == "string"
-    assert _valu.pageCount == 0
+    assert isinstance(_valu.pageCount, int)
     assert _valu.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == "string"
     assert _valu.images[0].extension == "string"
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _valu.monitored is True
     assert _valu.manualAdd is True
     assert _valu.book.isLoaded is True
     _value = _book.editions.value[0].bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
-    assert _value.quality.revision.real == 0
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
-    assert _value.mediaInfo.audioSampleRate == 0
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
+    assert isinstance(_value.mediaInfo.audioSampleRate, int)
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -2996,41 +2997,41 @@ async def test_async_get_calendar(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
     assert _value.author.value.qualityProfile.isLoaded is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value == [None]
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value == [None]
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -3038,48 +3039,48 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.name == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert _book.editions.value[0].bookFiles.isLoaded is True
     assert _book.editions.isLoaded is True
     _val = _book.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
     _author = _book.bookFiles.value[0].author
-    assert _author.value.id == 0
-    assert _author.value.authorMetadataId == 0
+    assert isinstance(_author.value.id, int)
+    assert isinstance(_author.value.authorMetadataId, int)
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
     assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
     assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _author.value.qualityProfileId == 0
-    assert _author.value.metadataProfileId == 0
-    assert _author.value.tags[0] == 0
+    assert isinstance(_author.value.qualityProfileId, int)
+    assert isinstance(_author.value.metadataProfileId, int)
+    assert isinstance(_author.value.tags[0], int)
     assert _author.value.addOptions.monitor == "string"
     assert _author.value.addOptions.booksToMonitor[0] == "string"
     assert _author.value.addOptions.monitored is True
     assert _author.value.addOptions.searchForMissingBooks is True
     _val = _author.value.metadata.value
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.foreignAuthorId == "string"
     assert _val.titleSlug == "string"
     assert _val.name == "string"
@@ -3100,41 +3101,41 @@ async def test_async_get_calendar(aresponses):
     assert _val.links[0].url == "string"
     assert _val.links[0].name == "string"
     assert _val.genres[0] == "string"
-    assert _val.ratings.votes == 0
-    assert _val.ratings.value == 0.0
-    assert _val.ratings.popularity == 0.0
+    assert isinstance(_val.ratings.votes, int)
+    assert isinstance(_val.ratings.value, int)
+    assert isinstance(_val.ratings.popularity, int)
     assert _author.value.metadata.isLoaded is True
-    assert _author.value.qualityProfile.value.id == 0
+    assert isinstance(_author.value.qualityProfile.value.id, int)
     assert _author.value.qualityProfile.value.name == "string"
     assert _author.value.qualityProfile.value.upgradeAllowed is True
-    assert _author.value.qualityProfile.value.cutoff == 0
-    assert _author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_author.value.qualityProfile.value.items[0].id, int)
     assert _author.value.qualityProfile.value.items[0].name == "string"
-    assert _author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_author.value.qualityProfile.value.items[0].quality.id, int)
     assert _author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _author.value.qualityProfile.value.items[0].items == [None]
     assert _author.value.qualityProfile.value.items[0].allowed is True
     assert _author.value.qualityProfile.isLoaded is True
-    assert _author.value.metadataProfile.value.id == 0
+    assert isinstance(_author.value.metadataProfile.value.id, int)
     assert _author.value.metadataProfile.value.name == "string"
-    assert _author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_author.value.metadataProfile.value.minPopularity, int)
     assert _author.value.metadataProfile.value.skipMissingDate is True
     assert _author.value.metadataProfile.value.skipMissingIsbn is True
     assert _author.value.metadataProfile.value.skipPartsAndSets is True
     assert _author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_author.value.metadataProfile.value.minPages, int)
     assert _author.value.metadataProfile.value.ignored == "string"
     assert _author.value.metadataProfile.isLoaded is True
     assert _author.value.books.value == [None]
     assert _author.value.books.isLoaded is True
-    assert _author.value.series.value[0].id == 0
+    assert isinstance(_author.value.series.value[0].id, int)
     assert _author.value.series.value[0].foreignSeriesId == "string"
     assert _author.value.series.value[0].title == "string"
     assert _author.value.series.value[0].description == "string"
     assert _author.value.series.value[0].numbered is True
-    assert _author.value.series.value[0].workCount == 0
-    assert _author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_author.value.series.value[0].workCount, int)
+    assert isinstance(_author.value.series.value[0].primaryWorkCount, int)
     assert _author.value.series.value[0].books.value == [None]
     assert _author.value.series.value[0].books.isLoaded is True
     assert _author.value.series.value[0].foreignAuthorId == "string"
@@ -3143,20 +3144,20 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.foreignAuthorId == "string"
     assert _author.isLoaded is True
     assert _book.bookFiles.value[0].edition.isLoaded is True
-    assert _book.bookFiles.value[0].partCount == 0
+    assert isinstance(_book.bookFiles.value[0].partCount, int)
     assert _book.bookFiles.isLoaded is True
-    assert _book.seriesLinks.value[0].id == 0
+    assert isinstance(_book.seriesLinks.value[0].id, int)
     assert _book.seriesLinks.value[0].position == "string"
-    assert _book.seriesLinks.value[0].seriesId == 0
-    assert _book.seriesLinks.value[0].bookId == 0
+    assert isinstance(_book.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_book.seriesLinks.value[0].bookId, int)
     assert _book.seriesLinks.value[0].isPrimary is True
-    assert _book.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.id, int)
     assert _book.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _book.seriesLinks.value[0].series.value.title == "string"
     assert _book.seriesLinks.value[0].series.value.description == "string"
     assert _book.seriesLinks.value[0].series.value.numbered is True
-    assert _book.seriesLinks.value[0].series.value.workCount == 0
-    assert _book.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_book.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _book.seriesLinks.value[0].series.value.books.value == [None]
     assert _book.seriesLinks.value[0].series.value.books.isLoaded is True
     assert _book.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -3164,8 +3165,8 @@ async def test_async_get_calendar(aresponses):
     assert _book.seriesLinks.value[0].book.isLoaded is True
     assert _book.seriesLinks.isLoaded is True
     _value = data[0].author
-    assert _value.nextBook.id == 0
-    assert _value.nextBook.authorMetadataId == 0
+    assert isinstance(_value.nextBook.id, int)
+    assert isinstance(_value.nextBook.authorMetadataId, int)
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
@@ -3173,8 +3174,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
-    assert _value.nextBook.ratings.votes == 0
-    assert _value.nextBook.ratings.value == 0
+    assert isinstance(_value.nextBook.ratings.votes, int)
+    assert isinstance(_value.nextBook.ratings.value, int)
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
@@ -3183,7 +3184,7 @@ async def test_async_get_calendar(aresponses):
     assert _value.nextBook.addOptions.addType == "string"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -3202,26 +3203,26 @@ async def test_async_get_calendar(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
     assert data[0].author.nextBook.authorMetadata.isLoaded is True
     _value = data[0].author.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -3241,40 +3242,40 @@ async def test_async_get_calendar(aresponses):
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
     assert _value.metadata.isLoaded is True
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items == [None]
     assert _value.qualityProfile.value.items[0].allowed is True
     assert _value.qualityProfile.isLoaded is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert _value.metadataProfile.isLoaded is True
     assert _value.books.value == [None]
     assert _value.books.isLoaded is True
-    assert _value.series.value[0].id == 0
+    assert isinstance(_value.series.value[0].id, int)
     assert _value.series.value[0].foreignSeriesId == "string"
     assert _value.series.value[0].title == "string"
     assert _value.series.value[0].description == "string"
     assert _value.series.value[0].numbered is True
-    assert _value.series.value[0].workCount == 0
-    assert _value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.series.value[0].workCount, int)
+    assert isinstance(_value.series.value[0].primaryWorkCount, int)
     assert _value.series.value[0].books.value == [None]
     assert _value.series.value[0].books.isLoaded is True
     assert _value.series.value[0].foreignAuthorId == "string"
@@ -3283,8 +3284,8 @@ async def test_async_get_calendar(aresponses):
     assert _value.foreignAuthorId == "string"
     _book = data[0].author.nextBook
     _value = _book.editions.value[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -3296,57 +3297,57 @@ async def test_async_get_calendar(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
+    assert isinstance(_value.ratings.popularity, int)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.book.isLoaded is True
     _value = _value.bookFiles.value[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.path == "string"
-    assert _value.size == 0
+    assert isinstance(_value.size, int)
     assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
-    assert _value.quality.quality.id == 0
+    assert isinstance(_value.quality.quality.id, int)
     assert _value.quality.quality.name == "string"
-    assert _value.quality.revision.version == 0
-    assert _value.quality.revision.real == 0
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
     assert _value.quality.revision.isRepack is True
     assert _value.mediaInfo.audioFormat == "string"
-    assert _value.mediaInfo.audioBitrate == 0
-    assert _value.mediaInfo.audioChannels == 0.0
-    assert _value.mediaInfo.audioBits == 0
-    assert _value.mediaInfo.audioSampleRate == 0
-    assert _value.editionId == 0
-    assert _value.calibreId == 0
-    assert _value.part == 0
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.mediaInfo.audioBitrate, int)
+    assert isinstance(_value.mediaInfo.audioChannels, float)
+    assert isinstance(_value.mediaInfo.audioBits, int)
+    assert isinstance(_value.mediaInfo.audioSampleRate, int)
+    assert isinstance(_value.editionId, int)
+    assert isinstance(_value.calibreId, int)
+    assert isinstance(_value.part, int)
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags[0] == 0
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor[0] == "string"
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -3367,41 +3368,41 @@ async def test_async_get_calendar(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres[0] == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, int)
+    assert isinstance(_valu.ratings.popularity, int)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
     assert _value.author.value.qualityProfile.isLoaded is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value == [None]
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value == [None]
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -3409,48 +3410,48 @@ async def test_async_get_calendar(aresponses):
     assert _value.author.value.name == "string"
     assert _value.author.isLoaded is True
     assert _value.edition.isLoaded is True
-    assert _value.partCount == 0
+    assert isinstance(_value.partCount, int)
     assert _book.editions.value[0].bookFiles.isLoaded is True
     assert _book.editions.isLoaded is True
     _val = _book.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
     _author = _val.author
-    assert _author.value.id == 0
-    assert _author.value.authorMetadataId == 0
+    assert isinstance(_author.value.id, int)
+    assert isinstance(_author.value.authorMetadataId, int)
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
     assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
     assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _author.value.qualityProfileId == 0
-    assert _author.value.metadataProfileId == 0
-    assert _author.value.tags[0] == 0
+    assert isinstance(_author.value.qualityProfileId, int)
+    assert isinstance(_author.value.metadataProfileId, int)
+    assert isinstance(_author.value.tags[0], int)
     assert _author.value.addOptions.monitor == "string"
     assert _author.value.addOptions.booksToMonitor[0] == "string"
     assert _author.value.addOptions.monitored is True
     assert _author.value.addOptions.searchForMissingBooks is True
     _val = _author.value.metadata.value
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.foreignAuthorId == "string"
     assert _val.titleSlug == "string"
     assert _val.name == "string"
@@ -3471,41 +3472,41 @@ async def test_async_get_calendar(aresponses):
     assert _val.links[0].url == "string"
     assert _val.links[0].name == "string"
     assert _val.genres[0] == "string"
-    assert _val.ratings.votes == 0
-    assert _val.ratings.value == 0.0
-    assert _val.ratings.popularity == 0.0
+    assert isinstance(_val.ratings.votes, int)
+    assert isinstance(_val.ratings.value, int)
+    assert isinstance(_val.ratings.popularity, int)
     assert _author.value.metadata.isLoaded is True
-    assert _author.value.qualityProfile.value.id == 0
+    assert isinstance(_author.value.qualityProfile.value.id, int)
     assert _author.value.qualityProfile.value.name == "string"
     assert _author.value.qualityProfile.value.upgradeAllowed is True
-    assert _author.value.qualityProfile.value.cutoff == 0
-    assert _author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_author.value.qualityProfile.value.items[0].id, int)
     assert _author.value.qualityProfile.value.items[0].name == "string"
-    assert _author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_author.value.qualityProfile.value.items[0].quality.id, int)
     assert _author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _author.value.qualityProfile.value.items[0].items == [None]
     assert _author.value.qualityProfile.value.items[0].allowed is True
     assert _author.value.qualityProfile.isLoaded is True
-    assert _author.value.metadataProfile.value.id == 0
+    assert isinstance(_author.value.metadataProfile.value.id, int)
     assert _author.value.metadataProfile.value.name == "string"
-    assert _author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_author.value.metadataProfile.value.minPopularity, int)
     assert _author.value.metadataProfile.value.skipMissingDate is True
     assert _author.value.metadataProfile.value.skipMissingIsbn is True
     assert _author.value.metadataProfile.value.skipPartsAndSets is True
     assert _author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_author.value.metadataProfile.value.minPages, int)
     assert _author.value.metadataProfile.value.ignored == "string"
     assert _author.value.metadataProfile.isLoaded is True
     assert _author.value.books.value == [None]
     assert _author.value.books.isLoaded is True
-    assert _author.value.series.value[0].id == 0
+    assert isinstance(_author.value.series.value[0].id, int)
     assert _author.value.series.value[0].foreignSeriesId == "string"
     assert _author.value.series.value[0].title == "string"
     assert _author.value.series.value[0].description == "string"
     assert _author.value.series.value[0].numbered is True
-    assert _author.value.series.value[0].workCount == 0
-    assert _author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_author.value.series.value[0].workCount, int)
+    assert isinstance(_author.value.series.value[0].primaryWorkCount, int)
     assert _author.value.series.value[0].books.value == [None]
     assert _author.value.series.value[0].books.isLoaded is True
     assert _author.value.series.value[0].foreignAuthorId == "string"
@@ -3514,20 +3515,20 @@ async def test_async_get_calendar(aresponses):
     assert _author.value.foreignAuthorId == "string"
     assert _author.isLoaded is True
     assert _book.bookFiles.value[0].edition.isLoaded is True
-    assert _book.bookFiles.value[0].partCount == 0
+    assert isinstance(_book.bookFiles.value[0].partCount, int)
     assert _book.bookFiles.isLoaded is True
-    assert _book.seriesLinks.value[0].id == 0
+    assert isinstance(_book.seriesLinks.value[0].id, int)
     assert _book.seriesLinks.value[0].position == "string"
-    assert _book.seriesLinks.value[0].seriesId == 0
-    assert _book.seriesLinks.value[0].bookId == 0
+    assert isinstance(_book.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_book.seriesLinks.value[0].bookId, int)
     assert _book.seriesLinks.value[0].isPrimary is True
-    assert _book.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.id, int)
     assert _book.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _book.seriesLinks.value[0].series.value.title == "string"
     assert _book.seriesLinks.value[0].series.value.description == "string"
     assert _book.seriesLinks.value[0].series.value.numbered is True
-    assert _book.seriesLinks.value[0].series.value.workCount == 0
-    assert _book.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_book.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _book.seriesLinks.value[0].series.value.books.value == [None]
     assert _book.seriesLinks.value[0].series.value.books.isLoaded is True
     assert _book.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -3539,45 +3540,45 @@ async def test_async_get_calendar(aresponses):
     assert data[0].author.images[0].extension == "string"
     assert data[0].author.remotePoster == "string"
     assert data[0].author.path == "string"
-    assert data[0].author.qualityProfileId == 0
-    assert data[0].author.metadataProfileId == 0
+    assert isinstance(data[0].author.qualityProfileId, int)
+    assert isinstance(data[0].author.metadataProfileId, int)
     assert data[0].author.monitored is True
     assert data[0].author.rootFolderPath == "string"
     assert data[0].author.genres[0] == "string"
     assert data[0].author.cleanName == "string"
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
-    assert data[0].author.tags[0] == 0
+    assert isinstance(data[0].author.tags[0], int)
     assert data[0].author.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].author.addOptions.monitor == "string"
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
     assert data[0].author.addOptions.searchForMissingBooks is True
-    assert data[0].author.ratings.votes == 0
-    assert data[0].author.ratings.value == 0.0
-    assert data[0].author.ratings.popularity == 0.0
-    assert data[0].author.statistics.bookFileCount == 0
-    assert data[0].author.statistics.bookCount == 0
-    assert data[0].author.statistics.availableBookCount == 0
-    assert data[0].author.statistics.totalBookCount == 0
-    assert data[0].author.statistics.sizeOnDisk == 0
-    assert data[0].author.statistics.percentOfBooks == 0.0
+    assert isinstance(data[0].author.ratings.votes, int)
+    assert isinstance(data[0].author.ratings.value, int)
+    assert isinstance(data[0].author.ratings.popularity, int)
+    assert isinstance(data[0].author.statistics.bookFileCount, int)
+    assert isinstance(data[0].author.statistics.bookCount, int)
+    assert isinstance(data[0].author.statistics.availableBookCount, int)
+    assert isinstance(data[0].author.statistics.totalBookCount, int)
+    assert isinstance(data[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].author.statistics.percentOfBooks, float)
     assert data[0].images[0].url == "string"
     assert data[0].images[0].coverType == "string"
     assert data[0].images[0].extension == "string"
     assert data[0].links[0].url == "string"
     assert data[0].links[0].name == "string"
-    assert data[0].statistics.bookFileCount == 0
-    assert data[0].statistics.bookCount == 0
-    assert data[0].statistics.totalBookCount == 0
-    assert data[0].statistics.sizeOnDisk == 0
-    assert data[0].statistics.percentOfBooks == 0.0
+    assert isinstance(data[0].statistics.bookFileCount, int)
+    assert isinstance(data[0].statistics.bookCount, int)
+    assert isinstance(data[0].statistics.totalBookCount, int)
+    assert isinstance(data[0].statistics.sizeOnDisk, int)
+    assert isinstance(data[0].statistics.percentOfBooks, float)
     assert data[0].added == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].addOptions.addType == "string"
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
-    assert data[0].editions[0].id == 0
-    assert data[0].editions[0].bookId == 0
+    assert isinstance(data[0].editions[0].id, int)
+    assert isinstance(data[0].editions[0].bookId, int)
     assert data[0].editions[0].foreignEditionId == "string"
     assert data[0].editions[0].titleSlug == "string"
     assert data[0].editions[0].isbn13 == "string"
@@ -3589,16 +3590,16 @@ async def test_async_get_calendar(aresponses):
     assert data[0].editions[0].isEbook is True
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
-    assert data[0].editions[0].pageCount == 0
+    assert isinstance(data[0].editions[0].pageCount, int)
     assert data[0].editions[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "string"
     assert data[0].editions[0].images[0].extension == "string"
     assert data[0].editions[0].links[0].url == "string"
     assert data[0].editions[0].links[0].name == "string"
-    assert data[0].editions[0].ratings.votes == 0
-    assert data[0].editions[0].ratings.value == 0.0
-    assert data[0].editions[0].ratings.popularity == 0.0
+    assert isinstance(data[0].editions[0].ratings.votes, int)
+    assert isinstance(data[0].editions[0].ratings.value, int)
+    assert isinstance(data[0].editions[0].ratings.popularity, int)
     assert data[0].editions[0].monitored is True
     assert data[0].editions[0].manualAdd is True
     assert data[0].editions[0].remoteCover == "string"
@@ -3627,24 +3628,24 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.pageSize == 10
     assert data.sortKey == "string"
     assert data.sortDirection == "default"
-    assert data.totalRecords == 0
+    assert isinstance(data.totalRecords, int)
     assert data.records[0].title == "string"
     assert data.records[0].authorTitle == "string"
     assert data.records[0].seriesTitle == "string"
     assert data.records[0].disambiguation == "string"
     assert data.records[0].overview == "string"
-    assert data.records[0].authorId == 0
+    assert isinstance(data.records[0].authorId, int)
     assert data.records[0].foreignBookId == "string"
     assert data.records[0].titleSlug == "string"
     assert data.records[0].monitored is True
     assert data.records[0].anyEditionOk is True
-    assert data.records[0].ratings.votes == 0
-    assert data.records[0].ratings.value == 0.0
-    assert data.records[0].ratings.popularity == 0.0
+    assert isinstance(data.records[0].ratings.votes, int)
+    assert isinstance(data.records[0].ratings.value, float)
+    assert isinstance(data.records[0].ratings.popularity, float)
     assert data.records[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert data.records[0].pageCount == 0
+    assert isinstance(data.records[0].pageCount, int)
     assert data.records[0].genres[0] == "string"
-    assert data.records[0].author.authorMetadataId == 0
+    assert isinstance(data.records[0].author.authorMetadataId, int)
     assert data.records[0].author.status == "string"
     assert data.records[0].author.ended is False
     assert data.records[0].author.authorName == "string"
@@ -3658,38 +3659,38 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].author.images[0].coverType == "string"
     assert data.records[0].author.images[0].extension == "string"
     assert data.records[0].author.path == "string"
-    assert data.records[0].author.qualityProfileId == 0
-    assert data.records[0].author.metadataProfileId == 0
+    assert isinstance(data.records[0].author.qualityProfileId, int)
+    assert isinstance(data.records[0].author.metadataProfileId, int)
     assert data.records[0].author.monitored is True
     assert data.records[0].author.monitorNewItems == "string"
-    assert data.records[0].author.genres == []
+    assert data.records[0].author.genres == ["string"]
     assert data.records[0].author.cleanName == "string"
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
-    assert data.records[0].author.tags == []
+    assert isinstance(data.records[0].author.tags[0], int)
     assert data.records[0].author.added == datetime(2021, 12, 6, 22, 23, 55)
-    assert data.records[0].author.ratings.votes == 0
-    assert data.records[0].author.ratings.value == 0.0
-    assert data.records[0].author.ratings.popularity == 0.0
-    assert data.records[0].author.statistics.bookFileCount == 0
-    assert data.records[0].author.statistics.bookCount == 0
-    assert data.records[0].author.statistics.availableBookCount == 0
-    assert data.records[0].author.statistics.totalBookCount == 0
-    assert data.records[0].author.statistics.sizeOnDisk == 0
-    assert data.records[0].author.statistics.percentOfBooks == 0.0
-    assert data.records[0].author.id == 0
+    assert isinstance(data.records[0].author.ratings.votes, int)
+    assert isinstance(data.records[0].author.ratings.value, float)
+    assert isinstance(data.records[0].author.ratings.popularity, float)
+    assert isinstance(data.records[0].author.statistics.bookFileCount, int)
+    assert isinstance(data.records[0].author.statistics.bookCount, int)
+    assert isinstance(data.records[0].author.statistics.availableBookCount, int)
+    assert isinstance(data.records[0].author.statistics.totalBookCount, int)
+    assert isinstance(data.records[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data.records[0].author.statistics.percentOfBooks, float)
+    assert isinstance(data.records[0].author.id, int)
     assert data.records[0].images[0].url == "string"
     assert data.records[0].images[0].coverType == "string"
     assert data.records[0].images[0].extension == "string"
     assert data.records[0].links[0].url == "string"
     assert data.records[0].links[0].name == "string"
-    assert data.records[0].statistics.bookFileCount == 0
-    assert data.records[0].statistics.bookCount == 0
-    assert data.records[0].statistics.totalBookCount == 0
-    assert data.records[0].statistics.sizeOnDisk == 0
-    assert data.records[0].statistics.percentOfBooks == 0.0
+    assert isinstance(data.records[0].statistics.bookFileCount, int)
+    assert isinstance(data.records[0].statistics.bookCount, int)
+    assert isinstance(data.records[0].statistics.totalBookCount, int)
+    assert isinstance(data.records[0].statistics.sizeOnDisk, int)
+    assert isinstance(data.records[0].statistics.percentOfBooks, float)
     assert data.records[0].added == datetime(2021, 12, 6, 22, 23, 58)
-    assert data.records[0].editions[0].bookId == 0
+    assert isinstance(data.records[0].editions[0].bookId, int)
     assert data.records[0].editions[0].foreignEditionId == "string"
     assert data.records[0].editions[0].titleSlug == "string"
     assert data.records[0].editions[0].asin == "string"
@@ -3700,22 +3701,22 @@ async def test_async_get_wanted_missing(aresponses):
     assert data.records[0].editions[0].isEbook is True
     assert data.records[0].editions[0].disambiguation == "string"
     assert data.records[0].editions[0].publisher == "string"
-    assert data.records[0].editions[0].pageCount == 0
+    assert isinstance(data.records[0].editions[0].pageCount, int)
     assert data.records[0].editions[0].releaseDate == datetime(2017, 3, 15, 0, 0)
     assert data.records[0].editions[0].images[0].url == "string"
     assert data.records[0].editions[0].images[0].coverType == "string"
     assert data.records[0].editions[0].images[0].extension == "string"
     assert data.records[0].editions[0].links[0].url == "string"
     assert data.records[0].editions[0].links[0].name == "string"
-    assert data.records[0].editions[0].ratings.votes == 0
-    assert data.records[0].editions[0].ratings.value == 0
-    assert data.records[0].editions[0].ratings.popularity == 0
+    assert isinstance(data.records[0].editions[0].ratings.votes, int)
+    assert isinstance(data.records[0].editions[0].ratings.value, float)
+    assert isinstance(data.records[0].editions[0].ratings.popularity, float)
     assert data.records[0].editions[0].monitored is False
     assert data.records[0].editions[0].manualAdd is False
     assert data.records[0].editions[0].grabbed is False
-    assert data.records[0].editions[0].id == 0
+    assert isinstance(data.records[0].editions[0].id, int)
     assert data.records[0].grabbed is False
-    assert data.records[0].id == 0
+    assert isinstance(data.records[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -3735,35 +3736,22 @@ async def test_async_get_wanted_cutoff(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_wanted_cutoff()
-    assert data.filters[0].key == "string"
-    assert data.filters[0].value == "string"
+    assert isinstance(data, ReadarrWantedCutoff)
 
-
-@pytest.mark.asyncio
-async def test_async_get_delay_profiles(aresponses):
-    """Test getting delay profile."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile",
+        f"/api/{READARR_API}/wanted/cutoff/0?sortKey=title&page=1&pageSize=10",
         "GET",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("readarr/delayprofile.json"),
         ),
         match_querystring=True,
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_delay_profiles()
-    assert data[0].enableUsenet is True
-    assert data[0].enableTorrent is True
-    assert data[0].preferredProtocol == "usenet"
-    assert data[0].usenetDelay == 0
-    assert data[0].torrentDelay == 0
-    assert data[0].order == 2147483647
-    assert data[0].tags == []
-    assert data[0].id == 1
+        data = await client.async_get_wanted_cutoff(0)
+    assert isinstance(data, ReadarrBook)
 
 
 @pytest.mark.asyncio
@@ -3783,18 +3771,18 @@ async def test_async_get_history(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_history()
-    assert data.page == 1
-    assert data.pageSize == 10
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
     assert data.sortKey == "date"
     assert data.sortDirection == "descending"
-    assert data.totalRecords == 5
-    assert data.records[0].bookId == 0
-    assert data.records[0].authorId == 0
+    assert isinstance(data.totalRecords, int)
+    assert isinstance(data.records[0].bookId, int)
+    assert isinstance(data.records[0].authorId, int)
     assert data.records[0].sourceTitle == "string"
-    assert data.records[0].quality.quality.id == 3
+    assert isinstance(data.records[0].quality.quality.id, int)
     assert data.records[0].quality.quality.name == "EPUB"
-    assert data.records[0].quality.revision.version == 1
-    assert data.records[0].quality.revision.real == 0
+    assert isinstance(data.records[0].quality.revision.version, int)
+    assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
     assert data.records[0].qualityCutoffNotMet is False
     assert data.records[0].date == datetime(2021, 12, 31, 1, 13, 38)
@@ -3803,18 +3791,18 @@ async def test_async_get_history(aresponses):
     assert data.records[0].data.indexer == "string"
     assert data.records[0].data.nzbInfoUrl == "string"
     assert data.records[0].data.releaseGroup is None
-    assert data.records[0].data.age == 0.0
-    assert data.records[0].data.ageHours == 0.0
-    assert data.records[0].data.ageMinutes == 0.0
+    assert isinstance(data.records[0].data.age, int)
+    assert isinstance(data.records[0].data.ageHours, float)
+    assert isinstance(data.records[0].data.ageMinutes, float)
     assert data.records[0].data.publishedDate == datetime(2020, 6, 6, 4, 0)
     assert data.records[0].data.downloadClient == "string"
-    assert data.records[0].data.size == 0
+    assert isinstance(data.records[0].data.size, int)
     assert data.records[0].data.downloadUrl == "string"
     assert data.records[0].data.guid == "string"
-    assert data.records[0].data.protocol == 2
+    assert isinstance(data.records[0].data.protocol, int)
     assert data.records[0].data.downloadForced is False
     assert data.records[0].data.torrentInfoHash == "string"
-    assert data.records[0].id == 0
+    assert isinstance(data.records[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -3835,28 +3823,28 @@ async def test_async_get_import_lists(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_import_lists()
     assert data[0].enableAutomaticAdd is True
-    assert data[0].shouldMonitor == "entireAuthor"
+    assert data[0].shouldMonitor == "string"
     assert data[0].shouldMonitorExisting is False
-    assert data[0].rootFolderPath == "/books/"
+    assert data[0].rootFolderPath == "string"
     assert data[0].monitorNewItems == "string"
-    assert data[0].qualityProfileId == 1
+    assert isinstance(data[0].qualityProfileId, int)
     assert data[0].listType == "string"
-    assert data[0].listOrder == 1
+    assert isinstance(data[0].listOrder, int)
     assert data[0].name == "string"
-    assert data[0].fields[0].order == 0
-    assert data[0].fields[0].name == "accessToken"
-    assert data[0].fields[0].label == "Access Token"
+    assert isinstance(data[0].fields[0].order, int)
+    assert data[0].fields[0].name == "string"
+    assert data[0].fields[0].label == "string"
     assert data[0].fields[0].helpText == "string"
-    assert data[0].fields[0].value == ["string", "string"]
+    assert data[0].fields[0].value == ["string"]
     assert data[0].fields[0].type == "string"
     assert data[0].fields[0].advanced is False
-    assert data[0].fields[0].hidden == "hidden"
+    assert data[0].fields[0].hidden == "string"
     assert data[0].implementationName == "string"
     assert data[0].implementation == "string"
     assert data[0].configContract == "string"
     assert data[0].infoLink == "string"
-    assert data[0].tags == []
-    assert data[0].id == 1
+    assert isinstance(data[0].tags[0], int)
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -3876,15 +3864,15 @@ async def test_async_get_metadata_profiles(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_metadata_profiles()
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
     assert data[0].name == "string"
-    assert data[0].minPages == 0
+    assert isinstance(data[0].minPages, int)
     assert data[0].skipMissingDate is True
     assert data[0].skipMissingIsbn is True
     assert data[0].skipPartsAndSets is True
     assert data[0].skipSeriesSecondary is True
     assert data[0].allowedLanguages == "string"
-    assert data[0].minPages == 0
+    assert isinstance(data[0].minPages, int)
     assert data[0].ignored == "string"
 
 
@@ -3978,7 +3966,7 @@ async def test_async_get_notifications(aresponses):
     assert data[0].supportsOnImportFailure is True
     assert data[0].supportsOnBookRetag is True
     assert data[0].name == "string"
-    assert data[0].fields[0].order == 0
+    assert isinstance(data[0].fields[0].order, int)
     assert data[0].fields[0].name == "string"
     assert data[0].fields[0].label == "string"
     assert data[0].fields[0].helpText == "string"
@@ -3989,8 +3977,8 @@ async def test_async_get_notifications(aresponses):
     assert data[0].implementation == "string"
     assert data[0].configContract == "string"
     assert data[0].infoLink == "string"
-    assert data[0].tags == [0]
-    assert data[0].id == 0
+    assert isinstance(data[0].tags[0],int)
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -4011,27 +3999,27 @@ async def test_async_parse(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_parse("test")
 
-    assert data.id == 0
+    assert isinstance(data.id, int)
     assert data.title == "string"
     assert data.parsedBookInfo.bookTitle == "string"
     assert data.parsedBookInfo.authorName == "string"
     assert data.parsedBookInfo.authorTitleInfo.title == "string"
     assert data.parsedBookInfo.authorTitleInfo.titleWithoutYear == "string"
-    assert data.parsedBookInfo.authorTitleInfo.year == 0
-    assert data.parsedBookInfo.quality.quality.id == 0
+    assert isinstance(data.parsedBookInfo.authorTitleInfo.year, int)
+    assert isinstance(data.parsedBookInfo.quality.quality.id, int)
     assert data.parsedBookInfo.quality.quality.name == "string"
-    assert data.parsedBookInfo.quality.revision.version == 0
-    assert data.parsedBookInfo.quality.revision.real == 0
+    assert isinstance(data.parsedBookInfo.quality.revision.version, int)
+    assert isinstance(data.parsedBookInfo.quality.revision.real, int)
     assert data.parsedBookInfo.quality.revision.isRepack is True
     assert data.parsedBookInfo.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
     assert data.parsedBookInfo.discography is True
-    assert data.parsedBookInfo.discographyStart == 0
-    assert data.parsedBookInfo.discographyEnd == 0
+    assert isinstance(data.parsedBookInfo.discographyStart, int)
+    assert isinstance(data.parsedBookInfo.discographyEnd, int)
     assert data.parsedBookInfo.releaseGroup == "string"
     assert data.parsedBookInfo.releaseHash == "string"
     assert data.parsedBookInfo.releaseVersion == "string"
-    assert data.author.id == 0
-    assert data.author.authorMetadataId == 0
+    assert isinstance(data.author.id, int)
+    assert isinstance(data.author.authorMetadataId, int)
     assert data.author.status == "string"
     assert data.author.ended is True
     assert data.author.authorName == "string"
@@ -4043,8 +4031,8 @@ async def test_async_parse(aresponses):
     assert data.author.links[0].url == "string"
     assert data.author.links[0].name == "string"
     _value = data.author.nextBook
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.foreignBookId == "string"
     assert _value.titleSlug == "string"
     assert _value.title == "string"
@@ -4052,9 +4040,9 @@ async def test_async_parse(aresponses):
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, float)
+    assert isinstance(_value.ratings.popularity, float)
     assert _value.cleanTitle == "string"
     assert _value.monitored is True
     assert _value.anyEditionOk is True
@@ -4062,7 +4050,7 @@ async def test_async_parse(aresponses):
     assert _value.added == datetime(2020, 2, 6, 12, 49, 48, 602000)
     assert _value.addOptions.addType == "string"
     assert _value.addOptions.searchForNewBook is True
-    assert _value.authorMetadata.value.id == 0
+    assert isinstance(_value.authorMetadata.value.id, int)
     assert _value.authorMetadata.value.foreignAuthorId == "string"
     assert _value.authorMetadata.value.titleSlug == "string"
     assert _value.authorMetadata.value.name == "string"
@@ -4083,27 +4071,27 @@ async def test_async_parse(aresponses):
     assert _value.authorMetadata.value.links[0].url == "string"
     assert _value.authorMetadata.value.links[0].name == "string"
     assert _value.authorMetadata.value.genres == ["string"]
-    assert _value.authorMetadata.value.ratings.votes == 0
-    assert _value.authorMetadata.value.ratings.value == 0.0
-    assert _value.authorMetadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.authorMetadata.value.ratings.votes, int)
+    assert isinstance(_value.authorMetadata.value.ratings.value, float)
+    assert isinstance(_value.authorMetadata.value.ratings.popularity, float)
     assert _value.authorMetadata.isLoaded is True
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 602000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 602000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags == [0]
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor == ["string"]
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _val = _value.author.value.metadata
-    assert _val.value.id == 0
+    assert isinstance(_val.value.id, int)
     assert _val.value.foreignAuthorId == "string"
     assert _val.value.titleSlug == "string"
     assert _val.value.name == "string"
@@ -4123,41 +4111,41 @@ async def test_async_parse(aresponses):
     assert _val.value.links[0].url == "string"
     assert _val.value.links[0].name == "string"
     assert _val.value.genres == ["string"]
-    assert _val.value.ratings.votes == 0
-    assert _val.value.ratings.value == 0.0
-    assert _val.value.ratings.popularity == 0.0
+    assert isinstance(_val.value.ratings.votes, int)
+    assert isinstance(_val.value.ratings.value, float)
+    assert isinstance(_val.value.ratings.popularity, float)
     assert _val.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
     assert _value.author.value.qualityProfile.isLoaded is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value == [None]
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value == [None]
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -4166,8 +4154,8 @@ async def test_async_parse(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     _val = _value.editions.value[0]
-    assert _val.id == 0
-    assert _val.bookId == 0
+    assert isinstance(_val.id, int)
+    assert isinstance(_val.bookId, int)
     assert _val.foreignEditionId == "string"
     assert _val.titleSlug == "string"
     assert _val.isbn13 == "string"
@@ -4179,56 +4167,56 @@ async def test_async_parse(aresponses):
     assert _val.isEbook is True
     assert _val.disambiguation == "string"
     assert _val.publisher == "string"
-    assert _val.pageCount == 0
+    assert isinstance(_val.pageCount, int)
     assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == "string"
     assert _val.images[0].extension == "string"
     assert _val.links[0].url == "string"
     assert _val.links[0].name == "string"
-    assert _val.ratings.votes == 0
-    assert _val.ratings.value == 0.0
-    assert _val.ratings.popularity == 0.0
+    assert isinstance(_val.ratings.votes, int)
+    assert isinstance(_val.ratings.value, float)
+    assert isinstance(_val.ratings.popularity, float)
     assert _val.monitored is True
     assert _val.manualAdd is True
     assert _val.book.isLoaded is True
-    assert _val.bookFiles.value[0].id == 0
+    assert isinstance(_val.bookFiles.value[0].id, int)
     assert _val.bookFiles.value[0].path == "string"
-    assert _val.bookFiles.value[0].size == 0
+    assert isinstance(_val.bookFiles.value[0].size, int)
     assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.bookFiles.value[0].sceneName == "string"
     assert _val.bookFiles.value[0].releaseGroup == "string"
-    assert _val.bookFiles.value[0].quality.quality.id == 0
+    assert isinstance(_val.bookFiles.value[0].quality.quality.id, int)
     assert _val.bookFiles.value[0].quality.quality.name == "string"
-    assert _val.bookFiles.value[0].quality.revision.version == 0
-    assert _val.bookFiles.value[0].quality.revision.real == 0
+    assert isinstance(_val.bookFiles.value[0].quality.revision.version, int)
+    assert isinstance(_val.bookFiles.value[0].quality.revision.real, int)
     assert _val.bookFiles.value[0].quality.revision.isRepack is True
     assert _val.bookFiles.value[0].mediaInfo.audioFormat == "string"
-    assert _val.bookFiles.value[0].mediaInfo.audioBitrate == 0
-    assert _val.bookFiles.value[0].mediaInfo.audioChannels == 0.0
-    assert _val.bookFiles.value[0].mediaInfo.audioBits == 0
-    assert _val.bookFiles.value[0].mediaInfo.audioSampleRate == 0
-    assert _val.bookFiles.value[0].editionId == 0
-    assert _val.bookFiles.value[0].calibreId == 0
-    assert _val.bookFiles.value[0].part == 0
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioBitrate, int)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioChannels, float)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioBits, int)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.bookFiles.value[0].editionId, int)
+    assert isinstance(_val.bookFiles.value[0].calibreId, int)
+    assert isinstance(_val.bookFiles.value[0].part, int)
     _valu = _val.bookFiles.value[0].author.value
-    assert _valu.id == 0
-    assert _valu.authorMetadataId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.authorMetadataId, int)
     assert _valu.cleanName == "string"
     assert _valu.monitored is True
     assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.path == "string"
     assert _valu.rootFolderPath == "string"
     assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.qualityProfileId == 0
-    assert _valu.metadataProfileId == 0
-    assert _valu.tags == [0]
+    assert isinstance(_valu.qualityProfileId, int)
+    assert isinstance(_valu.metadataProfileId, int)
+    assert isinstance(_valu.tags[0], int)
     assert _valu.addOptions.monitor == "string"
     assert _valu.addOptions.booksToMonitor == ["string"]
     assert _valu.addOptions.monitored is True
     assert _valu.addOptions.searchForMissingBooks is True
-    assert _valu.metadata.value.id == 0
+    assert isinstance(_valu.metadata.value.id, int)
     assert _valu.metadata.value.foreignAuthorId == "string"
     assert _valu.metadata.value.titleSlug == "string"
     assert _valu.metadata.value.name == "string"
@@ -4249,41 +4237,41 @@ async def test_async_parse(aresponses):
     assert _valu.metadata.value.links[0].url == "string"
     assert _valu.metadata.value.links[0].name == "string"
     assert _valu.metadata.value.genres == ["string"]
-    assert _valu.metadata.value.ratings.votes == 0
-    assert _valu.metadata.value.ratings.value == 0.0
-    assert _valu.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_valu.metadata.value.ratings.votes, int)
+    assert isinstance(_valu.metadata.value.ratings.value, float)
+    assert isinstance(_valu.metadata.value.ratings.popularity, float)
     assert _valu.metadata.isLoaded is True
-    assert _valu.qualityProfile.value.id == 0
+    assert isinstance(_valu.qualityProfile.value.id, int)
     assert _valu.qualityProfile.value.name == "string"
     assert _valu.qualityProfile.value.upgradeAllowed is True
-    assert _valu.qualityProfile.value.cutoff == 0
-    assert _valu.qualityProfile.value.items[0].id == 0
+    assert isinstance(_valu.qualityProfile.value.cutoff, int)
+    assert isinstance(_valu.qualityProfile.value.items[0].id, int)
     assert _valu.qualityProfile.value.items[0].name == "string"
-    assert _valu.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_valu.qualityProfile.value.items[0].quality.id, int)
     assert _valu.qualityProfile.value.items[0].quality.name == "string"
     assert _valu.qualityProfile.value.items[0].items == [None]
     assert _valu.qualityProfile.value.items[0].allowed is True
     assert _valu.qualityProfile.isLoaded is True
-    assert _valu.metadataProfile.value.id == 0
+    assert isinstance(_valu.metadataProfile.value.id, int)
     assert _valu.metadataProfile.value.name == "string"
-    assert _valu.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_valu.metadataProfile.value.minPopularity, int)
     assert _valu.metadataProfile.value.skipMissingDate is True
     assert _valu.metadataProfile.value.skipMissingIsbn is True
     assert _valu.metadataProfile.value.skipPartsAndSets is True
     assert _valu.metadataProfile.value.skipSeriesSecondary is True
     assert _valu.metadataProfile.value.allowedLanguages == "string"
-    assert _valu.metadataProfile.value.minPages == 0
+    assert isinstance(_valu.metadataProfile.value.minPages, int)
     assert _valu.metadataProfile.value.ignored == "string"
     assert _valu.metadataProfile.isLoaded is True
     assert _valu.books.value == [None]
     assert _valu.books.isLoaded is True
-    assert _valu.series.value[0].id == 0
+    assert isinstance(_valu.series.value[0].id, int)
     assert _valu.series.value[0].foreignSeriesId == "string"
     assert _valu.series.value[0].title == "string"
     assert _valu.series.value[0].description == "string"
     assert _valu.series.value[0].numbered is True
-    assert _valu.series.value[0].workCount == 0
-    assert _valu.series.value[0].primaryWorkCount == 0
+    assert isinstance(_valu.series.value[0].workCount, int)
+    assert isinstance(_valu.series.value[0].primaryWorkCount, int)
     assert _valu.series.value[0].books.value == [None]
     assert _valu.series.value[0].books.isLoaded is True
     assert _valu.series.value[0].foreignAuthorId == "string"
@@ -4292,47 +4280,47 @@ async def test_async_parse(aresponses):
     assert _valu.foreignAuthorId == "string"
     assert _val.bookFiles.value[0].author.isLoaded is True
     assert _val.bookFiles.value[0].edition.isLoaded is True
-    assert _val.bookFiles.value[0].partCount == 0
+    assert isinstance(_val.bookFiles.value[0].partCount, int)
     assert _val.bookFiles.isLoaded is True
     assert _value.editions.isLoaded is True
     _valu = _value.bookFiles.value[0]
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.path == "string"
-    assert _valu.size == 0
+    assert isinstance(_valu.size, int)
     assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
-    assert _valu.quality.quality.id == 0
+    assert isinstance(_valu.quality.quality.id, int)
     assert _valu.quality.quality.name == "string"
-    assert _valu.quality.revision.version == 0
-    assert _valu.quality.revision.real == 0
+    assert isinstance(_valu.quality.revision.version, int)
+    assert isinstance(_valu.quality.revision.real, int)
     assert _valu.quality.revision.isRepack is True
     assert _valu.mediaInfo.audioFormat == "string"
-    assert _valu.mediaInfo.audioBitrate == 0
-    assert _valu.mediaInfo.audioChannels == 0.0
-    assert _valu.mediaInfo.audioBits == 0
-    assert _valu.mediaInfo.audioSampleRate == 0
-    assert _valu.editionId == 0
-    assert _valu.calibreId == 0
-    assert _valu.part == 0
+    assert isinstance(_valu.mediaInfo.audioBitrate, int)
+    assert isinstance(_valu.mediaInfo.audioChannels, float)
+    assert isinstance(_valu.mediaInfo.audioBits, int)
+    assert isinstance(_valu.mediaInfo.audioSampleRate, int)
+    assert isinstance(_valu.editionId, int)
+    assert isinstance(_valu.calibreId, int)
+    assert isinstance(_valu.part, int)
     _valu = _value.bookFiles.value[0].author.value
-    assert _valu.id == 0
-    assert _valu.authorMetadataId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.authorMetadataId, int)
     assert _valu.cleanName == "string"
     assert _valu.monitored is True
     assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.path == "string"
     assert _valu.rootFolderPath == "string"
     assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.qualityProfileId == 0
-    assert _valu.metadataProfileId == 0
-    assert _valu.tags == [0]
+    assert isinstance(_valu.qualityProfileId, int)
+    assert isinstance(_valu.metadataProfileId, int)
+    assert isinstance(_valu.tags[0], int)
     assert _valu.addOptions.monitor == "string"
     assert _valu.addOptions.booksToMonitor == ["string"]
     assert _valu.addOptions.monitored is True
     assert _valu.addOptions.searchForMissingBooks is True
-    assert _valu.metadata.value.id == 0
+    assert isinstance(_valu.metadata.value.id, int)
     assert _valu.metadata.value.foreignAuthorId == "string"
     assert _valu.metadata.value.titleSlug == "string"
     assert _valu.metadata.value.name == "string"
@@ -4353,41 +4341,41 @@ async def test_async_parse(aresponses):
     assert _valu.metadata.value.links[0].url == "string"
     assert _valu.metadata.value.links[0].name == "string"
     assert _valu.metadata.value.genres == ["string"]
-    assert _valu.metadata.value.ratings.votes == 0
-    assert _valu.metadata.value.ratings.value == 0.0
-    assert _valu.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_valu.metadata.value.ratings.votes, int)
+    assert isinstance(_valu.metadata.value.ratings.value, float)
+    assert isinstance(_valu.metadata.value.ratings.popularity, float)
     assert _valu.metadata.isLoaded is True
-    assert _valu.qualityProfile.value.id == 0
+    assert isinstance(_valu.qualityProfile.value.id, int)
     assert _valu.qualityProfile.value.name == "string"
     assert _valu.qualityProfile.value.upgradeAllowed is True
-    assert _valu.qualityProfile.value.cutoff == 0
-    assert _valu.qualityProfile.value.items[0].id == 0
+    assert isinstance(_valu.qualityProfile.value.cutoff, int)
+    assert isinstance(_valu.qualityProfile.value.items[0].id, int)
     assert _valu.qualityProfile.value.items[0].name == "string"
-    assert _valu.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_valu.qualityProfile.value.items[0].quality.id, int)
     assert _valu.qualityProfile.value.items[0].quality.name == "string"
     assert _valu.qualityProfile.value.items[0].items == [None]
     assert _valu.qualityProfile.value.items[0].allowed is True
     assert _valu.qualityProfile.isLoaded is True
-    assert _valu.metadataProfile.value.id == 0
+    assert isinstance(_valu.metadataProfile.value.id, int)
     assert _valu.metadataProfile.value.name == "string"
-    assert _valu.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_valu.metadataProfile.value.minPopularity, int)
     assert _valu.metadataProfile.value.skipMissingDate is True
     assert _valu.metadataProfile.value.skipMissingIsbn is True
     assert _valu.metadataProfile.value.skipPartsAndSets is True
     assert _valu.metadataProfile.value.skipSeriesSecondary is True
     assert _valu.metadataProfile.value.allowedLanguages == "string"
-    assert _valu.metadataProfile.value.minPages == 0
+    assert isinstance(_valu.metadataProfile.value.minPages, int)
     assert _valu.metadataProfile.value.ignored == "string"
     assert _valu.metadataProfile.isLoaded is True
     assert _valu.books.value == [None]
     assert _valu.books.isLoaded is True
-    assert _valu.series.value[0].id == 0
+    assert isinstance(_valu.series.value[0].id, int)
     assert _valu.series.value[0].foreignSeriesId == "string"
     assert _valu.series.value[0].title == "string"
     assert _valu.series.value[0].description == "string"
     assert _valu.series.value[0].numbered is True
-    assert _valu.series.value[0].workCount == 0
-    assert _valu.series.value[0].primaryWorkCount == 0
+    assert isinstance(_valu.series.value[0].workCount, int)
+    assert isinstance(_valu.series.value[0].primaryWorkCount, int)
     assert _valu.series.value[0].books.value == [None]
     assert _valu.series.value[0].books.isLoaded is True
     assert _valu.series.value[0].foreignAuthorId == "string"
@@ -4396,28 +4384,28 @@ async def test_async_parse(aresponses):
     assert _valu.foreignAuthorId == "string"
     assert _value.bookFiles.value[0].author.isLoaded is True
     assert _value.bookFiles.value[0].edition.isLoaded is True
-    assert _value.bookFiles.value[0].partCount == 0
+    assert isinstance(_value.bookFiles.value[0].partCount, int)
     assert _value.bookFiles.isLoaded is True
-    assert _value.seriesLinks.value[0].id == 0
+    assert isinstance(_value.seriesLinks.value[0].id, int)
     assert _value.seriesLinks.value[0].position == "string"
-    assert _value.seriesLinks.value[0].seriesId == 0
-    assert _value.seriesLinks.value[0].bookId == 0
+    assert isinstance(_value.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_value.seriesLinks.value[0].bookId, int)
     assert _value.seriesLinks.value[0].isPrimary is True
-    assert _value.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_value.seriesLinks.value[0].series.value.id, int)
     assert _value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _value.seriesLinks.value[0].series.value.title == "string"
     assert _value.seriesLinks.value[0].series.value.description == "string"
     assert _value.seriesLinks.value[0].series.value.numbered is True
-    assert _value.seriesLinks.value[0].series.value.workCount == 0
-    assert _value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_value.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_value.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _value.seriesLinks.value[0].series.value.books.value == [None]
     assert _value.seriesLinks.value[0].series.value.books.isLoaded is True
     assert _value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
     assert _value.seriesLinks.value[0].series.isLoaded is True
     assert _value.seriesLinks.value[0].book.isLoaded is True
     assert _value.seriesLinks.isLoaded is True
-    assert data.author.lastBook.id == 0
-    assert data.author.lastBook.authorMetadataId == 0
+    assert isinstance(data.author.lastBook.id, int)
+    assert isinstance(data.author.lastBook.authorMetadataId, int)
     assert data.author.lastBook.foreignBookId == "string"
     assert data.author.lastBook.titleSlug == "string"
     assert data.author.lastBook.title == "string"
@@ -4425,9 +4413,9 @@ async def test_async_parse(aresponses):
     assert data.author.lastBook.links[0].url == "string"
     assert data.author.lastBook.links[0].name == "string"
     assert data.author.lastBook.genres[0] == "string"
-    assert data.author.lastBook.ratings.votes == 0
-    assert data.author.lastBook.ratings.value == 0.0
-    assert data.author.lastBook.ratings.popularity == 0.0
+    assert isinstance(data.author.lastBook.ratings.votes, int)
+    assert isinstance(data.author.lastBook.ratings.value, float)
+    assert isinstance(data.author.lastBook.ratings.popularity, float)
     assert data.author.lastBook.cleanTitle == "string"
     assert data.author.lastBook.monitored is True
     assert data.author.lastBook.anyEditionOk is True
@@ -4436,7 +4424,7 @@ async def test_async_parse(aresponses):
     assert data.author.lastBook.addOptions.addType == "string"
     assert data.author.lastBook.addOptions.searchForNewBook is True
     _value = data.author.lastBook
-    assert _value.authorMetadata.value.id == 0
+    assert isinstance(_value.authorMetadata.value.id, int)
     assert _value.authorMetadata.value.foreignAuthorId == "string"
     assert _value.authorMetadata.value.titleSlug == "string"
     assert _value.authorMetadata.value.name == "string"
@@ -4457,27 +4445,27 @@ async def test_async_parse(aresponses):
     assert _value.authorMetadata.value.links[0].url == "string"
     assert _value.authorMetadata.value.links[0].name == "string"
     assert _value.authorMetadata.value.genres == ["string"]
-    assert _value.authorMetadata.value.ratings.votes == 0
-    assert _value.authorMetadata.value.ratings.value == 0.0
-    assert _value.authorMetadata.value.ratings.popularity == 0.0
+    assert isinstance(_value.authorMetadata.value.ratings.votes, int)
+    assert isinstance(_value.authorMetadata.value.ratings.value, float)
+    assert isinstance(_value.authorMetadata.value.ratings.popularity, float)
     assert _value.authorMetadata.isLoaded is True
-    assert _value.author.value.id == 0
-    assert _value.author.value.authorMetadataId == 0
+    assert isinstance(_value.author.value.id, int)
+    assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
     assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
     assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _value.author.value.qualityProfileId == 0
-    assert _value.author.value.metadataProfileId == 0
-    assert _value.author.value.tags == [0]
+    assert isinstance(_value.author.value.qualityProfileId, int)
+    assert isinstance(_value.author.value.metadataProfileId, int)
+    assert isinstance(_value.author.value.tags[0], int)
     assert _value.author.value.addOptions.monitor == "string"
     assert _value.author.value.addOptions.booksToMonitor == ["string"]
     assert _value.author.value.addOptions.monitored is True
     assert _value.author.value.addOptions.searchForMissingBooks is True
     _valu = _value.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -4497,41 +4485,41 @@ async def test_async_parse(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres == ["string"]
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 00.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, float)
+    assert isinstance(_valu.ratings.popularity, float)
     assert _value.author.value.metadata.isLoaded is True
-    assert _value.author.value.qualityProfile.value.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.id, int)
     assert _value.author.value.qualityProfile.value.name == "string"
     assert _value.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _value.author.value.qualityProfile.value.cutoff == 0
-    assert _value.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].id, int)
     assert _value.author.value.qualityProfile.value.items[0].name == "string"
-    assert _value.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _value.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.author.value.qualityProfile.value.items[0].items == [None]
     assert _value.author.value.qualityProfile.value.items[0].allowed is True
     assert _value.author.value.qualityProfile.isLoaded is True
-    assert _value.author.value.metadataProfile.value.id == 0
+    assert isinstance(_value.author.value.metadataProfile.value.id, int)
     assert _value.author.value.metadataProfile.value.name == "string"
-    assert _value.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.author.value.metadataProfile.value.minPopularity, int)
     assert _value.author.value.metadataProfile.value.skipMissingDate is True
     assert _value.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _value.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _value.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.author.value.metadataProfile.value.minPages, int)
     assert _value.author.value.metadataProfile.value.ignored == "string"
     assert _value.author.value.metadataProfile.isLoaded is True
     assert _value.author.value.books.value == [None]
     assert _value.author.value.books.isLoaded is True
-    assert _value.author.value.series.value[0].id == 0
+    assert isinstance(_value.author.value.series.value[0].id, int)
     assert _value.author.value.series.value[0].foreignSeriesId == "string"
     assert _value.author.value.series.value[0].title == "string"
     assert _value.author.value.series.value[0].description == "string"
     assert _value.author.value.series.value[0].numbered is True
-    assert _value.author.value.series.value[0].workCount == 0
-    assert _value.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_value.author.value.series.value[0].workCount, int)
+    assert isinstance(_value.author.value.series.value[0].primaryWorkCount, int)
     assert _value.author.value.series.value[0].books.value == [None]
     assert _value.author.value.series.value[0].books.isLoaded is True
     assert _value.author.value.series.value[0].foreignAuthorId == "string"
@@ -4540,8 +4528,8 @@ async def test_async_parse(aresponses):
     assert _value.author.value.foreignAuthorId == "string"
     assert _value.author.isLoaded is True
     _valu = _value.editions.value[0]
-    assert _valu.id == 0
-    assert _valu.bookId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.bookId, int)
     assert _valu.foreignEditionId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.isbn13 == "string"
@@ -4553,58 +4541,58 @@ async def test_async_parse(aresponses):
     assert _valu.isEbook is True
     assert _valu.disambiguation == "string"
     assert _valu.publisher == "string"
-    assert _valu.pageCount == 0
+    assert isinstance(_valu.pageCount, int)
     assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == "string"
     assert _valu.images[0].extension == "string"
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, float)
+    assert isinstance(_valu.ratings.popularity, float)
     assert _valu.monitored is True
     assert _valu.manualAdd is True
     assert _valu.book.isLoaded is True
     _val = _valu.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags == [0]
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor == ["string"]
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _va = _val.author.value.metadata.value
-    assert _va.id == 0
+    assert isinstance(_va.id, int)
     assert _va.foreignAuthorId == "string"
     assert _va.titleSlug == "string"
     assert _va.name == "string"
@@ -4625,41 +4613,41 @@ async def test_async_parse(aresponses):
     assert _va.links[0].url == "string"
     assert _va.links[0].name == "string"
     assert _va.genres == ["string"]
-    assert _va.ratings.votes == 0
-    assert _va.ratings.value == 0.0
-    assert _va.ratings.popularity == 0.0
+    assert isinstance(_va.ratings.votes, int)
+    assert isinstance(_va.ratings.value, float)
+    assert isinstance(_va.ratings.popularity, float)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
     assert _val.author.value.qualityProfile.isLoaded is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value == [None]
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value == [None]
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -4668,47 +4656,47 @@ async def test_async_parse(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert _valu.bookFiles.isLoaded is True
     assert _value.editions.isLoaded is True
     _valu = _value.bookFiles.value[0]
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.path == "string"
-    assert _valu.size == 0
+    assert isinstance(_valu.size, int)
     assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
-    assert _valu.quality.quality.id == 0
+    assert isinstance(_valu.quality.quality.id, int)
     assert _valu.quality.quality.name == "string"
-    assert _valu.quality.revision.version == 0
-    assert _valu.quality.revision.real == 0
+    assert isinstance(_valu.quality.revision.version, int)
+    assert isinstance(_valu.quality.revision.real, int)
     assert _valu.quality.revision.isRepack is True
     assert _valu.mediaInfo.audioFormat == "string"
-    assert _valu.mediaInfo.audioBitrate == 0
-    assert _valu.mediaInfo.audioChannels == 0.0
-    assert _valu.mediaInfo.audioBits == 0
-    assert _valu.mediaInfo.audioSampleRate == 0
-    assert _valu.editionId == 0
-    assert _valu.calibreId == 0
-    assert _valu.part == 0
+    assert isinstance(_valu.mediaInfo.audioBitrate, int)
+    assert isinstance(_valu.mediaInfo.audioChannels, float)
+    assert isinstance(_valu.mediaInfo.audioBits, int)
+    assert isinstance(_valu.mediaInfo.audioSampleRate, int)
+    assert isinstance(_valu.editionId, int)
+    assert isinstance(_valu.calibreId, int)
+    assert isinstance(_valu.part, int)
     _val = _valu.author.value
-    assert _val.id == 0
-    assert _val.authorMetadataId == 0
+    assert isinstance(_val.id, int)
+    assert isinstance(_val.authorMetadataId, int)
     assert _val.cleanName == "string"
     assert _val.monitored is True
     assert _val.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _val.path == "string"
     assert _val.rootFolderPath == "string"
     assert _val.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.qualityProfileId == 0
-    assert _val.metadataProfileId == 0
-    assert _val.tags == [0]
+    assert isinstance(_val.qualityProfileId, int)
+    assert isinstance(_val.metadataProfileId, int)
+    assert isinstance(_val.tags[0], int)
     assert _val.addOptions.monitor == "string"
     assert _val.addOptions.booksToMonitor == ["string"]
     assert _val.addOptions.monitored is True
     assert _val.addOptions.searchForMissingBooks is True
-    assert _val.metadata.value.id == 0
+    assert isinstance(_val.metadata.value.id, int)
     assert _val.metadata.value.foreignAuthorId == "string"
     assert _val.metadata.value.titleSlug == "string"
     assert _val.metadata.value.name == "string"
@@ -4729,41 +4717,41 @@ async def test_async_parse(aresponses):
     assert _val.metadata.value.links[0].url == "string"
     assert _val.metadata.value.links[0].name == "string"
     assert _val.metadata.value.genres == ["string"]
-    assert _val.metadata.value.ratings.votes == 0
-    assert _val.metadata.value.ratings.value == 0.0
-    assert _val.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_val.metadata.value.ratings.votes, int)
+    assert isinstance(_val.metadata.value.ratings.value, float)
+    assert isinstance(_val.metadata.value.ratings.popularity, float)
     assert _val.metadata.isLoaded is True
-    assert _val.qualityProfile.value.id == 0
+    assert isinstance(_val.qualityProfile.value.id, int)
     assert _val.qualityProfile.value.name == "string"
     assert _val.qualityProfile.value.upgradeAllowed is True
-    assert _val.qualityProfile.value.cutoff == 0
-    assert _val.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.qualityProfile.value.items[0].id, int)
     assert _val.qualityProfile.value.items[0].name == "string"
-    assert _val.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.qualityProfile.value.items[0].quality.id, int)
     assert _val.qualityProfile.value.items[0].quality.name == "string"
     assert _val.qualityProfile.value.items[0].items == [None]
     assert _val.qualityProfile.value.items[0].allowed is True
     assert _val.qualityProfile.isLoaded is True
-    assert _val.metadataProfile.value.id == 0
+    assert isinstance(_val.metadataProfile.value.id, int)
     assert _val.metadataProfile.value.name == "string"
-    assert _val.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.metadataProfile.value.minPopularity, int)
     assert _val.metadataProfile.value.skipMissingDate is True
     assert _val.metadataProfile.value.skipMissingIsbn is True
     assert _val.metadataProfile.value.skipPartsAndSets is True
     assert _val.metadataProfile.value.skipSeriesSecondary is True
     assert _val.metadataProfile.value.allowedLanguages == "string"
-    assert _val.metadataProfile.value.minPages == 0
+    assert isinstance(_val.metadataProfile.value.minPages, int)
     assert _val.metadataProfile.value.ignored == "string"
     assert _val.metadataProfile.isLoaded is True
     assert _val.books.value == [None]
     assert _val.books.isLoaded is True
-    assert _val.series.value[0].id == 0
+    assert isinstance(_val.series.value[0].id, int)
     assert _val.series.value[0].foreignSeriesId == "string"
     assert _val.series.value[0].title == "string"
     assert _val.series.value[0].description == "string"
     assert _val.series.value[0].numbered is True
-    assert _val.series.value[0].workCount == 0
-    assert _val.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.series.value[0].workCount, int)
+    assert isinstance(_val.series.value[0].primaryWorkCount, int)
     assert _val.series.value[0].books.value == [None]
     assert _val.series.value[0].books.isLoaded is True
     assert _val.series.value[0].foreignAuthorId == "string"
@@ -4772,20 +4760,20 @@ async def test_async_parse(aresponses):
     assert _val.foreignAuthorId == "string"
     assert _valu.author.isLoaded is True
     assert _valu.edition.isLoaded is True
-    assert _valu.partCount == 0
+    assert isinstance(_valu.partCount, int)
     assert _value.bookFiles.isLoaded is True
-    assert _value.seriesLinks.value[0].id == 0
+    assert isinstance(_value.seriesLinks.value[0].id, int)
     assert _value.seriesLinks.value[0].position == "string"
-    assert _value.seriesLinks.value[0].seriesId == 0
-    assert _value.seriesLinks.value[0].bookId == 0
+    assert isinstance(_value.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_value.seriesLinks.value[0].bookId, int)
     assert _value.seriesLinks.value[0].isPrimary is True
-    assert _value.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_value.seriesLinks.value[0].series.value.id, int)
     assert _value.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _value.seriesLinks.value[0].series.value.title == "string"
     assert _value.seriesLinks.value[0].series.value.description == "string"
     assert _value.seriesLinks.value[0].series.value.numbered is True
-    assert _value.seriesLinks.value[0].series.value.workCount == 0
-    assert _value.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_value.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_value.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _value.seriesLinks.value[0].series.value.books.value == [None]
     assert _value.seriesLinks.value[0].series.value.books.isLoaded is True
     assert _value.seriesLinks.value[0].series.value.foreignAuthorId == "string"
@@ -4797,48 +4785,48 @@ async def test_async_parse(aresponses):
     assert data.author.images[0].extension == "string"
     assert data.author.remotePoster == "string"
     assert data.author.path == "string"
-    assert data.author.qualityProfileId == 0
-    assert data.author.metadataProfileId == 0
+    assert isinstance(data.author.qualityProfileId, int)
+    assert isinstance(data.author.metadataProfileId, int)
     assert data.author.monitored is True
     assert data.author.rootFolderPath == "string"
     assert data.author.genres == ["string"]
     assert data.author.cleanName == "string"
     assert data.author.sortName == "string"
     assert data.author.sortNameLastFirst == "string"
-    assert data.author.tags == [0]
+    assert isinstance(data.author.tags[0], int)
     assert data.author.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert data.author.addOptions.monitor == "string"
     assert data.author.addOptions.booksToMonitor == ["string"]
     assert data.author.addOptions.monitored is True
     assert data.author.addOptions.searchForMissingBooks is True
-    assert data.author.ratings.votes == 0
-    assert data.author.ratings.value == 0.0
-    assert data.author.ratings.popularity == 0.0
-    assert data.author.statistics.bookFileCount == 0
-    assert data.author.statistics.bookCount == 0
-    assert data.author.statistics.availableBookCount == 0
-    assert data.author.statistics.totalBookCount == 0
-    assert data.author.statistics.sizeOnDisk == 0
-    assert data.author.statistics.percentOfBooks == 0.0
-    assert data.books[0].id == 0
+    assert isinstance(data.author.ratings.votes, int)
+    assert isinstance(data.author.ratings.value, float)
+    assert isinstance(data.author.ratings.popularity, float)
+    assert isinstance(data.author.statistics.bookFileCount, int)
+    assert isinstance(data.author.statistics.bookCount, int)
+    assert isinstance(data.author.statistics.availableBookCount, int)
+    assert isinstance(data.author.statistics.totalBookCount, int)
+    assert isinstance(data.author.statistics.sizeOnDisk, int)
+    assert isinstance(data.author.statistics.percentOfBooks, float)
+    assert isinstance(data.books[0].id, int)
     assert data.books[0].title == "string"
     assert data.books[0].authorTitle == "string"
     assert data.books[0].seriesTitle == "string"
     assert data.books[0].disambiguation == "string"
     assert data.books[0].overview == "string"
-    assert data.books[0].authorId == 0
+    assert isinstance(data.books[0].authorId, int)
     assert data.books[0].foreignBookId == "string"
     assert data.books[0].titleSlug == "string"
     assert data.books[0].monitored is True
     assert data.books[0].anyEditionOk is True
-    assert data.books[0].ratings.votes == 0
-    assert data.books[0].ratings.value == 0.0
-    assert data.books[0].ratings.popularity == 0.0
+    assert isinstance(data.books[0].ratings.votes, int)
+    assert isinstance(data.books[0].ratings.value, float)
+    assert isinstance(data.books[0].ratings.popularity, float)
     assert data.books[0].releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert data.books[0].pageCount == 0
+    assert isinstance(data.books[0].pageCount, int)
     assert data.books[0].genres == ["string"]
-    assert data.books[0].author.id == 0
-    assert data.books[0].author.authorMetadataId == 0
+    assert isinstance(data.books[0].author.id, int)
+    assert isinstance(data.books[0].author.authorMetadataId, int)
     assert data.books[0].author.status == "string"
     assert data.books[0].author.ended is True
     assert data.books[0].author.authorName == "string"
@@ -4850,8 +4838,8 @@ async def test_async_parse(aresponses):
     assert data.books[0].author.links[0].url == "string"
     assert data.books[0].author.links[0].name == "string"
     _book = data.books[0].author.nextBook
-    assert _book.id == 0
-    assert _book.authorMetadataId == 0
+    assert isinstance(_book.id, int)
+    assert isinstance(_book.authorMetadataId, int)
     assert _book.foreignBookId == "string"
     assert _book.titleSlug == "string"
     assert _book.title == "string"
@@ -4859,9 +4847,9 @@ async def test_async_parse(aresponses):
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres == ["string"]
-    assert _book.ratings.votes == 0
-    assert _book.ratings.value == 0.0
-    assert _book.ratings.popularity == 0.0
+    assert isinstance(_book.ratings.votes, int)
+    assert isinstance(_book.ratings.value, float)
+    assert isinstance(_book.ratings.popularity, float)
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
@@ -4869,7 +4857,7 @@ async def test_async_parse(aresponses):
     assert _book.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _book.addOptions.addType == "string"
     assert _book.addOptions.searchForNewBook is True
-    assert _book.authorMetadata.value.id == 0
+    assert isinstance(_book.authorMetadata.value.id, int)
     assert _book.authorMetadata.value.foreignAuthorId == "string"
     assert _book.authorMetadata.value.titleSlug == "string"
     assert _book.authorMetadata.value.name == "string"
@@ -4889,27 +4877,27 @@ async def test_async_parse(aresponses):
     assert _book.authorMetadata.value.links[0].url == "string"
     assert _book.authorMetadata.value.links[0].name == "string"
     assert _book.authorMetadata.value.genres == ["string"]
-    assert _book.authorMetadata.value.ratings.votes == 0
-    assert _book.authorMetadata.value.ratings.value == 0.0
-    assert _book.authorMetadata.value.ratings.popularity == 0.0
+    assert isinstance(_book.authorMetadata.value.ratings.votes, int)
+    assert isinstance(_book.authorMetadata.value.ratings.value, float)
+    assert isinstance(_book.authorMetadata.value.ratings.popularity, float)
     assert _book.authorMetadata.isLoaded is True
-    assert _book.author.value.id == 0
-    assert _book.author.value.authorMetadataId == 0
+    assert isinstance(_book.author.value.id, int)
+    assert isinstance(_book.author.value.authorMetadataId, int)
     assert _book.author.value.cleanName == "string"
     assert _book.author.value.monitored is True
     assert _book.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
     assert _book.author.value.path == "string"
     assert _book.author.value.rootFolderPath == "string"
     assert _book.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _book.author.value.qualityProfileId == 0
-    assert _book.author.value.metadataProfileId == 0
-    assert _book.author.value.tags == [0]
+    assert isinstance(_book.author.value.qualityProfileId, int)
+    assert isinstance(_book.author.value.metadataProfileId, int)
+    assert isinstance(_book.author.value.tags[0], int)
     assert _book.author.value.addOptions.monitor == "string"
     assert _book.author.value.addOptions.booksToMonitor == ["string"]
     assert _book.author.value.addOptions.monitored is True
     assert _book.author.value.addOptions.searchForMissingBooks is True
     _valu = _book.author.value.metadata.value
-    assert _valu.id == 0
+    assert isinstance(_valu.id, int)
     assert _valu.foreignAuthorId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.name == "string"
@@ -4930,41 +4918,41 @@ async def test_async_parse(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres == ["string"]
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, float)
+    assert isinstance(_valu.ratings.popularity, float)
     assert _book.author.value.metadata.isLoaded is True
-    assert _book.author.value.qualityProfile.value.id == 0
+    assert isinstance(_book.author.value.qualityProfile.value.id, int)
     assert _book.author.value.qualityProfile.value.name == "string"
     assert _book.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _book.author.value.qualityProfile.value.cutoff == 0
-    assert _book.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_book.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_book.author.value.qualityProfile.value.items[0].id, int)
     assert _book.author.value.qualityProfile.value.items[0].name == "string"
-    assert _book.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_book.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _book.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _book.author.value.qualityProfile.value.items[0].items == [None]
     assert _book.author.value.qualityProfile.value.items[0].allowed is True
     assert _book.author.value.qualityProfile.isLoaded is True
-    assert _book.author.value.metadataProfile.value.id == 0
+    assert isinstance(_book.author.value.metadataProfile.value.id, int)
     assert _book.author.value.metadataProfile.value.name == "string"
-    assert _book.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_book.author.value.metadataProfile.value.minPopularity, int)
     assert _book.author.value.metadataProfile.value.skipMissingDate is True
     assert _book.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _book.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _book.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _book.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _book.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_book.author.value.metadataProfile.value.minPages, int)
     assert _book.author.value.metadataProfile.value.ignored == "string"
     assert _book.author.value.metadataProfile.isLoaded is True
     assert _book.author.value.books.value == [None]
     assert _book.author.value.books.isLoaded is True
-    assert _book.author.value.series.value[0].id == 0
+    assert isinstance(_book.author.value.series.value[0].id, int)
     assert _book.author.value.series.value[0].foreignSeriesId == "string"
     assert _book.author.value.series.value[0].title == "string"
     assert _book.author.value.series.value[0].description == "string"
     assert _book.author.value.series.value[0].numbered is True
-    assert _book.author.value.series.value[0].workCount == 0
-    assert _book.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_book.author.value.series.value[0].workCount, int)
+    assert isinstance(_book.author.value.series.value[0].primaryWorkCount, int)
     assert _book.author.value.series.value[0].books.value == [None]
     assert _book.author.value.series.value[0].books.isLoaded is True
     assert _book.author.value.series.value[0].foreignAuthorId == "string"
@@ -4973,8 +4961,8 @@ async def test_async_parse(aresponses):
     assert _book.author.value.foreignAuthorId == "string"
     assert _book.author.isLoaded is True
     _valu = _book.editions.value[0]
-    assert _valu.id == 0
-    assert _valu.bookId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.bookId, int)
     assert _valu.foreignEditionId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.isbn13 == "string"
@@ -4986,57 +4974,57 @@ async def test_async_parse(aresponses):
     assert _valu.isEbook is True
     assert _valu.disambiguation == "string"
     assert _valu.publisher == "string"
-    assert _valu.pageCount == 0
+    assert isinstance(_valu.pageCount, int)
     assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == "string"
     assert _valu.images[0].extension == "string"
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, float)
+    assert isinstance(_valu.ratings.popularity, float)
     assert _valu.monitored is True
     assert _valu.manualAdd is True
     assert _valu.book.isLoaded is True
     _val = _valu.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags == [0]
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor == ["string"]
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _va = _val.author.value.metadata.value
-    assert _va.id == 0
+    assert isinstance(_va.id, int)
     assert _va.foreignAuthorId == "string"
     assert _va.titleSlug == "string"
     assert _va.name == "string"
@@ -5057,41 +5045,41 @@ async def test_async_parse(aresponses):
     assert _va.links[0].url == "string"
     assert _va.links[0].name == "string"
     assert _va.genres == ["string"]
-    assert _va.ratings.votes == 0
-    assert _va.ratings.value == 0.0
-    assert _va.ratings.popularity == 0.0
+    assert isinstance(_va.ratings.votes, int)
+    assert isinstance(_va.ratings.value, float)
+    assert isinstance(_va.ratings.popularity, float)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
     assert _val.author.value.qualityProfile.isLoaded is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value == [None]
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value == [None]
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -5100,46 +5088,46 @@ async def test_async_parse(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert _valu.bookFiles.isLoaded is True
     _val = _book.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags == [0]
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor == ["string"]
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _va = _val.author.value.metadata.value
-    assert _va.id == 0
+    assert isinstance(_va.id, int)
     assert _va.foreignAuthorId == "string"
     assert _va.titleSlug == "string"
     assert _va.name == "string"
@@ -5160,41 +5148,41 @@ async def test_async_parse(aresponses):
     assert _va.links[0].url == "string"
     assert _va.links[0].name == "string"
     assert _va.genres == ["string"]
-    assert _va.ratings.votes == 0
-    assert _va.ratings.value == 0.0
-    assert _va.ratings.popularity == 0.0
+    assert isinstance(_va.ratings.votes, int)
+    assert isinstance(_va.ratings.value, float)
+    assert isinstance(_va.ratings.popularity, float)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
     assert _val.author.value.qualityProfile.isLoaded is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value == [None]
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -5203,28 +5191,28 @@ async def test_async_parse(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert _book.bookFiles.isLoaded is True
-    assert _book.seriesLinks.value[0].id == 0
+    assert isinstance(_book.seriesLinks.value[0].id, int)
     assert _book.seriesLinks.value[0].position == "string"
-    assert _book.seriesLinks.value[0].seriesId == 0
-    assert _book.seriesLinks.value[0].bookId == 0
+    assert isinstance(_book.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_book.seriesLinks.value[0].bookId, int)
     assert _book.seriesLinks.value[0].isPrimary is True
-    assert _book.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.id, int)
     assert _book.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _book.seriesLinks.value[0].series.value.title == "string"
     assert _book.seriesLinks.value[0].series.value.description == "string"
     assert _book.seriesLinks.value[0].series.value.numbered is True
-    assert _book.seriesLinks.value[0].series.value.workCount == 0
-    assert _book.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_book.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_book.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _book.seriesLinks.value[0].series.value.books.value == [None]
     assert _book.seriesLinks.value[0].series.value.foreignAuthorId == "string"
     assert _book.seriesLinks.value[0].series.isLoaded is True
     assert _book.seriesLinks.value[0].book.isLoaded is True
     assert _book.seriesLinks.isLoaded is True
     _valu = data.books[0].author.lastBook
-    assert _valu.id == 0
-    assert _valu.authorMetadataId == 0
+    assert isinstance(_valu.id, int)
+    assert isinstance(_valu.authorMetadataId, int)
     assert _valu.foreignBookId == "string"
     assert _valu.titleSlug == "string"
     assert _valu.title == "string"
@@ -5232,9 +5220,9 @@ async def test_async_parse(aresponses):
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres == ["string"]
-    assert _valu.ratings.votes == 0
-    assert _valu.ratings.value == 0.0
-    assert _valu.ratings.popularity == 0.0
+    assert isinstance(_valu.ratings.votes, int)
+    assert isinstance(_valu.ratings.value, float)
+    assert isinstance(_valu.ratings.popularity, float)
     assert _valu.cleanTitle == "string"
     assert _valu.monitored is True
     assert _valu.anyEditionOk is True
@@ -5242,7 +5230,7 @@ async def test_async_parse(aresponses):
     assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _valu.addOptions.addType == "string"
     assert _valu.addOptions.searchForNewBook is True
-    assert _valu.authorMetadata.value.id == 0
+    assert isinstance(_valu.authorMetadata.value.id, int)
     assert _valu.authorMetadata.value.foreignAuthorId == "string"
     assert _valu.authorMetadata.value.titleSlug == "string"
     assert _valu.authorMetadata.value.name == "string"
@@ -5262,27 +5250,27 @@ async def test_async_parse(aresponses):
     assert _valu.authorMetadata.value.links[0].url == "string"
     assert _valu.authorMetadata.value.links[0].name == "string"
     assert _valu.authorMetadata.value.genres == ["string"]
-    assert _valu.authorMetadata.value.ratings.votes == 0
-    assert _valu.authorMetadata.value.ratings.value == 0.0
-    assert _valu.authorMetadata.value.ratings.popularity == 0.0
+    assert isinstance(_valu.authorMetadata.value.ratings.votes, int)
+    assert isinstance(_valu.authorMetadata.value.ratings.value, float)
+    assert isinstance(_valu.authorMetadata.value.ratings.popularity, float)
     assert _valu.authorMetadata.isLoaded is True
-    assert _valu.author.value.id == 0
-    assert _valu.author.value.authorMetadataId == 0
+    assert isinstance(_valu.author.value.id, int)
+    assert isinstance(_valu.author.value.authorMetadataId, int)
     assert _valu.author.value.cleanName == "string"
     assert _valu.author.value.monitored is True
     assert _valu.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _valu.author.value.path == "string"
     assert _valu.author.value.rootFolderPath == "string"
     assert _valu.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _valu.author.value.qualityProfileId == 0
-    assert _valu.author.value.metadataProfileId == 0
-    assert _valu.author.value.tags == [0]
+    assert isinstance(_valu.author.value.qualityProfileId, int)
+    assert isinstance(_valu.author.value.metadataProfileId, int)
+    assert isinstance(_valu.author.value.tags[0], int)
     assert _valu.author.value.addOptions.monitor == "string"
     assert _valu.author.value.addOptions.booksToMonitor == ["string"]
     assert _valu.author.value.addOptions.monitored is True
     assert _valu.author.value.addOptions.searchForMissingBooks is True
     _val = _valu.author.value.metadata.value
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.foreignAuthorId == "string"
     assert _val.titleSlug == "string"
     assert _val.name == "string"
@@ -5303,41 +5291,41 @@ async def test_async_parse(aresponses):
     assert _val.links[0].url == "string"
     assert _val.links[0].name == "string"
     assert _val.genres == ["string"]
-    assert _val.ratings.votes == 0
-    assert _val.ratings.value == 0.0
-    assert _val.ratings.popularity == 0.0
+    assert isinstance(_val.ratings.votes, int)
+    assert isinstance(_val.ratings.value, float)
+    assert isinstance(_val.ratings.popularity, float)
     assert _valu.author.value.metadata.isLoaded is True
-    assert _valu.author.value.qualityProfile.value.id == 0
+    assert isinstance(_valu.author.value.qualityProfile.value.id, int)
     assert _valu.author.value.qualityProfile.value.name == "string"
     assert _valu.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _valu.author.value.qualityProfile.value.cutoff == 0
-    assert _valu.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_valu.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_valu.author.value.qualityProfile.value.items[0].id, int)
     assert _valu.author.value.qualityProfile.value.items[0].name == "string"
-    assert _valu.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_valu.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _valu.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _valu.author.value.qualityProfile.value.items[0].items == [None]
     assert _valu.author.value.qualityProfile.value.items[0].allowed is True
     assert _valu.author.value.qualityProfile.isLoaded is True
-    assert _valu.author.value.metadataProfile.value.id == 0
+    assert isinstance(_valu.author.value.metadataProfile.value.id, int)
     assert _valu.author.value.metadataProfile.value.name == "string"
-    assert _valu.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_valu.author.value.metadataProfile.value.minPopularity, int)
     assert _valu.author.value.metadataProfile.value.skipMissingDate is True
     assert _valu.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _valu.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _valu.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _valu.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _valu.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_valu.author.value.metadataProfile.value.minPages, int)
     assert _valu.author.value.metadataProfile.value.ignored == "string"
     assert _valu.author.value.metadataProfile.isLoaded is True
     assert _valu.author.value.books.value == [None]
     assert _valu.author.value.books.isLoaded is True
-    assert _valu.author.value.series.value[0].id == 0
+    assert isinstance(_valu.author.value.series.value[0].id, int)
     assert _valu.author.value.series.value[0].foreignSeriesId == "string"
     assert _valu.author.value.series.value[0].title == "string"
     assert _valu.author.value.series.value[0].description == "string"
     assert _valu.author.value.series.value[0].numbered is True
-    assert _valu.author.value.series.value[0].workCount == 0
-    assert _valu.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_valu.author.value.series.value[0].workCount, int)
+    assert isinstance(_valu.author.value.series.value[0].primaryWorkCount, int)
     assert _valu.author.value.series.value[0].books.value == [None]
     assert _valu.author.value.series.value[0].books.isLoaded is True
     assert _valu.author.value.series.value[0].foreignAuthorId == "string"
@@ -5346,8 +5334,8 @@ async def test_async_parse(aresponses):
     assert _valu.author.value.foreignAuthorId == "string"
     assert _valu.author.isLoaded is True
     _val = _valu.editions.value[0]
-    assert _val.id == 0
-    assert _val.bookId == 0
+    assert isinstance(_val.id, int)
+    assert isinstance(_val.bookId, int)
     assert _val.foreignEditionId == "string"
     assert _val.titleSlug == "string"
     assert _val.isbn13 == "string"
@@ -5359,56 +5347,56 @@ async def test_async_parse(aresponses):
     assert _val.isEbook is True
     assert _val.disambiguation == "string"
     assert _val.publisher == "string"
-    assert _val.pageCount == 0
+    assert isinstance(_val.pageCount, int)
     assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == "string"
     assert _val.images[0].extension == "string"
     assert _val.links[0].url == "string"
     assert _val.links[0].name == "string"
-    assert _val.ratings.votes == 0
-    assert _val.ratings.value == 0.0
-    assert _val.ratings.popularity == 0.0
+    assert isinstance(_val.ratings.votes, int)
+    assert isinstance(_val.ratings.value, float)
+    assert isinstance(_val.ratings.popularity, float)
     assert _val.monitored is True
     assert _val.manualAdd is True
     assert _val.book.isLoaded is True
-    assert _val.bookFiles.value[0].id == 0
+    assert isinstance(_val.bookFiles.value[0].id, int)
     assert _val.bookFiles.value[0].path == "string"
-    assert _val.bookFiles.value[0].size == 0
+    assert isinstance(_val.bookFiles.value[0].size, int)
     assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.bookFiles.value[0].sceneName == "string"
     assert _val.bookFiles.value[0].releaseGroup == "string"
-    assert _val.bookFiles.value[0].quality.quality.id == 0
+    assert isinstance(_val.bookFiles.value[0].quality.quality.id, int)
     assert _val.bookFiles.value[0].quality.quality.name == "string"
-    assert _val.bookFiles.value[0].quality.revision.version == 0
-    assert _val.bookFiles.value[0].quality.revision.real == 0
+    assert isinstance(_val.bookFiles.value[0].quality.revision.version, int)
+    assert isinstance(_val.bookFiles.value[0].quality.revision.real, int)
     assert _val.bookFiles.value[0].quality.revision.isRepack is True
     assert _val.bookFiles.value[0].mediaInfo.audioFormat == "string"
-    assert _val.bookFiles.value[0].mediaInfo.audioBitrate == 0
-    assert _val.bookFiles.value[0].mediaInfo.audioChannels == 0.0
-    assert _val.bookFiles.value[0].mediaInfo.audioBitrate == 0
-    assert _val.bookFiles.value[0].mediaInfo.audioSampleRate == 0
-    assert _val.bookFiles.value[0].editionId == 0
-    assert _val.bookFiles.value[0].calibreId == 0
-    assert _val.bookFiles.value[0].part == 0
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioBitrate, int)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioChannels, float)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioBitrate, int)
+    assert isinstance(_val.bookFiles.value[0].mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.bookFiles.value[0].editionId, int)
+    assert isinstance(_val.bookFiles.value[0].calibreId, int)
+    assert isinstance(_val.bookFiles.value[0].part, int)
     _va = _val.bookFiles.value[0].author.value
-    assert _va.id == 0
-    assert _va.authorMetadataId == 0
+    assert isinstance(_va.id, int)
+    assert isinstance(_va.authorMetadataId, int)
     assert _va.cleanName == "string"
     assert _va.monitored is True
     assert _va.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _va.path == "string"
     assert _va.rootFolderPath == "string"
     assert _va.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _va.qualityProfileId == 0
-    assert _va.metadataProfileId == 0
-    assert _va.tags == [0]
+    assert isinstance(_va.qualityProfileId, int)
+    assert isinstance(_va.metadataProfileId, int)
+    assert isinstance(_va.tags[0], int)
     assert _va.addOptions.monitor == "string"
     assert _va.addOptions.booksToMonitor == ["string"]
     assert _va.addOptions.monitored is True
     assert _va.addOptions.searchForMissingBooks is True
-    assert _va.metadata.value.id == 0
+    assert isinstance(_va.metadata.value.id, int)
     assert _va.metadata.value.foreignAuthorId == "string"
     assert _va.metadata.value.titleSlug == "string"
     assert _va.metadata.value.name == "string"
@@ -5429,41 +5417,41 @@ async def test_async_parse(aresponses):
     assert _va.metadata.value.links[0].url == "string"
     assert _va.metadata.value.links[0].name == "string"
     assert _va.metadata.value.genres == ["string"]
-    assert _va.metadata.value.ratings.votes == 0
-    assert _va.metadata.value.ratings.value == 0.0
-    assert _va.metadata.value.ratings.popularity == 0.0
+    assert isinstance(_va.metadata.value.ratings.votes, int)
+    assert isinstance(_va.metadata.value.ratings.value, float)
+    assert isinstance(_va.metadata.value.ratings.popularity, float)
     assert _va.metadata.isLoaded is True
-    assert _va.qualityProfile.value.id == 0
+    assert isinstance(_va.qualityProfile.value.id, int)
     assert _va.qualityProfile.value.name == "string"
     assert _va.qualityProfile.value.upgradeAllowed is True
-    assert _va.qualityProfile.value.cutoff == 0
-    assert _va.qualityProfile.value.items[0].id == 0
+    assert isinstance(_va.qualityProfile.value.cutoff, int)
+    assert isinstance(_va.qualityProfile.value.items[0].id, int)
     assert _va.qualityProfile.value.items[0].name == "string"
-    assert _va.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_va.qualityProfile.value.items[0].quality.id, int)
     assert _va.qualityProfile.value.items[0].quality.name == "string"
     assert _va.qualityProfile.value.items[0].items == [None]
     assert _va.qualityProfile.value.items[0].allowed is True
     assert _va.qualityProfile.isLoaded is True
-    assert _va.metadataProfile.value.id == 0
+    assert isinstance(_va.metadataProfile.value.id, int)
     assert _va.metadataProfile.value.name == "string"
-    assert _va.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_va.metadataProfile.value.minPopularity, int)
     assert _va.metadataProfile.value.skipMissingDate is True
     assert _va.metadataProfile.value.skipMissingIsbn is True
     assert _va.metadataProfile.value.skipPartsAndSets is True
     assert _va.metadataProfile.value.skipSeriesSecondary is True
     assert _va.metadataProfile.value.allowedLanguages == "string"
-    assert _va.metadataProfile.value.minPages == 0
+    assert isinstance(_va.metadataProfile.value.minPages, int)
     assert _va.metadataProfile.value.ignored == "string"
     assert _va.metadataProfile.isLoaded is True
     assert _va.books.value == [None]
     assert _va.books.isLoaded is True
-    assert _va.series.value[0].id == 0
+    assert isinstance(_va.series.value[0].id, int)
     assert _va.series.value[0].foreignSeriesId == "string"
     assert _va.series.value[0].title == "string"
     assert _va.series.value[0].description == "string"
     assert _va.series.value[0].numbered is True
-    assert _va.series.value[0].workCount == 0
-    assert _va.series.value[0].primaryWorkCount == 0
+    assert isinstance(_va.series.value[0].workCount, int)
+    assert isinstance(_va.series.value[0].primaryWorkCount, int)
     assert _va.series.value[0].books.value == [None]
     assert _va.series.value[0].books.isLoaded is True
     assert _va.series.value[0].foreignAuthorId == "string"
@@ -5472,46 +5460,46 @@ async def test_async_parse(aresponses):
     assert _va.foreignAuthorId == "string"
     assert _val.bookFiles.value[0].author.isLoaded is True
     assert _val.bookFiles.value[0].edition.isLoaded is True
-    assert _val.bookFiles.value[0].partCount == 0
+    assert isinstance(_val.bookFiles.value[0].partCount, int)
     assert _val.bookFiles.isLoaded is True
     _val = _valu.bookFiles.value[0]
-    assert _val.id == 0
+    assert isinstance(_val.id, int)
     assert _val.path == "string"
-    assert _val.size == 0
+    assert isinstance(_val.size, int)
     assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
-    assert _val.quality.quality.id == 0
+    assert isinstance(_val.quality.quality.id, int)
     assert _val.quality.quality.name == "string"
-    assert _val.quality.revision.version == 0
-    assert _val.quality.revision.real == 0
+    assert isinstance(_val.quality.revision.version, int)
+    assert isinstance(_val.quality.revision.real, int)
     assert _val.quality.revision.isRepack is True
     assert _val.mediaInfo.audioFormat == "string"
-    assert _val.mediaInfo.audioBitrate == 0
-    assert _val.mediaInfo.audioChannels == 0.0
-    assert _val.mediaInfo.audioBits == 0
-    assert _val.mediaInfo.audioSampleRate == 0
-    assert _val.editionId == 0
-    assert _val.calibreId == 0
-    assert _val.part == 0
-    assert _val.author.value.id == 0
-    assert _val.author.value.authorMetadataId == 0
+    assert isinstance(_val.mediaInfo.audioBitrate, int)
+    assert isinstance(_val.mediaInfo.audioChannels, float)
+    assert isinstance(_val.mediaInfo.audioBits, int)
+    assert isinstance(_val.mediaInfo.audioSampleRate, int)
+    assert isinstance(_val.editionId, int)
+    assert isinstance(_val.calibreId, int)
+    assert isinstance(_val.part, int)
+    assert isinstance(_val.author.value.id, int)
+    assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
     assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
     assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.author.value.qualityProfileId == 0
-    assert _val.author.value.metadataProfileId == 0
-    assert _val.author.value.tags == [0]
+    assert isinstance(_val.author.value.qualityProfileId, int)
+    assert isinstance(_val.author.value.metadataProfileId, int)
+    assert isinstance(_val.author.value.tags[0], int)
     assert _val.author.value.addOptions.monitor == "string"
     assert _val.author.value.addOptions.booksToMonitor == ["string"]
     assert _val.author.value.addOptions.monitored is True
     assert _val.author.value.addOptions.searchForMissingBooks is True
     _va = _val.author.value.metadata.value
-    assert _va.id == 0
+    assert isinstance(_va.id, int)
     assert _va.foreignAuthorId == "string"
     assert _va.titleSlug == "string"
     assert _va.name == "string"
@@ -5532,41 +5520,41 @@ async def test_async_parse(aresponses):
     assert _va.links[0].url == "string"
     assert _va.links[0].name == "string"
     assert _va.genres == ["string"]
-    assert _va.ratings.votes == 0
-    assert _va.ratings.value == 0.0
-    assert _va.ratings.popularity == 0.0
+    assert isinstance(_va.ratings.votes, int)
+    assert isinstance(_va.ratings.value, float)
+    assert isinstance(_va.ratings.popularity, float)
     assert _val.author.value.metadata.isLoaded is True
-    assert _val.author.value.qualityProfile.value.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.id, int)
     assert _val.author.value.qualityProfile.value.name == "string"
     assert _val.author.value.qualityProfile.value.upgradeAllowed is True
-    assert _val.author.value.qualityProfile.value.cutoff == 0
-    assert _val.author.value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.cutoff, int)
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].id, int)
     assert _val.author.value.qualityProfile.value.items[0].name == "string"
-    assert _val.author.value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_val.author.value.qualityProfile.value.items[0].quality.id, int)
     assert _val.author.value.qualityProfile.value.items[0].quality.name == "string"
     assert _val.author.value.qualityProfile.value.items[0].items == [None]
     assert _val.author.value.qualityProfile.value.items[0].allowed is True
     assert _val.author.value.qualityProfile.isLoaded is True
-    assert _val.author.value.metadataProfile.value.id == 0
+    assert isinstance(_val.author.value.metadataProfile.value.id, int)
     assert _val.author.value.metadataProfile.value.name == "string"
-    assert _val.author.value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_val.author.value.metadataProfile.value.minPopularity, int)
     assert _val.author.value.metadataProfile.value.skipMissingDate is True
     assert _val.author.value.metadataProfile.value.skipMissingIsbn is True
     assert _val.author.value.metadataProfile.value.skipPartsAndSets is True
     assert _val.author.value.metadataProfile.value.skipSeriesSecondary is True
     assert _val.author.value.metadataProfile.value.allowedLanguages == "string"
-    assert _val.author.value.metadataProfile.value.minPages == 0
+    assert isinstance(_val.author.value.metadataProfile.value.minPages, int)
     assert _val.author.value.metadataProfile.value.ignored == "string"
     assert _val.author.value.metadataProfile.isLoaded is True
     assert _val.author.value.books.value == [None]
     assert _val.author.value.books.isLoaded is True
-    assert _val.author.value.series.value[0].id == 0
+    assert isinstance(_val.author.value.series.value[0].id, int)
     assert _val.author.value.series.value[0].foreignSeriesId == "string"
     assert _val.author.value.series.value[0].title == "string"
     assert _val.author.value.series.value[0].description == "string"
     assert _val.author.value.series.value[0].numbered is True
-    assert _val.author.value.series.value[0].workCount == 0
-    assert _val.author.value.series.value[0].primaryWorkCount == 0
+    assert isinstance(_val.author.value.series.value[0].workCount, int)
+    assert isinstance(_val.author.value.series.value[0].primaryWorkCount, int)
     assert _val.author.value.series.value[0].books.value[0] is None
     assert _val.author.value.series.value[0].books.isLoaded is True
     assert _val.author.value.series.value[0].foreignAuthorId == "string"
@@ -5575,20 +5563,20 @@ async def test_async_parse(aresponses):
     assert _val.author.value.foreignAuthorId == "string"
     assert _val.author.isLoaded is True
     assert _val.edition.isLoaded is True
-    assert _val.partCount == 0
+    assert isinstance(_val.partCount, int)
     assert _valu.bookFiles.isLoaded is True
-    assert _valu.seriesLinks.value[0].id == 0
+    assert isinstance(_valu.seriesLinks.value[0].id, int)
     assert _valu.seriesLinks.value[0].position == "string"
-    assert _valu.seriesLinks.value[0].seriesId == 0
-    assert _valu.seriesLinks.value[0].bookId == 0
+    assert isinstance(_valu.seriesLinks.value[0].seriesId, int)
+    assert isinstance(_valu.seriesLinks.value[0].bookId, int)
     assert _valu.seriesLinks.value[0].isPrimary is True
-    assert _valu.seriesLinks.value[0].series.value.id == 0
+    assert isinstance(_valu.seriesLinks.value[0].series.value.id, int)
     assert _valu.seriesLinks.value[0].series.value.foreignSeriesId == "string"
     assert _valu.seriesLinks.value[0].series.value.title == "string"
     assert _valu.seriesLinks.value[0].series.value.description == "string"
     assert _valu.seriesLinks.value[0].series.value.numbered is True
-    assert _valu.seriesLinks.value[0].series.value.workCount == 0
-    assert _valu.seriesLinks.value[0].series.value.primaryWorkCount == 0
+    assert isinstance(_valu.seriesLinks.value[0].series.value.workCount, int)
+    assert isinstance(_valu.seriesLinks.value[0].series.value.primaryWorkCount, int)
     assert _valu.seriesLinks.value[0].series.value.books.value == [None]
     assert _valu.seriesLinks.value[0].series.value.foreignAuthorId == "string"
     assert _valu.seriesLinks.value[0].series.isLoaded is True
@@ -5599,47 +5587,47 @@ async def test_async_parse(aresponses):
     assert data.books[0].author.images[0].extension == "string"
     assert data.books[0].author.remotePoster == "string"
     assert data.books[0].author.path == "string"
-    assert data.books[0].author.qualityProfileId == 0
-    assert data.books[0].author.metadataProfileId == 0
+    assert isinstance(data.books[0].author.qualityProfileId, int)
+    assert isinstance(data.books[0].author.metadataProfileId, int)
     assert data.books[0].author.monitored is True
     assert data.books[0].author.rootFolderPath == "string"
     assert data.books[0].author.genres == ["string"]
     assert data.books[0].author.cleanName == "string"
     assert data.books[0].author.sortName == "string"
     assert data.books[0].author.sortNameLastFirst == "string"
-    assert data.books[0].author.tags == [0]
+    assert isinstance(data.books[0].author.tags[0], int)
     assert data.books[0].author.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert data.books[0].author.addOptions.monitor == "string"
     assert data.books[0].author.addOptions.booksToMonitor == ["string"]
     assert data.books[0].author.addOptions.monitored is True
     assert data.books[0].author.addOptions.searchForMissingBooks is True
-    assert data.books[0].author.ratings.votes == 0
-    assert data.books[0].author.ratings.value == 0.0
-    assert data.books[0].author.ratings.popularity == 0.0
-    assert data.books[0].author.statistics.bookFileCount == 0
-    assert data.books[0].author.statistics.bookCount == 0
-    assert data.books[0].author.statistics.availableBookCount == 0
-    assert data.books[0].author.statistics.totalBookCount == 0
-    assert data.books[0].author.statistics.sizeOnDisk == 0
-    assert data.books[0].author.statistics.percentOfBooks == 0.0
+    assert isinstance(data.books[0].author.ratings.votes, int)
+    assert isinstance(data.books[0].author.ratings.value, float)
+    assert isinstance(data.books[0].author.ratings.popularity, float)
+    assert isinstance(data.books[0].author.statistics.bookFileCount, int)
+    assert isinstance(data.books[0].author.statistics.bookCount, int)
+    assert isinstance(data.books[0].author.statistics.availableBookCount, int)
+    assert isinstance(data.books[0].author.statistics.totalBookCount, int)
+    assert isinstance(data.books[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data.books[0].author.statistics.percentOfBooks, float)
     assert data.books[0].images[0].url == "string"
     assert data.books[0].images[0].coverType == "string"
     assert data.books[0].images[0].extension == "string"
     assert data.books[0].links[0].url == "string"
     assert data.books[0].links[0].name == "string"
-    assert data.books[0].statistics.bookFileCount == 0
-    assert data.books[0].statistics.bookCount == 0
-    assert data.books[0].statistics.totalBookCount == 0
-    assert data.books[0].statistics.sizeOnDisk == 0
-    assert data.books[0].statistics.percentOfBooks == 0.0
+    assert isinstance(data.books[0].statistics.bookFileCount, int)
+    assert isinstance(data.books[0].statistics.bookCount, int)
+    assert isinstance(data.books[0].statistics.totalBookCount, int)
+    assert isinstance(data.books[0].statistics.sizeOnDisk, int)
+    assert isinstance(data.books[0].statistics.percentOfBooks, float)
     assert data.books[0].added == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert data.books[0].addOptions.addType == "string"
     assert data.books[0].addOptions.searchForNewBook is True
     assert data.books[0].remoteCover == "string"
     assert data.books[0].remoteCover == "string"
     _value = data.books[0].editions[0]
-    assert _value.id == 0
-    assert _value.bookId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.bookId, int)
     assert _value.foreignEditionId == "string"
     assert _value.titleSlug == "string"
     assert _value.isbn13 == "string"
@@ -5651,16 +5639,16 @@ async def test_async_parse(aresponses):
     assert _value.isEbook is True
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.images[0].extension == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0.0
-    assert _value.ratings.popularity == 0.0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, float)
+    assert isinstance(_value.ratings.popularity, float)
     assert _value.monitored is True
     assert _value.manualAdd is True
     assert _value.remoteCover == "string"
@@ -5690,18 +5678,18 @@ async def test_async_get_queue(aresponses):
     assert data.sortKey == "timeleft"
     assert data.sortDirection == "ascending"
     assert data.totalRecords == 1
-    assert data.records[0].authorId == 0
-    assert data.records[0].bookId == 0
+    assert isinstance(data.records[0].authorId, int)
+    assert isinstance(data.records[0].bookId, int)
     assert data.records[0].author
     assert data.records[0].book
-    assert data.records[0].quality.quality.id == 0
+    assert isinstance(data.records[0].quality.quality.id, int)
     assert data.records[0].quality.quality.name == "string"
-    assert data.records[0].quality.revision.version == 0
-    assert data.records[0].quality.revision.real == 0
+    assert isinstance(data.records[0].quality.revision.version, int)
+    assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
-    assert data.records[0].size == 0
+    assert isinstance(data.records[0].size, int)
     assert data.records[0].title == "string"
-    assert data.records[0].sizeleft == 0
+    assert isinstance(data.records[0].sizeleft, int)
     assert data.records[0].timeleft == "00:00:00"
     assert data.records[0].estimatedCompletionTime == datetime(2020, 2, 9, 23, 22, 30)
     assert data.records[0].status == "string"
@@ -5715,7 +5703,7 @@ async def test_async_get_queue(aresponses):
     assert data.records[0].indexer == "string"
     assert data.records[0].outputPath == "string"
     assert data.records[0].downloadForced is False
-    assert data.records[0].id == 0
+    assert isinstance(data.records[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -5735,8 +5723,8 @@ async def test_async_get_queue_details(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_queue_details(authorid=0, bookids=[0])
-    assert data[0].authorId == 0
-    assert data[0].bookId == 0
+    assert isinstance(data[0].authorId, int)
+    assert isinstance(data[0].bookId, int)
     assert data[0].author
     assert data[0].book
     assert data[0].book.title == "string"
@@ -5744,18 +5732,18 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].book.seriesTitle == "string"
     assert data[0].book.disambiguation == "string"
     assert data[0].book.overview == "string"
-    assert data[0].book.authorId == 0
+    assert isinstance(data[0].book.authorId, int)
     assert data[0].book.foreignBookId == "0"
     assert data[0].book.titleSlug == "0"
     assert data[0].book.monitored is True
     assert data[0].book.anyEditionOk is True
-    assert data[0].book.ratings.votes == 0
-    assert data[0].book.ratings.value == 0.0
-    assert data[0].book.ratings.popularity == 0.0
+    assert isinstance(data[0].book.ratings.votes, int)
+    assert isinstance(data[0].book.ratings.value, float)
+    assert isinstance(data[0].book.ratings.popularity, float)
     assert data[0].book.releaseDate == datetime(2021, 11, 22, 0, 0)
-    assert data[0].book.pageCount == 0
+    assert isinstance(data[0].book.pageCount, int)
     assert data[0].book.genres == ["string"]
-    assert data[0].book.author.authorMetadataId == 0
+    assert isinstance(data[0].book.author.authorMetadataId, int)
     assert data[0].book.author.status == "string"
     assert data[0].book.author.ended is False
     assert data[0].book.author.authorName == "string"
@@ -5769,36 +5757,36 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].book.author.images[0].coverType == "string"
     assert data[0].book.author.images[0].extension == "string"
     assert data[0].book.author.path == "string"
-    assert data[0].book.author.qualityProfileId == 0
-    assert data[0].book.author.metadataProfileId == 0
+    assert isinstance(data[0].book.author.qualityProfileId, int)
+    assert isinstance(data[0].book.author.metadataProfileId, int)
     assert data[0].book.author.monitored is True
     assert data[0].book.author.monitorNewItems == "string"
     assert data[0].book.author.genres == ["string"]
     assert data[0].book.author.cleanName == "string"
     assert data[0].book.author.sortName == "string"
     assert data[0].book.author.sortNameLastFirst == "string"
-    assert data[0].book.author.tags == [0]
+    assert isinstance(data[0].book.author.tags[0], int)
     assert data[0].book.author.added == datetime(2021, 12, 6, 23, 38, 3)
-    assert data[0].book.author.ratings.votes == 0
-    assert data[0].book.author.ratings.value == 0.0
-    assert data[0].book.author.ratings.popularity == 0.0
-    assert data[0].book.author.statistics.bookFileCount == 0
-    assert data[0].book.author.statistics.bookCount == 0
-    assert data[0].book.author.statistics.availableBookCount == 0
-    assert data[0].book.author.statistics.totalBookCount == 0
-    assert data[0].book.author.statistics.sizeOnDisk == 0
-    assert data[0].book.author.statistics.percentOfBooks == 0.0
-    assert data[0].book.author.id == 0
+    assert isinstance(data[0].book.author.ratings.votes, int)
+    assert isinstance(data[0].book.author.ratings.value, float)
+    assert isinstance(data[0].book.author.ratings.popularity, float)
+    assert isinstance(data[0].book.author.statistics.bookFileCount, int)
+    assert isinstance(data[0].book.author.statistics.bookCount, int)
+    assert isinstance(data[0].book.author.statistics.availableBookCount, int)
+    assert isinstance(data[0].book.author.statistics.totalBookCount, int)
+    assert isinstance(data[0].book.author.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].book.author.statistics.percentOfBooks, float)
+    assert isinstance(data[0].book.author.id, int)
     assert data[0].book.images[0].url == "string"
     assert data[0].book.images[0].coverType == "string"
     assert data[0].book.images[0].extension == "string"
     assert data[0].book.links[0].url == "string"
     assert data[0].book.links[0].name == "string"
     assert data[0].book.added == datetime(2021, 12, 6, 23, 53, 58)
-    assert data[0].book.editions[0].bookId == 0
-    assert data[0].book.editions[0].foreignEditionId == 0
-    assert data[0].book.editions[0].titleSlug == 0
-    assert data[0].book.editions[0].isbn13 == 0
+    assert isinstance(data[0].book.editions[0].bookId, int)
+    assert isinstance(data[0].book.editions[0].foreignEditionId, int)
+    assert isinstance(data[0].book.editions[0].titleSlug, int)
+    assert isinstance(data[0].book.editions[0].isbn13, int)
     assert data[0].book.editions[0].title == "string"
     assert data[0].book.editions[0].language == "string"
     assert data[0].book.editions[0].overview == "string"
@@ -5806,30 +5794,30 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].book.editions[0].isEbook is False
     assert data[0].book.editions[0].disambiguation == "string"
     assert data[0].book.editions[0].publisher == "string"
-    assert data[0].book.editions[0].pageCount == 0
+    assert isinstance(data[0].book.editions[0].pageCount, int)
     assert data[0].book.editions[0].releaseDate == datetime(2021, 11, 25, 0, 0)
     assert data[0].book.editions[0].images[0].url == "string"
     assert data[0].book.editions[0].images[0].coverType == "string"
     assert data[0].book.editions[0].images[0].extension == "string"
     assert data[0].book.editions[0].links[0].url == "string"
     assert data[0].book.editions[0].links[0].name == "string"
-    assert data[0].book.editions[0].ratings.votes == 0
-    assert data[0].book.editions[0].ratings.value == 0.0
-    assert data[0].book.editions[0].ratings.popularity == 0.0
+    assert isinstance(data[0].book.editions[0].ratings.votes, int)
+    assert isinstance(data[0].book.editions[0].ratings.value, float)
+    assert isinstance(data[0].book.editions[0].ratings.popularity, float)
     assert data[0].book.editions[0].monitored is False
     assert data[0].book.editions[0].manualAdd is False
     assert data[0].book.editions[0].grabbed is False
-    assert data[0].book.editions[0].id == 0
+    assert isinstance(data[0].book.editions[0].id, int)
     assert data[0].book.grabbed is False
-    assert data[0].book.id == 0
-    assert data[0].quality.quality.id == 0
+    assert isinstance(data[0].book.id, int)
+    assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
-    assert data[0].quality.revision.version == 0
-    assert data[0].quality.revision.real == 0
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
     assert data[0].quality.revision.isRepack is False
-    assert data[0].size == 0
+    assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert data[0].sizeleft == 0
+    assert isinstance(data[0].sizeleft, int)
     assert data[0].timeleft == "00:00:00"
     assert data[0].estimatedCompletionTime == datetime(2020, 2, 7, 11, 27, 27)
     assert data[0].status == "string"
@@ -5843,7 +5831,7 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].indexer == "string"
     assert data[0].outputPath == "string"
     assert data[0].downloadForced is False
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -5864,17 +5852,17 @@ async def test_async_get_release(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_release(authorid=0, bookid=0)
     assert data[0].guid == "string"
-    assert data[0].quality.quality.id == 0
+    assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
-    assert data[0].quality.revision.version == 0
-    assert data[0].quality.revision.real == 0
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
     assert data[0].quality.revision.isRepack is False
-    assert data[0].qualityWeight == 0
-    assert data[0].age == 0
-    assert data[0].ageHours == 0.0
-    assert data[0].ageMinutes == 0.0
-    assert data[0].size == 0
-    assert data[0].indexerId == 0
+    assert isinstance(data[0].qualityWeight, int)
+    assert isinstance(data[0].age, int)
+    assert isinstance(data[0].ageHours, float)
+    assert isinstance(data[0].ageMinutes, float)
+    assert isinstance(data[0].size, int)
+    assert isinstance(data[0].indexerId, int)
     assert data[0].indexer == "string"
     assert data[0].title == "string"
     assert data[0].discography is False
@@ -5890,12 +5878,12 @@ async def test_async_get_release(aresponses):
     assert data[0].downloadUrl == "string"
     assert data[0].infoUrl == "string"
     assert data[0].downloadAllowed is True
-    assert data[0].releaseWeight == 0
-    assert data[0].preferredWordScore == 0
+    assert isinstance(data[0].releaseWeight, int)
+    assert isinstance(data[0].preferredWordScore, float)
     assert data[0].magnetUrl == "string"
     assert data[0].infoHash == "string"
-    assert data[0].seeders == 0
-    assert data[0].leechers == 0
+    assert isinstance(data[0].seeders, int)
+    assert isinstance(data[0].leechers, int)
     assert data[0].protocol == "string"
 
 
@@ -5935,9 +5923,9 @@ async def test_async_get_rename(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_rename()
-    assert data[0].authorId == 0
-    assert data[0].bookId == 0
-    assert data[0].bookFileId == 0
+    assert isinstance(data[0].authorId, int)
+    assert isinstance(data[0].bookId, int)
+    assert isinstance(data[0].bookFileId, int)
     assert data[0].existingPath == "string"
     assert data[0].newPath == "string"
 
@@ -5959,10 +5947,10 @@ async def test_async_get_retag(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_retag()
-    assert data[0].authorId == 0
-    assert data[0].bookId == 0
-    assert data[0].trackNumbers == [0]
-    assert data[0].bookFileId == 0
+    assert isinstance(data[0].authorId, int)
+    assert isinstance(data[0].bookId, int)
+    assert isinstance(data[0].trackNumbers[0], int)
+    assert isinstance(data[0].bookFileId, int)
     assert data[0].path == "string"
     assert data[0].changes[0].field == "string"
     assert data[0].changes[0].oldValue == "string"
@@ -5987,7 +5975,7 @@ async def test_async_search(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_search("test")
     assert data[0].foreignId == "0"
-    assert data[0].author.authorMetadataId == 0
+    assert isinstance(data[0].author.authorMetadataId, int)
     assert data[0].author.status == "string"
     assert data[0].author.ended is False
     assert data[0].author.authorName == "string"
@@ -6002,27 +5990,27 @@ async def test_async_search(aresponses):
     assert data[0].author.images[0].extension == "string"
     assert data[0].author.remotePoster == "string"
     assert data[0].author.path == "string"
-    assert data[0].author.qualityProfileId == 0
-    assert data[0].author.metadataProfileId == 0
+    assert isinstance(data[0].author.qualityProfileId, int)
+    assert isinstance(data[0].author.metadataProfileId, int)
     assert data[0].author.monitored is True
     assert data[0].author.monitorNewItems == "string"
     assert data[0].author.genres == ["string"]
     assert data[0].author.cleanName == "string"
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
-    assert data[0].author.tags == [0]
+    assert isinstance(data[0].author.tags[0], int)
     assert data[0].author.added == datetime(2021, 10, 6, 23, 38, 49)
-    assert data[0].author.ratings.votes == 0
-    assert data[0].author.ratings.value == 0.0
-    assert data[0].author.ratings.popularity == 0.0
-    assert data[0].author.statistics.bookFileCount == 0
-    assert data[0].author.statistics.bookCount == 0
-    assert data[0].author.statistics.availableBookCount == 0
-    assert data[0].author.statistics.totalBookCount == 0
-    assert data[0].author.statistics.sizeOnDisk == 0
-    assert data[0].author.statistics.percentOfBooks == 0.0
-    assert data[0].author.id == 0
-    assert data[0].id == 0
+    assert isinstance(data[0].author.ratings.votes, int)
+    assert isinstance(data[0].author.ratings.value, float)
+    assert isinstance(data[0].author.ratings.popularity, float)
+    assert isinstance(data[0].author.statistics.bookFileCount, int)
+    assert isinstance(data[0].author.statistics.bookCount, int)
+    assert isinstance(data[0].author.statistics.availableBookCount, int)
+    assert isinstance(data[0].author.statistics.totalBookCount, int)
+    assert isinstance(data[0].author.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].author.statistics.percentOfBooks, float)
+    assert isinstance(data[0].author.id, int)
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -6045,11 +6033,11 @@ async def test_async_get_series(aresponses):
     assert data[0].title == "string"
     assert data[0].description == "string"
     assert data[0].links[0].position == "string"
-    assert data[0].links[0].seriesPosition == 0
-    assert data[0].links[0].seriesId == 0
-    assert data[0].links[0].bookId == 0
-    assert data[0].links[0].id == 0
-    assert data[0].id == 0
+    assert isinstance(data[0].links[0].seriesPosition, int)
+    assert isinstance(data[0].links[0].seriesId, int)
+    assert isinstance(data[0].links[0].bookId, int)
+    assert isinstance(data[0].links[0].id, int)
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -6070,13 +6058,13 @@ async def test_async_get_tag_details(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_tags_details(tagid=0)
 
-    assert data.id == 0
+    assert isinstance(data.id, int)
     assert data.label == "string"
-    assert data.delayProfileIds == [0]
-    assert data.notificationIds == [0]
-    assert data.restrictionIds == [0]
-    assert data.importListIds == [0]
-    assert data.authorIds == [0]
+    assert isinstance(data.delayProfileIds[0], int)
+    assert isinstance(data.notificationIds[0], int)
+    assert isinstance(data.restrictionIds[0], int)
+    assert isinstance(data.importListIds[0], int)
+    assert isinstance(data.authorIds[0], int)
 
 
 @pytest.mark.asyncio
@@ -6087,28 +6075,28 @@ async def test_readarr_bookshelf():
         datatype=ReadarrBookshelf,
     )
     assert isinstance(item.data, ReadarrBookshelf)
-    assert item.data.authors[0].id == 0
+    assert isinstance(item.data.authors[0].id, int)
     assert item.data.authors[0].monitored is True
     _value = item.data.authors[0].books[0]
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.title == "string"
     assert _value.authorTitle == "string"
     assert _value.seriesTitle == "string"
     assert _value.disambiguation == "string"
     assert _value.overview == "string"
-    assert _value.authorId == 0
+    assert isinstance(_value.authorId, int)
     assert _value.foreignBookId == "string"
     assert _value.titleSlug == "string"
     assert _value.monitored is True
     assert _value.anyEditionOk is True
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
     assert _value.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.pageCount == 0
+    assert isinstance(_value.pageCount, int)
     assert _value.genres[0] == "string"
     _value = item.data.authors[0].books[0].author
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.status == "string"
     assert _value.authorName == "string"
     assert _value.authorNameLastFirst == "string"
@@ -6118,8 +6106,8 @@ async def test_readarr_bookshelf():
     assert _value.disambiguation == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.nextBook.id == 0
-    assert _value.nextBook.authorMetadataId == 0
+    assert isinstance(_value.nextBook.id, int)
+    assert isinstance(_value.nextBook.authorMetadataId, int)
     assert _value.nextBook.foreignBookId == "string"
     assert _value.nextBook.titleSlug == "string"
     assert _value.nextBook.title == "string"
@@ -6127,8 +6115,8 @@ async def test_readarr_bookshelf():
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
-    assert _value.nextBook.ratings.votes == 0
-    assert _value.nextBook.ratings.value == 0
+    assert isinstance(_value.nextBook.ratings.votes, int)
+    assert isinstance(_value.nextBook.ratings.value, int)
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
@@ -6137,7 +6125,7 @@ async def test_readarr_bookshelf():
     assert _value.nextBook.addOptions.addType == "string"
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = item.data.authors[0].books[0].author.nextBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -6156,25 +6144,25 @@ async def test_readarr_bookshelf():
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
     _value = item.data.authors[0].books[0].author.nextBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -6194,27 +6182,27 @@ async def test_readarr_bookshelf():
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items == [None]
     assert _value.qualityProfile.value.items[0].allowed is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert isinstance(_value.books, _ReadarrAuthorValueBooks)
     assert isinstance(_value.series, _ReadarrAuthorValueSeries)
@@ -6224,8 +6212,8 @@ async def test_readarr_bookshelf():
     assert isinstance(_book.editions, _ReadarrEditions)
     assert isinstance(_book.bookFiles, _ReadarrEditionsValueBookFiles)
     assert isinstance(_book.seriesLinks, _ReadarrSeriesLinks)
-    assert _book.id == 0
-    assert _book.authorMetadataId == 0
+    assert isinstance(_book.id, int)
+    assert isinstance(_book.authorMetadataId, int)
     assert _book.foreignBookId == "string"
     assert _book.titleSlug == "string"
     assert _book.title == "string"
@@ -6233,8 +6221,8 @@ async def test_readarr_bookshelf():
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
-    assert _book.ratings.votes == 0
-    assert _book.ratings.value == 0
+    assert isinstance(_book.ratings.votes, int)
+    assert isinstance(_book.ratings.value, int)
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
@@ -6243,7 +6231,7 @@ async def test_readarr_bookshelf():
     assert _book.addOptions.addType == "string"
     assert _book.addOptions.searchForNewBook is True
     _value = item.data.authors[0].books[0].author.lastBook.authorMetadata.value
-    assert _value.id == 0
+    assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert _value.titleSlug == "string"
     assert _value.name == "string"
@@ -6262,25 +6250,25 @@ async def test_readarr_bookshelf():
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
-    assert _value.ratings.votes == 0
-    assert _value.ratings.value == 0
+    assert isinstance(_value.ratings.votes, int)
+    assert isinstance(_value.ratings.value, int)
     _value = item.data.authors[0].books[0].author.lastBook.author.value
-    assert _value.id == 0
-    assert _value.authorMetadataId == 0
+    assert isinstance(_value.id, int)
+    assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
     assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
     assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.qualityProfileId == 0
-    assert _value.metadataProfileId == 0
-    assert _value.tags[0] == 0
+    assert isinstance(_value.qualityProfileId, int)
+    assert isinstance(_value.metadataProfileId, int)
+    assert isinstance(_value.tags[0], int)
     assert _value.addOptions.monitor == "string"
     assert _value.addOptions.booksToMonitor[0] == "string"
     assert _value.addOptions.monitored is True
     assert _value.addOptions.searchForMissingBooks is True
-    assert _value.metadata.value.id == 0
+    assert isinstance(_value.metadata.value.id, int)
     assert _value.metadata.value.foreignAuthorId == "string"
     assert _value.metadata.value.titleSlug == "string"
     assert _value.metadata.value.name == "string"
@@ -6300,27 +6288,27 @@ async def test_readarr_bookshelf():
     assert _value.metadata.value.links[0].url == "string"
     assert _value.metadata.value.links[0].name == "string"
     assert _value.metadata.value.genres[0] == "string"
-    assert _value.metadata.value.ratings.votes == 0
-    assert _value.metadata.value.ratings.value == 0
-    assert _value.qualityProfile.value.id == 0
+    assert isinstance(_value.metadata.value.ratings.votes, int)
+    assert isinstance(_value.metadata.value.ratings.value, int)
+    assert isinstance(_value.qualityProfile.value.id, int)
     assert _value.qualityProfile.value.name == "string"
     assert _value.qualityProfile.value.upgradeAllowed is True
-    assert _value.qualityProfile.value.cutoff == 0
-    assert _value.qualityProfile.value.items[0].id == 0
+    assert isinstance(_value.qualityProfile.value.cutoff, int)
+    assert isinstance(_value.qualityProfile.value.items[0].id, int)
     assert _value.qualityProfile.value.items[0].name == "string"
-    assert _value.qualityProfile.value.items[0].quality.id == 0
+    assert isinstance(_value.qualityProfile.value.items[0].quality.id, int)
     assert _value.qualityProfile.value.items[0].quality.name == "string"
     assert _value.qualityProfile.value.items[0].items == [None]
     assert _value.qualityProfile.value.items[0].allowed is True
-    assert _value.metadataProfile.value.id == 0
+    assert isinstance(_value.metadataProfile.value.id, int)
     assert _value.metadataProfile.value.name == "string"
-    assert _value.metadataProfile.value.minPopularity == 0.0
+    assert isinstance(_value.metadataProfile.value.minPopularity, int)
     assert _value.metadataProfile.value.skipMissingDate is True
     assert _value.metadataProfile.value.skipMissingIsbn is True
     assert _value.metadataProfile.value.skipPartsAndSets is True
     assert _value.metadataProfile.value.skipSeriesSecondary is True
     assert _value.metadataProfile.value.allowedLanguages == "string"
-    assert _value.metadataProfile.value.minPages == 0
+    assert isinstance(_value.metadataProfile.value.minPages, int)
     assert _value.metadataProfile.value.ignored == "string"
     assert isinstance(_value.books, _ReadarrAuthorValueBooks)
     assert isinstance(_value.series, _ReadarrAuthorValueSeries)
@@ -6335,42 +6323,42 @@ async def test_readarr_bookshelf():
     assert _value.author.images[0].coverType == "string"
     assert _value.author.remotePoster == "string"
     assert _value.author.path == "string"
-    assert _value.author.qualityProfileId == 0
-    assert _value.author.metadataProfileId == 0
+    assert isinstance(_value.author.qualityProfileId, int)
+    assert isinstance(_value.author.metadataProfileId, int)
     assert _value.author.monitored is True
     assert _value.author.rootFolderPath == "string"
     assert _value.author.genres[0] == "string"
     assert _value.author.cleanName == "string"
     assert _value.author.sortName == "string"
     assert _value.author.sortNameLastFirst == "string"
-    assert _value.author.tags[0] == 0
+    assert isinstance(_value.author.tags[0], int)
     assert _value.author.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.author.addOptions.monitor == "string"
     assert _value.author.addOptions.booksToMonitor[0] == "string"
     assert _value.author.addOptions.monitored is True
     assert _value.author.addOptions.searchForMissingBooks is True
-    assert _value.author.ratings.votes == 0
-    assert _value.author.ratings.value == 0
-    assert _value.author.statistics.bookFileCount == 0
-    assert _value.author.statistics.bookCount == 0
-    assert _value.author.statistics.availableBookCount == 0
-    assert _value.author.statistics.totalBookCount == 0
-    assert _value.author.statistics.sizeOnDisk == 0
+    assert isinstance(_value.author.ratings.votes, int)
+    assert isinstance(_value.author.ratings.value, int)
+    assert isinstance(_value.author.statistics.bookFileCount, int)
+    assert isinstance(_value.author.statistics.bookCount, int)
+    assert isinstance(_value.author.statistics.availableBookCount, int)
+    assert isinstance(_value.author.statistics.totalBookCount, int)
+    assert isinstance(_value.author.statistics.sizeOnDisk, int)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == "string"
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
-    assert _value.statistics.bookFileCount == 0
-    assert _value.statistics.bookCount == 0
-    assert _value.statistics.totalBookCount == 0
-    assert _value.statistics.sizeOnDisk == 0
+    assert isinstance(_value.statistics.bookFileCount, int)
+    assert isinstance(_value.statistics.bookCount, int)
+    assert isinstance(_value.statistics.totalBookCount, int)
+    assert isinstance(_value.statistics.sizeOnDisk, int)
     assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.addOptions.addType == "string"
     assert _value.addOptions.searchForNewBook is True
     assert _value.remoteCover == "string"
     _editions = item.data.authors[0].books[0].editions[0]
-    assert _editions.id == 0
-    assert _editions.bookId == 0
+    assert isinstance(_editions.id, int)
+    assert isinstance(_editions.bookId, int)
     assert _editions.foreignEditionId == "string"
     assert _editions.titleSlug == "string"
     assert _editions.isbn13 == "string"
@@ -6382,15 +6370,15 @@ async def test_readarr_bookshelf():
     assert _editions.isEbook is True
     assert _editions.disambiguation == "string"
     assert _editions.publisher == "string"
-    assert _editions.pageCount == 0
-    assert _editions.pageCount == 0
+    assert isinstance(_editions.pageCount, int) #DUP TODO
+    assert isinstance(_editions.pageCount, int)
     assert _editions.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _editions.images[0].url == "string"
     assert _editions.images[0].coverType == "string"
     assert _editions.links[0].url == "string"
     assert _editions.links[0].name == "string"
-    assert _editions.ratings.votes == 0
-    assert _editions.ratings.value == 0
+    assert isinstance(_editions.ratings.votes, int)
+    assert isinstance(_editions.ratings.value, int)
     assert _editions.monitored is True
     assert _editions.manualAdd is True
     assert _editions.remoteCover == "string"
@@ -6538,10 +6526,6 @@ async def test_async_readarr_commands(aresponses):
         data = await client.async_readarr_command(ReadarrCommands.RESCAN_FOLDERS)
     assert isinstance(data, Command)
 
-
-@pytest.mark.asyncio
-async def test_async_commands(aresponses):
-    """Test commands."""
     aresponses.add(
         "127.0.0.1:8787",
         f"/api/{READARR_API}/command",
@@ -6555,7 +6539,55 @@ async def test_async_commands(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.APP_UPDATE_CHECK)
+        data = await client.async_readarr_command(ReadarrCommands.AUTHOR_SEARCH)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.BOOK_SEARCH)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.REFRESH_BOOK)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/command.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_readarr_command(ReadarrCommands.RENAME_AUTHOR)
     assert isinstance(data, Command)
 
 
@@ -6643,9 +6675,10 @@ async def test_async_edit_book_files(aresponses):
         ),
         match_querystring=True,
     )
+    data = ReadarrBookFileEditor({"bookFileIds": 0, "quality": {"quality": "test", "revision": "test"}})
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_book_files(ReadarrBookFileEditor("test"))
+        await client.async_edit_book_files(data)
 
 
 @pytest.mark.asyncio
@@ -6696,80 +6729,6 @@ async def test_async_add_bookshelf(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_add_bookshelf(ReadarrBookshelf("test"))
-
-
-@pytest.mark.asyncio
-async def test_async_add_delay_profile(aresponses):
-    """Test adding delay profile."""
-    aresponses.add(
-        "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile",
-        "POST",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_delay_profile(ReadarrDelayProfile("test"))
-    assert isinstance(data, ReadarrDelayProfile)
-
-
-@pytest.mark.asyncio
-async def test_async_edit_delay_profile(aresponses):
-    """Test editing delay profile."""
-    aresponses.add(
-        "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile",
-        "PUT",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_delay_profile(ReadarrDelayProfile({"id": 0}))
-    assert isinstance(data, ReadarrDelayProfile)
-
-
-@pytest.mark.asyncio
-async def test_async_delete_delay_profile(aresponses):
-    """Test deleting delay profile."""
-    aresponses.add(
-        "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile/0",
-        "DELETE",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_delay_profile(0)
-
-
-@pytest.mark.asyncio
-async def test_async_delay_profile_reorder(aresponses):
-    """Test delay profile reorder."""
-    aresponses.add(
-        "127.0.0.1:8787",
-        f"/api/{READARR_API}/delayprofile/reorder/0?afterId=1",
-        "PUT",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delay_profile_reorder(0, afterid=1)
 
 
 @pytest.mark.asyncio
@@ -6879,14 +6838,13 @@ async def test_async_test_import_lists(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
     assert await client.async_test_import_lists() is False
 
-
 @pytest.mark.asyncio
-async def test_async_delete_metadata_profile(aresponses):
-    """Test deleting metadata profile."""
+async def test_async_importlist_action(aresponses):
+    """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/metadataprofile/0",
-        "DELETE",
+        f"/api/{READARR_API}/importlist/action/test",
+        "POST",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
@@ -6895,7 +6853,8 @@ async def test_async_delete_metadata_profile(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_metadata_profile(0)
+    data = await client.async_importlist_action(ReadarrImportList({"name": "test"}))
+    assert isinstance(data, ReadarrImportList)
 
 
 @pytest.mark.asyncio
@@ -6914,6 +6873,25 @@ async def test_async_edit_metadata_profile(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_edit_metadata_profile(ReadarrMetadataProfile("test"))
+    assert isinstance(data, ReadarrMetadataProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_add_metadata_profile(aresponses):
+    """Test adding metadata profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/metadataprofile",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_metadata_profile(ReadarrMetadataProfile("test"))
     assert isinstance(data, ReadarrMetadataProfile)
 
 

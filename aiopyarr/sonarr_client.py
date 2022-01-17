@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 from urllib.parse import quote
 
-from .const import HTTPMethod
+from .const import ALL, ASCENDING, DESCENDING, IS_VALID, PAGE, PAGE_SIZE, SORT_DIRECTION, SORT_KEY, HTTPMethod
 from .decorator import api_command
 from .exceptions import ArrInvalidCommand, ArrResourceNotFound
 from .models.request import Command
@@ -17,6 +17,7 @@ from .models.sonarr import (  # isort:skip
     SonarrCommands,
     SonarrEpisode,
     SonarrEpisodeFile,
+    SonarrEventType,
     SonarrHistory,
     SonarrImportList,
     SonarrNamingConfig,
@@ -110,10 +111,10 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         id: Filter to a specific episode ID.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
             "includeUnknownSeriesItems": str(
                 include_unknown_series_items
             ),  # Unverified
@@ -184,7 +185,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             SeasonSearch,
             SeriesSearch
         """
-        data: dict[str, str | int | list[int]] = {"name": command}
+        data: dict[str, str | int | list[int]] = {"name": command.value}
         if clientid is not None:
             data["downloadClientId"] = clientid
         if episodeids is not None:
@@ -222,7 +223,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_edit_episode(self, data: SonarrEpisode) -> SonarrEpisode:
         """Edit given episodes, currently only monitored is changed."""
         return await self._async_request(
-            f"episode/{data.id}",
+            f"episode/{data.id}",  # TODO check for editor endpoint
             data=data,
             datatype=SonarrEpisode,
             method=HTTPMethod.PUT,
@@ -255,6 +256,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         page_size: int = 10,
         sort_key: str = "date",
         recordid: int | None = None,
+        event_type: SonarrEventType | None = None,
     ) -> SonarrHistory:
         """Get history (grabs/failures/completed).
 
@@ -265,17 +267,19 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             id: Filter to a specific episode ID.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_KEY: sort_key,
         }
+        if event_type and event_type in SonarrEventType:
+            params["eventType"] = event_type.value
         if recordid is not None:
             params["episodeId"] = recordid
         return await self._async_request(
             "history", datatype=SonarrHistory, params=params
         )
 
-    async def async_get_wanted(
+    async def async_get_wanted( #TODO check cutoff and merge
         self,
         page: int = 1,
         page_size: int = 10,
@@ -291,10 +295,10 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ascending: Sort items in ascending order.
         """
         params = {
-            "sortKey": sort_key,
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
+            SORT_KEY: sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
         }
         return await self._async_request(
             "wanted/missing",
@@ -484,15 +488,22 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test all import lists."""
         _res = await self._async_request(
-            f"importlist/test{'all' if data is None else ''}",
+            f"importlist/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
+
+    # {name} not yet confirmed
+    async def async_importlist_action(self, data: SonarrImportList) -> SonarrImportList:
+        """Perform import list action."""
+        return await self._async_request(
+            f"importlist/action/{data.name}", data=data, datatype=SonarrImportList, method=HTTPMethod.POST
+        )
 
     async def async_get_blocklist(
         self,
@@ -510,10 +521,10 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             sort_key: id, date, or series.Title.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
         }
         return await self._async_request(
             "blocklist",
@@ -575,13 +586,13 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test a notification configuration."""
         _res = await self._async_request(
-            f"notification/test{'all' if data is None else ''}",
+            f"notification/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
@@ -660,4 +671,8 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_languages(self, langid: int | None = None) -> Any:
         """Get import list exclusions."""
+        raise NotImplementedError()
+
+    async def async_delete_metadata_profile(self, profileid: int) -> Any:
+        """Delete a metadata profile."""
         raise NotImplementedError()

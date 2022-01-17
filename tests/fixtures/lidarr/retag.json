@@ -1,0 +1,16 @@
+[
+  {
+    "artistId": 0,
+    "albumId": 0,
+    "trackNumbers": [0],
+    "trackFileId": 0,
+    "path": "string",
+    "changes": [
+      {
+        "field": "string",
+        "oldValue": "string",
+        "newValue": "string"
+      }
+    ]
+  }
+]

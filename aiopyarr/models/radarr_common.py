@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel, get_datetime_from_string
+from .base import BaseModel, get_datetime
 
 from .request_common import (  # isort:skip
     _Common3,
@@ -18,14 +18,14 @@ from .request_common import (  # isort:skip
 
 @dataclass(init=False)
 class _RadarrMovieFileMediaInfo(_CommonAttrs):
-    """Movie file media attributes."""
+    """Radarr movie file media attributes."""
 
     audioAdditionalFeatures: str | None = None
 
 
 @dataclass(init=False)
 class _RadarrMovieImages(_Common5):
-    """Movie images attributes."""
+    """Radarr movie images attributes."""
 
     remoteUrl: str | None = None
 
@@ -41,7 +41,7 @@ class _RadarrDatabaseRating(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieRatings(BaseModel):
-    """Movie ratings attributes."""
+    """Radarr movie ratings attributes."""
 
     imdb: _RadarrDatabaseRating | None = None
     metacritic: _RadarrDatabaseRating | None = None
@@ -57,7 +57,7 @@ class _RadarrMovieRatings(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieCollection(BaseModel):
-    """Movie collection attributes."""
+    """Radarr movie collection attributes."""
 
     images: list[_RadarrMovieImages] | None = None
     name: str | None = None
@@ -69,7 +69,7 @@ class _RadarrMovieCollection(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieFields(_MetadataFields, _SelectOption):
-    """Movie fields attributes."""
+    """Radarr movie fields attributes."""
 
 
 @dataclass(init=False)
@@ -88,7 +88,7 @@ class _RadarrCommon(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieSpecifications(_RadarrCommon):
-    """Movie specifications attributes."""
+    """Radarr movie specifications attributes."""
 
     negate: bool | None = None
     required: bool | None = None
@@ -96,7 +96,7 @@ class _RadarrMovieSpecifications(_RadarrCommon):
 
 @dataclass(init=False)
 class _RadarrMovieCustomFormats(_Common3):
-    """Movie custom formats attributes."""
+    """Radarr movie custom formats attributes."""
 
     includeCustomFormatWhenRenaming: bool | None = None
     specifications: list[_RadarrMovieSpecifications] | None = None
@@ -118,7 +118,7 @@ class _RadarrCommon2(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieCommon(BaseModel):
-    """Movie common attributes."""
+    """Radarr movie common attributes."""
 
     edition: str | None = None
     id: int | None = None
@@ -132,7 +132,7 @@ class _RadarrMovieCommon(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
-    """Movie history/blocklist attributes."""
+    """Radarr movie history/blocklist attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
     date: str | None = None
@@ -164,14 +164,14 @@ class _RadarrNotificationMessage(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieHistoryData(BaseModel):
-    """Movie history data attributes."""
+    """Radarr movie history data attributes."""
 
     reason: str | None = None
 
 
 @dataclass(init=False)
 class _RadarrMovieAlternateTitle(BaseModel):
-    """Movie history alternate title attributes."""
+    """Radarr movie history alternate title attributes."""
 
     id: int | None = None
     language: _Common3 | None = None
@@ -189,7 +189,7 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovie(_RadarrCommon2):
-    """Movie attributes."""
+    """Radarr movie attributes."""
 
     added: str | None = None
     alternateTitles: list[_RadarrMovieAlternateTitle] | None = None
@@ -302,7 +302,7 @@ class _RadarrCustomFormats(BaseModel):
 
 @dataclass(init=False)
 class _RadarrMovieFile(_RadarrMovieCommon):
-    """Movie file attributes."""
+    """Radarr movie file attributes."""
 
     dateAdded: str | None = None
     edition: str | None = None
@@ -318,5 +318,5 @@ class _RadarrMovieFile(_RadarrMovieCommon):
 
     def __post_init__(self):
         super().__post_init__()
-        self.dateAdded = get_datetime_from_string(self.dateAdded)
+        self.dateAdded = get_datetime(self.dateAdded)
         self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}

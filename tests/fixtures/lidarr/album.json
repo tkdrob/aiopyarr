@@ -1,0 +1,123 @@
+{
+  "title": "string",
+  "disambiguation": "string",
+  "overview": "string",
+  "artistId": 0,
+  "foreignAlbumId": "string",
+  "monitored": true,
+  "anyReleaseOk": true,
+  "profileId": 0,
+  "duration": 0,
+  "albumType": "string",
+  "secondaryTypes": [
+    {
+      "id": 0,
+      "name": "string"
+    }
+  ],
+  "mediumCount": 0,
+  "ratings": {
+    "votes": 0,
+    "value": 0.0
+  },
+  "releaseDate": "2010-08-23T00:00:00Z",
+  "releases": [
+    {
+      "id": 0,
+      "albumId": 0,
+      "foreignReleaseId": "string",
+      "title": "string",
+      "status": "string",
+      "duration": 0,
+      "trackCount": 0,
+      "media": [
+        {
+          "mediumNumber": 0,
+          "mediumName": "string",
+          "mediumFormat": "string"
+        }
+      ],
+      "mediumCount": 0,
+      "disambiguation": "string",
+      "country": ["string"],
+      "label": ["string"],
+      "format": "string",
+      "monitored": true
+    }
+  ],
+  "genres": ["string"],
+  "media": [
+    {
+      "mediumNumber": 0,
+      "mediumName": "string",
+      "mediumFormat": "string"
+    }
+  ],
+  "artist": {
+    "status": "string",
+    "ended": true,
+    "artistName": "string",
+    "foreignArtistId": "string",
+    "tadbId": 0,
+    "discogsId": 0,
+    "overview": "string",
+    "artistType": "string",
+    "disambiguation": "string",
+    "links": [
+      {
+        "url": "string",
+        "name": "string"
+      }
+    ],
+    "images": [
+      {
+        "url": "string",
+        "coverType": "string",
+        "extension": "string"
+      }
+    ],
+    "path": "string",
+    "qualityProfileId": 0,
+    "metadataProfileId": 0,
+    "monitored": true,
+    "genres": ["string"],
+    "cleanName": "string",
+    "sortName": "string",
+    "tags": [0],
+    "added": "2021-08-21T15:35:54.398878Z",
+    "ratings": {
+      "votes": 0,
+      "value": 0.0
+    },
+    "statistics": {
+      "albumCount": 0,
+      "trackFileCount": 0,
+      "trackCount": 0,
+      "totalTrackCount": 0,
+      "sizeOnDisk": 0,
+      "percentOfTracks": 0.0
+    },
+    "id": 0
+  },
+  "images": [
+    {
+      "url": "string",
+      "coverType": "string",
+      "extension": "string"
+    }
+  ],
+  "links": [
+    {
+      "url": "string",
+      "name": "string"
+    }
+  ],
+  "statistics": {
+    "trackFileCount": 0,
+    "trackCount": 0,
+    "totalTrackCount": 0,
+    "sizeOnDisk": 0,
+    "percentOfTracks": 0.0
+  },
+  "id": 0
+}

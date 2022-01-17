@@ -17,17 +17,17 @@ from .const import (  # isort:skip
 )
 
 
-def get_datetime_from_string(string: str) -> datetime | None:
-    """Convert string to datetime object."""
-    if string is not None:
-        if search(r"^\d{4}-\d{2}-\d{2}$", string):
-            return datetime.strptime(string, "%Y-%m-%d")
-        if search(r".\d{7}Z$", string):
-            string = sub(r"\dZ", "Z", string)
-        elif not search(r"\.\d+Z$", string):
-            string = sub("Z", ".000000Z", string)
-        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
-    return None
+def get_datetime(input: datetime | str | None) -> datetime | str | None:
+    """Convert input to datetime object."""
+    if isinstance(input, str):
+        if search(r"^\d{4}-\d{2}-\d{2}$", input):
+            return datetime.strptime(input, "%Y-%m-%d")
+        if search(r".\d{7}Z$", input):
+            input = sub(r"\dZ", "Z", input)
+        elif not search(r"\.\d+Z$", input):
+            input = sub("Z", ".000000Z", input)
+        return datetime.strptime(input, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return input
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -103,9 +103,7 @@ class BaseModel:
                     pass
         for key in CONVERT_TO_DATETIME:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
-                self.__setattr__(
-                    key, get_datetime_from_string(self.__getattribute__(key))
-                )
+                self.__setattr__(key, get_datetime(self.__getattribute__(key)))
 
     @property
     def attributes(self) -> dict[str, Any]:

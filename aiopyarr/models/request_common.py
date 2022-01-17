@@ -144,7 +144,7 @@ class _MetadataFields(_Fields):
 
 
 @dataclass(init=False)
-class _UnmappedRootFolder(BaseModel):
+class _FilesystemFolder(BaseModel):
     """Unmapped folder attributes."""
 
     name: str | None = None
@@ -152,7 +152,7 @@ class _UnmappedRootFolder(BaseModel):
 
 
 @dataclass(init=False)
-class _FilesystemDirectory(_UnmappedRootFolder):
+class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
     lastModified: str | None = None
@@ -1817,3 +1817,12 @@ class _Notification(BaseModel):
     supportsOnRename: bool | None = None
     supportsOnUpgrade: bool | None = None
     tags: list[int | None] | None = None
+
+
+@dataclass(init=False)
+class _RetagChange(BaseModel):
+    """Tag change attributes."""
+
+    field: str | None = None
+    oldValue: str | None = None
+    newValue: str | None = None

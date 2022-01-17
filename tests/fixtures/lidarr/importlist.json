@@ -1,0 +1,54 @@
+[
+  {
+    "enableAutomaticAdd": false,
+    "shouldMonitor": "string",
+    "qualityProfileId": 0,
+    "metadataProfileId": 0,
+    "listType": "string",
+    "listOrder": 0,
+    "name": "string",
+    "fields": [
+      {
+        "order": 0,
+        "name": "string",
+        "label": "string",
+        "helpText": "string",
+        "value": [],
+        "type": "string",
+        "advanced": false,
+        "selectOptionsProviderAction": "string"
+      }
+    ],
+    "implementationName": "string",
+    "implementation": "string",
+    "configContract": "string",
+    "infoLink": "string",
+    "tags": [0],
+    "presets": [
+      {
+        "enableAutomaticAdd": false,
+        "shouldMonitor": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "listType": "string",
+        "listOrder": 0,
+        "name": "string",
+        "fields": [
+          {
+            "order": 0,
+            "name": "string",
+            "label": "string",
+            "value": "string",
+            "type": "string",
+            "advanced": true
+          }
+        ],
+        "implementation": "string",
+        "configContract": "string",
+        "infoLink": "string",
+        "tags": [0]
+      }
+    ],
+    "id": 0
+  }
+]

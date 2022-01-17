@@ -1,6 +1,7 @@
 {
   "id": 0,
   "foreignId": "string",
+  "artistName": "string",
   "authorName": "string",
   "title": "string",
   "tvdbId": 0

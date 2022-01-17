@@ -17,7 +17,7 @@
     },
     "releaseDate": "1869-01-01T00:00:00Z",
     "pageCount": 0,
-    "genres": [],
+    "genres": ["string"],
     "author": {
       "authorMetadataId": 0,
       "status": "string",
@@ -26,7 +26,12 @@
       "authorNameLastFirst": "string",
       "foreignAuthorId": "string",
       "titleSlug": "string",
-      "links": [],
+      "links": [
+        {
+          "url": "string",
+          "name": "string"
+        }
+      ],
       "images": [
         {
           "url": "string",
@@ -38,11 +43,11 @@
       "metadataProfileId": 0,
       "monitored": false,
       "monitorNewItems": "string",
-      "genres": [],
+      "genres": ["string"],
       "cleanName": "string",
       "sortName": "string",
       "sortNameLastFirst": "string",
-      "tags": [],
+      "tags": [0],
       "added": "0001-01-01T04:57:00Z",
       "ratings": {
         "votes": 0,

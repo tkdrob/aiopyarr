@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel, get_datetime_from_string
+from .base import BaseModel, get_datetime
 
 from .request_common import (  # isort:skip
     _Common2,
@@ -116,10 +116,8 @@ class _SonarrSeries2(BaseModel):
     year: int | None = None
 
     def __post_init__(self):
-        self.added = get_datetime_from_string(self.added)
-        self.firstAired = get_datetime_from_string(self.firstAired)
+        super().__post_init__()
         self.images = [_SonarrImages(image) for image in self.images or []]
-        self.lastInfoSync = get_datetime_from_string(self.lastInfoSync)
         self.qualityProfile = _SonarrQualityProfile(self.qualityProfile) or {}
         self.ratings = _SonarrRatings(self.ratings) or {}
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
@@ -217,7 +215,7 @@ class _SonarrSeasonStatistics(BaseModel):
     totalEpisodeCount: int | None = None
 
     def __post_init__(self):
-        self.previousAiring = get_datetime_from_string(self.previousAiring)
+        self.previousAiring = get_datetime(self.previousAiring)
 
 
 @dataclass(init=False)
@@ -243,8 +241,8 @@ class _SonarrSeriesCommon(_SonarrSeries2):
     statistics: _SonarrSeasonStatistics | None = None
 
     def __post_init__(self):
-        self.added = get_datetime_from_string(self.added)
-        self.firstAired = get_datetime_from_string(self.firstAired)
+        self.added = get_datetime(self.added)
+        self.firstAired = get_datetime(self.firstAired)
         self.images = [_SonarrImages(image) for image in self.images or []]
         self.qualityProfile = _SonarrQualityProfile(self.qualityProfile) or {}
         self.ratings = _SonarrRatings(self.ratings) or {}

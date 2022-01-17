@@ -41,13 +41,16 @@ class RadarrCommands(str, Enum):
     DOWNLOADED_MOVIES_SCAN = "DownloadedMoviesScan"
     MISSING_MOVIES_SEARCH = "MissingMoviesSearch"
     REFRESH_MOVIE = "RefreshMovie"
+    RENAME_MOVIE = "RenameMovie"
+    RESCAN_MOVIE = "RescanMovie"
 
 
-class RadarrEventType(str, Enum):
+
+class RadarrEventType(str, Enum): #TODO check all against Lidarr
     """Radarr event types."""
 
     DELETED = "movieFileDeleted"
-    FAILED = "downloadFailed"
+    DOWNLOAD_FAILED = "downloadFailed"
     GRABBED = "grabbed"
     IMPORTED = "downloadFolderImported"
 
@@ -84,7 +87,7 @@ class RadarrHistory(_RecordCommon):
 
 @dataclass(init=False)
 class RadarrBlocklistMovie(_RadarrMovieHistoryBlocklistBase):
-    """Blocklist movie attributes."""
+    """Radarr blocklist movie attributes."""
 
     indexer: str | None = None
     protocol: str | None = None
@@ -92,7 +95,7 @@ class RadarrBlocklistMovie(_RadarrMovieHistoryBlocklistBase):
 
 @dataclass(init=False)
 class RadarrBlocklist(_RecordCommon):
-    """Blocklist attributes."""
+    """Radarr blocklist attributes."""
 
     records: list[RadarrBlocklistMovie] | None = None
 

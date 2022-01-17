@@ -1,0 +1,76 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "sortKey": "date",
+  "sortDirection": "descending",
+  "totalRecords": 1,
+  "records": [
+    {
+      "artistId": 0,
+      "albumIds": [0],
+      "sourceTitle": "string",
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "date": "2020-02-15T19:24:28.4760603Z",
+      "protocol": "string",
+      "indexer": "string",
+      "message": "string",
+      "artist": {
+        "status": "string",
+        "ended": true,
+        "artistName": "string",
+        "foreignArtistId": "string",
+        "tadbId": 0,
+        "discogsId": 0,
+        "overview": "string",
+        "artistType": "string",
+        "disambiguation": "string",
+        "links": [
+          {
+            "url": "string",
+            "name": "string"
+          }
+        ],
+        "images": [
+          {
+            "url": "string",
+            "coverType": "string",
+            "extension": "string"
+          }
+        ],
+        "path": "string",
+        "qualityProfileId": 0,
+        "metadataProfileId": 0,
+        "monitored": true,
+        "genres": ["string"],
+        "cleanName": "string",
+        "sortName": "string",
+        "tags": [0],
+        "added": "2021-08-21T15:35:54.398878Z",
+        "ratings": {
+          "votes": 0,
+          "value": 0.0
+        },
+        "statistics": {
+          "albumCount": 0,
+          "trackFileCount": 0,
+          "trackCount": 0,
+          "totalTrackCount": 0,
+          "sizeOnDisk": 0,
+          "percentOfTracks": 0.0
+        },
+        "id": 0
+      },
+      "id": 0
+    }
+  ]
+}

@@ -14,6 +14,7 @@ from .request_common import (  # isort:skip
     _CustomFilterAttr,
     _Fields,
     _FilesystemDirectory,
+    _FilesystemFolder,
     _LocalizationStrings,
     _LogRecord,
     _MetadataFields,
@@ -22,7 +23,6 @@ from .request_common import (  # isort:skip
     _RecordCommon,
     _ReleaseProfilePreferred,
     _Tag,
-    _UnmappedRootFolder,
     _UpdateChanges,
 )
 
@@ -43,6 +43,22 @@ class Commands(str, Enum):
     REFRESH_MONITORED_DOWNLOADS = "RefreshMonitoredDownloads"
     RENAME_FILES = "RenameFiles"
     RSS_SYNC = "RssSync"
+
+
+class ImageSize(str, Enum):
+    """Image size."""
+
+    LARGE = "large"
+    MEDIUM = "medium"
+    SMALL = "small"
+
+class ImageType(str, Enum):
+    """Image type."""
+
+    BANNER = "banner"
+    FANART = "fanart"
+    LOGO = "logo"
+    POSTER = "poster"
 
 
 @dataclass(init=False)
@@ -112,12 +128,12 @@ class RootFolder(BaseModel):
     freeSpace: int | None = None
     id: int | None = None
     path: str | None = None
-    unmappedFolders: list[_UnmappedRootFolder] | None = None
+    unmappedFolders: list[FilesystemFolder] | None = None
 
     def __post_init__(self):
         """Post init."""
         self.unmappedFolders = [
-            _UnmappedRootFolder(unmap) for unmap in self.unmappedFolders or []
+            FilesystemFolder(unmap) for unmap in self.unmappedFolders or []
         ]
 
 
@@ -266,6 +282,7 @@ class Filesystem(BaseModel):
 
     directories: list[_FilesystemDirectory] | None = None
     files: list | None = None
+    parent: str | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -286,6 +303,7 @@ class Health(BaseModel):
 class ImportListExclusion(BaseModel):
     """import list exclusion attributes."""
 
+    artistName: str | None = None
     authorName: str | None = None
     foreignId: str | None = None
     id: int | None = None
@@ -507,3 +525,26 @@ class Update(BaseModel):
         """Post init."""
         super().__post_init__()
         self.changes = _UpdateChanges(self.changes) or {}
+
+
+@dataclass(init=False)
+class DelayProfile(BaseModel):
+    """Delay profile attributes."""
+
+    bypassIfHighestQuality: bool | None = None
+    enableTorrent: bool | None = None
+    enableUsenet: bool | None = None
+    id: int | None = None
+    order: int | None = None
+    preferredProtocol: str | None = None
+    tags: list[int | None] | None = None
+    torrentDelay: int | None = None
+    usenetDelay: int | None = None
+
+
+@dataclass(init=False)
+class FilesystemFolder(_FilesystemFolder):
+    """Filesystem folder attributes."""
+
+    relativePath: str | None = None
+

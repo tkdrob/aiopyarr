@@ -1,0 +1,61 @@
+{
+  "artistId": 0,
+  "albumId": 0,
+  "path": "string",
+  "size": 0,
+  "dateAdded": "2021-08-21T16:00:17.9301483Z",
+  "quality": {
+    "quality": {
+      "id": 0,
+      "name": "string"
+    },
+    "revision": {
+      "version": 0,
+      "real": 0,
+      "isRepack": false
+    }
+  },
+  "qualityWeight": 0,
+  "mediaInfo": {
+    "audioChannels": 0.0,
+    "audioBitRate": "string",
+    "audioCodec": "string",
+    "audioBits": "string",
+    "audioSampleRate": "string"
+  },
+  "qualityCutoffNotMet": false,
+  "audioTags": {
+    "title": "string",
+    "cleanTitle": "string",
+    "artistTitle": "string",
+    "albumTitle": "string",
+    "artistTitleInfo": {
+      "title": "string",
+      "year": 0
+    },
+    "discNumber": 0,
+    "discCount": 0,
+    "year": 0,
+    "duration": "00:15:08.0093333",
+    "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+    },
+    "mediaInfo": {
+      "audioFormat": "string",
+      "audioBitrate": 0,
+      "audioChannels": 0.0,
+      "audioBits": 0,
+      "audioSampleRate": 0
+    },
+    "trackNumbers": [0]
+  },
+  "id": 0
+}

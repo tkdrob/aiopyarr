@@ -36,14 +36,22 @@ from .sonarr_common import (  # isort:skip
 class SonarrCommands(str, Enum):
     """Sonarr commands."""
 
+    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
+    EPISODE_SEARCH = "EpisodeSearch"
     REFRESH_SERIES = "RefreshSeries"
-    RENAME_FILES = "RenameFiles"
     RENAME_SERIES = "RenameSeries"
     RESCAN_SERIES = "RescanSeries"
-    EPISODE_SEARCH = "EpisodeSearch"
     SEASON_SEARCH = "SeasonSearch"
     SERIES_SEARCH = "SeriesSearch"
-    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
+
+
+class SonarrEventType(str, Enum):
+    """Sonarr event types."""
+
+    DOWNLOAD_FAILED = "downloadFailed" #assumed
+    EPISODE_DELETED = "episodeFileDeleted"
+    GRABBED = "grabbed"
+    IMPORTED = "downloadFolderImported"
 
 
 @dataclass(init=False)
@@ -200,7 +208,7 @@ class SonarrSeriesUpdateParams(BaseModel):
 
 @dataclass(init=False)
 class SonarrBlocklistSeries(BaseModel):
-    """Blocklist series attributes."""
+    """Sonarr blocklist series attributes."""
 
     date: str | None = None
     episodeIds: list[int] | None = None
@@ -222,7 +230,7 @@ class SonarrBlocklistSeries(BaseModel):
 
 @dataclass(init=False)
 class SonarrBlocklist(_RecordCommon):
-    """Blocklist attributes."""
+    """Sonarr blocklist attributes."""
 
     records: list[SonarrBlocklistSeries] | None = None
 
