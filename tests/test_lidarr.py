@@ -1,10 +1,10 @@
 """Tests for Lidarr object models."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-import json
 from datetime import datetime
+import json
 
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 
 from aiopyarr.exceptions import ArrException
 from aiopyarr.lidarr_client import LidarrClient
@@ -23,6 +23,7 @@ from aiopyarr.models.lidarr import (
     LidarrWantedCutoff,
 )
 from aiopyarr.models.request import Command
+
 from tests import LIDARR_API, TEST_HOST_CONFIGURATION, load_fixture
 
 

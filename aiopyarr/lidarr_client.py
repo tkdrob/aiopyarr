@@ -48,9 +48,10 @@ from .models.lidarr import (
     LidarrTrack,
     LidarrTrackDetails,
     LidarrTrackFile,
+    LidarrTrackFileDetails as FileDetails,
+    LidarrTrackFileEditor,
+    LidarrWantedCutoff,
 )
-from .models.lidarr import LidarrTrackFileDetails as FileDetails
-from .models.lidarr import LidarrTrackFileEditor, LidarrWantedCutoff
 from .models.request import Command
 from .request_client import RequestClient
 

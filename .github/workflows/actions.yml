@@ -25,9 +25,11 @@ jobs:
       - name: 📦 Install dependencies
         run:  make requirements
 
+      - name: 🖤 Format with black
+        run:  black . --check
+
       - name: 🗃 Organize with isort
         run:  isort .
-        run:  black . --check
 
       - name: 🧹 Lint files with pylint
         run:  pylint aiopyarr tests

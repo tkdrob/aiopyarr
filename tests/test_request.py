@@ -1,10 +1,10 @@
 """Tests for common methods."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-import json
 from datetime import datetime
+import json
 
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 
 from aiopyarr.exceptions import ArrConnectionException
 from aiopyarr.lidarr_client import LidarrClient

@@ -2,8 +2,8 @@
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
 
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 
 from aiopyarr.models.request import Command
 from aiopyarr.models.sonarr import (
