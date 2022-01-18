@@ -2,15 +2,27 @@
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 import json
 from datetime import datetime
-from re import T
-from aiopyarr.models.request import Command
-from aiopyarr.exceptions import ArrException
 
 import pytest
 from aiohttp.client import ClientSession
 
+from aiopyarr.exceptions import ArrException
 from aiopyarr.lidarr_client import LidarrClient
-from aiopyarr.models.lidarr import LidarrAlbum, LidarrAlbumEditor, LidarrAlbumHistory, LidarrAlbumStudio, LidarrArtist, LidarrCommands, LidarrEventType, LidarrImportList, LidarrMetadataProfile, LidarrRelease, LidarrWantedCutoff
+from aiopyarr.models.lidarr import (
+    LidarrAlbum,
+    LidarrAlbumEditor,
+    LidarrAlbumHistory,
+    LidarrArtist,
+    LidarrCommands,
+    LidarrEventType,
+    LidarrImportList,
+    LidarrMetadataProfile,
+    LidarrRelease,
+    LidarrTrackFile,
+    LidarrTrackFileEditor,
+    LidarrWantedCutoff,
+)
+from aiopyarr.models.request import Command
 from tests import LIDARR_API, TEST_HOST_CONFIGURATION, load_fixture
 
 
@@ -41,7 +53,8 @@ async def test_async_get_albums(aresponses):
     assert isinstance(data.profileId, int)
     assert isinstance(data.duration, int)
     assert data.albumType == "string"
-    #assert data.secondaryTypes == ["string"] #TODO
+    assert isinstance(data.secondaryTypes[0].id, int)
+    assert data.secondaryTypes[0].name == "string"
     assert isinstance(data.mediumCount, int)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
@@ -187,7 +200,6 @@ async def test_async_edit_albums(aresponses):
         match_querystring=True,
     )
     editor = LidarrAlbumEditor({"albumids": [0], "monitored": True})
-    # TODO lower case all params if they work and are in models
     assert isinstance(editor.albumids[0], int)
     assert editor.monitored is True
     async with ClientSession():
@@ -226,94 +238,9 @@ async def test_async_album_studio(aresponses):
         ),
         match_querystring=True,
     )
-    editor = LidarrAlbumStudio(json.loads(load_fixture("lidarr/albumstudio.json")))
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_album_studio(editor)
-    assert isinstance(editor.artist[0].id, int)
-    assert editor.artist[0].monitored is True
-    assert isinstance(editor.artist[0].albums[0].id, int)
-    assert editor.artist[0].albums[0].title == "string"
-    assert editor.artist[0].albums[0].disambiguation == "string"
-    assert editor.artist[0].albums[0].overview == "string"
-    assert isinstance(editor.artist[0].albums[0].artistId, int)
-    assert editor.artist[0].albums[0].foreignAlbumId == "string"
-    assert editor.artist[0].albums[0].monitored is True
-    assert editor.artist[0].albums[0].anyReleaseOk is True
-    assert isinstance(editor.artist[0].albums[0].profileId, int)
-    assert isinstance(editor.artist[0].albums[0].duration, int)
-    assert editor.artist[0].albums[0].albumType == "string"
-    #assert editor.artist[0].albums[0].secondaryTypes == ["string"] #TODO
-    assert isinstance(editor.artist[0].albums[0].ratings.votes, int)
-    assert isinstance(editor.artist[0].albums[0].ratings.value, float)
-    assert editor.artist[0].albums[0].releaseDate == datetime(2020, 2, 15, 14, 59, 24, 750000)
-    assert isinstance(editor.artist[0].albums[0].releases[0].id, int)
-    assert isinstance(editor.artist[0].albums[0].releases[0].albumId, int)
-    assert editor.artist[0].albums[0].releases[0].foreignReleaseId == "string"
-    assert editor.artist[0].albums[0].releases[0].title == "string"
-    assert editor.artist[0].albums[0].releases[0].status == "string"
-    assert isinstance(editor.artist[0].albums[0].releases[0].duration, int)
-    assert isinstance(editor.artist[0].albums[0].releases[0].trackCount, int)
-    assert isinstance(editor.artist[0].albums[0].releases[0].media[0].mediumNumber, int)
-    assert editor.artist[0].albums[0].releases[0].media[0].mediumName == "string"
-    assert editor.artist[0].albums[0].releases[0].media[0].mediumFormat == "string"
-    assert editor.artist[0].albums[0].releases[0].disambiguation == "string"
-    assert editor.artist[0].albums[0].releases[0].country == ["string"]
-    assert editor.artist[0].albums[0].releases[0].label == ["string"]
-    assert editor.artist[0].albums[0].releases[0].format == "string"
-    assert editor.artist[0].albums[0].releases[0].monitored is True
-    assert isinstance(editor.artist[0].albums[0].artist.id, int)
-    assert isinstance(editor.artist[0].albums[0].artist.artistMetadataId, int)
-    assert editor.artist[0].albums[0].artist.status == "string"
-    assert editor.artist[0].albums[0].artist.artistName == "string"
-    assert editor.artist[0].albums[0].artist.foreignArtistId == "string"
-    assert editor.artist[0].albums[0].artist.mbId == "string"
-    assert isinstance(editor.artist[0].albums[0].artist.tadbId, int)
-    assert isinstance(editor.artist[0].albums[0].artist.discogsId, int)
-    assert editor.artist[0].albums[0].artist.allMusicId == "string"
-    assert editor.artist[0].albums[0].artist.overview == "string"
-    assert editor.artist[0].albums[0].artist.artistType == "string"
-    assert editor.artist[0].albums[0].artist.disambiguation == "string"
-    assert editor.artist[0].albums[0].artist.links[0].url == "string"
-    assert editor.artist[0].albums[0].artist.links[0].name == "string"
-    #assert editor.artist[0].albums[0].artist.nextAlbum == "string" #TODO
-    #assert editor.artist[0].albums[0].artist.lastAlbum == "string" #TODO
-    assert editor.artist[0].albums[0].artist.images[0].url == "string"
-    assert editor.artist[0].albums[0].artist.images[0].coverType == "string"
-    #assert editor.artist[0].albums[0].artist.members == "string"
-    #assert editor.artist[0].albums[0].artist.remotePoster == "string"
-    assert editor.artist[0].albums[0].artist.path == "string"
-    assert isinstance(editor.artist[0].albums[0].artist.qualityProfileId, int)
-    assert isinstance(editor.artist[0].albums[0].artist.metadataProfileId, int)
-    assert editor.artist[0].albums[0].artist.monitored is True
-    #assert editor.artist[0].albums[0].artist.rootFolderPath == "string"
-    assert editor.artist[0].albums[0].artist.genres == ["string"]
-    assert editor.artist[0].albums[0].artist.cleanName == "string"
-    assert editor.artist[0].albums[0].artist.sortName == "string"
-    assert isinstance(editor.artist[0].albums[0].artist.tags[0], int)
-    assert editor.artist[0].albums[0].artist.added == datetime(2020, 2, 15, 14, 59, 24, 751000)
-    #assert editor.artist[0].albums[0].artist.addOptions
-    assert isinstance(editor.artist[0].albums[0].artist.ratings.votes, int)
-    assert isinstance(editor.artist[0].albums[0].artist.ratings.value, float)
-    assert isinstance(editor.artist[0].albums[0].artist.statistics.albumCount, int)
-    assert isinstance(editor.artist[0].albums[0].artist.statistics.trackFileCount, int)
-    assert isinstance(editor.artist[0].albums[0].artist.statistics.trackCount, int)
-    assert isinstance(editor.artist[0].albums[0].artist.statistics.totalTrackCount, int)
-    assert isinstance(editor.artist[0].albums[0].artist.statistics.sizeOnDisk, int)
-    assert editor.artist[0].albums[0].images[0].url == "string"
-    assert editor.artist[0].albums[0].images[0].coverType == "string"
-    assert editor.artist[0].albums[0].links[0].url == "string"
-    assert editor.artist[0].albums[0].links[0].name == "string"
-    assert isinstance(editor.artist[0].albums[0].statistics.trackFileCount, int)
-    assert isinstance(editor.artist[0].albums[0].statistics.trackCount, int)
-    assert isinstance(editor.artist[0].albums[0].statistics.totalTrackCount, int)
-    assert isinstance(editor.artist[0].albums[0].statistics.sizeOnDisk, int)
-    #assert editor.artist[0].albums[0].addOptions
-    #assert editor.artist[0].albums[0].remoteCover
-    #assert editor.artist[0].albums[0].grabbed is True
-    assert editor.monitoringOptions.monitor == "string"
-    assert editor.monitoringOptions.albumsToMonitor == ["string"]
-    assert editor.monitoringOptions.monitored is True
+        await client.async_album_studio("test")
 
 
 @pytest.mark.asyncio
@@ -344,7 +271,6 @@ async def test_async_get_artists(aresponses):
     assert data.disambiguation == "string"
     assert data.links[0].url == "string"
     assert data.links[0].name == "string"
-    #assert data.lasrAlbum #TODO
     assert data.images[0].url == "string"
     assert data.images[0].coverType == "string"
     assert data.images[0].extension == "string"
@@ -352,7 +278,7 @@ async def test_async_get_artists(aresponses):
     assert isinstance(data.qualityProfileId, int)
     assert isinstance(data.metadataProfileId, int)
     assert data.monitored is True
-    #assert data.rootFolderPath == "string"
+    assert data.rootFolderPath == "string"
     assert data.genres == ["string"]
     assert data.cleanName == "string"
     assert data.sortName == "string"
@@ -446,7 +372,7 @@ async def test_async_edit_artists(aresponses):
     )
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_artists("test") #TODO test for ArtistEditor instance
+        await client.async_edit_artists("test")
 
 
 @pytest.mark.asyncio
@@ -508,7 +434,8 @@ async def test_async_album_lookup(aresponses):
     assert isinstance(data[0].profileId, int)
     assert isinstance(data[0].duration, int)
     assert data[0].albumType == "string"
-    #assert data[0].secondaryTypes == ["string"] #TODO
+    assert isinstance(data[0].secondaryTypes[0].id, int)
+    assert data[0].secondaryTypes[0].name == "string"
     assert isinstance(data[0].mediumCount, int)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
@@ -671,7 +598,8 @@ async def test_async_get_calendar(aresponses):
     assert isinstance(data[0].profileId, int)
     assert isinstance(data[0].duration, int)
     assert data[0].albumType == "string"
-    #assert data[0].secondaryTypes[0] == "string" #TODO
+    assert isinstance(data[0].secondaryTypes[0].id, int)
+    assert data[0].secondaryTypes[0].name == "string"
     assert isinstance(data[0].mediumCount, int)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
@@ -714,7 +642,7 @@ async def test_async_get_calendar(aresponses):
     assert isinstance(data[0].artist.qualityProfileId, int)
     assert isinstance(data[0].artist.metadataProfileId, int)
     assert data[0].artist.monitored is True
-    assert data[0].artist.genres== ["string"]
+    assert data[0].artist.genres == ["string"]
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
@@ -871,7 +799,8 @@ async def test_async_get_wanted(aresponses):
     assert isinstance(data.profileId, int)
     assert isinstance(data.duration, int)
     assert data.albumType == "string"
-    #assert data.secondaryTypes == ["string"] #TODO
+    assert isinstance(data.secondaryTypes[0].id, int)
+    assert data.secondaryTypes[0].name == "string"
     assert isinstance(data.mediumCount, int)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
@@ -940,6 +869,7 @@ async def test_async_get_wanted(aresponses):
     assert isinstance(data.statistics.percentOfTracks, float)
     assert isinstance(data.id, int)
 
+    data = {"records": ["test"]}
     aresponses.add(
         "127.0.0.1:8686",
         f"/api/{LIDARR_API}/wanted/missing?sortKey=title&page=1&pageSize=10",
@@ -947,6 +877,7 @@ async def test_async_get_wanted(aresponses):
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
+            text=json.dumps(data),
         ),
         match_querystring=True,
     )
@@ -954,6 +885,45 @@ async def test_async_get_wanted(aresponses):
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_wanted()
     assert isinstance(data, LidarrWantedCutoff)
+    assert isinstance(data.records[0], LidarrAlbum)
+
+
+@pytest.mark.asyncio
+async def test_async_parse(aresponses):
+    """Test parsing track file name."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/parse?title=test",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/parse.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_parse("test")
+    assert data.title == "string"
+    assert data.parsedAlbumInfo.albumTitle == "string"
+    assert data.parsedAlbumInfo.artistName == "string"
+    assert data.parsedAlbumInfo.artistTitleInfo.title == "string"
+    assert isinstance(data.parsedAlbumInfo.artistTitleInfo.year, int)
+    assert isinstance(data.parsedAlbumInfo.quality.quality.id, int)
+    assert data.parsedAlbumInfo.quality.quality.name == "string"
+    assert isinstance(data.parsedAlbumInfo.quality.revision.version, int)
+    assert isinstance(data.parsedAlbumInfo.quality.revision.real, int)
+    assert data.parsedAlbumInfo.quality.revision.isRepack is False
+    assert isinstance(data.parsedAlbumInfo.releaseDate, int)
+    assert data.parsedAlbumInfo.discography is False
+    assert isinstance(data.parsedAlbumInfo.discographyStart, int)
+    assert isinstance(data.parsedAlbumInfo.discographyEnd, int)
+    assert data.parsedAlbumInfo.releaseGroup == "string"
+    assert data.parsedAlbumInfo.releaseHash == "string"
+    assert data.parsedAlbumInfo.releaseVersion == "string"
+    assert isinstance(data.artist, LidarrArtist)
+    assert isinstance(data.albums[0], LidarrAlbum)
 
 
 @pytest.mark.asyncio
@@ -987,7 +957,7 @@ async def test_async_get_importlist(aresponses):
     assert data[0].fields[0].value == []
     assert data[0].fields[0].type == "string"
     assert data[0].fields[0].advanced is False
-    assert data[0].fields[0].selectOptionsProviderAction =="string"
+    assert data[0].fields[0].selectOptionsProviderAction == "string"
     assert data[0].implementationName == "string"
     assert data[0].implementation == "string"
     assert data[0].configContract == "string"
@@ -1180,7 +1150,7 @@ async def test_async_get_history(aresponses):
     assert data.records[0].data.downloadUrl == "string"
     assert data.records[0].data.guid == "string"
     assert isinstance(data.records[0].data.protocol, int)
-    assert data.records[0].data.downloadForced is False #TODO check type hints
+    assert data.records[0].data.downloadForced is False
     assert data.records[0].data.torrentInfoHash == "string"
     assert data.records[0].album.title == "string"
     assert data.records[0].album.disambiguation == "string"
@@ -1192,8 +1162,8 @@ async def test_async_get_history(aresponses):
     assert isinstance(data.records[0].album.profileId, int)
     assert isinstance(data.records[0].album.duration, int)
     assert data.records[0].album.albumType == "string"
-    #assert isinstance(data.records[0].album.secondaryTypes[0].id, int) #TODO
-    #assert data.records[0].album.secondaryTypes[0].name == "string"
+    assert isinstance(data.records[0].album.secondaryTypes[0].id, int)
+    assert data.records[0].album.secondaryTypes[0].name == "string"
     assert isinstance(data.records[0].album.mediumCount, int)
     assert isinstance(data.records[0].album.ratings.votes, int)
     assert isinstance(data.records[0].album.ratings.value, float)
@@ -1240,7 +1210,9 @@ async def test_async_get_history(aresponses):
     assert data.records[0].album.artist.cleanName == "string"
     assert data.records[0].album.artist.sortName == "string"
     assert isinstance(data.records[0].album.artist.tags[0], int)
-    assert data.records[0].album.artist.added == datetime(2021, 8, 21, 15, 56, 31, 922597)
+    assert data.records[0].album.artist.added == datetime(
+        2021, 8, 21, 15, 56, 31, 922597
+    )
     assert isinstance(data.records[0].album.artist.ratings.votes, int)
     assert isinstance(data.records[0].album.artist.ratings.value, float)
     assert isinstance(data.records[0].album.artist.statistics.albumCount, int)
@@ -1255,7 +1227,7 @@ async def test_async_get_history(aresponses):
     assert data.records[0].album.links[0].url == "string"
     assert data.records[0].album.links[0].name == "string"
     assert isinstance(data.records[0].album.id, int)
-    assert data.records[0].artist.status =="string"
+    assert data.records[0].artist.status == "string"
     assert data.records[0].artist.ended is False
     assert data.records[0].artist.artistName == "string"
     assert data.records[0].artist.foreignArtistId == "string"
@@ -1332,7 +1304,9 @@ async def test_async_get_history(aresponses):
     )
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(artist=0, album=0, event_type=LidarrEventType.DOWNLOAD_FAILED)
+        data = await client.async_get_history(
+            artist=0, album=0, event_type=LidarrEventType.DOWNLOAD_FAILED
+        )
     assert isinstance(data, LidarrAlbumHistory)
 
 
@@ -1437,7 +1411,9 @@ async def test_async_get_queue(aresponses):
     assert data.records[0].title == "string"
     assert isinstance(data.records[0].sizeleft, float)
     assert data.records[0].timeleft == "00:00:00"
-    assert data.records[0].estimatedCompletionTime == datetime(2020, 2, 16, 23, 34, 44, 885649)
+    assert data.records[0].estimatedCompletionTime == datetime(
+        2020, 2, 16, 23, 34, 44, 885649
+    )
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "string"
@@ -1513,10 +1489,11 @@ async def test_async_get_queue_details(aresponses):
     assert isinstance(data[0].album.profileId, int)
     assert isinstance(data[0].album.duration, int)
     assert data[0].album.albumType == "string"
-    assert isinstance(data[0].album.secondaryTypes[0], int) 
+    assert isinstance(data[0].album.secondaryTypes[0].id, int)
+    assert data[0].album.secondaryTypes[0].name == "string"
     assert isinstance(data[0].album.mediumCount, int)
-    #assert isinstance(data[0].album.ratings.votes, int) #TODO
-    #assert isinstance(data[0].album.ratings.value, float)
+    assert isinstance(data[0].album.ratings.votes, int)
+    assert isinstance(data[0].album.ratings.value, float)
     assert data[0].album.releaseDate == datetime(2010, 11, 12, 0, 0)
     assert isinstance(data[0].album.releases[0].id, int)
     assert isinstance(data[0].album.releases[0].albumId, int)
@@ -1542,8 +1519,8 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].album.artist.ended is False
     assert data[0].album.artist.artistName == "string"
     assert data[0].album.artist.foreignArtistId == "string"
-    assert isinstance(data[0].album.artist.tadbId, int) 
-    assert isinstance(data[0].album.artist.discogsId, int) 
+    assert isinstance(data[0].album.artist.tadbId, int)
+    assert isinstance(data[0].album.artist.discogsId, int)
     assert data[0].album.artist.overview == "string"
     assert data[0].album.artist.artistType == "string"
     assert data[0].album.artist.disambiguation == "string"
@@ -1574,13 +1551,13 @@ async def test_async_get_queue_details(aresponses):
     assert data[0].album.images[0].extension == "string"
     assert data[0].album.links[0].url == "string"
     assert data[0].album.links[0].name == "string"
-    assert isinstance(data[0].album.id, int) 
+    assert isinstance(data[0].album.id, int)
     assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
-    assert isinstance(data[0].quality.revision.version, int) 
+    assert isinstance(data[0].quality.revision.version, int)
     assert isinstance(data[0].quality.revision.real, int)
     assert data[0].quality.revision.isRepack is False
-    assert isinstance(data[0].size, int)
+    assert isinstance(data[0].size, float)
     assert data[0].title == "string"
     assert isinstance(data[0].sizeleft, float)
     assert data[0].timeleft == "00:00:00"
@@ -1715,7 +1692,7 @@ async def test_async_get_rename(aresponses):
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("lidarr/rename.json")
+            text=load_fixture("lidarr/rename.json"),
         ),
         match_querystring=True,
     )
@@ -1740,7 +1717,7 @@ async def test_async_get_retag(aresponses):
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("lidarr/retag.json")
+            text=load_fixture("lidarr/retag.json"),
         ),
         match_querystring=True,
     )
@@ -1767,7 +1744,7 @@ async def test_async_search(aresponses):
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("lidarr/search.json")
+            text=load_fixture("lidarr/search.json"),
         ),
         match_querystring=True,
     )
@@ -1789,7 +1766,7 @@ async def test_async_search(aresponses):
     assert data[0].artist.images[0].url == "string"
     assert data[0].artist.images[0].coverType == "string"
     assert data[0].artist.images[0].extension == "string"
-    #assert data[0].artist.remotePoster == "string" TODO
+    assert data[0].artist.remotePoster == "string"
     assert data[0].artist.path == "string"
     assert isinstance(data[0].artist.qualityProfileId, int)
     assert isinstance(data[0].artist.metadataProfileId, int)
@@ -1854,7 +1831,9 @@ async def test_async_get_tracks(aresponses):
     )
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_tracks(artistid=0, albumid=0, albumreleaseid=0, trackids=[0])
+        data = await client.async_get_tracks(
+            artistid=0, albumid=0, albumreleaseid=0, trackids=[0]
+        )
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].trackFileId, int)
     assert isinstance(data[0].albumId, int)
@@ -1898,22 +1877,22 @@ async def test_async_get_tracks(aresponses):
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_tracks(trackids=0)
-    assert isinstance(data.artistId, int) 
-    assert isinstance(data.trackFileId, int) 
-    assert isinstance(data.albumId, int) 
+    assert isinstance(data.artistId, int)
+    assert isinstance(data.trackFileId, int)
+    assert isinstance(data.albumId, int)
     assert data.explicit is False
-    assert isinstance(data.absoluteTrackNumber, int) 
-    assert isinstance(data.trackNumber, int) 
+    assert isinstance(data.absoluteTrackNumber, int)
+    assert isinstance(data.trackNumber, int)
     assert data.title == "string"
-    assert isinstance(data.duration, int) 
-    assert isinstance(data.mediumNumber, int) 
+    assert isinstance(data.duration, int)
+    assert isinstance(data.mediumNumber, int)
     assert data.hasFile is False
     assert data.artist.status == "string"
     assert data.artist.ended is True
     assert data.artist.artistName == "string"
     assert data.artist.foreignArtistId == "string"
-    assert isinstance(data.artist.tadbId, int) 
-    assert isinstance(data.artist.discogsId, int) 
+    assert isinstance(data.artist.tadbId, int)
+    assert isinstance(data.artist.discogsId, int)
     assert data.artist.overview == "string"
     assert data.artist.artistType == "string"
     assert data.artist.disambiguation == "string"
@@ -1923,21 +1902,21 @@ async def test_async_get_tracks(aresponses):
     assert data.artist.images[0].coverType == "string"
     assert data.artist.images[0].extension == "string"
     assert data.artist.path == "string"
-    assert isinstance(data.artist.qualityProfileId, int) 
-    assert isinstance(data.artist.metadataProfileId, int) 
+    assert isinstance(data.artist.qualityProfileId, int)
+    assert isinstance(data.artist.metadataProfileId, int)
     assert data.artist.monitored is True
     assert data.artist.genres == ["string"]
     assert data.artist.cleanName == "string"
     assert data.artist.sortName == "string"
-    assert isinstance(data.artist.tags[0], int) 
+    assert isinstance(data.artist.tags[0], int)
     assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
-    assert isinstance(data.artist.ratings.votes, int) 
-    assert isinstance(data.artist.ratings.value, float) 
+    assert isinstance(data.artist.ratings.votes, int)
+    assert isinstance(data.artist.ratings.value, float)
     assert isinstance(data.artist.statistics.albumCount, int)
-    assert isinstance(data.artist.statistics.trackFileCount, int) 
-    assert isinstance(data.artist.statistics.trackCount, int) 
+    assert isinstance(data.artist.statistics.trackFileCount, int)
+    assert isinstance(data.artist.statistics.trackCount, int)
     assert isinstance(data.artist.statistics.totalTrackCount, int)
-    assert isinstance(data.artist.statistics.sizeOnDisk, int) 
+    assert isinstance(data.artist.statistics.sizeOnDisk, int)
     assert isinstance(data.artist.statistics.percentOfTracks, float)
     assert isinstance(data.artist.id, int)
     assert isinstance(data.ratings.votes, int)
@@ -1961,19 +1940,21 @@ async def test_async_get_track_files(aresponses):
     )
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_track_files(artistid=0, albumid=0, trackfileids=[0])
-    assert isinstance(data[0].artistId, int) 
-    assert isinstance(data[0].albumId, int) 
+        data = await client.async_get_track_files(
+            artistid=0, albumid=0, trackfileids=[0]
+        )
+    assert isinstance(data[0].artistId, int)
+    assert isinstance(data[0].albumId, int)
     assert data[0].path == "string"
-    assert isinstance(data[0].size, int) 
+    assert isinstance(data[0].size, int)
     assert data[0].dateAdded == datetime(2021, 8, 21, 16, 0, 22, 10803)
-    assert isinstance(data[0].quality.quality.id, int) 
+    assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
-    assert isinstance(data[0].quality.revision.version, int) 
-    assert isinstance(data[0].quality.revision.real, int) 
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
     assert data[0].quality.revision.isRepack is False
-    assert isinstance(data[0].qualityWeight, int) 
-    assert isinstance(data[0].mediaInfo.audioChannels, float) 
+    assert isinstance(data[0].qualityWeight, int)
+    assert isinstance(data[0].mediaInfo.audioChannels, float)
     assert data[0].mediaInfo.audioBitRate == "string"
     assert data[0].mediaInfo.audioCodec == "string"
     assert data[0].mediaInfo.audioBits == "string"
@@ -1995,18 +1976,18 @@ async def test_async_get_track_files(aresponses):
     async with ClientSession():
         client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_track_files(trackfileids=0)
-    assert isinstance(data.artistId, int) 
-    assert isinstance(data.albumId, int) 
+    assert isinstance(data.artistId, int)
+    assert isinstance(data.albumId, int)
     assert data.path == "string"
-    assert isinstance(data.size, int) 
+    assert isinstance(data.size, int)
     assert data.dateAdded == datetime(2021, 8, 21, 16, 0, 17, 930148)
-    assert isinstance(data.quality.quality.id, int) 
+    assert isinstance(data.quality.quality.id, int)
     assert data.quality.quality.name == "string"
-    assert isinstance(data.quality.revision.version, int) 
-    assert isinstance(data.quality.revision.real, int) 
+    assert isinstance(data.quality.revision.version, int)
+    assert isinstance(data.quality.revision.real, int)
     assert data.quality.revision.isRepack is False
-    assert isinstance(data.qualityWeight, int) 
-    assert isinstance(data.mediaInfo.audioChannels, float) 
+    assert isinstance(data.qualityWeight, int)
+    assert isinstance(data.mediaInfo.audioChannels, float)
     assert data.mediaInfo.audioBitRate == "string"
     assert data.mediaInfo.audioCodec == "string"
     assert data.mediaInfo.audioBits == "string"
@@ -2018,19 +1999,104 @@ async def test_async_get_track_files(aresponses):
     assert data.audioTags.albumTitle == "string"
     assert data.audioTags.artistTitleInfo.title == "string"
     assert isinstance(data.audioTags.artistTitleInfo.year, int)
-    assert isinstance(data.audioTags.discNumber, int) 
-    assert isinstance(data.audioTags.discCount, int) 
-    assert isinstance(data.audioTags.year, int) 
+    assert isinstance(data.audioTags.discNumber, int)
+    assert isinstance(data.audioTags.discCount, int)
+    assert isinstance(data.audioTags.year, int)
     assert data.audioTags.duration == "00:15:08.0093333"
-    assert isinstance(data.audioTags.quality.quality.id, int) 
+    assert isinstance(data.audioTags.quality.quality.id, int)
     assert data.audioTags.quality.quality.name == "string"
     assert isinstance(data.audioTags.quality.revision.version, int)
     assert isinstance(data.audioTags.quality.revision.real, int)
     assert data.audioTags.quality.revision.isRepack is False
     assert data.audioTags.mediaInfo.audioFormat == "string"
-    assert isinstance(data.audioTags.mediaInfo.audioBitrate, int) 
-    assert isinstance(data.audioTags.mediaInfo.audioChannels, float) 
-    assert isinstance(data.audioTags.mediaInfo.audioBits, int) 
-    assert isinstance(data.audioTags.mediaInfo.audioSampleRate, int) 
+    assert isinstance(data.audioTags.mediaInfo.audioBitrate, int)
+    assert isinstance(data.audioTags.mediaInfo.audioChannels, float)
+    assert isinstance(data.audioTags.mediaInfo.audioBits, int)
+    assert isinstance(data.audioTags.mediaInfo.audioSampleRate, int)
     assert isinstance(data.audioTags.trackNumbers[0], int)
-    assert isinstance(data.id, int) 
+    assert isinstance(data.id, int)
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/trackfile?unmapped=False",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/trackfile-details.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+
+    with pytest.raises(ArrException):
+        await client.async_get_track_files()
+
+
+@pytest.mark.asyncio
+async def test_async_edit_track_files(aresponses):
+    """Test editing track files."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/trackfile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_track_files(LidarrTrackFile("test"))
+    assert isinstance(data, LidarrTrackFile)
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/trackfile/editor",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = LidarrTrackFileEditor(
+        {"trackFileIds": 0, "quality": {"quality": "test", "revision": "test"}}
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_edit_track_files(data)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_track_files(aresponses):
+    """Test deleting track files."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/trackfile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_track_files(0)
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/trackfile/bulk",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_track_files([0])

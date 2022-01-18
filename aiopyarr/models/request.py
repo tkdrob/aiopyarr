@@ -6,11 +6,10 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .base import BaseModel
-
-from .request_common import (  # isort:skip
+from .request_common import (
+    _CommandBody,
     _Common,
     _Common3,
-    _CommandBody,
     _CustomFilterAttr,
     _Fields,
     _FilesystemDirectory,
@@ -52,6 +51,7 @@ class ImageSize(str, Enum):
     MEDIUM = "medium"
     SMALL = "small"
 
+
 class ImageType(str, Enum):
     """Image type."""
 
@@ -63,7 +63,7 @@ class ImageType(str, Enum):
 
 @dataclass(init=False)
 class Diskspace(BaseModel):
-    """Radarr diskspace attributes."""
+    """Diskspace attributes."""
 
     freeSpace: int | None = None
     label: str | None = None
@@ -195,7 +195,7 @@ class UIConfig(BaseModel):
 
 @dataclass(init=False)
 class SystemStatus(BaseModel):
-    """system status attributes."""
+    """System status attributes."""
 
     appData: str | None = None
     authentication: str | None = None
@@ -291,7 +291,7 @@ class Filesystem(BaseModel):
 
 @dataclass(init=False)
 class Health(BaseModel):
-    """Failed health check attributes."""
+    """Health attributes."""
 
     message: str | None = None
     source: str | None = None
@@ -301,7 +301,7 @@ class Health(BaseModel):
 
 @dataclass(init=False)
 class ImportListExclusion(BaseModel):
-    """import list exclusion attributes."""
+    """Import list exclusion attributes."""
 
     artistName: str | None = None
     authorName: str | None = None
@@ -547,4 +547,3 @@ class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
 
     relativePath: str | None = None
-

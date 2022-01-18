@@ -31,7 +31,3 @@ class ArrAuthenticationException(ArrException):
 
 class ArrResourceNotFound(ArrException):
     """Arr resource not found exception."""
-
-
-class ArrInvalidCommand(ArrException):
-    """Arr invalid command exception."""

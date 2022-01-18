@@ -6,21 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .base import BaseModel
-
-from .request_common import (  # isort:skip
-    _Common2,
-    _Common3,
-    _Common4,
-    _MetadataFields,
-    _Notification,
-    _Quality,
-    _RecordCommon,
-    _ReleaseCommon,
-    _Rename,
-    _TagDetails,
-)
-
-from .radarr_common import (  # isort:skip
+from .radarr_common import (
     _RadarrCommon,
     _RadarrCommon2,
     _RadarrCustomFormats,
@@ -31,7 +17,21 @@ from .radarr_common import (  # isort:skip
     _RadarrMovieHistoryData,
     _RadarrNotificationMessage,
     _RadarrParsedMovieInfo,
-    _RadarrQueueStatusMessages,
+)
+from .request_common import (
+    _Common2,
+    _Common3,
+    _Common4,
+    _Common7,
+    _Editor,
+    _MetadataFields,
+    _Notification,
+    _Quality,
+    _RecordCommon,
+    _ReleaseCommon,
+    _Rename,
+    _StatusMessage,
+    _TagDetails,
 )
 
 
@@ -45,8 +45,7 @@ class RadarrCommands(str, Enum):
     RESCAN_MOVIE = "RescanMovie"
 
 
-
-class RadarrEventType(str, Enum): #TODO check all against Lidarr
+class RadarrEventType(str, Enum):
     """Radarr event types."""
 
     DELETED = "movieFileDeleted"
@@ -86,11 +85,8 @@ class RadarrHistory(_RecordCommon):
 
 
 @dataclass(init=False)
-class RadarrBlocklistMovie(_RadarrMovieHistoryBlocklistBase):
+class RadarrBlocklistMovie(_Common7, _RadarrMovieHistoryBlocklistBase):
     """Radarr blocklist movie attributes."""
-
-    indexer: str | None = None
-    protocol: str | None = None
 
 
 @dataclass(init=False)
@@ -118,7 +114,7 @@ class RadarrQueueDetail(_Common4):
     size: int | None = None
     sizeleft: int | None = None
     status: str | None = None
-    statusMessages: list[_RadarrQueueStatusMessages] | None = None
+    statusMessages: list[_StatusMessage] | None = None
     timeleft: str | None = None
     title: str | None = None
     trackedDownloadState: str | None = None
@@ -131,7 +127,7 @@ class RadarrQueueDetail(_Common4):
         ]
         self.languages = [_Common3(language) for language in self.languages or []]
         self.statusMessages = [
-            _RadarrQueueStatusMessages(statMsg) for statMsg in self.statusMessages or []
+            _StatusMessage(statMsg) for statMsg in self.statusMessages or []
         ]
         self.quality = _Quality(self.quality) or {}
 
@@ -219,17 +215,10 @@ class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
 
 
 @dataclass(init=False)
-class RadarrMovieEditor(BaseModel):
+class RadarrMovieEditor(_Editor):
     """Radarr root folder attributes."""
 
-    applyTags: str | None = None
-    minimumAvailability: str | None = None
-    monitored: bool | None = None
-    moveFiles: bool | None = None
     movieIds: list[int] | None = None
-    qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
-    tags: list[int | None] | None = None
 
 
 @dataclass(init=False)

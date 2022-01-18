@@ -59,7 +59,12 @@
       "profileId": 0,
       "duration": 0,
       "albumType": "string",
-      "secondaryTypes": [0],
+      "secondaryTypes": [
+        {
+          "id": 0,
+          "name": "string"
+        }
+      ],
       "mediumCount": 0,
       "ratings": {
         "votes": 0,

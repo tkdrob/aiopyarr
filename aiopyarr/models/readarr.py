@@ -6,21 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .base import BaseModel
-from .request_common import _Fields
-
-from .request_common import (  # isort:skip
-    _Common3,
-    _Common4,
-    _Notification,
-    _Quality,
-    _RecordCommon,
-    _ReleaseCommon,
-    _Rename,
-    _RetagChange,
-    _TagDetails,
-)
-
-from .readarr_common import (  # isort:skip
+from .readarr_common import (
     _ReadarrAddOptions,
     _ReadarrAudioTags,
     _ReadarrAuthorAddOptions,
@@ -33,13 +19,28 @@ from .readarr_common import (  # isort:skip
     _ReadarrEditionsValue,
     _ReadarrHistoryRecord,
     _ReadarrImage,
-    _ReadarrLink,
     _ReadarrMetadataProfileValue,
     _ReadarrParsedBookInfo,
     _ReadarrRating,
     _ReadarrSearchAuthor,
     _ReadarrSeriesLinks2,
-    _ReadarrStatusMessages,
+)
+from .request_common import (
+    _Common3,
+    _Common4,
+    _Common6,
+    _Editor,
+    _Fields,
+    _Link,
+    _Notification,
+    _Quality,
+    _QualityCommon,
+    _RecordCommon,
+    _ReleaseCommon,
+    _Rename,
+    _RetagChange,
+    _StatusMessage,
+    _TagDetails,
 )
 
 
@@ -77,6 +78,7 @@ class ReadarrEventType(str, Enum):
     DOWNLOAD_IMPORTED = "downloadImported"
     GRABBED = "grabbed"
     UNKNOWN = "unknown"
+
 
 @dataclass(init=False)
 class ReadarrBook(_ReadarrBookCommon):
@@ -134,22 +136,15 @@ class ReadarrBlocklist(_RecordCommon):
 
 
 @dataclass(init=False)
-class ReadarrAuthorEditor(BaseModel):
+class ReadarrAuthorEditor(_Editor):
     """Readarr author editor attributes."""
 
-    applyTags: str | None = None
     authorIds: list[int] | None = None
-    deleteFiles: bool | None = None
     metadataProfileId: int | None = None
-    monitored: bool | None = None
-    moveFiles: bool | None = None
-    qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
-    tags: list[int | None] | None = None
 
 
 @dataclass(init=False)
-class ReadarrBookFile(BaseModel):
+class ReadarrBookFile(_QualityCommon):
     """Readarr book file attributes."""
 
     audioTags: _ReadarrAudioTags | None = None
@@ -159,8 +154,6 @@ class ReadarrBookFile(BaseModel):
     id: int | None = None
     mediaInfo: _ReadarrBookFileMediaInfo | None = None
     path: str | None = None
-    quality: _Quality | None = None
-    qualityCutoffNotMet: bool | None = None
     qualityWeight: int | None = None
     size: int | None = None
 
@@ -169,7 +162,6 @@ class ReadarrBookFile(BaseModel):
         super().__post_init__()
         self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
         self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo) or {}
-        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -185,7 +177,7 @@ class ReadarrBookFileEditor(BaseModel):
 
 
 @dataclass(init=False)
-class ReadarrBookLookup(BaseModel):
+class ReadarrBookLookup(_Common6):
     """Readarr book lookup attributes."""
 
     added: str | None = None
@@ -199,9 +191,7 @@ class ReadarrBookLookup(BaseModel):
     genres: list[str] | None = None
     grabbed: bool | None = None
     images: list[_ReadarrImage] | None = None
-    links: list[_ReadarrLink] | None = None
-    monitored: bool | None = None
-    overview: str | None = None
+    links: list[_Link] | None = None
     pageCount: int | None = None
     ratings: _ReadarrRating | None = None
     releaseDate: str | None = None
@@ -216,7 +206,7 @@ class ReadarrBookLookup(BaseModel):
         self.author = ReadarrAuthor(self.author) or {}
         self.editions = [_ReadarrEditionsValue(editn) for editn in self.editions or []]
         self.images = [_ReadarrImage(image) for image in self.images or []]
-        self.links = [_ReadarrLink(link) for link in self.links or []]
+        self.links = [_Link(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
 
 
@@ -422,7 +412,7 @@ class ReadarrQueueDetail(_Common4):
     size: int | None = None
     sizeleft: int | None = None
     status: str | None = None
-    statusMessages: list[_ReadarrStatusMessages] | None = None
+    statusMessages: list[_StatusMessage] | None = None
     timeleft: str | None = None
     title: str | None = None
     trackedDownloadState: str | None = None
@@ -434,9 +424,7 @@ class ReadarrQueueDetail(_Common4):
         self.author = ReadarrAuthor(self.authorId) or {}
         self.book = ReadarrBook(self.book) or {}
         self.quality = _Quality(self.quality) or {}
-        self.statusMessages = [
-            _ReadarrStatusMessages(book) for book in self.statusMessages or []
-        ]
+        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
 @dataclass(init=False)

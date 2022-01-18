@@ -4,17 +4,36 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
+from datetime import datetime
 from json import dumps
 from typing import Any, Text
-from datetime import datetime
+
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
 
-from .const import ALL, ASCENDING, ATTR_DATA, DESCENDING, HEADERS, IS_VALID, LOGGER, PAGE, PAGE_SIZE, SORT_DIRECTION, SORT_KEY, HTTPMethod
+from .const import (
+    ALL,
+    ASCENDING,
+    ATTR_DATA,
+    DESCENDING,
+    HEADERS,
+    IS_VALID,
+    LOGGER,
+    PAGE,
+    PAGE_SIZE,
+    PATH,
+    SORT_DIRECTION,
+    SORT_KEY,
+    HTTPMethod,
+)
 from .decorator import api_command
+from .exceptions import (
+    ArrAuthenticationException,
+    ArrConnectionException,
+    ArrException,
+    ArrResourceNotFound,
+)
 from .models.host_configuration import PyArrHostConfiguration
-from .models.response import PyArrResponse
-
-from .models.request import (  # isort:skip
+from .models.request import (
     Command,
     Commands,
     CustomFilter,
@@ -50,13 +69,7 @@ from .models.request import (  # isort:skip
     UIConfig,
     Update,
 )
-
-from .exceptions import (  # isort:skip
-    ArrAuthenticationException,
-    ArrConnectionException,
-    ArrException,
-    ArrResourceNotFound,
-)
+from .models.response import PyArrResponse
 
 
 class RequestClient:  # pylint: disable=too-many-public-methods
@@ -137,8 +150,12 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Send API request."""
         command = args[0] if isinstance(args[0], str) else args[1]
         url = self._host.api_url(command)
-        _data = lambda o: o.isoformat() if isinstance(o, datetime) else o.__dict__
-        json = dumps(data, default=_data, sort_keys=True, indent=2)
+        json = dumps(
+            data,
+            default=lambda o: o.isoformat() if isinstance(o, datetime) else o.__dict__,
+            sort_keys=True,
+            indent=2,
+        )
         try:
             request = await self._session.request(
                 method=method.value,
@@ -190,8 +207,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         except ArrException as ex:
             raise ArrException(self, ex) from ex
 
-        #except (Exception, BaseException) as ex:  # TODO
-        #    raise ArrException(self, ex) from ex
+        except (Exception, BaseException) as ex:
+            raise ArrException(self, ex) from ex
 
         else:
             return response.data
@@ -281,13 +298,16 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=Command,
         )
 
-    async def async_command(self, command: Commands) -> Command: #TODO add test for each
+    async def async_command(self, command: Commands) -> Command:
         """Send a command to the API."""
-        if command == Commands.CLEAR_BLOCKLIST and hasattr(self, "async_get_albums"):
-            command = "ClearBlacklist"
+        cmd = None
+        if command == Commands.CLEAR_BLOCKLIST.value and hasattr(
+            self, "async_get_albums"
+        ):
+            cmd = "ClearBlacklist"
         return await self._async_request(
             "command",
-            data={"name": command},
+            data={"name": cmd if cmd else command.value},
             datatype=Command,
             method=HTTPMethod.POST,
         )
@@ -331,9 +351,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     # Curently not working with postman, a second request must be made
     # also requires Content-Type: multipart/form-data
     # https://stackoverflow.com/questions/57553738/how-to-aiohttp-request-post-files-list-python-requests-module
-    async def async_upload_system_backup(
-        self, data: bytes
-    ) -> None:  # TODO check return
+    async def async_upload_system_backup(self, data: bytes) -> None:
         """Upload a system backup."""
         return await self._async_request(
             "system/backup/restore/upload", data=data, method=HTTPMethod.POST
@@ -497,22 +515,24 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get filesystem attributes."""
         return await self._async_request(
             "filesystem",
-            params={"path": path},
+            params={PATH: path},
             datatype=Filesystem,
         )
 
     async def async_get_filesystem_media_type(self, path: str) -> str:
         """Return whether queried path is a file or folder."""
-        return (await self._async_request(
-            "filesystem/type",
-            params={"path": path},
-        ))["type"]
+        return (
+            await self._async_request(
+                "filesystem/type",
+                params={PATH: path},
+            )
+        )["type"]
 
     async def async_get_filesystem_media(self, path: str) -> list[FilesystemFolder]:
         """Get attributes of specified mediafiles path."""
         return await self._async_request(
             "filesystem/mediafiles",
-            params={"path": path},
+            params={PATH: path},
             datatype=FilesystemFolder,
         )
 
@@ -544,7 +564,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         self, data: ImportListExclusion
     ) -> ImportListExclusion:
         """Edit import list exclusion.
-        
+
         foreignId must be different than existing or the call will fail
         """
         return await self._async_request(
@@ -664,7 +684,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get localization strings."""
         return await self._async_request("localization", datatype=Localization)
 
-    # manualimport GET / POST, not yet confirmed #TODO
+    # manualimport GET / POST, not yet confirmed
 
     async def async_get_image(
         self,
@@ -1008,9 +1028,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=DelayProfile,
         )
 
-    async def async_add_delay_profile(
-        self, data: DelayProfile
-    ) -> DelayProfile:
+    async def async_add_delay_profile(self, data: DelayProfile) -> DelayProfile:
         """Add delay profile."""
         return await self._async_request(
             "delayprofile",
@@ -1019,9 +1037,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    async def async_edit_delay_profile(
-        self, data: DelayProfile
-    ) -> DelayProfile:
+    async def async_edit_delay_profile(self, data: DelayProfile) -> DelayProfile:
         """Edit delay profile."""
         return await self._async_request(
             "delayprofile",
@@ -1061,7 +1077,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         method: HTTPMethod = HTTPMethod.GET,
     ) -> Any:
         """Run a command not already defined.
-        
+
         Useful if new endpoints become available/known
         or if the user insists on using schema query endpoints
         """

@@ -4,22 +4,33 @@ from logging import Logger, getLogger
 
 LOGGER: Logger = getLogger(__package__)
 
+ALBUM_ID = "albumId"
 ALL = "all"
+ARTIST_ID = "artistId"
 ASCENDING = "ascending"
 ATTR_DATA = "data"
+AUTHOR_ID = "authorId"
+BOOK_ID = "bookId"
 DESCENDING = "descending"
-IS_VALID = "isValid"
-
+EPISODE_ID = "episodeId"
 HEADERS = {
     "Accept-Encoding": "gzip, deflate",
     "Accept": "application/json",
     "Connection": "keep-alive",
     "Content-Type": "application/json",
 }
+IS_VALID = "isValid"
+MOVIE_ID = "movieId"
+NOTIFICATION = "notification"
 PAGE = "page"
 PAGE_SIZE = "pageSize"
+PATH = "path"
+SERIES_ID = "seriesId"
 SORT_DIRECTION = "sortDirection"
 SORT_KEY = "sortKey"
+TERM = "term"
+TITLE = "title"
+
 
 class HTTPMethod(Enum):
     """HTTPMethod Enum."""

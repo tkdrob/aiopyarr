@@ -2,22 +2,57 @@
 from __future__ import annotations
 
 from datetime import datetime
-from os import path
-from typing import TYPE_CHECKING
+
+from aiohttp.client import ClientSession
 
 from aiopyarr.exceptions import ArrException
 
-from .models.lidarr import LidarrAlbum, LidarrAlbumEditor, LidarrAlbumHistory, LidarrAlbumLookup, LidarrAlbumStudio, LidarrArtist, LidarrBlocklist, LidarrCalendar, LidarrCommands, LidarrEventType, LidarrHistory, LidarrImportList, LidarrMetadataProfile, LidarrQueue, LidarrQueueDetail, LidarrRelease, LidarrRename, LidarrRetag, LidarrSearch, LidarrTagDetails, LidarrTrack, LidarrTrackDetails, LidarrTrackFile, LidarrTrackFileDetails as FileDetails, LidarrWantedCutoff
-from .models.request import Command, RootFolder
-
-from .const import ALL, ASCENDING, DESCENDING, IS_VALID, PAGE, PAGE_SIZE, SORT_DIRECTION, SORT_KEY, HTTPMethod
-from .decorator import api_command
+from .const import (
+    ALBUM_ID,
+    ALL,
+    ARTIST_ID,
+    ASCENDING,
+    DESCENDING,
+    IS_VALID,
+    PAGE,
+    PAGE_SIZE,
+    SORT_DIRECTION,
+    SORT_KEY,
+    TERM,
+    TITLE,
+    HTTPMethod,
+)
+from .models.host_configuration import PyArrHostConfiguration
+from .models.lidarr import (
+    LidarrAlbum,
+    LidarrAlbumEditor,
+    LidarrAlbumHistory,
+    LidarrAlbumLookup,
+    LidarrArtist,
+    LidarrArtistEditor,
+    LidarrBlocklist,
+    LidarrCalendar,
+    LidarrCommands,
+    LidarrEventType,
+    LidarrHistory,
+    LidarrImportList,
+    LidarrMetadataProfile,
+    LidarrParse,
+    LidarrQueue,
+    LidarrQueueDetail,
+    LidarrRelease,
+    LidarrRename,
+    LidarrRetag,
+    LidarrSearch,
+    LidarrTagDetails,
+    LidarrTrack,
+    LidarrTrackDetails,
+    LidarrTrackFile,
+)
+from .models.lidarr import LidarrTrackFileDetails as FileDetails
+from .models.lidarr import LidarrTrackFileEditor, LidarrWantedCutoff
+from .models.request import Command
 from .request_client import RequestClient
-
-if TYPE_CHECKING: #TODO remove from here if not needed
-    from aiohttp.client import ClientSession
-
-    from .models.host_configuration import PyArrHostConfiguration
 
 
 class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
@@ -66,11 +101,12 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         allartistalbums: bool = False,
     ) -> LidarrAlbum | list[LidarrAlbum]:
         """Get info about specified album by id, leave blank for all."""
-        params = {"includeAllArtistAlbums": str(allartistalbums)}
+        params: dict[str, str | int | list[int]] = {}
+        params["includeAllArtistAlbums"] = str(allartistalbums)
         if isinstance(albumids, list):
             params["albumids"] = albumids
         if artistid is not None:
-            params["artistId"] = artistid
+            params[ARTIST_ID] = artistid
         if foreignalbumid is not None:
             params["foreignAlbumId"] = foreignalbumid
         cmd = "" if isinstance(albumids, list) or albumids is None else f"/{albumids}"
@@ -86,7 +122,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "album", data=data, datatype=LidarrAlbum, method=HTTPMethod.POST
         )
 
-    async def async_edit_albums(  # TODO test all inputing models that the input carryies
+    async def async_edit_albums(
         self, data: LidarrAlbum | LidarrAlbumEditor
     ) -> LidarrAlbum | list[LidarrAlbum]:
         """Edit album database info."""
@@ -101,7 +137,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Delete the album with the given id."""
         return await self._async_request(f"album/{albumid}", method=HTTPMethod.DELETE)
 
-    async def async_album_studio(self, data: LidarrAlbumStudio) -> list[LidarrAlbum]:
+    async def async_album_studio(self, data: dict) -> list[LidarrAlbum]:
         """Edit database with album studio."""
         return await self._async_request(
             "albumstudio",
@@ -111,13 +147,14 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_get_artists(
-        self, entryid: str | int | None = None,
+        self,
+        entryid: str | int | None = None,
     ) -> LidarrArtist | list[LidarrArtist]:
         """Get info about specified artists by id, leave blank for all.
-        
+
         entryid: Include a string to search by MusicBrainz id.
         """
-        command = '' if isinstance(entryid, str) or entryid is None else f'/{entryid}'
+        command = "" if isinstance(entryid, str) or entryid is None else f"/{entryid}"
         return await self._async_request(
             f"artist{command}",
             params={"mbId": entryid} if isinstance(entryid, str) else None,
@@ -131,7 +168,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_edit_artists(
-        self, data: LidarrArtist | dict #TODO
+        self, data: LidarrArtist | LidarrArtistEditor
     ) -> LidarrArtist | list[LidarrArtist]:
         """Edit artist database info."""
         return await self._async_request(
@@ -141,10 +178,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_artists(
-        self,
-        data: int | dict, #TODO
-    ) -> None:
+    async def async_delete_artists(self, data: int | dict) -> None:
         """Delete the artists with the given ids."""
         return await self._async_request(
             f"artist/{data if isinstance(data, int) else 'editor'}",
@@ -155,15 +189,13 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_album_lookup(self, term: str) -> list[LidarrAlbumLookup]:
         """Search for new albums using a term."""
         return await self._async_request(
-            "album/lookup", params={"term": term}, datatype=LidarrAlbumLookup
+            "album/lookup", params={TERM: term}, datatype=LidarrAlbumLookup
         )
-
-    #TODO /content/, /{path}
 
     async def async_get_blocklist(
         self,
         page: int = 1,
-        page_size: int = 10, #TODO check all default
+        page_size: int = 10,
         ascending: bool = False,
         sort_key: str = "date",
     ) -> LidarrBlocklist:
@@ -193,7 +225,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         start_date: datetime,
         end_date: datetime,
         calendarid: int | None = None,
-        unmonitored: bool = False, #TODO test all calendars, does all params actually do anything
+        unmonitored: bool = False,
     ) -> LidarrCalendar | list[LidarrCalendar]:
         """Get calendar items."""
         params = {
@@ -208,7 +240,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_lidarr_command(self, command: LidarrCommands) -> Command:
-        """Send a command to Lidarr.""" #TODO add test for each
+        """Send a command to Lidarr."""
         return await self._async_request(
             "command",
             data={"name": command.value},
@@ -216,10 +248,10 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    async def async_get_wanted(  # check sortDir not working
+    async def async_get_wanted(  # pylint: disable=too-many-arguments
         self,
         recordid: int | None = None,
-        sortkey: str = "title",
+        sortkey: str = TITLE,
         page: int = 1,
         page_size: int = 10,
         missing: bool = True,
@@ -244,7 +276,12 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=LidarrWantedCutoff if recordid is None else LidarrAlbum,
         )
 
-    async def async_get_history( #TODO track may not ahve effect
+    async def async_parse(self, title: str) -> LidarrParse:
+        """Return the movie with matching file name."""
+        params = {TITLE: title}
+        return await self._async_request("parse", params=params, datatype=LidarrParse)
+
+    async def async_get_history(  # pylint: disable=too-many-arguments
         self,
         page: int = 1,
         pagesize: int = 10,
@@ -252,7 +289,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         ascending: bool = True,
         artist: int | bool = False,
         album: int | bool = False,
-        event_type: LidarrEventType | None = None, # not working
+        event_type: LidarrEventType | None = None,  # not working
         date: datetime | None = None,
     ) -> LidarrHistory | list[LidarrAlbumHistory]:
         """Get history.
@@ -278,9 +315,9 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             if isinstance(album, bool):
                 params["includeAlbum"] = str(album)
         else:
-            params["artistId"] = artist
+            params[ARTIST_ID] = artist
             if not isinstance(album, bool):
-                params["albumId"] = album
+                params[ALBUM_ID] = album
             command = "history/artist"
         if isinstance(date, datetime):
             params["date"] = date.strftime("%Y-%m-%d")
@@ -300,9 +337,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=LidarrImportList,
         )
 
-    async def async_edit_import_list(
-        self, data: LidarrImportList
-    ) -> LidarrImportList:
+    async def async_edit_import_list(self, data: LidarrImportList) -> LidarrImportList:
         """Edit import list."""
         return await self._async_request(
             "importlist",
@@ -336,7 +371,10 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_importlist_action(self, data: LidarrImportList) -> LidarrImportList:
         """Perform import list action."""
         return await self._async_request(
-            f"importlist/action/{data.name}", data=data, datatype=LidarrImportList, method=HTTPMethod.POST
+            f"importlist/action/{data.name}",
+            data=data,
+            datatype=LidarrImportList,
+            method=HTTPMethod.POST,
         )
 
     async def async_get_metadata_profiles(
@@ -414,7 +452,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "includeAlbum": str(include_album),
         }
         if artistid is not None:
-            params["artistId"] = artistid
+            params[ARTIST_ID] = artistid
         if albumids is not None:
             params["albumIds"] = albumids
         return await self._async_request(
@@ -429,9 +467,9 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search indexers for specified fields."""
         params = {}
         if artistid is not None:
-            params["artistId"] = artistid
+            params[ARTIST_ID] = artistid
         if albumid is not None:
-            params["albumId"] = albumid
+            params[ALBUM_ID] = albumid
         return await self._async_request(
             "release", params=params, datatype=LidarrRelease
         )
@@ -465,11 +503,11 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_rename(
         self, artistid: int, albumid: int | None = None
-    ) -> list[LidarrRename]: #TODO check others require id
+    ) -> list[LidarrRename]:
         """Get files matching specified id that are not properly renamed yet."""
-        params = {"artistId": artistid}
+        params = {ARTIST_ID: artistid}
         if albumid is not None:
-            params["albumId"] = albumid
+            params[ALBUM_ID] = albumid
         return await self._async_request(
             "rename",
             params=params,
@@ -480,9 +518,9 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self, artistid: int, albumid: int | None = None
     ) -> list[LidarrRetag]:
         """Get retag."""
-        params = {"artistId": artistid}
+        params = {ARTIST_ID: artistid}
         if albumid is not None:
-            params["albumId"] = albumid
+            params[ALBUM_ID] = albumid
         return await self._async_request(
             "retag",
             params=params,
@@ -493,7 +531,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search for albums."""
         return await self._async_request(
             "search",
-            params={"term": term},
+            params={TERM: term},
             datatype=LidarrSearch,
         )
 
@@ -514,21 +552,25 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         artistid: int | None = None,
         albumid: int | None = None,
         albumreleaseid: int | None = None,
-        trackids: int | list[int] | None = None
+        trackids: int | list[int] | None = None,
     ) -> LidarrTrackDetails | list[LidarrTrack]:
         """Get tracks based on specified ids.
-        
+
         trackids: specify one integer to search database by track id only
         """
-        if artistid is None and albumid is None and albumreleaseid is None and trackids is None:
-            raise ArrException(
-                message="BadRequest: One of artistId, albumId, albumReleaseId or trackIds must be provided"
-            )
-        params = {}
+        if (
+            artistid is None
+            and albumid is None
+            and albumreleaseid is None
+            and trackids is None
+        ):
+            msg = "BadRequest: artistId, albumId, albumReleaseId or trackIds must be provided"
+            raise ArrException(message=msg)
+        params: dict[str, int | list[int]] = {}
         if artistid is not None:
-            params["artistId"] = artistid
+            params[ARTIST_ID] = artistid
         if albumid is not None:
-            params["albumId"] = albumid
+            params[ALBUM_ID] = albumid
         if albumreleaseid is not None:
             params["albumReleaseId"] = albumreleaseid
         if isinstance(trackids, list):
@@ -544,21 +586,21 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         artistid: int | None = None,
         albumid: int | None = None,
         trackfileids: int | list[int] | None = None,
-        unmapped: bool = False, #Not sure what this does
+        unmapped: bool = False,  # Not sure what this does
     ) -> FileDetails | list[LidarrTrackFile]:
         """Get track files based on specified ids.
-        
+
         trackfileids: specify one integer to include audioTags for that id
         """
         if artistid is None and albumid is None and trackfileids is None:
             raise ArrException(
                 message="BadRequest: artistId, albumId, trackFileIds or unmapped must be provided"
             )
-        params = {"unmapped": str(unmapped)}
+        params: dict[str, str | int | list[int]] = {"unmapped": str(unmapped)}
         if artistid is not None:
-            params["artistId"] = artistid
+            params[ARTIST_ID] = artistid
         if albumid is not None:
-            params["albumId"] = albumid
+            params[ALBUM_ID] = albumid
         if isinstance(trackfileids, list):
             params["trackFileIds"] = trackfileids
         return await self._async_request(
@@ -567,4 +609,22 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=FileDetails if isinstance(trackfileids, int) else LidarrTrackFile,
         )
 
-    #TODO add put, delete
+    # documented, but may throw code 500
+    async def async_edit_track_files(
+        self, data: LidarrTrackFile | LidarrTrackFileEditor
+    ) -> LidarrTrackFile | list[LidarrTrackFile]:
+        """Edit track file attributes."""
+        return await self._async_request(
+            f"trackfile{'' if isinstance(data, LidarrTrackFile) else '/editor'}",
+            data=data,
+            datatype=LidarrTrackFile,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_delete_track_files(self, ids: int | list[int]) -> None:
+        """Delete track files. Use integer for one file or list for mass deletion."""
+        return await self._async_request(
+            f"trackfile/{'bulk' if isinstance(ids, list) else f'{ids}'}",
+            data={"trackFileIds": ids} if isinstance(ids, list) else None,
+            method=HTTPMethod.DELETE,
+        )

@@ -8,8 +8,7 @@ from re import search, sub
 from typing import Any
 
 from ..const import LOGGER
-
-from .const import (  # isort:skip
+from .const import (
     CONVERT_TO_BOOL,
     CONVERT_TO_DATETIME,
     CONVERT_TO_FLOAT,
@@ -17,17 +16,19 @@ from .const import (  # isort:skip
 )
 
 
-def get_datetime(input: datetime | str | None) -> datetime | str | None:
+def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
     """Convert input to datetime object."""
-    if isinstance(input, str):
-        if search(r"^\d{4}-\d{2}-\d{2}$", input):
-            return datetime.strptime(input, "%Y-%m-%d")
-        if search(r".\d{7}Z$", input):
-            input = sub(r"\dZ", "Z", input)
-        elif not search(r"\.\d+Z$", input):
-            input = sub("Z", ".000000Z", input)
-        return datetime.strptime(input, "%Y-%m-%dT%H:%M:%S.%fZ")
-    return input
+    if isinstance(_input, str):
+        if _input.isnumeric():
+            return int(_input)
+        if search(r"^\d{4}-\d{2}-\d{2}$", _input):
+            return datetime.strptime(_input, "%Y-%m-%d")
+        if search(r".\d{7}Z$", _input):
+            _input = sub(r"\dZ", "Z", _input)
+        elif not search(r"\.\d+Z$", _input):
+            _input = sub("Z", ".000000Z", _input)
+        return datetime.strptime(_input, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return _input
 
 
 class ApiJSONEncoder(json.JSONEncoder):

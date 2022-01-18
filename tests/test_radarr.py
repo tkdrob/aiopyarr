@@ -388,7 +388,9 @@ async def test_async_get_movie_history(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_movie_history(recordid=0, event_type=RadarrEventType.GRABBED)
+        await client.async_get_movie_history(
+            recordid=0, event_type=RadarrEventType.GRABBED
+        )
 
 
 @pytest.mark.asyncio
@@ -764,7 +766,9 @@ async def test_async_get_queue(aresponses):
     assert data.records[0].customFormats[0].specifications[0].infoLink == "string"
     assert data.records[0].customFormats[0].specifications[0].negate is True
     assert data.records[0].customFormats[0].specifications[0].required is True
-    assert isinstance(data.records[0].customFormats[0].specifications[0].fields[0].order, int)
+    assert isinstance(
+        data.records[0].customFormats[0].specifications[0].fields[0].order, int
+    )
     assert data.records[0].customFormats[0].specifications[0].fields[0].name == "string"
     assert (
         data.records[0].customFormats[0].specifications[0].fields[0].label == "string"
@@ -1166,7 +1170,7 @@ async def test_async_edit_movies(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_edit_movies(RadarrMovieEditor("test"))
-    assert isinstance(data, RadarrMovieEditor)
+    assert isinstance(data, RadarrMovie)
 
 
 @pytest.mark.asyncio
@@ -1517,7 +1521,6 @@ async def test_async_radarr_commands(aresponses):
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_radarr_command(RadarrCommands.RENAME_MOVIE)
     assert isinstance(data, Command)
-
 
     aresponses.add(
         "127.0.0.1:7878",

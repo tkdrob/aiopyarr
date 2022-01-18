@@ -906,7 +906,6 @@ async def test_async_get_queue_details(aresponses):
         data = await client.async_get_queue_details()
     assert isinstance(data[0].seriesId, int)
     assert isinstance(data[0].episodeId, int)
-    assert data[0].series #TODO
     assert isinstance(data[0].episode.seriesId, int)
     assert isinstance(data[0].episode.episodeFileId, int)
     assert isinstance(data[0].episode.seasonNumber, int)

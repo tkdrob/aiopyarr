@@ -5,13 +5,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .base import BaseModel, get_datetime
-
-from .request_common import (  # isort:skip
+from .request_common import (
     _Common3,
     _Common5,
+    _Common6,
     _CommonAttrs,
     _MetadataFields,
     _Quality,
+    _Ratings,
     _SelectOption,
 )
 
@@ -31,12 +32,10 @@ class _RadarrMovieImages(_Common5):
 
 
 @dataclass(init=False)
-class _RadarrDatabaseRating(BaseModel):
+class _RadarrDatabaseRating(_Ratings):
     """Radarr databade rating attributes."""
 
     type: str | None = None
-    value: int | float | None = None
-    votes: int | None = None
 
 
 @dataclass(init=False)
@@ -147,14 +146,6 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
 
 
 @dataclass(init=False)
-class _RadarrQueueStatusMessages(BaseModel):
-    """Radarr queue status messages."""
-
-    messages: list[str] | None = None
-    title: str | None = None
-
-
-@dataclass(init=False)
 class _RadarrNotificationMessage(BaseModel):
     """Radarr notification message attributes."""
 
@@ -188,7 +179,7 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
 
 @dataclass(init=False)
-class _RadarrMovie(_RadarrCommon2):
+class _RadarrMovie(_RadarrCommon2, _Common6):
     """Radarr movie attributes."""
 
     added: str | None = None
@@ -204,10 +195,8 @@ class _RadarrMovie(_RadarrCommon2):
     imdbId: str | None = None
     inCinemas: str | None = None
     isAvailable: bool | None = None
-    monitored: bool | None = None
     movieFile: _RadarrMovieFile | None = None
     originalTitle: str | None = None
-    overview: str | None = None
     path: str | None = None
     physicalRelease: str | None = None
     ratings: _RadarrMovieRatings | None = None

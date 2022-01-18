@@ -5,7 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/v/aiopyarr)](https://pypi.org/project/aiopyarr)
 ![Actions](https://github.com/tkdrob/aiopyarr/workflows/Actions/badge.svg?branch=master)
 
-_Python API client for Radarr/Readarr/Sonarr._
+_Python API client for Lidarr/Radarr/Readarr/Sonarr._
 
 ## Installation
 

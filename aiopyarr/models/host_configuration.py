@@ -20,7 +20,7 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
     verify_ssl: bool = True
     base_api_path: str | None = None
     url: str | None = None
-    api_ver: str = "v3"
+    api_ver: str | None = "v3"
 
     def __post_init__(self) -> None:
         """Post init."""

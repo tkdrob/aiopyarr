@@ -1,18 +1,14 @@
 """Tests for common methods."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime
 import json
-from aiopyarr.lidarr_client import LidarrClient
+from datetime import datetime
 
 import pytest
 from aiohttp.client import ClientSession
 
 from aiopyarr.exceptions import ArrConnectionException
-from aiopyarr.radarr_client import RadarrClient
-from aiopyarr.readarr_client import ReadarrClient
-from aiopyarr.sonarr_client import SonarrClient
-
-from aiopyarr.models.request import (  # isort:skip
+from aiopyarr.lidarr_client import LidarrClient
+from aiopyarr.models.request import (
     Command,
     Commands,
     CustomFilter,
@@ -20,7 +16,6 @@ from aiopyarr.models.request import (  # isort:skip
     Diskspace,
     DownloadClient,
     DownloadClientConfig,
-    Filesystem,
     Health,
     HostConfig,
     ImportListExclusion,
@@ -36,13 +31,16 @@ from aiopyarr.models.request import (  # isort:skip
     RemotePathMapping,
     RootFolder,
     SystemBackup,
+    SystemStatus,
     Tag,
     UIConfig,
-    SystemStatus,
     Update,
 )
+from aiopyarr.radarr_client import RadarrClient
+from aiopyarr.readarr_client import ReadarrClient
+from aiopyarr.sonarr_client import SonarrClient
 
-from . import (  # isort:skip
+from . import (
     LIDARR_API,
     RADARR_API,
     READARR_API,
@@ -306,7 +304,7 @@ async def test_async_get_logs(aresponses):
     assert data.records[0].level == "info"
     assert data.records[0].logger == "BackupService"
     assert data.records[0].message == "Starting Backup"
-    assert isinstance(data.records[0].id , int)
+    assert isinstance(data.records[0].id, int)
     assert data.records[0].exception == "string"
     assert data.records[0].exceptionType == "string"
 
