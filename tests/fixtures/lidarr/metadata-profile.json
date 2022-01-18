@@ -1,0 +1,33 @@
+[
+  {
+    "name": "string",
+    "primaryAlbumTypes": [
+      {
+        "albumType": {
+          "id": 0,
+          "name": "string"
+        },
+        "allowed": false
+      }
+    ],
+    "secondaryAlbumTypes": [
+      {
+        "albumType": {
+          "id": 0,
+          "name": "string"
+        },
+        "allowed": true
+      }
+    ],
+    "releaseStatuses": [
+      {
+        "releaseStatus": {
+          "id": 0,
+          "name": "string"
+        },
+        "allowed": false
+      }
+    ],
+    "id": 0
+  }
+]

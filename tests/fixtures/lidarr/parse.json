@@ -1,0 +1,31 @@
+{
+  "title": "string",
+  "parsedAlbumInfo": {
+    "albumTitle": "string",
+    "artistName": "string",
+    "artistTitleInfo": {
+        "title": "string",
+        "year": 0
+    },
+    "quality": {
+        "quality": {
+            "id": 0,
+            "name": "string"
+        },
+        "revision": {
+            "version": 0,
+            "real": 0,
+            "isRepack": false
+        }
+    },
+    "releaseDate": "0",
+    "discography": false,
+    "discographyStart": 0,
+    "discographyEnd": 0,
+    "releaseGroup": "string",
+    "releaseHash": "string",
+    "releaseVersion": "string"
+  },
+  "artist": {},
+  "albums": ["test"]
+}

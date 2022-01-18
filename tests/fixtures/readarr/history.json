@@ -28,7 +28,7 @@
           "indexer": "string",
           "nzbInfoUrl": "string",
           "releaseGroup": null,
-          "age": "0.0",
+          "age": "0",
           "ageHours": "0.0",
           "ageMinutes": "0.0",
           "publishedDate": "2020-06-06T04:00:00Z",

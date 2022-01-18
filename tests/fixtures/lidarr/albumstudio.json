@@ -1,0 +1,576 @@
+{
+  "artist": [
+    {
+      "id": 0,
+      "monitored": true,
+      "albums": [
+        {
+          "id": 0,
+          "title": "string",
+          "disambiguation": "string",
+          "overview": "string",
+          "artistId": 0,
+          "foreignAlbumId": "string",
+          "monitored": true,
+          "anyReleaseOk": true,
+          "profileId": 0,
+          "duration": 0,
+          "albumType": "string",
+          "secondaryTypes": [
+            {
+              "id": 0,
+              "name": "string"
+            }
+          ],
+          "ratings": {
+            "votes": 0,
+            "value": 0.0
+          },
+          "releaseDate": "2020-02-15T14:59:24.750Z",
+          "releases": [
+            {
+              "id": 0,
+              "albumId": 0,
+              "foreignReleaseId": "string",
+              "title": "string",
+              "status": "string",
+              "duration": 0,
+              "trackCount": 0,
+              "media": [
+                {
+                  "mediumNumber": 0,
+                  "mediumName": "string",
+                  "mediumFormat": "string"
+                }
+              ],
+              "disambiguation": "string",
+              "country": ["string"],
+              "label": ["string"],
+              "format": "string",
+              "monitored": true
+            }
+          ],
+          "genres": ["string"],
+          "media": [
+            {
+              "mediumNumber": 0,
+              "mediumName": "string",
+              "mediumFormat": "string"
+            }
+          ],
+          "artist": {
+            "id": 0,
+            "artistMetadataId": 0,
+            "status": "string",
+            "artistName": "string",
+            "foreignArtistId": "string",
+            "mbId": "string",
+            "tadbId": 0,
+            "discogsId": 0,
+            "allMusicId": "string",
+            "overview": "string",
+            "artistType": "string",
+            "disambiguation": "string",
+            "links": [
+              {
+                "url": "string",
+                "name": "string"
+              }
+            ],
+            "nextAlbum": {
+              "id": 0,
+              "artistMetadataId": 0,
+              "foreignAlbumId": "string",
+              "oldForeignAlbumIds": ["string"],
+              "title": "string",
+              "overview": "string",
+              "disambiguation": "string",
+              "releaseDate": "2020-02-15T14:59:24.750Z",
+              "images": [
+                {
+                  "url": "string",
+                  "coverType": "string"
+                }
+              ],
+              "links": [
+                {
+                  "url": "string",
+                  "name": "string"
+                }
+              ],
+              "genres": ["string"],
+              "albumType": "string",
+              "secondaryTypes": [
+                {
+                  "id": 0,
+                  "name": "string"
+                }
+              ],
+              "ratings": {
+                "votes": 0,
+                "value": 0.0
+              },
+              "cleanTitle": "string",
+              "profileId": 0,
+              "monitored": true,
+              "anyReleaseOk": true,
+              "lastInfoSync": "2020-02-15T14:59:24.750Z",
+              "added": "2020-02-15T14:59:24.750Z",
+              "addOptions": {
+                "addType": "string",
+                "searchForNewAlbum": true
+              },
+              "artistMetadata": {
+                "value": {
+                  "id": 0,
+                  "foreignArtistId": "string",
+                  "oldForeignArtistIds": ["string"],
+                  "name": "string",
+                  "aliases": ["string"],
+                  "overview": "string",
+                  "disambiguation": "string",
+                  "type": "string",
+                  "status": "string",
+                  "images": [
+                    {
+                      "url": "string",
+                      "coverType": "string"
+                    }
+                  ],
+                  "links": [
+                    {
+                      "url": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "genres": ["string"],
+                  "ratings": {
+                    "votes": 0,
+                    "value": 0.0
+                  },
+                  "members": [
+                    {
+                      "name": "string",
+                      "instrument": "string",
+                      "images": [
+                        {
+                          "url": "string",
+                          "coverType": "string"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "albumReleases": {},
+              "artist": {
+                "value": {
+                  "id": 0,
+                  "artistMetadataId": 0,
+                  "cleanName": "string",
+                  "sortName": "string",
+                  "monitored": true,
+                  "lastInfoSync": "2020-02-15T14:59:24.750Z",
+                  "path": "string",
+                  "rootFolderPath": "string",
+                  "added": "2020-02-15T14:59:24.750Z",
+                  "qualityProfileId": 0,
+                  "metadataProfileId": 0,
+                  "tags": [0],
+                  "addOptions": {
+                    "monitor": "string",
+                    "albumsToMonitor": ["string"],
+                    "monitored": true,
+                    "searchForMissingAlbums": true
+                  },
+                  "metadata": {
+                    "value": {
+                      "id": 0,
+                      "foreignArtistId": "string",
+                      "oldForeignArtistIds": ["string"],
+                      "name": "string",
+                      "aliases": ["string"],
+                      "overview": "string",
+                      "disambiguation": "string",
+                      "type": "string",
+                      "status": "string",
+                      "images": [
+                        {
+                          "url": "string",
+                          "coverType": "string"
+                        }
+                      ],
+                      "links": [
+                        {
+                          "url": "string",
+                          "name": "string"
+                        }
+                      ],
+                      "genres": ["string"],
+                      "ratings": {
+                        "votes": 0,
+                        "value": 0.0
+                      },
+                      "members": [
+                        {
+                          "name": "string",
+                          "instrument": "string",
+                          "images": [
+                            {
+                              "url": "string",
+                              "coverType": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "qualityProfile": {
+                    "value": {
+                      "id": 0,
+                      "name": "string",
+                      "upgradeAllowed": true,
+                      "cutoff": 0,
+                      "items": [
+                        {
+                          "id": 0,
+                          "name": "string",
+                          "quality": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "items": [null],
+                          "allowed": true
+                        }
+                      ]
+                    }
+                  },
+                  "metadataProfile": {
+                    "value": {
+                      "id": 0,
+                      "name": "string",
+                      "primaryAlbumTypes": [
+                        {
+                          "primaryAlbumType": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ],
+                      "secondaryAlbumTypes": [
+                        {
+                          "secondaryAlbumType": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ],
+                      "releaseStatuses": [
+                        {
+                          "releaseStatus": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ]
+                    }
+                  },
+                  "albums": {},
+                  "name": "string",
+                  "foreignArtistId": "string"
+                }
+              }
+            },
+            "lastAlbum": {
+              "id": 0,
+              "artistMetadataId": 0,
+              "foreignAlbumId": "string",
+              "oldForeignAlbumIds": ["string"],
+              "title": "string",
+              "overview": "string",
+              "disambiguation": "string",
+              "releaseDate": "2020-02-15T14:59:24.750Z",
+              "images": [
+                {
+                  "url": "string",
+                  "coverType": "string"
+                }
+              ],
+              "links": [
+                {
+                  "url": "string",
+                  "name": "string"
+                }
+              ],
+              "genres": ["string"],
+              "albumType": "string",
+              "secondaryTypes": [
+                {
+                  "id": 0,
+                  "name": "string"
+                }
+              ],
+              "ratings": {
+                "votes": 0,
+                "value": 0.0
+              },
+              "cleanTitle": "string",
+              "profileId": 0,
+              "monitored": true,
+              "anyReleaseOk": true,
+              "lastInfoSync": "2020-02-15T14:59:24.751Z",
+              "added": "2020-02-15T14:59:24.751Z",
+              "addOptions": {
+                "addType": "atring",
+                "searchForNewAlbum": true
+              },
+              "artistMetadata": {
+                "value": {
+                  "id": 0,
+                  "foreignArtistId": "string",
+                  "oldForeignArtistIds": ["string"],
+                  "name": "string",
+                  "aliases": ["string"],
+                  "overview": "string",
+                  "disambiguation": "string",
+                  "type": "string",
+                  "status": "string",
+                  "images": [
+                    {
+                      "url": "string",
+                      "coverType": "string"
+                    }
+                  ],
+                  "links": [
+                    {
+                      "url": "string",
+                      "name": "string"
+                    }
+                  ],
+                  "genres": ["string"],
+                  "ratings": {
+                    "votes": 0,
+                    "value": 0.0
+                  },
+                  "members": [
+                    {
+                      "name": "string",
+                      "instrument": "string",
+                      "images": [
+                        {
+                          "url": "string",
+                          "coverType": "string"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "albumReleases": {},
+              "artist": {
+                "value": {
+                  "id": 0,
+                  "artistMetadataId": 0,
+                  "cleanName": "string",
+                  "sortName": "string",
+                  "monitored": true,
+                  "lastInfoSync": "2020-02-15T14:59:24.751Z",
+                  "path": "string",
+                  "rootFolderPath": "string",
+                  "added": "2020-02-15T14:59:24.751Z",
+                  "qualityProfileId": 0,
+                  "metadataProfileId": 0,
+                  "tags": [0],
+                  "addOptions": {
+                    "monitor": "string",
+                    "albumsToMonitor": ["string"],
+                    "monitored": true,
+                    "searchForMissingAlbums": true
+                  },
+                  "metadata": {
+                    "value": {
+                      "id": 0,
+                      "foreignArtistId": "string",
+                      "oldForeignArtistIds": ["string"],
+                      "name": "string",
+                      "aliases": ["string"],
+                      "overview": "string",
+                      "disambiguation": "string",
+                      "type": "string",
+                      "status": "string",
+                      "images": [
+                        {
+                          "url": "string",
+                          "coverType": "string"
+                        }
+                      ],
+                      "links": [
+                        {
+                          "url": "string",
+                          "name": "string"
+                        }
+                      ],
+                      "genres": [
+                        "string"
+                      ],
+                      "ratings": {
+                        "votes": 0,
+                        "value": 0.0
+                      },
+                      "members": [
+                        {
+                          "name": "string",
+                          "instrument": "string",
+                          "images": [
+                            {
+                              "url": "string",
+                              "coverType": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "qualityProfile": {
+                    "value": {
+                      "id": 0,
+                      "name": "string",
+                      "upgradeAllowed": true,
+                      "cutoff": 0,
+                      "items": [
+                        {
+                          "id": 0,
+                          "name": "string",
+                          "quality": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "items": [null],
+                          "allowed": true
+                        }
+                      ]
+                    }
+                  },
+                  "metadataProfile": {
+                    "value": {
+                      "id": 0,
+                      "name": "string",
+                      "primaryAlbumTypes": [
+                        {
+                          "primaryAlbumType": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ],
+                      "secondaryAlbumTypes": [
+                        {
+                          "secondaryAlbumType": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ],
+                      "releaseStatuses": [
+                        {
+                          "releaseStatus": {
+                            "id": 0,
+                            "name": "string"
+                          },
+                          "allowed": true
+                        }
+                      ]
+                    }
+                  },
+                  "albums": {},
+                  "name": "string",
+                  "foreignArtistId": "string"
+                }
+              }
+            },
+            "images": [
+              {
+                "url": "string",
+                "coverType": "string"
+              }
+            ],
+            "members": [
+              {
+                "name": "string",
+                "instrument": "string",
+                "images": [
+                  {
+                    "url": "string",
+                    "coverType": "string"
+                  }
+                ]
+              }
+            ],
+            "remotePoster": "string",
+            "path": "string",
+            "qualityProfileId": 0,
+            "metadataProfileId": 0,
+            "monitored": true,
+            "rootFolderPath": "string",
+            "genres": ["string"],
+            "cleanName": "string",
+            "sortName": "string",
+            "tags": [0],
+            "added": "2020-02-15T14:59:24.751Z",
+            "addOptions": {
+              "monitor": "string",
+              "albumsToMonitor": ["string"],
+              "monitored": true,
+              "searchForMissingAlbums": true
+            },
+            "ratings": {
+              "votes": 0,
+              "value": 0.0
+            },
+            "statistics": {
+              "albumCount": 0,
+              "trackFileCount": 0,
+              "trackCount": 0,
+              "totalTrackCount": 0,
+              "sizeOnDisk": 0
+            }
+          },
+          "images": [
+            {
+              "url": "string",
+              "coverType": "string"
+            }
+          ],
+          "links": [
+            {
+              "url": "string",
+              "name": "string"
+            }
+          ],
+          "statistics": {
+            "trackFileCount": 0,
+            "trackCount": 0,
+            "totalTrackCount": 0,
+            "sizeOnDisk": 0
+          },
+          "addOptions": {
+            "addType": "string",
+            "searchForNewAlbum": true
+          },
+          "remoteCover": "string",
+          "grabbed": true
+        }
+      ]
+    }
+  ],
+  "monitoringOptions": {
+    "monitor": "string",
+    "albumsToMonitor": ["string"],
+    "monitored": true
+  }
+}

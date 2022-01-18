@@ -51,11 +51,11 @@
         "metadataProfileId": 0,
         "monitored": true,
         "monitorNewItems": "string",
-        "genres": [],
+        "genres": ["string"],
         "cleanName": "string",
         "sortName": "string",
         "sortNameLastFirst": "string",
-        "tags": [],
+        "tags": [0],
         "added": "2021-12-06T22:23:55Z",
         "ratings": {
           "votes": 0,

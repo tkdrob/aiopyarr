@@ -3,21 +3,22 @@
 CONVERT_TO_BOOL = ("downloadForced",)
 
 CONVERT_TO_FLOAT = (
-    "age",
     "ageHours",
     "ageMinutes",
     "preferredWordScore",
 )
 
 CONVERT_TO_INTEGER = (
+    "age",
     "fileId",
     "foreignEditionId",
     "isbn13",
     "protocol",
     "size",
+    "titleSlug",
+    "trackNumber",
     "tvdbId",
     "tvRageId",
-    "titleSlug",
 )
 
 CONVERT_TO_DATETIME = (

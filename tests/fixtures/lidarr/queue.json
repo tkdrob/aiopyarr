@@ -1,0 +1,45 @@
+{
+  "page": 1,
+  "pageSize": 1,
+  "sortKey": "timeleft",
+  "sortDirection": "ascending",
+  "totalRecords": 1,
+  "records": [
+    {
+      "artistId": 0,
+      "albumId": 0,
+      "quality": {
+        "quality": {
+          "id": 0,
+          "name": "string"
+        },
+        "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "size": 0.0,
+      "title": "string",
+      "sizeleft": 0.0,
+      "timeleft": "00:00:00",
+      "estimatedCompletionTime": "2020-02-16T23:34:44.8856492Z",
+      "status": "string",
+      "trackedDownloadStatus": "string",
+      "trackedDownloadState": "string",
+      "statusMessages": [
+        {
+          "title": "string",
+          "messages": ["string"]
+        }
+      ],
+      "downloadId": "string",
+      "protocol": "string",
+      "downloadClient": "string",
+      "indexer": "string",
+      "outputPath": "string",
+      "downloadForced": false,
+      "id": 0
+    }
+  ]
+}

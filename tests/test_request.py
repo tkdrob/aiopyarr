@@ -1,23 +1,21 @@
 """Tests for common methods."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
+import json
 
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 
 from aiopyarr.exceptions import ArrConnectionException
-from aiopyarr.radarr_client import RadarrClient
-from aiopyarr.readarr_client import ReadarrClient
-from aiopyarr.sonarr_client import SonarrClient
-
-from aiopyarr.models.request import (  # isort:skip
+from aiopyarr.lidarr_client import LidarrClient
+from aiopyarr.models.request import (
     Command,
     Commands,
     CustomFilter,
+    DelayProfile,
     Diskspace,
     DownloadClient,
     DownloadClientConfig,
-    Filesystem,
     Health,
     HostConfig,
     ImportListExclusion,
@@ -33,13 +31,17 @@ from aiopyarr.models.request import (  # isort:skip
     RemotePathMapping,
     RootFolder,
     SystemBackup,
+    SystemStatus,
     Tag,
     UIConfig,
-    SystemStatus,
     Update,
 )
+from aiopyarr.radarr_client import RadarrClient
+from aiopyarr.readarr_client import ReadarrClient
+from aiopyarr.sonarr_client import SonarrClient
 
-from . import (  # isort:skip
+from . import (
+    LIDARR_API,
     RADARR_API,
     READARR_API,
     SONARR_API,
@@ -66,10 +68,10 @@ async def test_async_get_diskspace(aresponses):
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: list[Diskspace] = await client.async_get_diskspace()
 
-    assert data[0].freeSpace == 16187217043456
+    assert isinstance(data[0].freeSpace, int)
     assert data[0].label == "DrivePool"
     assert data[0].path == "D:\\"
-    assert data[0].totalSpace == 56009755148288
+    assert isinstance(data[0].totalSpace, int)
 
 
 @pytest.mark.asyncio
@@ -91,10 +93,10 @@ async def test_async_get_root_folders(aresponses):
         data = await client.async_get_root_folders()
 
     assert data[0].path == "C:\\Downloads\\Movies"
-    assert data[0].freeSpace == 282500063232
+    assert isinstance(data[0].freeSpace, int)
     assert data[0].unmappedFolders[0].name == "string"
     assert data[0].unmappedFolders[0].path == "path"
-    assert data[0].id == 1
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -119,30 +121,30 @@ async def test_async_get_host_config(aresponses):
     assert data.apiKey == "string"
     assert data.authenticationMethod == "string"
     assert data.backupFolder == "string"
-    assert data.backupInterval == 0
-    assert data.backupRetention == 0
+    assert isinstance(data.backupInterval, int)
+    assert isinstance(data.backupRetention, int)
     assert data.bindAddress == "string"
     assert data.branch == "string"
     assert data.certificateValidation == "string"
     assert data.consoleLogLevel == "string"
     assert data.enableSsl is True
-    assert data.id == 0
+    assert isinstance(data.id, int)
     assert data.launchBrowser is True
     assert data.logLevel == "string"
     assert data.password == "string"
-    assert data.port == 0
+    assert isinstance(data.port, int)
     assert data.proxyBypassFilter == "string"
     assert data.proxyBypassLocalAddresses is True
     assert data.proxyEnabled is True
     assert data.proxyHostname == "string"
     assert data.proxyPassword == "string"
-    assert data.proxyPort == 0
+    assert isinstance(data.proxyPort, int)
     assert data.proxyType == "string"
     assert data.proxyUsername == "string"
     assert data.sslCertHash == "string"
     assert data.sslCertPassword == "string"
     assert data.sslCertPath == "string"
-    assert data.sslPort == 0
+    assert isinstance(data.sslPort, int)
     assert data.urlBase == "string"
     assert data.updateAutomatically is True
     assert data.updateMechanism == "string"
@@ -170,15 +172,15 @@ async def test_async_get_ui_config(aresponses):
 
     assert data.calendarWeekColumnHeader == "ddd M/D"
     assert data.enableColorImpairedMode is False
-    assert data.firstDayOfWeek == 0
-    assert data.id == 1
+    assert isinstance(data.firstDayOfWeek, int)
+    assert isinstance(data.id, int)
     assert data.longDateFormat == "dddd, MMMM D YYYY"
-    assert data.movieInfoLanguage == 1
+    assert isinstance(data.movieInfoLanguage, int)
     assert data.movieRuntimeFormat == "hoursMinutes"
     assert data.shortDateFormat == "MMM D YYYY"
     assert data.showRelativeDates is True
     assert data.timeFormat == "h(:mm)a"
-    assert data.uiLanguage == 1
+    assert isinstance(data.uiLanguage, int)
 
 
 @pytest.mark.asyncio
@@ -214,7 +216,7 @@ async def test_async_get_system_status(aresponses):
     assert data.isProduction is False
     assert data.isUserInteractive is True
     assert data.isWindows is True
-    assert data.migrationVersion == 180
+    assert isinstance(data.migrationVersion, int)
     assert data.mode == "console"
     assert data.osName == "Windows"
     assert data.osVersion == "10.0.18363.0"
@@ -246,7 +248,7 @@ async def test_async_get_system_backup(aresponses):
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_system_backup()
     assert isinstance(data, list) and isinstance(data[0], SystemBackup)
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
     assert data[0].name == "string"
     assert data[0].path == "string"
     assert data[0].type == "scheduled"
@@ -272,7 +274,7 @@ async def test_async_get_tags(aresponses):
         data = await client.async_get_tags(tagid=1)
 
     assert data.label == "amzn"
-    assert data.id == 1
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio
@@ -280,7 +282,7 @@ async def test_async_get_logs(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDir=descending",
+        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDirection=descending",
         "GET",
         aresponses.Response(
             status=200,
@@ -293,16 +295,16 @@ async def test_async_get_logs(aresponses):
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_logs()
 
-    assert data.page == 1
-    assert data.pageSize == 10
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
     assert data.sortKey == "logger"
     assert data.sortDirection == "default"
-    assert data.totalRecords == 74433
+    assert isinstance(data.totalRecords, int)
     assert data.records[0].time == datetime(2021, 11, 19, 9, 28, 26, 549994)
     assert data.records[0].level == "info"
     assert data.records[0].logger == "BackupService"
     assert data.records[0].message == "Starting Backup"
-    assert data.records[0].id == 3920809
+    assert isinstance(data.records[0].id, int)
     assert data.records[0].exception == "string"
     assert data.records[0].exceptionType == "string"
 
@@ -328,7 +330,7 @@ async def test_get_log_file(aresponses):
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
     assert data[0].contentsUrl == "string"
     assert data[0].downloadUrl == "string"
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -371,7 +373,7 @@ async def test_get_log_file_update(aresponses):
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
     assert data[0].contentsUrl == "string"
     assert data[0].downloadUrl == "string"
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -410,7 +412,7 @@ async def test_async_get_custom_filters(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_custom_filters()
-    assert data[0].id == 10
+    assert isinstance(data[0].id, int)
     assert data[0].type == "string"
     assert data[0].label == "string"
     assert data[0].filters[0].key == "string"
@@ -462,7 +464,7 @@ async def test_async_get_command(aresponses):
     assert data[0].sendUpdatesToClient is False
     assert data[0].updateScheduledTask is True
     assert data[0].lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46)
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -484,25 +486,25 @@ async def test_async_get_download_client(aresponses):
         data = await client.async_get_download_clients(clientid=0)
     assert data.configContract == "string"
     assert data.enable is True
-    assert data.fields[0].order == 0
+    assert isinstance(data.fields[0].order, int)
     assert data.fields[0].name == "string"
     assert data.fields[0].label == "string"
     assert data.fields[0].helpText == "string"
     assert data.fields[0].value == "string"
     assert data.fields[0].type == "string"
     assert data.fields[0].advanced is True
-    assert data.fields[0].selectOptions[0].value == 0
+    assert isinstance(data.fields[0].selectOptions[0].value, int)
     assert data.fields[0].selectOptions[0].name == "Last"
-    assert data.fields[0].selectOptions[0].order == 0
+    assert isinstance(data.fields[0].selectOptions[0].order, int)
     assert data.fields[0].selectOptions[0].dividerAfter is False
-    assert data.id == 0
+    assert isinstance(data.id, int)
     assert data.implementation == "string"
     assert data.implementationName == "string"
     assert data.infoLink == "string"
     assert data.name == "string"
     assert data.protocol == "string"
-    assert data.priority == 0
-    assert data.tags == [0]
+    assert isinstance(data.priority, int)
+    assert isinstance(data.tags[0], int)
 
 
 @pytest.mark.asyncio
@@ -523,12 +525,12 @@ async def test_async_get_download_client_config(aresponses):
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_download_client_config()
     assert data.downloadClientWorkingFolders == "_UNPACK_|_FAILED_"
-    assert data.checkForFinishedDownloadInterval == 10
+    assert isinstance(data.checkForFinishedDownloadInterval, int)
     assert data.enableCompletedDownloadHandling is True
     assert data.removeCompletedDownloads is False
     assert data.autoRedownloadFailed is True
     assert data.removeFailedDownloads is True
-    assert data.id == 1
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio
@@ -536,7 +538,7 @@ async def test_async_get_filesystem(aresponses):
     """Test getting filesystem attributes."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/filesystem",
+        f"/api/{RADARR_API}/filesystem?path=test",
         "GET",
         aresponses.Response(
             status=200,
@@ -547,13 +549,55 @@ async def test_async_get_filesystem(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: Filesystem = await client.async_get_filesystem()
+        data = await client.async_get_filesystem("test")
+    assert data.parent == "string"
     assert data.directories[0].type == "folder"
     assert data.directories[0].name == "app"
     assert data.directories[0].path == "/app/"
-    assert data.directories[0].size == 0
+    assert isinstance(data.directories[0].size, int)
     assert data.directories[0].lastModified == datetime(2020, 1, 4, 3, 2, 20)
     assert data.files == []
+
+
+@pytest.mark.asyncio
+async def test_async_get_filesystem_media_type(aresponses):
+    """Test getting filesystem media type."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/filesystem/type?path=test",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=json.dumps({"type": "folder"}),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        assert await client.async_get_filesystem_media_type("test") == "folder"
+
+
+@pytest.mark.asyncio
+async def test_async_get_filesystem_media(aresponses):
+    """Test getting filesystem media files."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/filesystem/mediafiles?path=test",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/filesystem-mediafiles.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_filesystem_media("test")
+    assert data[0].name == "string"
+    assert data[0].relativePath == "string"
+    assert data[0].path == "string"
 
 
 @pytest.mark.asyncio
@@ -600,11 +644,12 @@ async def test_async_get_import_list_exclusions(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_import_list_exclusions()
+    assert data.artistName == "string"
     assert data.authorName == "string"
     assert data.foreignId == "string"
-    assert data.id == 0
+    assert isinstance(data.id, int)
     assert data.title == "string"
-    assert data.tvdbId == 0
+    assert isinstance(data.tvdbId, int)
 
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
@@ -637,9 +682,9 @@ async def test_async_get_indexer(aresponses):
     assert data.supportsRss is True
     assert data.supportsSearch is True
     assert data.protocol == "string"
-    assert data.priority == 0
+    assert isinstance(data.priority, int)
     assert data.name == "string"
-    assert data.fields[0].order == 0
+    assert isinstance(data.fields[0].order, int)
     assert data.fields[0].name == "string"
     assert data.fields[0].label == "string"
     assert data.fields[0].helpText == "string"
@@ -651,7 +696,7 @@ async def test_async_get_indexer(aresponses):
     assert data.configContract == "string"
     assert data.infoLink == "string"
     assert data.tags == [{}]
-    assert data.id == 0
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio
@@ -672,20 +717,20 @@ async def test_async_get_indexer_configs(aresponses):
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_indexer_configs()
 
-    assert data.minimumAge == 0
-    assert data.maximumSize == 0
-    assert data.retention == 0
-    assert data.rssSyncInterval == 360
+    assert isinstance(data.minimumAge, int)
+    assert isinstance(data.maximumSize, int)
+    assert isinstance(data.retention, int)
+    assert isinstance(data.rssSyncInterval, int)
     assert data.preferIndexerFlags is True
-    assert data.availabilityDelay == 0
+    assert isinstance(data.availabilityDelay, int)
     assert data.allowHardcodedSubs is False
     assert data.whitelistedHardcodedSubs == ""
-    assert data.id == 1
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio
 async def test_async_get_languages(aresponses):
-    """Test getting import list exclusions."""
+    """Test getting languages."""
     aresponses.add(
         "127.0.0.1:8787",
         f"/api/{READARR_API}/language",
@@ -700,7 +745,7 @@ async def test_async_get_languages(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_languages()
-    assert data.id == -1
+    assert isinstance(data.id, int)
     assert data.name == "Any"
     assert data.nameLower == "any"
 
@@ -2232,9 +2277,6 @@ async def test_async_get_localization(aresponses):
     async with ClientSession():
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
 
-    with pytest.raises(NotImplementedError):
-        await client.async_get_localization()
-
 
 @pytest.mark.asyncio
 async def test_async_get_image(aresponses):
@@ -2281,6 +2323,48 @@ async def test_async_get_image(aresponses):
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_get_image(imageid=0)
 
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/mediacover/artist/0/poster.jpg",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_get_image(imageid=0, size="medium")
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/mediacover/artist/0/logo.png",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_get_image(imageid=0, imagetype="logo")
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/mediacover/album/0/logo.png",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_get_image(imageid=0, imagetype="logo", alt=True)
+
 
 @pytest.mark.asyncio
 async def test_async_get_author_image(aresponses):
@@ -2297,7 +2381,7 @@ async def test_async_get_author_image(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_image(0, size="small", author=True)
+        await client.async_get_image(0, size="small", alt=True)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2311,7 +2395,7 @@ async def test_async_get_author_image(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_image(0, size="medium", author=True)
+        await client.async_get_image(0, size="medium", alt=True)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2325,7 +2409,7 @@ async def test_async_get_author_image(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_image(0, author=True)
+        await client.async_get_image(0, alt=True)
 
 
 @pytest.mark.asyncio
@@ -2409,12 +2493,12 @@ async def test_async_get_media_management_configs(aresponses):
     assert data.episodeTitleRequired == "always"
     assert data.extraFileExtensions == "srt,mp4,avi,mkv"
     assert data.fileDate == "string"
-    assert data.id == 1
+    assert isinstance(data.id, int)
     assert data.importExtraFiles is True
-    assert data.minimumFreeSpaceWhenImporting == 100
+    assert isinstance(data.minimumFreeSpaceWhenImporting, int)
     assert data.pathsDefaultStatic is False
     assert data.recycleBin == "/recycle/"
-    assert data.recycleBinCleanupDays == 7
+    assert isinstance(data.recycleBinCleanupDays, int)
     assert data.rescanAfterRefresh == "afterManual"
     assert data.setPermissionsLinux is False
     assert data.skipFreeSpaceCheckWhenImporting is False
@@ -2441,7 +2525,7 @@ async def test_async_get_metadata_config(aresponses):
 
     assert data[0].enable is True
     assert data[0].name == "string"
-    assert data[0].fields[0].order == 0
+    assert isinstance(data[0].fields[0].order, int)
     assert data[0].fields[0].name == "string"
     assert data[0].fields[0].label == "string"
     assert data[0].fields[0].helpText == "string"
@@ -2454,7 +2538,7 @@ async def test_async_get_metadata_config(aresponses):
     assert data[0].configContract == "string"
     assert data[0].infoLink == "string"
     assert data[0].tags == [0]
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -2474,17 +2558,17 @@ async def test_async_get_quality_definitions(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_get_quality_definitions()
-    assert data.quality.id == 0
+    assert isinstance(data.quality.id, int)
     assert data.quality.name == "string"
     assert data.quality.source == "string"
-    assert data.quality.resolution == 0
+    assert isinstance(data.quality.resolution, int)
     assert data.quality.modifier == "string"
     assert data.title == "string"
-    assert data.weight == 0
-    assert data.minSize == 0
-    assert data.maxSize == 0.0
-    assert data.preferredSize == 0
-    assert data.id == 0
+    assert isinstance(data.weight, int)
+    assert isinstance(data.minSize, int)
+    assert isinstance(data.maxSize, float)
+    assert isinstance(data.preferredSize, int)
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio
@@ -2507,30 +2591,30 @@ async def test_async_get_quality_profiles(aresponses):
 
     assert data[0].name == "string"
     assert data[0].upgradeAllowed is True
-    assert data[0].cutoff == 0
-    assert data[0].items[0].quality.id == 0
+    assert isinstance(data[0].cutoff, int)
+    assert isinstance(data[0].items[0].quality.id, int)
     assert data[0].items[0].quality.name == "string"
     assert data[0].items[0].quality.source == "string"
-    assert data[0].items[0].quality.resolution == 0
+    assert isinstance(data[0].items[0].quality.resolution, int)
     assert data[0].items[0].quality.modifier == "string"
     assert data[0].items[0].items == []
     assert data[0].items[0].allowed is False
     assert data[0].items[1].name == "string"
-    assert data[0].items[1].items[0].quality.id == 0
+    assert isinstance(data[0].items[1].items[0].quality.id, int)
     assert data[0].items[1].items[0].quality.name == "string"
     assert data[0].items[1].items[0].quality.source == "string"
-    assert data[0].items[1].items[0].quality.resolution == 0
+    assert isinstance(data[0].items[1].items[0].quality.resolution, int)
     assert data[0].items[1].items[0].quality.modifier == "string"
     assert data[0].items[1].items[0].items == []
     assert data[0].items[1].items[0].allowed is True
     assert data[0].items[1].allowed is True
-    assert data[0].items[1].id == 0
-    assert data[0].minFormatScore == 0
-    assert data[0].cutoffFormatScore == 0
+    assert isinstance(data[0].items[1].id, int)
+    assert isinstance(data[0].minFormatScore, int)
+    assert isinstance(data[0].cutoffFormatScore, int)
     assert data[0].formatItems == []
-    assert data[0].language.id == 0
+    assert isinstance(data[0].language.id, int)
     assert data[0].language.name == "string"
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -2550,9 +2634,9 @@ async def test_async_get_queue_status(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data: QueueStatus = await client.async_get_queue_status()
-    assert data.totalCount == 0
-    assert data.count == 0
-    assert data.unknownCount == 0
+    assert isinstance(data.totalCount, int)
+    assert isinstance(data.count, int)
+    assert isinstance(data.unknownCount, int)
     assert data.errors is True
     assert data.warnings is True
     assert data.unknownErrors is True
@@ -2580,17 +2664,14 @@ async def test_async_get_release_profiles(aresponses):
     assert data[0].required == "string"
     assert data[0].ignored == "string"
     assert data[0].preferred[0].key == "string"
-    assert data[0].preferred[0].value == 0
+    assert isinstance(data[0].preferred[0].value, int)
     assert data[0].includePreferredWhenRenaming is False
-    assert data[0].indexerId == 0
-    assert data[0].tags == [0]
-    assert data[0].id == 0
+    assert isinstance(data[0].indexerId, int)
+    assert isinstance(data[0].tags[0], int)
+    assert isinstance(data[0].id, int)
 
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-
-    with pytest.raises(NotImplementedError):
-        await client.async_get_release_profiles()
 
 
 @pytest.mark.asyncio
@@ -2614,7 +2695,7 @@ async def test_async_get_remote_path_mappings(aresponses):
     assert data[0].host == "localhost"
     assert data[0].remotePath == "C:\\"
     assert data[0].localPath == "A:\\Movies\\"
-    assert data[0].id == 1
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -2637,12 +2718,12 @@ async def test_async_get_system_tasks(aresponses):
 
     assert data[0].name == "string"
     assert data[0].taskName == "string"
-    assert data[0].interval == 0
+    assert isinstance(data[0].interval, int)
     assert data[0].lastExecution == datetime(2020, 2, 8, 14, 24, 40, 993044)
     assert data[0].lastStartTime == datetime(2020, 2, 8, 14, 24, 40, 993044)
     assert data[0].nextExecution == datetime(2020, 2, 8, 20, 24, 40, 993044)
     assert data[0].lastDuration == "00:00:00.1976902"
-    assert data[0].id == 0
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -2818,6 +2899,24 @@ async def test_async_restore_system_backup(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_restore_system_backup(0)
+
+
+@pytest.mark.asyncio
+async def test_async_upload_system_backup(aresponses):
+    """Test uploading system backup."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/system/backup/restore/upload",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_upload_system_backup("test")
 
 
 @pytest.mark.asyncio
@@ -3145,15 +3244,17 @@ async def test_async_add_import_list_exclusion(aresponses):
         ),
         match_querystring=True,
     )
+    data = ImportListExclusion({"id": 0})
+    data.id = 0
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_import_list_exclusion(ImportListExclusion("test"))
+        data = await client.async_add_import_list_exclusion(data)
     assert isinstance(data, ImportListExclusion)
 
 
 @pytest.mark.asyncio
 async def test_async_edit_indexer(aresponses):
-    """Test editing import list exclusion."""
+    """Test editing indexer."""
     aresponses.add(
         "127.0.0.1:8787",
         f"/api/{READARR_API}/indexer",
@@ -3172,7 +3273,7 @@ async def test_async_edit_indexer(aresponses):
 
 @pytest.mark.asyncio
 async def test_async_delete_indexer(aresponses):
-    """Test deleting import list exclusion."""
+    """Test deleting indexer."""
     aresponses.add(
         "127.0.0.1:8787",
         f"/api/{READARR_API}/indexer/0",
@@ -3190,7 +3291,7 @@ async def test_async_delete_indexer(aresponses):
 
 @pytest.mark.asyncio
 async def test_async_add_indexer(aresponses):
-    """Test adding import list exclusion."""
+    """Test adding indexer."""
     aresponses.add(
         "127.0.0.1:8787",
         f"/api/{READARR_API}/indexer",
@@ -3508,11 +3609,30 @@ async def test_async_edit_quality_profile(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_async_add_quality_profile(aresponses):
+    """Test adding quality profile."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/qualityprofile",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_quality_profile(QualityProfile("test"))
+    assert isinstance(data, QualityProfile)
+
+
+@pytest.mark.asyncio
 async def test_async_delete_queue(aresponses):
     """Test deleting from queue."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/queue/0?removeFromClient=True&blocklist=False",
+        f"/api/{RADARR_API}/queue/0?removeFromClient=True&blocklist=False&skipReDownload=False",
         "DELETE",
         aresponses.Response(
             status=200,
@@ -3526,7 +3646,7 @@ async def test_async_delete_queue(aresponses):
 
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/queue/bulk?removeFromClient=True&blocklist=False",
+        f"/api/{RADARR_API}/queue/bulk?removeFromClient=True&blocklist=False&skipReDownload=False",
         "DELETE",
         aresponses.Response(
             status=200,
@@ -3751,3 +3871,141 @@ async def test_async_system_restart(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
     assert await client.async_system_restart() is True
+
+
+@pytest.mark.asyncio
+async def test_async_get_delay_profiles(aresponses):
+    """Test getting delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/delayprofile.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_delay_profiles()
+    assert data[0].enableUsenet is True
+    assert data[0].enableTorrent is True
+    assert data[0].preferredProtocol == "string"
+    assert isinstance(data[0].usenetDelay, int)
+    assert isinstance(data[0].torrentDelay, int)
+    assert data[0].bypassIfHighestQuality is True
+    assert isinstance(data[0].order, int)
+    assert isinstance(data[0].tags[0], int)
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_add_delay_profile(aresponses):
+    """Test adding delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_delay_profile(DelayProfile("test"))
+    assert isinstance(data, DelayProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_delay_profile(aresponses):
+    """Test editing delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_edit_delay_profile(DelayProfile({"id": 0}))
+    assert isinstance(data, DelayProfile)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_delay_profile(aresponses):
+    """Test deleting delay profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_delay_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_delay_profile_reorder(aresponses):
+    """Test delay profile reorder."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/delayprofile/reorder/0?afterId=1",
+        "PUT",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delay_profile_reorder(0, afterid=1)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_metadata_profile(aresponses):
+    """Test deleting metadata profile."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/metadataprofile/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_delete_metadata_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_command_other(aresponses):
+    """Test running nonstandard command."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/test",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_command_other("test")

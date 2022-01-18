@@ -1,0 +1,45 @@
+[
+  {
+    "guid": "string",
+    "quality": {
+      "quality": {
+          "id": 0,
+          "name": "string"
+      },
+      "revision": {
+          "version": 0,
+          "real": 0,
+          "isRepack": false
+      }
+    },
+    "qualityWeight": 0,
+    "age": 0,
+    "ageHours": 0.0,
+    "ageMinutes": 0.0,
+    "size": 0,
+    "indexerId": 0,
+    "indexer": "string",
+    "releaseHash": "string",
+    "title": "string",
+    "discography": false,
+    "sceneSource": false,
+    "artistName": "string",
+    "albumTitle": "string",
+    "approved": false,
+    "temporarilyRejected": false,
+    "rejected": true,
+    "rejections": ["string"],
+    "publishDate": "2020-02-16T20:08:16Z",
+    "commentUrl": "string",
+    "downloadUrl": "string",
+    "infoUrl": "string",
+    "downloadAllowed": true,
+    "releaseWeight": 0,
+    "preferredWordScore": 0,
+    "magnetUrl": "string",
+    "infoHash": "string",
+    "seeders": 0,
+    "leechers": 0,
+    "protocol": "string"
+  }
+]

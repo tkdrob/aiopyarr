@@ -1,15 +1,14 @@
 """PyArr base model."""
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from enum import Enum
+import json
 from re import search, sub
 from typing import Any
 
 from ..const import LOGGER
-
-from .const import (  # isort:skip
+from .const import (
     CONVERT_TO_BOOL,
     CONVERT_TO_DATETIME,
     CONVERT_TO_FLOAT,
@@ -17,17 +16,19 @@ from .const import (  # isort:skip
 )
 
 
-def get_datetime_from_string(string: str) -> datetime | None:
-    """Convert string to datetime object."""
-    if string is not None:
-        if search(r"^\d{4}-\d{2}-\d{2}$", string):
-            return datetime.strptime(string, "%Y-%m-%d")
-        if search(r".\d{7}Z$", string):
-            string = sub(r"\dZ", "Z", string)
-        elif not search(r"\.\d+Z$", string):
-            string = sub("Z", ".000000Z", string)
-        return datetime.strptime(string, "%Y-%m-%dT%H:%M:%S.%fZ")
-    return None
+def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
+    """Convert input to datetime object."""
+    if isinstance(_input, str):
+        if _input.isnumeric():
+            return int(_input)
+        if search(r"^\d{4}-\d{2}-\d{2}$", _input):
+            return datetime.strptime(_input, "%Y-%m-%d")
+        if search(r".\d{7}Z$", _input):
+            _input = sub(r"\dZ", "Z", _input)
+        elif not search(r"\.\d+Z$", _input):
+            _input = sub("Z", ".000000Z", _input)
+        return datetime.strptime(_input, "%Y-%m-%dT%H:%M:%S.%fZ")
+    return _input
 
 
 class ApiJSONEncoder(json.JSONEncoder):
@@ -103,9 +104,7 @@ class BaseModel:
                     pass
         for key in CONVERT_TO_DATETIME:
             if hasattr(self, key) and self.__getattribute__(key) is not None:
-                self.__setattr__(
-                    key, get_datetime_from_string(self.__getattribute__(key))
-                )
+                self.__setattr__(key, get_datetime(self.__getattribute__(key)))
 
     @property
     def attributes(self) -> dict[str, Any]:

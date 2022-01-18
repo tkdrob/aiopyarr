@@ -1,7 +1,7 @@
 """Tests for host configuration."""
 # pylint:disable=protected-access
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
 from aiopyarr.radarr_client import RadarrClient

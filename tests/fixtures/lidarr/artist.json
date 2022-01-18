@@ -1,0 +1,101 @@
+{
+  "status": "string",
+  "ended": true,
+  "artistName": "string",
+  "foreignArtistId": "string",
+  "tadbId": 0,
+  "discogsId": 0,
+  "overview": "string",
+  "artistType": "string",
+  "disambiguation": "string",
+  "links": [
+    {
+      "url": "string",
+      "name": "string"
+    }
+  ],
+  "lastAlbum": {
+    "artistMetadataId": 0,
+    "foreignAlbumId": "string",
+    "oldForeignAlbumIds": ["string"],
+    "title": "string",
+    "overview": "string",
+    "disambiguation": "string",
+    "releaseDate": "2010-08-23T00:00:00Z",
+    "images": [
+      {
+        "url": "string",
+        "coverType": "string",
+        "extension": "string"
+      }
+    ],
+    "links": [
+      {
+        "url": "string",
+        "name": "string"
+      }
+    ],
+    "genres": ["string"],
+    "albumType": "string",
+    "secondaryTypes": [
+      {
+        "id": 0,
+        "name": "string"
+      }
+    ],
+    "ratings": {
+      "votes": 0,
+      "value": 0.0
+    },
+    "cleanTitle": "string",
+    "profileId": 0,
+    "monitored": true,
+    "anyReleaseOk": true,
+    "lastInfoSync": "2021-12-27T10:52:27.2200393Z",
+    "added": "0001-01-01T00:00:00Z",
+    "addOptions": {
+      "addType": "string",
+      "searchForNewAlbum": false
+    },
+    "artistMetadata": {
+      "isLoaded": false
+    },
+    "albumReleases": {
+      "isLoaded": false
+    },
+    "artist": {
+      "isLoaded": false
+    },
+    "id": 0
+  },
+  "images": [
+    {
+      "url": "string",
+      "coverType": "string",
+      "extension": "string"
+    }
+  ],
+  "path": "string",
+  "qualityProfileId": 0,
+  "metadataProfileId": 0,
+  "monitored": true,
+  "rootFolderPath": "string",
+  "genres": ["string"],
+  "cleanName": "string",
+  "sortName": "string",
+  "tags": [0],
+  "added": "2021-08-21T15:35:54.398878Z",
+  "ratings": {
+    "votes": 0,
+    "value": 0.0
+  },
+  "statistics": {
+    "albumCount": 0,
+    "trackFileCount": 0,
+    "trackCount": 0,
+    "totalTrackCount": 0,
+    "sizeOnDisk": 0,
+    "percentOfTracks": 0.0
+  },
+  "id": 0
+}

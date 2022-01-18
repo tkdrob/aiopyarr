@@ -4,26 +4,49 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
+from datetime import datetime
 from json import dumps
 from typing import Any, Text
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
 
-from .const import ATTR_DATA, HEADERS, LOGGER, HTTPMethod
+from .const import (
+    ALL,
+    ASCENDING,
+    ATTR_DATA,
+    DESCENDING,
+    HEADERS,
+    IS_VALID,
+    LOGGER,
+    PAGE,
+    PAGE_SIZE,
+    PATH,
+    SORT_DIRECTION,
+    SORT_KEY,
+    HTTPMethod,
+)
 from .decorator import api_command
+from .exceptions import (
+    ArrAuthenticationException,
+    ArrConnectionException,
+    ArrException,
+    ArrResourceNotFound,
+)
 from .models.host_configuration import PyArrHostConfiguration
-from .models.response import PyArrResponse
-
-from .models.request import (  # isort:skip
+from .models.request import (
     Command,
     Commands,
     CustomFilter,
+    DelayProfile,
     Diskspace,
     DownloadClient,
     DownloadClientConfig,
     Filesystem,
+    FilesystemFolder,
     Health,
     HostConfig,
+    ImageSize,
+    ImageType,
     ImportListExclusion,
     Indexer,
     IndexerConfig,
@@ -46,13 +69,7 @@ from .models.request import (  # isort:skip
     UIConfig,
     Update,
 )
-
-from .exceptions import (  # isort:skip
-    ArrAuthenticationException,
-    ArrConnectionException,
-    ArrException,
-    ArrResourceNotFound,
-)
+from .models.response import PyArrResponse
 
 
 class RequestClient:  # pylint: disable=too-many-public-methods
@@ -133,11 +150,16 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Send API request."""
         command = args[0] if isinstance(args[0], str) else args[1]
         url = self._host.api_url(command)
-        json = dumps(data, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+        json = dumps(
+            data,
+            default=lambda o: o.isoformat() if isinstance(o, datetime) else o.__dict__,
+            sort_keys=True,
+            indent=2,
+        )
         try:
             request = await self._session.request(
                 method=method.value,
-                url=url,
+                url=self._host.api_url(command),
                 params=params,
                 json=json,
                 verify_ssl=self._host.verify_ssl,
@@ -260,10 +282,10 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             filter_value: Value of the filter.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
-            "sortDir": "ascending" if ascending is True else "descending",
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_KEY: sort_key,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
         }
         return await self._async_request("log", params=params, datatype=Logs)
 
@@ -278,9 +300,14 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     async def async_command(self, command: Commands) -> Command:
         """Send a command to the API."""
+        cmd = None
+        if command == Commands.CLEAR_BLOCKLIST.value and hasattr(
+            self, "async_get_albums"
+        ):
+            cmd = "ClearBlacklist"
         return await self._async_request(
             "command",
-            data={"name": command},
+            data={"name": cmd if cmd else command.value},
             datatype=Command,
             method=HTTPMethod.POST,
         )
@@ -321,7 +348,14 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             f"system/backup/restore/{backupid}", method=HTTPMethod.POST
         )
 
-    # Upload system backup not working
+    # Curently not working with postman, a second request must be made
+    # also requires Content-Type: multipart/form-data
+    # https://stackoverflow.com/questions/57553738/how-to-aiohttp-request-post-files-list-python-requests-module
+    async def async_upload_system_backup(self, data: bytes) -> None:
+        """Upload a system backup."""
+        return await self._async_request(
+            "system/backup/restore/upload", data=data, method=HTTPMethod.POST
+        )
 
     async def async_delete_system_backup(self, backupid: int) -> None:
         """Delete a system backup."""
@@ -445,13 +479,13 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test download client configurations."""
         _res = await self._async_request(
-            f"downloadclient/test{'all' if data is None else ''}",
+            f"downloadclient/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
@@ -477,11 +511,30 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    @api_command("filesystem", datatype=Filesystem)
-    async def async_get_filesystem(self) -> Filesystem:
+    async def async_get_filesystem(self, path: str) -> Filesystem:
         """Get filesystem attributes."""
+        return await self._async_request(
+            "filesystem",
+            params={PATH: path},
+            datatype=Filesystem,
+        )
 
-    # filesystem/type / filesystem/mediafiles, use above method
+    async def async_get_filesystem_media_type(self, path: str) -> str:
+        """Return whether queried path is a file or folder."""
+        return (
+            await self._async_request(
+                "filesystem/type",
+                params={PATH: path},
+            )
+        )["type"]
+
+    async def async_get_filesystem_media(self, path: str) -> list[FilesystemFolder]:
+        """Get attributes of specified mediafiles path."""
+        return await self._async_request(
+            "filesystem/mediafiles",
+            params={PATH: path},
+            datatype=FilesystemFolder,
+        )
 
     @api_command("health", datatype=Health)
     async def async_get_failed_health_checks(self) -> Health:
@@ -496,8 +549,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     # importlist/schema, not that useful
 
-    # importlist/action/{name} cannot get working
-
+    # Readarr asks for MusicBrainz id, api programming error
+    # Radarr has exclusion in UI, but no endpoint implemented
     async def async_get_import_list_exclusions(
         self, clientid: int | None = None
     ) -> ImportListExclusion | list[ImportListExclusion]:
@@ -510,7 +563,10 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_edit_import_list_exclusion(
         self, data: ImportListExclusion
     ) -> ImportListExclusion:
-        """Edit import list exclusion."""
+        """Edit import list exclusion.
+
+        foreignId must be different than existing or the call will fail
+        """
         return await self._async_request(
             "importlistexclusion",
             data=data,
@@ -529,6 +585,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         self, data: ImportListExclusion
     ) -> ImportListExclusion:
         """Add import list exclusion."""
+
+        if data.id is not None:
+            delattr(data, "id")
         return await self._async_request(
             "importlistexclusion",
             data=data,
@@ -577,17 +636,17 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_test_indexers(self, data: Indexer | None = None) -> bool:
         """Test an indexer configuration."""
         _res = await self._async_request(
-            f"indexer/test{'all' if data is None else ''}",
+            f"indexer/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
-    # indexer/action/{name} cannot get working
+    # indexer/action/{name} not yet confirmed
 
     async def async_get_indexer_configs(
         self, indexerid: int | None = None
@@ -625,39 +684,49 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get localization strings."""
         return await self._async_request("localization", datatype=Localization)
 
-    # manualimport, cannot get working
+    # manualimport GET / POST, not yet confirmed
 
     async def async_get_image(
         self,
         imageid: int,
-        imagetype: str = "poster",
-        size: str = "large",
-        author: bool = False,
+        imagetype: ImageType = ImageType.POSTER,
+        size: ImageSize = ImageSize.LARGE,
+        alt: bool = False,
     ) -> bytes:
-        """Get image from movie.
+        """Get image from application.
 
-        imagetype: poster, banner, or fanart
+        imagetype: poster, banner, or fanart (logo only for Lidarr)
         size: large, medium, small
               pixel size: None for full size (500, 250), (70, 35), (360, 180)
-        authorid: Include to get author only applies to Readarr
+              Does not apply to Lidarr
+        alt: True to get author (Readarr), album (Lidarr)
         """
-        value = [
-            value * factor
-            for key, factor in {"small": 1, "medium": 2, "large": 0}.items()
+        val = [
+            val * factor
+            for key, factor in {
+                ImageSize.LARGE: 0,
+                ImageSize.MEDIUM: 2,
+                ImageSize.SMALL: 1,
+            }.items()
             if key == size
-            for key, value in {"poster": 250, "banner": 35, "fanart": 180}.items()
-            if imagetype == key
+            for x, val in {
+                ImageType.BANNER: 35,
+                ImageType.FANART: 180,
+                ImageType.LOGO: 0,
+                ImageType.POSTER: 250,
+            }.items()
+            if imagetype == x
         ][0]
-        _val = (
-            "author/"
-            if author
-            else "book/"
-            if hasattr(self, "async_get_author")
-            else ""
-        )
-        _imgsize = f"-{value}" if size != "large" else ""
+        _val = ""
+        if hasattr(self, "async_get_albums"):
+            _val = "album/" if alt else "artist/"
+        elif hasattr(self, "async_get_author"):
+            _val = "author/" if alt else "book/"
+        _imgsize = f"-{val}" if size is not ImageSize.LARGE else ""
+        _imgsize = "" if hasattr(self, "async_get_albums") else _imgsize
 
-        cmd = f"mediacover/{_val}{imageid}/{imagetype}{_imgsize}.jpg"
+        _ext = "png" if imagetype == ImageType.LOGO else "jpg"
+        cmd = f"mediacover/{_val}{imageid}/{imagetype}{_imgsize}.{_ext}"
         return await self._async_request(cmd)
 
     async def async_get_media_management_configs(
@@ -715,17 +784,17 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_test_metadata(self, data: MetadataConfig | None = None) -> bool:
         """Test a metadata configuration."""
         _res = await self._async_request(
-            f"metadata/test{'all' if data is None else ''}",
+            f"metadata/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
-    # metadata/action/{name} cannot get working
+    # metadata/action/{name} not yet confirmed
 
     async def async_delete_notification(self, notifyid: int) -> None:
         """Delete a notification."""
@@ -740,11 +809,11 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Test all notification configurations."""
         _res = await self._async_request("notification/testall", method=HTTPMethod.POST)
         for item in _res:
-            if item["isValid"] is False:
+            if item[IS_VALID] is False:
                 return False
         return True
 
-    # notification/action/{name} cannot get working
+    # notification/action/{name} not yet confirmed
 
     async def async_get_quality_definitions(
         self, qualityid: int | None = None
@@ -777,13 +846,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=QualityProfile,
         )
 
-    async def async_delete_quality_profile(self, profileid: int) -> None:
-        """Delete quality profile."""
-        return await self._async_request(
-            f"qualityprofile/{profileid}",
-            method=HTTPMethod.DELETE,
-        )
-
     async def async_edit_quality_profile(self, data: QualityProfile) -> QualityProfile:
         """Edit quality profile."""
         return await self._async_request(
@@ -793,6 +855,22 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
+    async def async_add_quality_profile(self, data: QualityProfile) -> QualityProfile:
+        """Add quality profile."""
+        return await self._async_request(
+            "qualityprofile",
+            data=data,
+            datatype=QualityProfile,
+            method=HTTPMethod.POST,
+        )
+
+    async def async_delete_quality_profile(self, profileid: int) -> None:
+        """Delete quality profile."""
+        return await self._async_request(
+            f"qualityprofile/{profileid}",
+            method=HTTPMethod.DELETE,
+        )
+
     # qualityprofile/schema, not that useful
 
     async def async_delete_queue(
@@ -800,6 +878,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         ids: int | list[int],
         remove_from_client: bool = True,
         blocklist: bool = False,
+        skipredownload: bool = False,
     ) -> None:
         """Remove an item from the queue and optionally blocklist it.
 
@@ -807,12 +886,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             ids: id of the item to be removed or mass deletion with a list
             remove_from_client: Remove the item from the client.
             blocklist: Add the item to the blocklist.
+            skipredownload: Prevent application from replacing with new result
+                Only documented in Readarr/Lidarr, may not work for others.
         """
         return await self._async_request(
             f"queue/{'bulk' if isinstance(ids, list) else ids}",
             params={
                 "removeFromClient": str(remove_from_client),
                 "blocklist": str(blocklist),
+                "skipReDownload": str(skipredownload),
             },
             data={"ids": ids} if isinstance(ids, list) else None,
             method=HTTPMethod.DELETE,
@@ -936,3 +1018,72 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     @api_command("update", datatype=Update)
     async def async_get_software_update_info(self) -> list[Update]:
         """Get information about software updates."""
+
+    async def async_get_delay_profiles(
+        self, profileid: int | None = None
+    ) -> DelayProfile | list[DelayProfile]:
+        """Get delay profiles."""
+        return await self._async_request(
+            f"delayprofile{'' if profileid is None else f'/{profileid}'}",
+            datatype=DelayProfile,
+        )
+
+    async def async_add_delay_profile(self, data: DelayProfile) -> DelayProfile:
+        """Add delay profile."""
+        return await self._async_request(
+            "delayprofile",
+            data=data,
+            datatype=DelayProfile,
+            method=HTTPMethod.POST,
+        )
+
+    async def async_edit_delay_profile(self, data: DelayProfile) -> DelayProfile:
+        """Edit delay profile."""
+        return await self._async_request(
+            "delayprofile",
+            data=data,
+            datatype=DelayProfile,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_delete_delay_profile(self, profileid: int) -> None:
+        """Delete delay profile."""
+        return await self._async_request(
+            f"delayprofile/{profileid}", method=HTTPMethod.DELETE
+        )
+
+    async def async_delay_profile_reorder(
+        self, profileid: int, afterid: int | None = None
+    ) -> list[DelayProfile]:
+        """Reorder delay profile."""
+        return await self._async_request(
+            f"delayprofile/reorder/{profileid}",
+            params=None if afterid is None else {"afterId": afterid},
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_delete_metadata_profile(self, profileid: int) -> None:
+        """Delete a metadata profile."""
+        return await self._async_request(
+            f"metadataprofile/{profileid}",
+            method=HTTPMethod.DELETE,
+        )
+
+    async def async_command_other(
+        self,
+        command: str,
+        params: dict[str, Any] | None = None,
+        data: dict[str, Any] | list[dict[str, Any]] | None = None,
+        method: HTTPMethod = HTTPMethod.GET,
+    ) -> Any:
+        """Run a command not already defined.
+
+        Useful if new endpoints become available/known
+        or if the user insists on using schema query endpoints
+        """
+        return await self._async_request(
+            command,
+            params=params,
+            data=data,
+            method=method,
+        )

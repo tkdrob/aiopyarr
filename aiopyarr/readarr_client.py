@@ -2,15 +2,30 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING
+
+from aiohttp.client import ClientSession
 
 from aiopyarr.models.request import Command, RootFolder
 
-from .const import HTTPMethod
+from .const import (
+    ALL,
+    ASCENDING,
+    AUTHOR_ID,
+    BOOK_ID,
+    DESCENDING,
+    IS_VALID,
+    NOTIFICATION,
+    PAGE,
+    PAGE_SIZE,
+    SORT_DIRECTION,
+    SORT_KEY,
+    TERM,
+    TITLE,
+    HTTPMethod,
+)
 from .decorator import api_command
-from .request_client import RequestClient
-
-from .models.readarr import (  # isort:skip
+from .models.host_configuration import PyArrHostConfiguration
+from .models.readarr import (
     ReadarrAuthor,
     ReadarrAuthorEditor,
     ReadarrAuthorLookup,
@@ -19,11 +34,10 @@ from .models.readarr import (  # isort:skip
     ReadarrBookFile,
     ReadarrBookFileEditor,
     ReadarrBookLookup,
-    ReadarrBookTypes,
     ReadarrBookshelf,
+    ReadarrBookTypes,
     ReadarrCalendar,
     ReadarrCommands,
-    ReadarrDelayProfile,
     ReadarrDevelopmentConfig,
     ReadarrHistory,
     ReadarrImportList,
@@ -43,11 +57,7 @@ from .models.readarr import (  # isort:skip
     ReadarrWantedCutoff,
     ReadarrWantedMissing,
 )
-
-if TYPE_CHECKING:
-    from aiohttp.client import ClientSession
-
-    from .models.host_configuration import PyArrHostConfiguration
+from .request_client import RequestClient
 
 
 class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
@@ -98,7 +108,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_author_lookup(self, term: str) -> list[ReadarrAuthorLookup]:
         """Search for new authors using a term."""
         return await self._async_request(
-            "author/lookup", params={"term": term}, datatype=ReadarrAuthorLookup
+            "author/lookup", params={TERM: term}, datatype=ReadarrAuthorLookup
         )
 
     async def async_add_author(self, data: ReadarrAuthor) -> ReadarrAuthor:
@@ -114,7 +124,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"author{'' if isinstance(data, ReadarrAuthor) else '/editor'}",
             data=data,
-            datatype=ReadarrAuthor if isinstance(data, ReadarrAuthor) else None,
+            datatype=ReadarrAuthor,
             method=HTTPMethod.PUT,
         )
 
@@ -189,7 +199,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Send a command to Readarr."""
         return await self._async_request(
             "command",
-            data={"name": command},
+            data={"name": command.value},
             datatype=Command,
             method=HTTPMethod.POST,
         )
@@ -211,10 +221,10 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             indexer, path, message, or ratings.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
         }
         return await self._async_request(
             "blocklist",
@@ -225,7 +235,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_wanted_missing(  # includeAuthor, sortDir not working
         self,
         recordid: int | None = None,
-        sortkey: str = "title",
+        sortkey: str = TITLE,
         page: int = 1,
         page_size: int = 10,
     ) -> ReadarrWantedMissing | ReadarrBook:
@@ -237,9 +247,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             page_size: Number of items per page.
         """
         params = {
-            "sortKey": sortkey,
-            "page": page,
-            "pageSize": page_size,
+            SORT_KEY: sortkey,
+            PAGE: page,
+            PAGE_SIZE: page_size,
         }
         return await self._async_request(
             f"wanted/missing{'' if recordid is None else f'/{recordid}'}",
@@ -250,7 +260,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_wanted_cutoff(  # includeAuthor, sortDir not working
         self,
         recordid: int | None = None,
-        sortkey: str = "title",
+        sortkey: str = TITLE,
         page: int = 1,
         page_size: int = 10,
     ) -> ReadarrWantedCutoff | ReadarrBook:
@@ -262,9 +272,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             page_size: Number of items per page.
         """
         params = {
-            "sortKey": sortkey,
-            "page": page,
-            "pageSize": page_size,
+            SORT_KEY: sortkey,
+            PAGE: page,
+            PAGE_SIZE: page_size,
         }
         return await self._async_request(
             f"wanted/cutoff{'' if recordid is None else f'/{recordid}'}",
@@ -292,9 +302,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             include_book: Include the book
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_KEY: sort_key,
             "includeUnknownAuthorItems": str(unknown_authors),
             "includeAuthor": str(include_author),
             "includeBook": str(include_book),
@@ -316,7 +326,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "includeBook": str(include_book),
         }
         if authorid is not None:
-            params["authorId"] = authorid
+            params[AUTHOR_ID] = authorid
         if bookids is not None:
             params["bookIds"] = bookids
         return await self._async_request(
@@ -376,9 +386,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params: dict[str, str | int | list[int]] = {"unmapped": str(unmapped)}
         if not isinstance(fileid, int):
             if authorid is not None:
-                params["authorId"] = authorid
+                params[AUTHOR_ID] = authorid
             if bookid is not None:
-                params["bookId"] = bookid
+                params[BOOK_ID] = bookid
             if fileid is not None:
                 params["bookFileIds"] = fileid
         if isinstance(fileid, list):
@@ -394,12 +404,12 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"bookfile{'' if isinstance(data, ReadarrBookFile) else '/editor'}",
             data=data,
-            datatype=ReadarrBookFile if isinstance(data, ReadarrBookFile) else None,
+            datatype=ReadarrBookFile,
             method=HTTPMethod.PUT,
         )
 
     async def async_delete_book_files(self, ids: int | list[int]) -> None:
-        """Delete book files. Use fileid for one file or data for mass deletion."""
+        """Delete book files. Use integer for one file or list for mass deletion."""
         return await self._async_request(
             f"bookfile/{'bulk' if isinstance(ids, list) else f'{ids}'}",
             data={"bookFileIds": ids} if isinstance(ids, list) else None,
@@ -412,7 +422,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search for new books using a term, goodreads ID, isbn or asin."""
         return await self._async_request(
             "book/lookup",
-            params={"term": f"{booktype}:{term}"},
+            params={TERM: f"{booktype}:{term}"},
             datatype=ReadarrBookLookup,
         )
 
@@ -445,53 +455,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     # /api/v1/calendar/readarr.ics not working
 
-    async def async_get_delay_profiles(
-        self, profileid: int | None = None
-    ) -> ReadarrDelayProfile | list[ReadarrDelayProfile]:
-        """Get all delay profiles."""
-        return await self._async_request(
-            f"delayprofile{'' if profileid is None else f'/{profileid}'}",
-            datatype=ReadarrDelayProfile,
-        )
-
-    async def async_add_delay_profile(
-        self, data: ReadarrDelayProfile
-    ) -> ReadarrDelayProfile:
-        """Add delay profiles."""
-        return await self._async_request(
-            "delayprofile",
-            data=data,
-            datatype=ReadarrDelayProfile,
-            method=HTTPMethod.POST,
-        )
-
-    async def async_edit_delay_profile(
-        self, data: ReadarrDelayProfile
-    ) -> ReadarrDelayProfile:
-        """Edit delay profiles."""
-        return await self._async_request(
-            "delayprofile",
-            data=data,
-            datatype=ReadarrDelayProfile,
-            method=HTTPMethod.PUT,
-        )
-
-    async def async_delete_delay_profile(self, profileid: int) -> None:
-        """Delete delay profiles."""
-        return await self._async_request(
-            f"delayprofile/{profileid}", method=HTTPMethod.DELETE
-        )
-
-    async def async_delay_profile_reorder(
-        self, profileid: int, afterid: int | None = None
-    ) -> list[ReadarrDelayProfile]:
-        """Reorder delay profiles."""
-        return await self._async_request(
-            f"delayprofile/reorder/{profileid}",
-            params=None if afterid is None else {"afterId": afterid},
-            method=HTTPMethod.PUT,
-        )
-
     @api_command("config/development", datatype=ReadarrDevelopmentConfig)
     async def async_get_development_config(self) -> ReadarrDevelopmentConfig:
         """Get development config."""
@@ -508,15 +471,11 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    async def async_get_history(
-        self,
-    ) -> ReadarrHistory:
+    async def async_get_history(self) -> ReadarrHistory:
         """Get history."""
         return await self._async_request("history", datatype=ReadarrHistory)
 
     # history/since / history/author
-
-    # history/failed POST does not seem to work
 
     async def async_get_import_lists(
         self, listid: int | None = None
@@ -549,15 +508,27 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test all import lists."""
         _res = await self._async_request(
-            f"importlist/test{'all' if data is None else ''}",
+            f"importlist/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
+
+    # {name} not yet confirmed
+    async def async_importlist_action(
+        self, data: ReadarrImportList
+    ) -> ReadarrImportList:
+        """Perform import list action."""
+        return await self._async_request(
+            f"importlist/action/{data.name}",
+            data=data,
+            datatype=ReadarrImportList,
+            method=HTTPMethod.POST,
+        )
 
     async def async_get_metadata_profiles(
         self, profileid: int | None = None
@@ -566,13 +537,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"metadataprofile{'' if profileid is None else f'/{profileid}'}",
             datatype=ReadarrMetadataProfile,
-        )
-
-    async def async_delete_metadata_profile(self, profileid: int | None = None) -> None:
-        """Delete a metadata profile."""
-        return await self._async_request(
-            f"metadataprofile/{profileid}",
-            method=HTTPMethod.DELETE,
         )
 
     async def async_edit_metadata_profile(
@@ -584,6 +548,17 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             data=data,
             datatype=ReadarrMetadataProfile,
             method=HTTPMethod.PUT,
+        )
+
+    async def async_add_metadata_profile(
+        self, data: ReadarrMetadataProfile
+    ) -> ReadarrMetadataProfile:
+        """Add a metadata profile."""
+        return await self._async_request(
+            "metadataprofile",
+            data=data,
+            datatype=ReadarrMetadataProfile,
+            method=HTTPMethod.POST,
         )
 
     # metadataprofile/schema, not that useful
@@ -642,7 +617,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> ReadarrNotification:
         """Edit a notification."""
         return await self._async_request(
-            "notification",
+            NOTIFICATION,
             data=data,
             datatype=ReadarrNotification,
             method=HTTPMethod.PUT,
@@ -653,7 +628,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> ReadarrNotification:
         """Add a notification."""
         return await self._async_request(
-            "notification",
+            NOTIFICATION,
             data=data,
             datatype=ReadarrNotification,
             method=HTTPMethod.POST,
@@ -664,19 +639,19 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test a notification configuration."""
         _res = await self._async_request(
-            f"notification/test{'all' if data is None else ''}",
+            f"notification/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
     async def async_parse(self, title: str) -> ReadarrParse:
         """Return the movie with matching file name."""
-        params = {"title": title}
+        params = {TITLE: title}
         return await self._async_request("parse", params=params, datatype=ReadarrParse)
 
     async def async_get_release(
@@ -685,9 +660,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search indexers for specified fields."""
         params = {}
         if authorid is not None:
-            params["authorId"] = authorid
+            params[AUTHOR_ID] = authorid
         if bookid is not None:
-            params["bookId"] = bookid
+            params[BOOK_ID] = bookid
         return await self._async_request(
             "release", params=params, datatype=ReadarrRelease
         )
@@ -725,7 +700,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Get files matching specified id that are not properly renamed yet."""
         return await self._async_request(
             "rename",
-            params={"authorId": authorid, "bookId": bookid},
+            params={AUTHOR_ID: authorid, BOOK_ID: bookid},
             datatype=ReadarrRename,
         )
 
@@ -735,7 +710,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Get retag."""
         return await self._async_request(
             "retag",
-            params={"authorId": authorid, "bookId": bookid},
+            params={AUTHOR_ID: authorid, BOOK_ID: bookid},
             datatype=ReadarrRetag,
         )
 
@@ -743,7 +718,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search for books."""
         return await self._async_request(
             "search",
-            params={"term": term},
+            params={TERM: term},
             datatype=ReadarrSearch,
         )
 
@@ -751,7 +726,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Get series."""
         return await self._async_request(
             "series",
-            params={"authorId": authorid},
+            params={AUTHOR_ID: authorid},
             datatype=ReadarrSeries,
         )
 

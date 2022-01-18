@@ -6,29 +6,28 @@ from dataclasses import dataclass
 from enum import Enum
 
 from .base import BaseModel
-
-from .request_common import (  # isort:skip
+from .request_common import (
     _Common3,
     _Common4,
+    _Common7,
     _Fields,
     _Notification,
     _Quality,
     _RecordCommon,
     _ReleaseCommon,
     _Rename,
+    _StatusMessage,
     _TagDetails,
 )
-
-from .sonarr_common import (  # isort:skip
+from .sonarr_common import (
     _SonarrCommon,
     _SonarrCommon2,
     _SonarrEpisodeFile,
     _SonarrHistoryRecord,
     _SonarrParseEpisodeInfo,
+    _SonarrSeries2,
     _SonarrSeriesAlternateTitle,
     _SonarrSeriesCommon,
-    _SonarrSeries2,
-    _SonarrStatusMesssage,
     _SonarrWantedMissingRecord,
 )
 
@@ -36,21 +35,27 @@ from .sonarr_common import (  # isort:skip
 class SonarrCommands(str, Enum):
     """Sonarr commands."""
 
+    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
+    EPISODE_SEARCH = "EpisodeSearch"
     REFRESH_SERIES = "RefreshSeries"
-    RENAME_FILES = "RenameFiles"
     RENAME_SERIES = "RenameSeries"
     RESCAN_SERIES = "RescanSeries"
-    EPISODE_SEARCH = "EpisodeSearch"
     SEASON_SEARCH = "SeasonSearch"
     SERIES_SEARCH = "SeriesSearch"
-    DOWNLOADED_EPISODES_SCAN = "DownloadedEpisodesScan"
+
+
+class SonarrEventType(str, Enum):
+    """Sonarr event types."""
+
+    DOWNLOAD_FAILED = "downloadFailed"  # assumed
+    EPISODE_DELETED = "episodeFileDeleted"
+    GRABBED = "grabbed"
+    IMPORTED = "downloadFolderImported"
 
 
 @dataclass(init=False)
 class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
     """Sonarr calendar attributes."""
-
-    unverifiedSceneNumbering: bool | None = None
 
 
 @dataclass(init=False)
@@ -199,16 +204,13 @@ class SonarrSeriesUpdateParams(BaseModel):
 
 
 @dataclass(init=False)
-class SonarrBlocklistSeries(BaseModel):
-    """Blocklist series attributes."""
+class SonarrBlocklistSeries(_Common7):
+    """Sonarr blocklist series attributes."""
 
     date: str | None = None
     episodeIds: list[int] | None = None
-    id: int | None = None
-    indexer: str | None = None
     language: _Common3 | None = None
     message: str | None = None
-    protocol: str | None = None
     quality: _Quality | None = None
     seriesId: int | None = None
     sourceTitle: str | None = None
@@ -222,7 +224,7 @@ class SonarrBlocklistSeries(BaseModel):
 
 @dataclass(init=False)
 class SonarrBlocklist(_RecordCommon):
-    """Blocklist attributes."""
+    """Sonarr blocklist attributes."""
 
     records: list[SonarrBlocklistSeries] | None = None
 
@@ -285,7 +287,7 @@ class SonarrQueueDetail(_Common4):
     size: float | None = None
     sizeleft: float | None = None
     status: str | None = None
-    statusMessages: list[_SonarrStatusMesssage] | None = None
+    statusMessages: list[_StatusMessage] | None = None
     timeleft: str | None = None
     title: str | None = None
     trackedDownloadState: str | None = None
@@ -298,9 +300,7 @@ class SonarrQueueDetail(_Common4):
         self.language = _Common3(self.language) or {}
         self.quality = _Quality(self.quality) or {}
         self.series = _SonarrSeries2(self.series) or {}
-        self.statusMessages = [
-            _SonarrStatusMesssage(x) for x in self.statusMessages or []
-        ]
+        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
 @dataclass(init=False)

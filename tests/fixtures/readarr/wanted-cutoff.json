@@ -3,12 +3,6 @@
   "pageSize": 0,
   "sortKey": "string",
   "sortDirection": "default",
-  "filters": [
-    {
-      "key": "string",
-      "value": "string"
-    }
-  ],
   "totalRecords": 0,
   "records": [
     {

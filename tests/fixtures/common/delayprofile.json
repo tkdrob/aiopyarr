@@ -2,11 +2,12 @@
   {
     "enableUsenet": true,
     "enableTorrent": true,
-    "preferredProtocol": "usenet",
+    "preferredProtocol": "string",
     "usenetDelay": 0,
     "torrentDelay": 0,
+    "bypassIfHighestQuality": true,
     "order": 2147483647,
-    "tags": [],
-    "id": 1
+    "tags": [0],
+    "id": 0
   }
 ]

@@ -4,15 +4,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .base import BaseModel, get_datetime_from_string
-
-from .request_common import (  # isort:skip
+from .base import BaseModel, get_datetime
+from .request_common import (
     _Common2,
     _Common3,
     _Common4,
     _Common5,
+    _Common6,
     _CommonAttrs,
     _Quality,
+    _QualityCommon,
+    _Ratings,
     _TitleInfo,
 )
 
@@ -26,7 +28,7 @@ class _SonarrSeriesAlternateTitle(BaseModel):
 
 
 @dataclass(init=False)
-class _SonarrCommon2(_SonarrSeriesAlternateTitle):
+class _SonarrCommon2(_SonarrSeriesAlternateTitle, _Common6):
     """Sonarr common attributes."""
 
     airDate: str | None = None
@@ -35,8 +37,6 @@ class _SonarrCommon2(_SonarrSeriesAlternateTitle):
     episodeNumber: int | None = None
     hasFile: bool | None = None
     id: int | None = None
-    monitored: bool | None = None
-    overview: str | None = None
     seriesId: int | None = None
 
 
@@ -48,28 +48,6 @@ class _SonarrQualityProfileValueAttr(_Common3):
 
 
 @dataclass(init=False)
-class _SonarrQualityProfileValueItems(BaseModel):
-    """Sonarr quality profile value items attributes."""
-
-    allowed: bool | None = None
-    quality: _SonarrQualityProfileValueAttr | None = None
-
-    def __post_init__(self):
-        self.quality = _SonarrQualityProfileValueAttr(self.quality) or {}
-
-
-@dataclass(init=False)
-class _SonarrQualityProfile(BaseModel):
-    """Sonarr quality profile attributes."""
-
-    isLoaded: bool | None = None
-    value: _SonarrQualityProfileValueAttr | None = None
-
-    def __post_init__(self):
-        self.value = _SonarrQualityProfileValueAttr(self.value) or {}
-
-
-@dataclass(init=False)
 class _SonarrImages(_Common5):
     """Sonarr images attributes."""
 
@@ -77,7 +55,7 @@ class _SonarrImages(_Common5):
 
 
 @dataclass(init=False)
-class _SonarrSeries2(BaseModel):
+class _SonarrSeries2(_Common6):
     """Sonarr parse attributes."""
 
     added: str | None = None
@@ -93,13 +71,10 @@ class _SonarrSeries2(BaseModel):
     imdbId: str | None = None
     languageProfileId: int | None = None
     lastInfoSync: str | None = None
-    monitored: bool | None = None
     network: str | None = None
-    overview: str | None = None
     path: str | None = None
-    qualityProfile: _SonarrQualityProfile | None = None
     qualityProfileId: int | None = None
-    ratings: _SonarrRatings | None = None
+    ratings: _Ratings | None = None
     runtime: int | None = None
     seasonFolder: bool | None = None
     seasons: list[_SonarrSeriesSeason] | None = None
@@ -116,17 +91,14 @@ class _SonarrSeries2(BaseModel):
     year: int | None = None
 
     def __post_init__(self):
-        self.added = get_datetime_from_string(self.added)
-        self.firstAired = get_datetime_from_string(self.firstAired)
+        super().__post_init__()
         self.images = [_SonarrImages(image) for image in self.images or []]
-        self.lastInfoSync = get_datetime_from_string(self.lastInfoSync)
-        self.qualityProfile = _SonarrQualityProfile(self.qualityProfile) or {}
-        self.ratings = _SonarrRatings(self.ratings) or {}
+        self.ratings = _Ratings(self.ratings) or {}
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
 
 
 @dataclass(init=False)
-class _SonarrEpisodeFile(BaseModel):
+class _SonarrEpisodeFile(_QualityCommon):
     """Sonarr episode file attributes."""
 
     dateAdded: str | None = None
@@ -135,8 +107,6 @@ class _SonarrEpisodeFile(BaseModel):
     languageCutoffNotMet: bool | None = None
     mediaInfo: _CommonAttrs | None = None
     path: str | None = None
-    quality: _Quality | None = None
-    qualityCutoffNotMet: bool | None = None
     relativePath: str | None = None
     releaseGroup: str | None = None
     seasonNumber: int | None = None
@@ -147,7 +117,6 @@ class _SonarrEpisodeFile(BaseModel):
         super().__post_init__()
         self.language = _SonarrQualityProfileValueAttr(self.language) or {}
         self.mediaInfo = _CommonAttrs(self.mediaInfo) or {}
-        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -197,14 +166,6 @@ class _SonarrHistoryRecordData(_Common4):
 
 
 @dataclass(init=False)
-class _SonarrRatings(BaseModel):
-    """Sonarr ratings attributes."""
-
-    value: float | None = None
-    votes: int | None = None
-
-
-@dataclass(init=False)
 class _SonarrSeasonStatistics(BaseModel):
     """Sonarr season statistics attributes."""
 
@@ -217,7 +178,7 @@ class _SonarrSeasonStatistics(BaseModel):
     totalEpisodeCount: int | None = None
 
     def __post_init__(self):
-        self.previousAiring = get_datetime_from_string(self.previousAiring)
+        self.previousAiring = get_datetime(self.previousAiring)
 
 
 @dataclass(init=False)
@@ -237,23 +198,21 @@ class _SonarrSeriesCommon(_SonarrSeries2):
     """Sonarr series common attributes."""
 
     images: list[_SonarrImages] | None = None
-    qualityProfile: _SonarrQualityProfile | None = None
     remotePoster: str | None = None
     seasons: list[_SonarrSeriesSeason] | None = None
     statistics: _SonarrSeasonStatistics | None = None
 
     def __post_init__(self):
-        self.added = get_datetime_from_string(self.added)
-        self.firstAired = get_datetime_from_string(self.firstAired)
+        self.added = get_datetime(self.added)
+        self.firstAired = get_datetime(self.firstAired)
         self.images = [_SonarrImages(image) for image in self.images or []]
-        self.qualityProfile = _SonarrQualityProfile(self.qualityProfile) or {}
-        self.ratings = _SonarrRatings(self.ratings) or {}
+        self.ratings = _Ratings(self.ratings) or {}
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
         self.statistics = _SonarrSeasonStatistics(self.statistics) or {}
 
 
 @dataclass(init=False)
-class _SonarrHistoryRecord(_Common2):
+class _SonarrHistoryRecord(_Common2, _QualityCommon):
     """Sonarr history record attributes."""
 
     data: _SonarrHistoryRecordData | None = None
@@ -262,8 +221,6 @@ class _SonarrHistoryRecord(_Common2):
     id: int | None = None
     language: _Common3 | None = None
     languageCutoffNotMet: bool | None = None
-    quality: _Quality | None = None
-    qualityCutoffNotMet: bool | None = None
     seriesId: int | None = None
     sourceTitle: str | None = None
 
@@ -271,7 +228,6 @@ class _SonarrHistoryRecord(_Common2):
         super().__post_init__()
         self.data = _SonarrHistoryRecordData(self.data) or {}
         self.language = _Common3(self.language) or {}
-        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -315,11 +271,3 @@ class _SonarrParseEpisodeInfo(BaseModel):
         self.language = _Common3(self.language) or {}
         self.quality = _Quality(self.quality) or {}
         self.seriesTitleInfo = _TitleInfo(self.seriesTitleInfo) or {}
-
-
-@dataclass(init=False)
-class _SonarrStatusMesssage(BaseModel):
-    """Sonarr status meessage attributes."""
-
-    messages: list[str] | None = None
-    title: str | None = None

@@ -1,0 +1,19 @@
+[
+  {
+    "artistId": 0,
+    "trackFileId": 0,
+    "albumId": 0,
+    "explicit": false,
+    "absoluteTrackNumber": 0,
+    "trackNumber": "0",
+    "title": "string",
+    "duration": 0,
+    "mediumNumber": 0,
+    "hasFile": false,
+    "ratings": {
+      "votes": 0,
+      "value": 0.0
+    },
+    "id": 0
+  }
+]

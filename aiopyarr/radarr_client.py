@@ -2,15 +2,31 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import Any
+
+from aiohttp.client import ClientSession
 
 from aiopyarr.models.request import Command
 
-from .const import HTTPMethod
+from .const import (
+    ALL,
+    ASCENDING,
+    DESCENDING,
+    IS_VALID,
+    MOVIE_ID,
+    NOTIFICATION,
+    PAGE,
+    PAGE_SIZE,
+    PATH,
+    SORT_DIRECTION,
+    SORT_KEY,
+    TERM,
+    TITLE,
+    HTTPMethod,
+)
 from .decorator import api_command
-from .request_client import RequestClient
-
-from .models.radarr import (  # isort:skip
+from .models.host_configuration import PyArrHostConfiguration
+from .models.radarr import (
     RadarrBlocklist,
     RadarrBlocklistMovie,
     RadarrCalendar,
@@ -31,12 +47,8 @@ from .models.radarr import (  # isort:skip
     RadarrRename,
     RadarrTagDetails,
 )
-
-if TYPE_CHECKING:
-    from aiohttp.client import ClientSession
-
-    from .models.host_configuration import PyArrHostConfiguration
-    from .models.radarr_common import _RadarrMovieImages
+from .models.radarr_common import _RadarrMovieImages
+from .request_client import RequestClient
 
 
 class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
@@ -88,7 +100,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         tmdb: Use TMDB ID.
         """
         return await self._async_request(
-            f"movie{'' if movieid is None or tmdb is True else f'/{movieid}'}",
+            f"movie{'' if movieid is None or tmdb else f'/{movieid}'}",
             params=None if movieid is None else {"tmdbid": movieid},
             datatype=RadarrMovie,
         )
@@ -130,7 +142,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "movie/editor" if hasattr(data, "movieIds") else "movie",
             params=None if hasattr(data, "movieIds") else params,
             data=data if hasattr(data, "movieIds") else None,
-            datatype=RadarrMovieEditor if hasattr(data, "movieIds") else RadarrMovie,
+            datatype=RadarrMovie,
             method=HTTPMethod.PUT,
         )
 
@@ -185,7 +197,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """
         return await self._async_request(
             "movie/lookup",
-            params={"term": f"{'tmdb' if tmdb is True else 'imdb'}:{term}"},
+            params={TERM: f"{'tmdb' if tmdb else 'imdb'}:{term}"},
             datatype=RadarrMovie,
         )
 
@@ -215,10 +227,10 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             sort_key: date, id, movieid, title, sourcetitle, or quality
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
         }
         return await self._async_request(
             "history",
@@ -235,8 +247,9 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             id: Database id of movie
             event_type: History event type to retrieve.
         """
-        params: dict[str, str | int] = {"movieId": recordid}
-        params["eventType"] = event_type if event_type else ""
+        params: dict[str, str | int] = {MOVIE_ID: recordid}
+        if event_type and event_type in RadarrEventType:
+            params["eventType"] = event_type.value
         return await self._async_request(
             "history/movie",
             params=params,
@@ -275,15 +288,25 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test all import lists."""
         _res = await self._async_request(
-            f"importlist/test{'all' if data is None else ''}",
+            f"importlist/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
+
+    # {name} not yet confirmed
+    async def async_importlist_action(self, data: RadarrImportList) -> RadarrImportList:
+        """Perform import list action."""
+        return await self._async_request(
+            f"importlist/action/{data.name}",
+            data=data,
+            datatype=RadarrImportList,
+            method=HTTPMethod.POST,
+        )
 
     @api_command("config/naming", datatype=RadarrNamingConfig)
     async def async_get_naming_config(self) -> RadarrNamingConfig:
@@ -328,10 +351,10 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             sort_key: date, id, movieid, title, sourcetitle, or quality
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
         }
         return await self._async_request(
             "blocklist",
@@ -347,7 +370,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Retrieve blocklisted releases that are tied to a given movie in the database."""
         return await self._async_request(
             "blocklist/movie",
-            params={"movieId": bocklistid},
+            params={MOVIE_ID: bocklistid},
             datatype=RadarrBlocklistMovie,
         )
 
@@ -370,10 +393,10 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             include_unknown_movie_items: Include unknown movie items.
         """
         params = {
-            "page": page,
-            "pageSize": page_size,
-            "sortDirection": "ascending" if ascending else "descending",
-            "sortKey": sort_key,
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key,
             "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
             "includeMovie": str(include_movie),
         }
@@ -412,7 +435,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> RadarrNotification:
         """Edit a notification."""
         return await self._async_request(
-            "notification",
+            NOTIFICATION,
             data=data,
             datatype=RadarrNotification,
             method=HTTPMethod.PUT,
@@ -423,7 +446,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> RadarrNotification:
         """Add a notification."""
         return await self._async_request(
-            "notification",
+            NOTIFICATION,
             data=data,
             datatype=RadarrNotification,
             method=HTTPMethod.POST,
@@ -434,31 +457,55 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> bool:
         """Test a notification configuration."""
         _res = await self._async_request(
-            f"notification/test{'all' if data is None else ''}",
+            f"notification/test{ALL if data is None else ''}",
             data=None if data is None else data,
             method=HTTPMethod.POST,
         )
         if data is None:
             for item in _res:
-                if item["isValid"] is False:
+                if item[IS_VALID] is False:
                     return False
         return True
 
     async def async_parse(self, title: str) -> RadarrParse:
         """Return the movie with matching file name."""
-        params = {"title": title}
+        params = {TITLE: title}
         return await self._async_request("parse", params=params, datatype=RadarrParse)
 
-    async def async_radarr_command(
-        self, command: RadarrCommands, movieids: list[int] | None = None
+    async def async_radarr_command(  # pylint: disable=too-many-arguments
+        self,
+        command: RadarrCommands,
+        clientid: int | None = None,
+        copymode: bool = True,
+        files: list[int] | None = None,
+        path: str | None = None,
+        movieid: int | list[int] | None = None,
     ) -> Command:
         """Send a command to Radarr.
 
-        movieids: applicable to RefreshMovie
+        Specify clientid for DownloadedMoviesScan (Optional)
+        Specify files for RenameFiles
+        Specify path for DownloadedMoviesScan (Optional)
+        Specify movieid for:
+            RefreshMovie (Optional),
+            RenameMovie (list[int]),
+            RescanMovie (Optional),
+            MovieSearch
         """
-        data: dict[str, str | list[int]] = {"name": command}
-        if movieids is not None:
-            data["movieIds"] = movieids
+        data: dict[str, str | int | list[int]] = {"name": command.value}
+        if clientid is not None:
+            data["downloadClientId"] = clientid
+        if files is not None:
+            data["files"] = files
+        if path is not None:
+            data[PATH] = path
+        if movieid is not None:
+            if command == RadarrCommands.RENAME_MOVIE:
+                data["movieIds"] = movieid
+            else:
+                data[MOVIE_ID] = movieid
+        if command is RadarrCommands.DOWNLOADED_MOVIES_SCAN:
+            data["importMode"] = "Copy" if copymode else "Move"
         return await self._async_request(
             "command",
             data=data,
@@ -487,7 +534,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search indexers for specified fields."""
         return await self._async_request(
             "release",
-            params=None if movieid is None else {"movieId": movieid},
+            params=None if movieid is None else {MOVIE_ID: movieid},
             datatype=RadarrRelease,
         )
 
@@ -522,7 +569,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Get files matching specified id that are not properly renamed yet."""
         return await self._async_request(
             "rename",
-            params={"movieId": movieid},
+            params={MOVIE_ID: movieid},
             datatype=RadarrRename,
         )
 
@@ -549,7 +596,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             raise Exception("Movie Doesn't Exist")
 
         return {
-            "title": movie[0].title or "",
+            TITLE: movie[0].title or "",
             "rootFolderPath": root_dir,
             "qualityProfileId": quality_profile_id,
             "year": movie[0].year or "",
@@ -560,6 +607,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "addOptions": {"searchForMovie": str(search_for_movie)},
         }
 
+    # Import list exclusions are included in the UI but not in the API.
     async def async_get_import_list_exclusions(
         self, clientid: int | None = None
     ) -> Any:
@@ -592,4 +640,8 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_add_release_profile(self, data: Any) -> Any:
         """Add release profile."""
+        raise NotImplementedError()
+
+    async def async_delete_metadata_profile(self, profileid: int) -> Any:
+        """Delete a metadata profile."""
         raise NotImplementedError()

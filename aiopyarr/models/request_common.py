@@ -9,7 +9,7 @@ from .base import BaseModel
 
 @dataclass(init=False)
 class _SelectOption(BaseModel):
-    """Select options attributes."""
+    """Select option attributes."""
 
     name: str | None = None
     order: int | None = None
@@ -90,6 +90,23 @@ class _Common5(BaseModel):
 
 
 @dataclass(init=False)
+class _Common6(BaseModel):
+    """Common attributes."""
+
+    monitored: bool | None = None
+    overview: str | None = None
+
+
+@dataclass(init=False)
+class _Common7(BaseModel):
+    """Common attributes."""
+
+    id: int | None = None
+    indexer: str | None = None
+    protocol: str | None = None
+
+
+@dataclass(init=False)
 class _CommonAttrs(BaseModel):
     """Common attributes."""
 
@@ -144,15 +161,15 @@ class _MetadataFields(_Fields):
 
 
 @dataclass(init=False)
-class _UnmappedRootFolder(BaseModel):
-    """Unmapped folder attributes."""
+class _FilesystemFolder(BaseModel):
+    """Filesystem folder attributes."""
 
     name: str | None = None
     path: str | None = None
 
 
 @dataclass(init=False)
-class _FilesystemDirectory(_UnmappedRootFolder):
+class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
     lastModified: str | None = None
@@ -1649,7 +1666,7 @@ class _LocalizationStrings(BaseModel):
 
 @dataclass(init=False)
 class _LogRecord(BaseModel):
-    """Sonarr log record attributes."""
+    """Log record attributes."""
 
     exception: str | None = None
     exceptionType: str | None = None
@@ -1662,7 +1679,7 @@ class _LogRecord(BaseModel):
 
 @dataclass(init=False)
 class _QualityInfo(_Common3):
-    """Quality attributes."""
+    """Quality info attributes."""
 
     modifier: str | None = None
     resolution: int | None = None
@@ -1715,7 +1732,7 @@ class _ReleaseCommon(BaseModel):
 
 @dataclass(init=False)
 class _Revision(BaseModel):
-    """Revision attributes attributes."""
+    """Revision attributes."""
 
     isRepack: bool | None = None
     real: int | None = None
@@ -1737,7 +1754,7 @@ class _Quality(BaseModel):
 
 @dataclass(init=False)
 class _RecordCommon(BaseModel):
-    """Sonarr common attributes."""
+    """Record common attributes."""
 
     page: int | None = None
     pageSize: int | None = None
@@ -1756,7 +1773,7 @@ class _ReleaseProfilePreferred(BaseModel):
 
 @dataclass(init=False)
 class _Rename(BaseModel):
-    """Rename common attributes."""
+    """Rename attributes."""
 
     existingPath: str | None = None
     newPath: str | None = None
@@ -1764,7 +1781,7 @@ class _Rename(BaseModel):
 
 @dataclass(init=False)
 class _Tag(BaseModel):
-    """Radarr tag attributes."""
+    """Tag attributes."""
 
     id: int | None = None
     label: str | None = None
@@ -1772,7 +1789,7 @@ class _Tag(BaseModel):
 
 @dataclass(init=False)
 class _TagDetails(_Tag):
-    """Readarr tag details attributes."""
+    """Tag details attributes."""
 
     delayProfileIds: list[int] | None = None
     importListIds: list[int] | None = None
@@ -1816,4 +1833,84 @@ class _Notification(BaseModel):
     supportsOnHealthIssue: bool | None = None
     supportsOnRename: bool | None = None
     supportsOnUpgrade: bool | None = None
+    tags: list[int | None] | None = None
+
+
+@dataclass(init=False)
+class _RetagChange(BaseModel):
+    """Retag change attributes."""
+
+    field: str | None = None
+    oldValue: str | None = None
+    newValue: str | None = None
+
+
+@dataclass(init=False)
+class _HistoryData(BaseModel):
+    """History data attributes."""
+
+    age: str | None = None
+    ageHours: str | None = None
+    ageMinutes: str | None = None
+    downloadForced: str | None = None
+    downloadUrl: str | None = None
+    guid: str | None = None
+    nzbInfoUrl: str | None = None
+    protocol: str | None = None
+    publishedDate: str | None = None
+    releaseGroup: str | None = None
+    size: str | None = None
+    torrentInfoHash: str | None = None
+    indexer: str | None = None
+    downloadClient: str | None = None
+
+
+@dataclass(init=False)
+class _QualityCommon(BaseModel):
+    """Quality common attributes."""
+
+    quality: _Quality | None = None
+    qualityCutoffNotMet: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.quality = _Quality(self.quality) or {}
+
+
+@dataclass(init=False)
+class _Ratings(BaseModel):
+    """Ratings attributes."""
+
+    value: float | None = None
+    votes: int | None = None
+
+
+@dataclass(init=False)
+class _Link(BaseModel):
+    """Link attributes."""
+
+    name: str | None = None
+    url: str | None = None
+
+
+@dataclass(init=False)
+class _StatusMessage(BaseModel):
+    """Status message attributes."""
+
+    messages: list[str] | None = None
+    title: str | None = None
+
+
+@dataclass(init=False)
+class _Editor(BaseModel):
+    """Editor attributes."""
+
+    applyTags: str | None = None
+    deleteFiles: bool | None = None
+    minimumAvailability: str | None = None
+    monitored: bool | None = None
+    moveFiles: bool | None = None
+    qualityProfileId: int | None = None
+    rootFolderPath: str | None = None
     tags: list[int | None] | None = None

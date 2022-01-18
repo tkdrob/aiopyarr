@@ -1,0 +1,10 @@
+[
+  {
+    "artistId": 0,
+    "albumId": 0,
+    "trackNumbers": [0],
+    "trackFileId": 0,
+    "existingPath": "string",
+    "newPath": "string"
+  }
+]
