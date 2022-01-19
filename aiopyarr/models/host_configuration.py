@@ -32,8 +32,10 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
             )
         HEADERS["X-Api-Key"] = self.api_token
 
-    def api_url(self, command: str) -> str:
+    def api_url(self, command: str, initialize: bool = False) -> str:
         """Return the generated base URL based on host configuration."""
+        if initialize:
+            return f"{self.base_url}/initialize.js"
         return f"{self.base_url}/api/{self.api_ver}/{command}"
 
     @property
