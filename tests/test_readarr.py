@@ -3922,7 +3922,7 @@ async def test_async_get_naming_config(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: ReadarrNamingConfig = await client.async_get_naming_config()
+        data = await client.async_get_naming_config()
 
     assert data.renameBooks is False
     assert data.replaceIllegalCharacters is True
@@ -6736,6 +6736,31 @@ async def test_async_add_bookshelf(aresponses):
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         await client.async_add_bookshelf(ReadarrBookshelf("test"))
+
+
+@pytest.mark.asyncio
+async def test_async_get_development_config(aresponses):
+    """Test getting development config."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/config/development",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/config-development.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_get_development_config()
+    assert data.metadataSource == "string"
+    assert data.consoleLogLevel == "string"
+    assert data.logSql is False
+    assert isinstance(data.logRotate, int)
+    assert data.filterSentryEvents is True
+    assert isinstance(data.id, int)
 
 
 @pytest.mark.asyncio

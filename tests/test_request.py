@@ -1,40 +1,39 @@
 """Tests for common methods."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
+import asyncio
 from datetime import datetime
 import json
 
 from aiohttp.client import ClientSession
 import pytest
 
-from aiopyarr.exceptions import ArrConnectionException
+from aiopyarr.exceptions import (
+    ArrAuthenticationException,
+    ArrConnectionException,
+    ArrException,
+)
 from aiopyarr.lidarr_client import LidarrClient
 from aiopyarr.models.request import (
     Command,
     Commands,
     CustomFilter,
     DelayProfile,
-    Diskspace,
     DownloadClient,
     DownloadClientConfig,
-    Health,
     HostConfig,
     ImportListExclusion,
     Indexer,
     IndexerConfig,
-    LogFile,
     MediaManagementConfig,
     MetadataConfig,
     QualityDefinition,
     QualityProfile,
-    QueueStatus,
     ReleaseProfile,
     RemotePathMapping,
     RootFolder,
     SystemBackup,
-    SystemStatus,
     Tag,
     UIConfig,
-    Update,
 )
 from aiopyarr.radarr_client import RadarrClient
 from aiopyarr.readarr_client import ReadarrClient
@@ -48,6 +47,81 @@ from . import (
     TEST_HOST_CONFIGURATION,
     load_fixture,
 )
+
+
+@pytest.mark.asyncio
+async def test_raw():
+    """Test raw."""
+    async with ClientSession():
+        RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+
+
+@pytest.mark.asyncio
+async def test_exceptions(aresponses):
+    """Test exceptions."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/diskspace",
+        "GET",
+        aresponses.Response(
+            status=401,
+            headers={"Content-Type": "application/json"},
+        ),
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+
+    with pytest.raises(ArrAuthenticationException):
+        await client.async_get_diskspace()
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/diskspace",
+        "GET",
+        aresponses.Response(
+            status=404,
+            headers={"Content-Type": "application/json"},
+        ),
+    )
+
+    with pytest.raises(ArrException):
+        await client.async_get_diskspace()
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/diskspace",
+        "GET",
+        aresponses.Response(body="Timeout!"),
+    )
+
+    with pytest.raises(ArrConnectionException):
+        await client.async_get_diskspace()
+
+    async def response_handler(_):
+        await asyncio.sleep(0.1)
+        return aresponses.Response(body="Timeout!")
+
+    aresponses.add(
+        "127.0.0.1:7878", f"/api/{RADARR_API}/diskspace", "GET", response_handler
+    )
+
+    async with ClientSession() as session:
+        client = RadarrClient(
+            host_configuration=TEST_HOST_CONFIGURATION,
+            session=session,
+            request_timeout=0.1,
+        )
+        with pytest.raises(ArrConnectionException):
+            assert await client.async_get_diskspace()
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/diskspace",
+        "GET",
+    )
+
+    with pytest.raises(ArrException):
+        await client.async_get_diskspace()
 
 
 @pytest.mark.asyncio
@@ -66,7 +140,7 @@ async def test_async_get_diskspace(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[Diskspace] = await client.async_get_diskspace()
+        data = await client.async_get_diskspace()
 
     assert isinstance(data[0].freeSpace, int)
     assert data[0].label == "DrivePool"
@@ -115,7 +189,7 @@ async def test_async_get_host_config(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: HostConfig = await client.async_get_host_config()
+        data = await client.async_get_host_config()
 
     assert data.analyticsEnabled is True
     assert data.apiKey == "string"
@@ -168,7 +242,7 @@ async def test_async_get_ui_config(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: UIConfig = await client.async_get_ui_config()
+        data = await client.async_get_ui_config()
 
     assert data.calendarWeekColumnHeader == "ddd M/D"
     assert data.enableColorImpairedMode is False
@@ -199,7 +273,7 @@ async def test_async_get_system_status(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: SystemStatus = await client.async_get_system_status()
+        data = await client.async_get_system_status()
 
     assert data.appData == "C:\\ProgramData\\Radarr"
     assert data.authentication == "string"
@@ -325,7 +399,7 @@ async def test_get_log_file(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[LogFile] = await client.async_get_log_file()
+        data = await client.async_get_log_file()
     assert data[0].filename == "string"
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
     assert data[0].contentsUrl == "string"
@@ -368,7 +442,7 @@ async def test_get_log_file_update(aresponses):
     )
     async with ClientSession():
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[LogFile] = await client.async_get_log_file_updates()
+        data = await client.async_get_log_file_updates()
     assert data[0].filename == "string"
     assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
     assert data[0].contentsUrl == "string"
@@ -436,7 +510,7 @@ async def test_async_get_command(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[Command] = await client.async_get_commands()
+        data = await client.async_get_commands()
 
     assert data[0].name == "MessagingCleanup"
     assert data[0].commandName == "Messaging Cleanup"
@@ -616,7 +690,7 @@ async def test_async_get_failed_health_checks(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[Health] = await client.async_get_failed_health_checks()
+        data = await client.async_get_failed_health_checks()
 
     assert data[0].message == "Enable Completed Download Handling"
     assert data[0].source == "ImportMechanismCheck"
@@ -2521,7 +2595,7 @@ async def test_async_get_metadata_config(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[MetadataConfig] = await client.async_get_metadata_configs()
+        data = await client.async_get_metadata_configs()
 
     assert data[0].enable is True
     assert data[0].name == "string"
@@ -2633,7 +2707,7 @@ async def test_async_get_queue_status(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: QueueStatus = await client.async_get_queue_status()
+        data = await client.async_get_queue_status()
     assert isinstance(data.totalCount, int)
     assert isinstance(data.count, int)
     assert isinstance(data.unknownCount, int)
@@ -2742,7 +2816,7 @@ async def test_async_get_software_update_info(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: list[Update] = await client.async_get_software_update_info()
+        data = await client.async_get_software_update_info()
 
     assert data[0].version == "string"
     assert data[0].branch == "string"
@@ -2849,6 +2923,21 @@ async def test_async_command(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_command(Commands.APPLICATION_UPDATE)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_command(Commands.CLEAR_BLOCKLIST)
     assert isinstance(data, Command)
 
 
@@ -3833,6 +3922,24 @@ async def test_async_add_remote_path_mapping(aresponses):
         client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_add_remote_path_mapping(RemotePathMapping("test"))
     assert isinstance(data, RemotePathMapping)
+
+
+@pytest.mark.asyncio
+async def test_async_get_system_routes(aresponses):
+    """Test getting system routes."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/system/routes",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        await client.async_get_system_routes()
 
 
 @pytest.mark.asyncio

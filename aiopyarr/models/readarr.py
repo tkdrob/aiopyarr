@@ -346,7 +346,6 @@ class ReadarrMetadataProviderConfig(BaseModel):
     writeBookTags: str | None = None
 
 
-@dataclass(init=False)
 class ReadarrNamingConfig(BaseModel):
     """Readarr naming config attributes."""
 

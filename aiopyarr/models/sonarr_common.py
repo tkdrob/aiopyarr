@@ -271,3 +271,12 @@ class _SonarrParseEpisodeInfo(BaseModel):
         self.language = _Common3(self.language) or {}
         self.quality = _Quality(self.quality) or {}
         self.seriesTitleInfo = _TitleInfo(self.seriesTitleInfo) or {}
+
+
+@dataclass(init=False)
+class _SonarrAddOptions(BaseModel):
+    """Sonarr add options attributes."""
+
+    ignoreEpisodesWithFiles: bool | None = None
+    ignoreEpisodesWithoutFiles: bool | None = None
+    searchForMissingEpisodes: bool | None = None

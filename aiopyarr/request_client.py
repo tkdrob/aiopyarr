@@ -25,7 +25,6 @@ from .const import (
     SORT_KEY,
     HTTPMethod,
 )
-from .decorator import api_command
 from .exceptions import (
     ArrAuthenticationException,
     ArrConnectionException,
@@ -83,6 +82,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         port: int,
         request_timeout: float,
         raw_response: bool,
+        api_ver: str,
         host_configuration: PyArrHostConfiguration | None = None,
         session: ClientSession | None = None,
         hostname: str | None = None,
@@ -92,7 +92,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         ssl: bool | None = None,
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
-        api_ver: str | None = None,
         user_agent: str | None = None,
     ) -> None:
         """Initialize."""
@@ -113,7 +112,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             host_configuration.ssl = ssl
         if verify_ssl is not None:
             host_configuration.verify_ssl = verify_ssl
-        if base_api_path is not None:
+        if base_api_path is not None:  # TODO remove if blocks if works without
             host_configuration.base_api_path = base_api_path
         if api_ver is not None:
             host_configuration.api_ver = api_ver
@@ -213,9 +212,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         else:
             return response.data
 
-    @api_command("diskspace", datatype=Diskspace)
     async def async_get_diskspace(self) -> list[Diskspace]:
         """Get information about diskspace."""
+        return await self._async_request("diskspace", datatype=Diskspace)
 
     async def async_get_root_folders(
         self, folderid: int | None = None
@@ -238,9 +237,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             "rootfolder", data=data, datatype=RootFolder, method=HTTPMethod.POST
         )
 
-    @api_command("config/host", datatype=HostConfig)
     async def async_get_host_config(self) -> HostConfig:
         """Get information about host configuration."""
+        return await self._async_request("config/host", datatype=HostConfig)
 
     async def async_edit_host_config(self, data: HostConfig) -> HostConfig:
         """Edit General/Host settings for Radarr."""
@@ -251,9 +250,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    @api_command("config/ui", datatype=UIConfig)
     async def async_get_ui_config(self) -> UIConfig:
         """Get information about UI configuration."""
+        return await self._async_request("config/ui", datatype=UIConfig)
 
     async def async_edit_ui_config(self, data: UIConfig) -> UIConfig:
         """Edit one or many UI settings and save to to the database."""
@@ -318,29 +317,29 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             f"command/{commandid}", method=HTTPMethod.DELETE
         )
 
-    @api_command("log/file", datatype=LogFile)
     async def async_get_log_file(self) -> list[LogFile]:
         """Get log file."""
+        return await self._async_request("log/file", datatype=LogFile)
 
     async def async_get_log_file_content(self, file: str) -> Text:
         """Get log file content."""
         return await self._async_request(f"log/file/{file}")
 
-    @api_command("log/file/update", datatype=LogFile)
     async def async_get_log_file_updates(self) -> list[LogFile]:
         """Get log file updates."""
+        return await self._async_request("log/file/update", datatype=LogFile)
 
     async def async_get_log_file_update_content(self, file: str) -> Text:
         """Get log file update content."""
         return await self._async_request(f"log/file/update/{file}")
 
-    @api_command("system/status", datatype=SystemStatus)
     async def async_get_system_status(self) -> SystemStatus:
         """Get information about system status."""
+        return await self._async_request("system/status", datatype=SystemStatus)
 
-    @api_command("system/backup", datatype=SystemBackup)
     async def async_get_system_backup(self) -> list[SystemBackup]:
         """Get information about system backup."""
+        return await self._async_request("system/backup", datatype=SystemBackup)
 
     async def async_restore_system_backup(self, backupid: int) -> None:
         """Restore from a system backup."""
@@ -536,9 +535,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=FilesystemFolder,
         )
 
-    @api_command("health", datatype=Health)
     async def async_get_failed_health_checks(self) -> Health:
         """Get information about failed health checks."""
+        return await self._async_request("health", datatype=Health)
 
     async def async_delete_import_list(self, listid: int) -> None:
         """Delete an import list."""
@@ -669,7 +668,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    # initialize.js, no clue what this does
+    # initialize.js, can get api version, key(security issue), and urlbase
+    # can be done unauthenticated
 
     async def async_get_languages(
         self, langid: int | None = None
@@ -684,7 +684,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get localization strings."""
         return await self._async_request("localization", datatype=Localization)
 
-    # manualimport GET / POST, not yet confirmed
+    # manualimport GET / PUT, not yet confirmed TODO
 
     async def async_get_image(
         self,
@@ -908,9 +908,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    @api_command("queue/status", datatype=QueueStatus)
     async def async_get_queue_status(self) -> QueueStatus:
         """Get information about download queue status."""
+        return await self._async_request("queue/status", datatype=QueueStatus)
 
     async def async_delete_blocklists(self, ids: int | list[int]) -> None:
         """Delete blocklisted releases."""
@@ -992,9 +992,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    @api_command("system/routes")
-    async def async_get_system_routes(self) -> Any:
-        """Get system rout information. No models, just for reference."""
+    async def async_get_system_routes(self) -> list[list[dict[str, Any]]]:
+        """Get api endpoint information. No models, just for reference."""
+        return await self._async_request("system/routes")
 
     async def async_system_shutdown(self) -> bool:
         """Shutdown the system."""
@@ -1015,9 +1015,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=SystemTask,
         )
 
-    @api_command("update", datatype=Update)
     async def async_get_software_update_info(self) -> list[Update]:
         """Get information about software updates."""
+        return await self._async_request("update", datatype=Update)
 
     async def async_get_delay_profiles(
         self, profileid: int | None = None

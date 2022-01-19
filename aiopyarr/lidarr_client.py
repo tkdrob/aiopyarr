@@ -81,6 +81,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             port,
             request_timeout,
             raw_response,
+            api_ver,
             host_configuration,
             session,
             hostname,
@@ -90,7 +91,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            api_ver,
             user_agent,
         )
 
@@ -192,6 +192,8 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "album/lookup", params={TERM: term}, datatype=LidarrAlbumLookup
         )
+
+    # artist/import POST
 
     async def async_get_blocklist(
         self,
@@ -328,6 +330,8 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params=params,
             datatype=LidarrHistory if _type else LidarrAlbumHistory,
         )
+
+    # history/failed POST
 
     async def async_get_import_lists(
         self, listid: int | None = None

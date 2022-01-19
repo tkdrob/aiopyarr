@@ -115,7 +115,6 @@ class LidarrWantedCutoff(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [LidarrAlbum(record) for record in self.records or []]
 
 
@@ -162,7 +161,6 @@ class LidarrHistory(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.records = [LidarrAlbumHistory(field) for field in self.records or []]
 
 
@@ -200,7 +198,6 @@ class LidarrMetadataProfile(_Common3):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.primaryAlbumTypes = [
             _LidarrAlbumType(x) for x in self.primaryAlbumTypes or []
         ]
@@ -231,7 +228,6 @@ class LidarrQueueRecord(_Common4, _Common7):
 
     def __post_init__(self):
         """Post init."""
-        # super().__post_init__()
         self.estimatedCompletionTime = get_datetime(self.estimatedCompletionTime)
         self.quality = _Quality(self.quality) or {}
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
@@ -245,7 +241,6 @@ class LidarrQueue(_RecordCommon):
 
     def __post_init__(self):
         """Post init."""
-        # super().__post_init__()
         self.records = [LidarrQueueRecord(record) for record in self.records or []]
 
 

@@ -1,6 +1,7 @@
 """Tests for Radarr object models."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime
+import json
 
 from aiohttp.client import ClientSession
 import pytest
@@ -250,7 +251,7 @@ async def test_async_get_naming_config(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: RadarrNamingConfig = await client.async_get_naming_config()
+        data = await client.async_get_naming_config()
 
     assert data.colonReplacementFormat == "string"
     assert isinstance(data.id, int)
@@ -1140,6 +1141,41 @@ async def test_async_get_rename(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_async_add_movies(aresponses):
+    """Test adding movies."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/movie",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_movies(RadarrMovie("test"))
+    assert isinstance(data, RadarrMovie)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/movie/import",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/movie-list.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_movies([RadarrMovie("test")])
+    assert isinstance(data[0], RadarrMovie)
+
+
+@pytest.mark.asyncio
 async def test_async_edit_movies(aresponses):
     """Test editing movies."""
     aresponses.add(
@@ -1471,7 +1507,9 @@ async def test_async_radarr_commands(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_radarr_command(RadarrCommands.DOWNLOADED_MOVIES_SCAN)
+        data = await client.async_radarr_command(
+            RadarrCommands.DOWNLOADED_MOVIES_SCAN, path="/"
+        )
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -1503,7 +1541,9 @@ async def test_async_radarr_commands(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_radarr_command(RadarrCommands.REFRESH_MOVIE, [0])
+        data = await client.async_radarr_command(
+            RadarrCommands.REFRESH_MOVIE, [0], movieid=0
+        )
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -1519,7 +1559,7 @@ async def test_async_radarr_commands(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_radarr_command(RadarrCommands.RENAME_MOVIE)
+        data = await client.async_radarr_command(RadarrCommands.RENAME_MOVIE, movieid=0)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -1535,6 +1575,21 @@ async def test_async_radarr_commands(aresponses):
     async with ClientSession():
         client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_radarr_command(RadarrCommands.RESCAN_MOVIE)
+    assert isinstance(data, Command)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/command",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_radarr_command(RadarrCommands.RENAME_MOVIE, files=[0])
     assert isinstance(data, Command)
 
 

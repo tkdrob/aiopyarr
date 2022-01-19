@@ -5,16 +5,19 @@ from datetime import datetime
 from aiohttp.client import ClientSession
 import pytest
 
+from aiopyarr.exceptions import ArrException
 from aiopyarr.models.request import Command
 from aiopyarr.models.sonarr import (
     SonarrCommands,
     SonarrEpisode,
     SonarrEpisodeFile,
+    SonarrEventType,
     SonarrImportList,
     SonarrNamingConfig,
     SonarrNotification,
     SonarrRelease,
     SonarrSeries,
+    SonarrSeriesAdd,
 )
 from aiopyarr.sonarr_client import SonarrClient
 
@@ -245,7 +248,7 @@ async def test_async_get_history(aresponses):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/history?page=1&pageSize=10&sortKey=date&episodeId=0",
+        f"/api/{SONARR_API}/history?page=1&pageSize=10&sortKey=date&eventType=grabbed&episodeId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -256,7 +259,9 @@ async def test_async_get_history(aresponses):
     )
     async with ClientSession():
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(recordid=0)
+        data = await client.async_get_history(
+            recordid=0, event_type=SonarrEventType.GRABBED
+        )
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
@@ -402,6 +407,9 @@ async def test_async_parse_title_or_path(aresponses):
     assert isinstance(data.episodes[0].absoluteEpisodeNumber, int)
     assert data.episodes[0].unverifiedSceneNumbering is False
     assert isinstance(data.episodes[0].id, int)
+
+    with pytest.raises(ArrException):
+        await client.async_parse_title_or_path()
 
 
 @pytest.mark.asyncio
@@ -596,6 +604,9 @@ async def test_async_lookup_series(aresponses):
     assert isinstance(data[0].statistics.sizeOnDisk, int)
     assert isinstance(data[0].statistics.percentOfEpisodes, float)
     assert isinstance(data[0].id, int)
+
+    with pytest.raises(ArrException):
+        await client.async_lookup_series()
 
 
 @pytest.mark.asyncio
@@ -813,7 +824,7 @@ async def test_async_get_naming_config(aresponses):
     )
     async with ClientSession():
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: SonarrNamingConfig = await client.async_get_naming_config()
+        data = await client.async_get_naming_config()
 
     assert data.renameEpisodes is True
     assert data.replaceIllegalCharacters is True
@@ -1058,7 +1069,9 @@ async def test_async_sonarr_commands(aresponses):
     )
     async with ClientSession():
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_sonarr_command(SonarrCommands.RENAME_SERIES, seriesid=[0])
+        await client.async_sonarr_command(
+            SonarrCommands.RENAME_SERIES, files=[0], seriesid=[0]
+        )
 
     aresponses.add(
         "127.0.0.1:8989",
@@ -1195,6 +1208,29 @@ async def test_async_push_release(aresponses):
         client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
         data = await client.async_push_release(SonarrRelease("test"))
     assert isinstance(data, SonarrRelease)
+
+
+@pytest.mark.asyncio
+async def test_async_add_series(aresponses):
+    """Test adding series."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/series",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = SonarrSeriesAdd("test")
+    assert data.addOptions.ignoreEpisodesWithFiles is None
+    assert data.addOptions.ignoreEpisodesWithoutFiles is None
+    assert data.addOptions.searchForMissingEpisodes is None
+    async with ClientSession():
+        client = SonarrClient(host_configuration=TEST_HOST_CONFIGURATION)
+        data = await client.async_add_series(data)
+    assert isinstance(data, SonarrSeries)
 
 
 @pytest.mark.asyncio

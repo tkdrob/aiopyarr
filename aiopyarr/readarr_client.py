@@ -23,7 +23,6 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
-from .decorator import api_command
 from .models.host_configuration import PyArrHostConfiguration
 from .models.readarr import (
     ReadarrAuthor,
@@ -85,6 +84,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             port,
             request_timeout,
             raw_response,
+            api_ver,
             host_configuration,
             session,
             hostname,
@@ -94,7 +94,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            api_ver,
             user_agent,
         )
 
@@ -150,50 +149,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             data=data,
             method=HTTPMethod.DELETE,
         )
-
-    async def _async_construct_book_json(  # pylint: disable=too-many-arguments
-        self,
-        db_id: int,
-        book_id_type: ReadarrBookTypes,
-        root_dir: str,
-        quality_profile_id: int = 1,
-        metadata_profile_id: int = 0,
-        monitored: bool = True,
-        search_for_new_book: bool = False,
-        author_monitor: str = "all",
-        author_search_for_missing_books: bool = False,
-    ) -> ReadarrBookLookup | dict | None:
-        """Construct the JSON required to add a new book to Readarr.
-
-        Args:
-            db_id: goodreads, isbn, asin ID
-            book_id_type: goodreads / isbn / asin
-            root_dir: root directory for books
-            quality_profile_id: quality profile id
-            metadata_profile_id: metadata profile id
-            monitored: should the book be monitored
-            search_for_new_book : shour a search for the new book happen
-            author_monitor: monitor the author.
-            author_search_for_missing_books: search for other missing books by the author
-        """
-        books = await self.async_lookup_book(book_id_type + ":" + str(db_id))
-        if not isinstance(books, list) or books[0].author is None:
-            return None
-
-        books[0].author.metadataProfileId = metadata_profile_id
-        books[0].author.qualityProfileId = quality_profile_id
-        books[0].author.rootFolderPath = root_dir
-        if books[0].author.addOptions:
-            books[0].author.addOptions.monitor = author_monitor
-            books[
-                0
-            ].author.addOptions.searchForMissingBooks = author_search_for_missing_books
-        books[0].monitored = monitored
-
-        books[0].author.__setattr__("manualAdd", True)
-        books[0].__setattr__("addOptions", {"searchForNewBook": search_for_new_book})
-
-        return books[0]
 
     async def async_readarr_command(self, command: ReadarrCommands) -> Command:
         """Send a command to Readarr."""
@@ -455,9 +410,11 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     # /api/v1/calendar/readarr.ics not working
 
-    @api_command("config/development", datatype=ReadarrDevelopmentConfig)
     async def async_get_development_config(self) -> ReadarrDevelopmentConfig:
         """Get development config."""
+        return await self._async_request(
+            "config/development", datatype=ReadarrDevelopmentConfig
+        )
 
     # Documented, does not seem to work.
     async def async_edit_development_config(
@@ -585,9 +542,9 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    @api_command("config/naming", datatype=ReadarrNamingConfig)
     async def async_get_naming_config(self) -> ReadarrNamingConfig:
         """Get information about naming configuration."""
+        return await self._async_request("config/naming", datatype=ReadarrNamingConfig)
 
     async def async_edit_naming_config(
         self, data: ReadarrNamingConfig
