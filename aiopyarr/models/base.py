@@ -1,6 +1,7 @@
 """PyArr base model."""
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from re import search, sub
 from typing import Any
@@ -29,15 +30,16 @@ def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
     return _input
 
 
+@dataclass(init=False)
 class BaseModel:
     """BaseModel."""
 
-    _datatype: BaseModel | None = None
+    _datatype: Any = None
 
     def __init__(
         self,
         data: dict[str, Any] | list[dict[str, Any]],
-        datatype: BaseModel = None,
+        datatype: Any = None,
     ) -> None:
         """Init."""
         self._datatype = datatype

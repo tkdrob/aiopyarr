@@ -11,11 +11,11 @@ from . import API_TOKEN, RADARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_host_configuration(aresponses):
+async def test_host_configuration(aresponses) -> None:
     """Test host configuration."""
     aresponses.add(
         "127.0.0.1:7000",
-        f"/api/{RADARR_API}/system/status",
+        "/api/v4/system/status",
         "GET",
         aresponses.Response(
             status=200,
@@ -29,7 +29,10 @@ async def test_host_configuration(aresponses):
     )
     async with ClientSession():
         client = RadarrClient(
-            host_configuration=host_config, user_agent="test", raw_response=True
+            host_configuration=host_config,
+            user_agent="test",
+            raw_response=True,
+            api_ver="v4",
         )
         data = await client.async_get_system_status()
     assert client._host.api_token == API_TOKEN
@@ -40,9 +43,9 @@ async def test_host_configuration(aresponses):
     assert client._host.verify_ssl is True
     assert client._host.base_api_path is None
     assert client._host.url is None
-    assert client._host.api_ver == RADARR_API
+    assert client._host.api_ver == "v4"
     url = client._host.api_url("test")
-    assert url == "http://127.0.0.1:7000/api/v3/test"
+    assert url == "http://127.0.0.1:7000/api/v4/test"
     assert client._session.headers["X-Api-Key"] == API_TOKEN
     assert client._session.headers["User-Agent"] == "test"
 
@@ -53,7 +56,7 @@ async def test_host_configuration(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_with_hostname(aresponses):
+async def test_host_configuration_with_hostname(aresponses) -> None:
     """Test host configuration with hostname."""
     aresponses.add(
         "localhost:7000",
@@ -88,7 +91,7 @@ async def test_host_configuration_with_hostname(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_with_url(aresponses):
+async def test_host_configuration_with_url(aresponses) -> None:
     """Test host configuration with url."""
     aresponses.add(
         "localhost:7878",
@@ -128,7 +131,7 @@ async def test_host_configuration_with_url(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_no_host_configuration_given(aresponses):
+async def test_no_host_configuration_given(aresponses) -> None:
     """Test host configuration not given."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -163,7 +166,7 @@ async def test_no_host_configuration_given(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_exceptions():
+async def test_host_configuration_exceptions() -> None:
     """Test host configuration exceptions."""
 
     with pytest.raises(ArrException):

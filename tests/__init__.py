@@ -13,7 +13,7 @@ READARR_API = "v1"
 SONARR_API = "v3"
 
 
-def load_fixture(filename):
+def load_fixture(filename) -> str:
     """Load a fixture."""
     return (
         pathlib.Path(__file__)

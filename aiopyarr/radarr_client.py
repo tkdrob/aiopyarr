@@ -114,7 +114,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-        # TODO check /search for all
+        # check /search for all
 
     async def async_edit_movies(
         self, data: RadarrMovie | RadarrMovieEditor, move_files: bool = False

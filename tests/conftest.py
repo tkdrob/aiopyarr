@@ -1,13 +1,16 @@
 """Tests configuration."""
+# pylint:disable=redefined-outer-name
 import asyncio
 
 from aiohttp import ClientSession
 import pytest
 
+from aiopyarr.lidarr_client import LidarrClient
 from aiopyarr.radarr_client import RadarrClient
+from aiopyarr.readarr_client import ReadarrClient
+from aiopyarr.sonarr_client import SonarrClient
 
-from . import TEST_HOST_CONFIGURATION
-from .common import MockedRequests, MockResponse
+from tests import TEST_HOST_CONFIGURATION
 
 
 @pytest.fixture(autouse=True)
@@ -17,31 +20,43 @@ def loop_factory():
 
 
 @pytest.fixture()
-def requests():
-    yield MockedRequests()
+async def apisession():
+    """Create client session."""
+    async with ClientSession() as sess:
+        yield sess
 
 
 @pytest.fixture()
-def response():
-    yield MockResponse()
+async def lidarr_client(apisession):
+    """Create Lidarr Client."""
+    async with LidarrClient(
+        session=apisession, host_configuration=TEST_HOST_CONFIGURATION
+    ) as obj:
+        yield obj
 
 
 @pytest.fixture()
-async def client_session(response, requests):
-    async def _mocked_request(*args, **kwargs):
-        response.url = args[1]
-        requests.add(args[1])
-        return response
-
-    async with ClientSession() as session:
-        requests.clear()
-        session._request = _mocked_request
-        yield session
-
-
-@pytest.fixture()
-async def client(client_session):
+async def radarr_client(apisession):
+    """Create Radarr Client."""
     async with RadarrClient(
-        session=client_session, host_configuration=TEST_HOST_CONFIGURATION
+        session=apisession, host_configuration=TEST_HOST_CONFIGURATION
+    ) as obj:
+        yield obj
+
+
+@pytest.fixture()
+async def readarr_client(apisession):
+    """Create Readarr Client."""
+    async with ReadarrClient(
+        session=apisession, host_configuration=TEST_HOST_CONFIGURATION
+    ) as obj:
+        yield obj
+
+
+@pytest.fixture()
+async def sonarr_client(apisession):
+    """Create Sonarr Client."""
+    async with SonarrClient(
+        session=apisession, host_configuration=TEST_HOST_CONFIGURATION
     ) as obj:
         yield obj

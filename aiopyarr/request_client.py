@@ -112,10 +112,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             host_configuration.ssl = ssl
         if verify_ssl is not None:
             host_configuration.verify_ssl = verify_ssl
-        if base_api_path is not None:  # TODO remove if blocks if works without
+        if base_api_path is not None:
             host_configuration.base_api_path = base_api_path
-        if api_ver is not None:
-            host_configuration.api_ver = api_ver
+        host_configuration.api_ver = api_ver
 
         if session is None:
             if user_agent:
