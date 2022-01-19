@@ -3,7 +3,6 @@
 from datetime import datetime
 import json
 
-from aiohttp.client import ClientSession
 import pytest
 
 from aiopyarr.const import ATTR_DATA
@@ -35,11 +34,11 @@ from aiopyarr.models.request import Command, RootFolder
 from aiopyarr.models.response import PyArrResponse
 from aiopyarr.readarr_client import ReadarrClient
 
-from . import READARR_API, TEST_HOST_CONFIGURATION, load_fixture
+from . import READARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_author(aresponses):
+async def test_async_get_author(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting author info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -52,9 +51,7 @@ async def test_async_get_author(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_author(authorid=0)
+    data = await readarr_client.async_get_author(authorid=0)
     assert isinstance(data.id, int)
     assert isinstance(data.authorMetadataId, int)
     assert data.status == "string"
@@ -926,7 +923,7 @@ async def test_async_get_author(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_author_lookup(aresponses):
+async def test_async_author_lookup(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting author lookup info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -939,9 +936,8 @@ async def test_async_author_lookup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_author_lookup(term="string")
+
+    data = await readarr_client.async_author_lookup(term="string")
     assert isinstance(data[0].authorMetadataId, int)
     assert data[0].status == "string"
     assert data[0].ended is False
@@ -980,7 +976,7 @@ async def test_async_author_lookup(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses):
+async def test_async_get_blocklist(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting blocklist info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -993,9 +989,7 @@ async def test_async_get_blocklist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_blocklist()
+    data = await readarr_client.async_get_blocklist()
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
     assert data.sortKey == "string"
@@ -1884,7 +1878,7 @@ async def test_async_get_blocklist(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_book(aresponses):
+async def test_async_get_book(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -1897,9 +1891,7 @@ async def test_async_get_book(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_book(bookid=0)
+    data = await readarr_client.async_get_book(bookid=0)
     assert isinstance(data[0].id, int)
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
@@ -2552,7 +2544,7 @@ async def test_async_get_book(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_book_file(aresponses):
+async def test_async_get_book_file(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting book file info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2565,9 +2557,7 @@ async def test_async_get_book_file(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_book_file(fileid=[0])
+    data = await readarr_client.async_get_book_file(fileid=[0])
     assert isinstance(data.id, int)
     assert isinstance(data.authorId, int)
     assert isinstance(data.bookId, int)
@@ -2650,13 +2640,11 @@ async def test_async_get_book_file(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_book_file(authorid=0, bookid=0)
+    await readarr_client.async_get_book_file(authorid=0, bookid=0)
 
 
 @pytest.mark.asyncio
-async def test_async_book_lookup(aresponses):
+async def test_async_book_lookup(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2669,9 +2657,7 @@ async def test_async_book_lookup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_lookup_book(term="test")
+    data = await readarr_client.async_lookup_book(term="test")
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
     assert data[0].seriesTitle == "string"
@@ -2753,7 +2739,7 @@ async def test_async_book_lookup(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses):
+async def test_async_get_calendar(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2768,9 +2754,7 @@ async def test_async_get_calendar(aresponses):
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_calendar(start, end)
+    data = await readarr_client.async_get_calendar(start, end)
     assert isinstance(data[0].id, int)
     assert data[0].title == "string"
     assert data[0].authorTitle == "string"
@@ -3613,7 +3597,9 @@ async def test_async_get_calendar(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_wanted_missing(aresponses):
+async def test_async_get_wanted_missing(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting wanted and missing books."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3626,9 +3612,7 @@ async def test_async_get_wanted_missing(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_wanted_missing()
+    data = await readarr_client.async_get_wanted_missing()
     assert data.page == 1
     assert data.pageSize == 10
     assert data.sortKey == "string"
@@ -3725,7 +3709,9 @@ async def test_async_get_wanted_missing(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_wanted_cutoff(aresponses):
+async def test_async_get_wanted_cutoff(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3738,9 +3724,7 @@ async def test_async_get_wanted_cutoff(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_wanted_cutoff()
+    data = await readarr_client.async_get_wanted_cutoff()
     assert isinstance(data, ReadarrWantedCutoff)
 
     aresponses.add(
@@ -3753,14 +3737,12 @@ async def test_async_get_wanted_cutoff(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_wanted_cutoff(0)
+    data = await readarr_client.async_get_wanted_cutoff(0)
     assert isinstance(data, ReadarrBook)
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses):
+async def test_async_get_history(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3773,9 +3755,7 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history()
+    data = await readarr_client.async_get_history()
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
     assert data.sortKey == "date"
@@ -3811,7 +3791,9 @@ async def test_async_get_history(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_lists(aresponses):
+async def test_async_get_import_lists(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3824,9 +3806,7 @@ async def test_async_get_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_import_lists()
+    data = await readarr_client.async_get_import_lists()
     assert data[0].enableAutomaticAdd is True
     assert data[0].shouldMonitor == "string"
     assert data[0].shouldMonitorExisting is False
@@ -3853,7 +3833,9 @@ async def test_async_get_import_lists(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_metadata_profiles(aresponses):
+async def test_async_get_metadata_profiles(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3866,9 +3848,7 @@ async def test_async_get_metadata_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_metadata_profiles()
+    data = await readarr_client.async_get_metadata_profiles()
     assert isinstance(data[0].id, int)
     assert data[0].name == "string"
     assert isinstance(data[0].minPages, int)
@@ -3882,7 +3862,9 @@ async def test_async_get_metadata_profiles(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_metadata_provider_configs(aresponses):
+async def test_async_get_metadata_provider_configs(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting metadata provider configs."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3895,9 +3877,7 @@ async def test_async_get_metadata_provider_configs(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_metadata_provider_configs()
+    data = await readarr_client.async_get_metadata_provider_configs()
     assert data.writeAudioTags == "no"
     assert data.scrubAudioTags is False
     assert data.writeBookTags == "newFiles"
@@ -3907,7 +3887,9 @@ async def test_async_get_metadata_provider_configs(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_naming_config(aresponses):
+async def test_async_get_naming_config(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3920,9 +3902,7 @@ async def test_async_get_naming_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data: ReadarrNamingConfig = await client.async_get_naming_config()
+    data = await readarr_client.async_get_naming_config()
 
     assert data.renameBooks is False
     assert data.replaceIllegalCharacters is True
@@ -3936,7 +3916,9 @@ async def test_async_get_naming_config(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_notifications(aresponses):
+async def test_async_get_notifications(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting notifications."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3949,9 +3931,7 @@ async def test_async_get_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_notifications()
+    data = await readarr_client.async_get_notifications()
 
     assert data[0].onGrab is True
     assert data[0].onReleaseImport is True
@@ -3987,7 +3967,7 @@ async def test_async_get_notifications(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_parse(aresponses):
+async def test_async_parse(aresponses, readarr_client: ReadarrClient) -> None:
     """Test parsing book file name."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -4000,9 +3980,7 @@ async def test_async_parse(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_parse("test")
+    data = await readarr_client.async_parse("test")
 
     assert isinstance(data.id, int)
     assert data.title == "string"
@@ -5662,7 +5640,7 @@ async def test_async_parse(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses):
+async def test_async_get_queue(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5675,9 +5653,7 @@ async def test_async_get_queue(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_queue()
+    data = await readarr_client.async_get_queue()
     assert data.page == 1
     assert data.pageSize == 10
     assert data.sortKey == "timeleft"
@@ -5712,7 +5688,9 @@ async def test_async_get_queue(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_details(aresponses):
+async def test_async_get_queue_details(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5725,9 +5703,7 @@ async def test_async_get_queue_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_queue_details(authorid=0, bookids=[0])
+    data = await readarr_client.async_get_queue_details(authorid=0, bookids=[0])
     assert isinstance(data[0].authorId, int)
     assert isinstance(data[0].bookId, int)
     assert data[0].author
@@ -5840,7 +5816,7 @@ async def test_async_get_queue_details(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses):
+async def test_async_get_release(aresponses, readarr_client: ReadarrClient) -> None:
     """Test searching indexers for specified fields."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5853,9 +5829,7 @@ async def test_async_get_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_release(authorid=0, bookid=0)
+    data = await readarr_client.async_get_release(authorid=0, bookid=0)
     assert data[0].guid == "string"
     assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
@@ -5893,7 +5867,9 @@ async def test_async_get_release(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_pushed_release(aresponses):
+async def test_async_get_pushed_release(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test getting pushed release."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5905,14 +5881,12 @@ async def test_async_get_pushed_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_pushed_release("test")
+    data = await readarr_client.async_get_pushed_release("test")
     assert isinstance(data, ReadarrRelease)
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses):
+async def test_async_get_rename(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5925,9 +5899,7 @@ async def test_async_get_rename(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_rename()
+    data = await readarr_client.async_get_rename()
     assert isinstance(data[0].authorId, int)
     assert isinstance(data[0].bookId, int)
     assert isinstance(data[0].bookFileId, int)
@@ -5936,7 +5908,7 @@ async def test_async_get_rename(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_retag(aresponses):
+async def test_async_get_retag(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5949,9 +5921,7 @@ async def test_async_get_retag(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_retag()
+    data = await readarr_client.async_get_retag()
     assert isinstance(data[0].authorId, int)
     assert isinstance(data[0].bookId, int)
     assert isinstance(data[0].trackNumbers[0], int)
@@ -5963,7 +5933,7 @@ async def test_async_get_retag(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_search(aresponses):
+async def test_async_search(aresponses, readarr_client: ReadarrClient) -> None:
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5976,9 +5946,7 @@ async def test_async_search(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_search("test")
+    data = await readarr_client.async_search("test")
     assert data[0].foreignId == "0"
     assert isinstance(data[0].author.authorMetadataId, int)
     assert data[0].author.status == "string"
@@ -6019,7 +5987,7 @@ async def test_async_search(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_series(aresponses):
+async def test_async_get_series(aresponses, readarr_client: ReadarrClient) -> None:
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6032,9 +6000,7 @@ async def test_async_get_series(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_series(0)
+    data = await readarr_client.async_get_series(0)
     assert data[0].title == "string"
     assert data[0].description == "string"
     assert data[0].links[0].position == "string"
@@ -6046,7 +6012,7 @@ async def test_async_get_series(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses):
+async def test_async_get_tag_details(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6059,9 +6025,7 @@ async def test_async_get_tag_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_tags_details(tagid=0)
+    data = await readarr_client.async_get_tags_details(tagid=0)
 
     assert isinstance(data.id, int)
     assert data.label == "string"
@@ -6073,7 +6037,7 @@ async def test_async_get_tag_details(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_readarr_bookshelf():
+async def test_readarr_bookshelf() -> None:
     """Test readarr bookshelf model."""
     item = PyArrResponse(
         data={ATTR_DATA: json.loads(load_fixture("readarr/bookshelf.json"))},
@@ -6395,7 +6359,7 @@ async def test_readarr_bookshelf():
 
 
 @pytest.mark.asyncio
-async def test_async_add_author(aresponses):
+async def test_async_add_author(aresponses, readarr_client: ReadarrClient) -> None:
     """Test adding author."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6407,14 +6371,12 @@ async def test_async_add_author(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_author(ReadarrAuthor("test"))
+    data = await readarr_client.async_add_author(ReadarrAuthor("test"))
     assert isinstance(data, ReadarrAuthor)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_authors(aresponses):
+async def test_async_edit_authors(aresponses, readarr_client: ReadarrClient) -> None:
     """Test editing authors."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6427,9 +6389,7 @@ async def test_async_edit_authors(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_authors(ReadarrAuthor("test"))
+    data = await readarr_client.async_edit_authors(ReadarrAuthor("test"))
     assert isinstance(data, ReadarrAuthor)
 
     aresponses.add(
@@ -6443,13 +6403,11 @@ async def test_async_edit_authors(aresponses):
         match_querystring=True,
     )
 
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_authors(ReadarrAuthorEditor("test"))
+    await readarr_client.async_edit_authors(ReadarrAuthorEditor("test"))
 
 
 @pytest.mark.asyncio
-async def test_async_delete_authors(aresponses):
+async def test_async_delete_authors(aresponses, readarr_client: ReadarrClient) -> None:
     """Test editing authors."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6461,9 +6419,7 @@ async def test_async_delete_authors(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_authors(0)
+    await readarr_client.async_delete_authors(0)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -6475,13 +6431,13 @@ async def test_async_delete_authors(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_authors([0, 1])
+    await readarr_client.async_delete_authors([0, 1])
 
 
 @pytest.mark.asyncio
-async def test_async_readarr_commands(aresponses):
+async def test_async_readarr_commands(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test Readarr commands."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6494,9 +6450,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.APP_UPDATE_CHECK)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.APP_UPDATE_CHECK)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6510,9 +6464,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.REFRESH_AUTHOR)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.REFRESH_AUTHOR)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6526,9 +6478,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.RESCAN_FOLDERS)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.RESCAN_FOLDERS)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6542,9 +6492,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.AUTHOR_SEARCH)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.AUTHOR_SEARCH)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6558,9 +6506,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.BOOK_SEARCH)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.BOOK_SEARCH)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6574,9 +6520,7 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.REFRESH_BOOK)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.REFRESH_BOOK)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -6590,14 +6534,12 @@ async def test_async_readarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_readarr_command(ReadarrCommands.RENAME_AUTHOR)
+    data = await readarr_client.async_readarr_command(ReadarrCommands.RENAME_AUTHOR)
     assert isinstance(data, Command)
 
 
 @pytest.mark.asyncio
-async def test_async_add_book(aresponses):
+async def test_async_add_book(aresponses, readarr_client: ReadarrClient) -> None:
     """Test adding book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6609,14 +6551,12 @@ async def test_async_add_book(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_book(ReadarrBook("test"))
+    data = await readarr_client.async_add_book(ReadarrBook("test"))
     assert isinstance(data, ReadarrBook)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_book(aresponses):
+async def test_async_edit_book(aresponses, readarr_client: ReadarrClient) -> None:
     """Test editing book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6628,14 +6568,12 @@ async def test_async_edit_book(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_book(ReadarrBook("test"))
+    data = await readarr_client.async_edit_book(ReadarrBook("test"))
     assert isinstance(data, ReadarrBook)
 
 
 @pytest.mark.asyncio
-async def test_async_delete_book(aresponses):
+async def test_async_delete_book(aresponses, readarr_client: ReadarrClient) -> None:
     """Test deleting book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6647,13 +6585,11 @@ async def test_async_delete_book(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_book(0)
+    await readarr_client.async_delete_book(0)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_book_files(aresponses):
+async def test_async_edit_book_files(aresponses, readarr_client: ReadarrClient) -> None:
     """Test editing book files."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6665,9 +6601,7 @@ async def test_async_edit_book_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_book_files(ReadarrBookFile("test"))
+    data = await readarr_client.async_edit_book_files(ReadarrBookFile("test"))
     assert isinstance(data, ReadarrBookFile)
 
     aresponses.add(
@@ -6683,13 +6617,13 @@ async def test_async_edit_book_files(aresponses):
     data = ReadarrBookFileEditor(
         {"bookFileIds": 0, "quality": {"quality": "test", "revision": "test"}}
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_book_files(data)
+    await readarr_client.async_edit_book_files(data)
 
 
 @pytest.mark.asyncio
-async def test_async_delete_book_files(aresponses):
+async def test_async_delete_book_files(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test deleting book files."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6701,9 +6635,7 @@ async def test_async_delete_book_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_book_files(0)
+    await readarr_client.async_delete_book_files(0)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -6715,13 +6647,11 @@ async def test_async_delete_book_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_book_files([0])
+    await readarr_client.async_delete_book_files([0])
 
 
 @pytest.mark.asyncio
-async def test_async_add_bookshelf(aresponses):
+async def test_async_add_bookshelf(aresponses, readarr_client: ReadarrClient) -> None:
     """Test adding bookshelf."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6733,13 +6663,38 @@ async def test_async_add_bookshelf(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_add_bookshelf(ReadarrBookshelf("test"))
+    await readarr_client.async_add_bookshelf(ReadarrBookshelf("test"))
 
 
 @pytest.mark.asyncio
-async def test_async_edit_development_config(aresponses):
+async def test_async_get_development_config(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
+    """Test getting development config."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/config/development",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/config-development.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await readarr_client.async_get_development_config()
+    assert data.metadataSource == "string"
+    assert data.consoleLogLevel == "string"
+    assert data.logSql is False
+    assert isinstance(data.logRotate, int)
+    assert data.filterSentryEvents is True
+    assert isinstance(data.id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_development_config(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing development config."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6751,16 +6706,16 @@ async def test_async_edit_development_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_development_config(
-            ReadarrDevelopmentConfig("test")
-        )
+    data = await readarr_client.async_edit_development_config(
+        ReadarrDevelopmentConfig("test")
+    )
     assert isinstance(data, ReadarrDevelopmentConfig)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_import_list(aresponses):
+async def test_async_edit_import_list(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing import list."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6772,14 +6727,12 @@ async def test_async_edit_import_list(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_import_list(ReadarrImportList("test"))
+    data = await readarr_client.async_edit_import_list(ReadarrImportList("test"))
     assert isinstance(data, ReadarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_add_import_list(aresponses):
+async def test_async_add_import_list(aresponses, readarr_client: ReadarrClient) -> None:
     """Test adding import list."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6791,14 +6744,14 @@ async def test_async_add_import_list(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_import_list(ReadarrImportList("test"))
+    data = await readarr_client.async_add_import_list(ReadarrImportList("test"))
     assert isinstance(data, ReadarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_test_import_lists(aresponses):
+async def test_async_test_import_lists(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test import list testing."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6811,9 +6764,8 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists(ReadarrImportList("test")) is True
+    data = await readarr_client.async_test_import_lists(ReadarrImportList("test"))
+    assert data is True
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -6826,9 +6778,7 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists() is True
+    assert await readarr_client.async_test_import_lists() is True
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -6841,13 +6791,13 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists() is False
+    assert await readarr_client.async_test_import_lists() is False
 
 
 @pytest.mark.asyncio
-async def test_async_importlist_action(aresponses):
+async def test_async_importlist_action(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6859,14 +6809,15 @@ async def test_async_importlist_action(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    data = await client.async_importlist_action(ReadarrImportList({"name": "test"}))
+    data = ReadarrImportList({"name": "test"})
+    data = await readarr_client.async_importlist_action(data)
     assert isinstance(data, ReadarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_metadata_profile(aresponses):
+async def test_async_edit_metadata_profile(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing metadata profile."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6878,14 +6829,15 @@ async def test_async_edit_metadata_profile(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_metadata_profile(ReadarrMetadataProfile("test"))
+    data = ReadarrMetadataProfile("test")
+    data = await readarr_client.async_edit_metadata_profile(data)
     assert isinstance(data, ReadarrMetadataProfile)
 
 
 @pytest.mark.asyncio
-async def test_async_add_metadata_profile(aresponses):
+async def test_async_add_metadata_profile(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test adding metadata profile."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6897,14 +6849,15 @@ async def test_async_add_metadata_profile(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_metadata_profile(ReadarrMetadataProfile("test"))
+    data = ReadarrMetadataProfile("test")
+    data = await readarr_client.async_add_metadata_profile(data)
     assert isinstance(data, ReadarrMetadataProfile)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_metadata_provider_config(aresponses):
+async def test_async_edit_metadata_provider_config(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing metadata profile."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6916,16 +6869,15 @@ async def test_async_edit_metadata_provider_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_metadata_provider_config(
-            ReadarrMetadataProviderConfig({"id": 0})
-        )
+    data = ReadarrMetadataProviderConfig({"id": 0})
+    data = await readarr_client.async_edit_metadata_provider_config(data)
     assert isinstance(data, ReadarrMetadataProviderConfig)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_naming_config(aresponses):
+async def test_async_edit_naming_config(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing naming config."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6937,14 +6889,14 @@ async def test_async_edit_naming_config(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_naming_config(ReadarrNamingConfig("test"))
+    data = await readarr_client.async_edit_naming_config(ReadarrNamingConfig("test"))
     assert isinstance(data, ReadarrNamingConfig)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_notification(aresponses):
+async def test_async_edit_notification(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing notification."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6956,14 +6908,14 @@ async def test_async_edit_notification(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_notification(ReadarrNotification("test"))
+    data = await readarr_client.async_edit_notification(ReadarrNotification("test"))
     assert isinstance(data, ReadarrNotification)
 
 
 @pytest.mark.asyncio
-async def test_async_add_notification(aresponses):
+async def test_async_add_notification(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test adding notification."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6975,14 +6927,14 @@ async def test_async_add_notification(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_notification(ReadarrNotification("test"))
+    data = await readarr_client.async_add_notification(ReadarrNotification("test"))
     assert isinstance(data, ReadarrNotification)
 
 
 @pytest.mark.asyncio
-async def test_async_test_notifications(aresponses):
+async def test_async_test_notifications(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test notification testing."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6995,9 +6947,8 @@ async def test_async_test_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_notifications(ReadarrNotification("test")) is True
+    data = ReadarrNotification("test")
+    assert await readarr_client.async_test_notifications(data) is True
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -7010,9 +6961,7 @@ async def test_async_test_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_notifications() is True
+    assert await readarr_client.async_test_notifications() is True
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -7025,13 +6974,13 @@ async def test_async_test_notifications(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_notifications() is False
+    assert await readarr_client.async_test_notifications() is False
 
 
 @pytest.mark.asyncio
-async def test_async_download_release(aresponses):
+async def test_async_download_release(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test download release."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -7043,14 +6992,14 @@ async def test_async_download_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_download_release("test", 0)
+    data = await readarr_client.async_download_release("test", 0)
     assert isinstance(data, ReadarrRelease)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_root_folder(aresponses):
+async def test_async_edit_root_folder(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
     """Test editing root folder."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -7062,7 +7011,5 @@ async def test_async_edit_root_folder(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = ReadarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_root_folder(RootFolder("test"))
+    data = await readarr_client.async_edit_root_folder(RootFolder("test"))
     assert isinstance(data, RootFolder)

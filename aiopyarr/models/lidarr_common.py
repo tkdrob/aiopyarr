@@ -153,7 +153,6 @@ class _LidarrRelease(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        super().__post_init__()
         self.media = [_LidarrMedia(x) for x in self.media or []]
 
 

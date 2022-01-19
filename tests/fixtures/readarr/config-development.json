@@ -1,8 +1,8 @@
 {
-  "metadataSource": "",
-  "consoleLogLevel": "",
+  "metadataSource": "string",
+  "consoleLogLevel": "string",
   "logSql": false,
-  "logRotate": 50,
+  "logRotate": 0,
   "filterSentryEvents": true,
-  "id": 1
+  "id": 0
 }

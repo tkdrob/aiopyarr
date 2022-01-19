@@ -3,7 +3,6 @@
 from datetime import datetime
 import json
 
-from aiohttp.client import ClientSession
 import pytest
 
 from aiopyarr.exceptions import ArrException
@@ -24,11 +23,11 @@ from aiopyarr.models.lidarr import (
 )
 from aiopyarr.models.request import Command
 
-from tests import LIDARR_API, TEST_HOST_CONFIGURATION, load_fixture
+from tests import LIDARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_albums(aresponses):
+async def test_async_get_albums(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -41,9 +40,7 @@ async def test_async_get_albums(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_albums(albumids=0)
+    data = await lidarr_client.async_get_albums(albumids=0)
     assert data.title == "string"
     assert data.disambiguation == "string"
     assert data.overview == "string"
@@ -134,9 +131,7 @@ async def test_async_get_albums(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_albums()
+    await lidarr_client.async_get_albums()
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -148,13 +143,11 @@ async def test_async_get_albums(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_albums(albumids=[0, 1], artistid=0, foreignalbumid=0)
+    await lidarr_client.async_get_albums(albumids=[0, 1], artistid=0, foreignalbumid=0)
 
 
 @pytest.mark.asyncio
-async def test_async_add_album(aresponses):
+async def test_async_add_album(aresponses, lidarr_client: LidarrClient) -> None:
     """Test adding album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -166,14 +159,12 @@ async def test_async_add_album(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_album(LidarrAlbum("test"))
+    data = await lidarr_client.async_add_album(LidarrAlbum("test"))
     assert isinstance(data, LidarrAlbum)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_albums(aresponses):
+async def test_async_edit_albums(aresponses, lidarr_client: LidarrClient) -> None:
     """Test editing album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -185,9 +176,7 @@ async def test_async_edit_albums(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_albums(LidarrAlbum("test"))
+    data = await lidarr_client.async_edit_albums(LidarrAlbum("test"))
     assert isinstance(data, LidarrAlbum)
 
     aresponses.add(
@@ -203,13 +192,11 @@ async def test_async_edit_albums(aresponses):
     editor = LidarrAlbumEditor({"albumids": [0], "monitored": True})
     assert isinstance(editor.albumids[0], int)
     assert editor.monitored is True
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_albums(editor)
+    await lidarr_client.async_edit_albums(editor)
 
 
 @pytest.mark.asyncio
-async def test_async_delete_album(aresponses):
+async def test_async_delete_album(aresponses, lidarr_client: LidarrClient) -> None:
     """Test deleting album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -221,13 +208,11 @@ async def test_async_delete_album(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_album(0)
+    await lidarr_client.async_delete_album(0)
 
 
 @pytest.mark.asyncio
-async def test_async_album_studio(aresponses):
+async def test_async_album_studio(aresponses, lidarr_client: LidarrClient) -> None:
     """Test album studio."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -239,13 +224,11 @@ async def test_async_album_studio(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_album_studio("test")
+    await lidarr_client.async_album_studio("test")
 
 
 @pytest.mark.asyncio
-async def test_async_get_artists(aresponses):
+async def test_async_get_artists(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting artists."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -258,9 +241,7 @@ async def test_async_get_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_artists(0)
+    data = await lidarr_client.async_get_artists(0)
     assert data.status == "string"
     assert data.ended is True
     assert data.artistName == "string"
@@ -305,9 +286,7 @@ async def test_async_get_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_artists()
+    await lidarr_client.async_get_artists()
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -319,13 +298,11 @@ async def test_async_get_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_artists("test")
+    await lidarr_client.async_get_artists("test")
 
 
 @pytest.mark.asyncio
-async def test_async_add_artist(aresponses):
+async def test_async_add_artist(aresponses, lidarr_client: LidarrClient) -> None:
     """Test adding artist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -337,14 +314,12 @@ async def test_async_add_artist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_artist(LidarrArtist("test"))
+    data = await lidarr_client.async_add_artist(LidarrArtist("test"))
     assert isinstance(data, LidarrArtist)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_artists(aresponses):
+async def test_async_edit_artists(aresponses, lidarr_client: LidarrClient) -> None:
     """Test editing artist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -356,9 +331,7 @@ async def test_async_edit_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_artists(LidarrArtist("test"))
+    data = await lidarr_client.async_edit_artists(LidarrArtist("test"))
     assert isinstance(data, LidarrArtist)
 
     aresponses.add(
@@ -371,13 +344,11 @@ async def test_async_edit_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_artists("test")
+    await lidarr_client.async_edit_artists("test")
 
 
 @pytest.mark.asyncio
-async def test_async_delete_artists(aresponses):
+async def test_async_delete_artists(aresponses, lidarr_client: LidarrClient) -> None:
     """Test deleting artists."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -389,9 +360,7 @@ async def test_async_delete_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_artists(0)
+    await lidarr_client.async_delete_artists(0)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -403,13 +372,11 @@ async def test_async_delete_artists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_artists([0])
+    await lidarr_client.async_delete_artists([0])
 
 
 @pytest.mark.asyncio
-async def test_async_album_lookup(aresponses):
+async def test_async_album_lookup(aresponses, lidarr_client: LidarrClient) -> None:
     """Test album lookup."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -422,9 +389,7 @@ async def test_async_album_lookup(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_album_lookup("test")
+    data = await lidarr_client.async_album_lookup("test")
     assert data[0].title == "string"
     assert data[0].disambiguation == "string"
     assert data[0].overview == "string"
@@ -502,7 +467,7 @@ async def test_async_album_lookup(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses):
+async def test_async_get_blocklist(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting blocklist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -515,9 +480,7 @@ async def test_async_get_blocklist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_blocklist()
+    data = await lidarr_client.async_get_blocklist()
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
     assert data.sortKey == "date"
@@ -571,7 +534,7 @@ async def test_async_get_blocklist(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses):
+async def test_async_get_calendar(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -586,9 +549,7 @@ async def test_async_get_calendar(aresponses):
     )
     start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_calendar(start, end)
+    data = await lidarr_client.async_get_calendar(start, end)
     assert data[0].title == "string"
     assert data[0].disambiguation == "string"
     assert data[0].overview == "string"
@@ -671,7 +632,7 @@ async def test_async_get_calendar(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_lidarr_commands(aresponses):
+async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) -> None:
     """Test sending lidarr commands."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -683,9 +644,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_lidarr_command(LidarrCommands.ALBUM_SEARCH)
+    data = await lidarr_client.async_lidarr_command(LidarrCommands.ALBUM_SEARCH)
     assert isinstance(data, Command)
 
     aresponses.add(
@@ -698,9 +657,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.APP_UPDATE_CHECK)
+    await lidarr_client.async_lidarr_command(LidarrCommands.APP_UPDATE_CHECK)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -712,9 +669,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.ARTIST_SEARCH)
+    await lidarr_client.async_lidarr_command(LidarrCommands.ARTIST_SEARCH)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -726,9 +681,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.ALBUM_SEARCH)
+    await lidarr_client.async_lidarr_command(LidarrCommands.ALBUM_SEARCH)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -740,9 +693,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.MISSING_ALBUM_SEARCH)
+    await lidarr_client.async_lidarr_command(LidarrCommands.MISSING_ALBUM_SEARCH)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -754,9 +705,7 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.REFRESH_ALBUM)
+    await lidarr_client.async_lidarr_command(LidarrCommands.REFRESH_ALBUM)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -768,13 +717,11 @@ async def test_async_lidarr_commands(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_lidarr_command(LidarrCommands.REFRESH_ARTIST)
+    await lidarr_client.async_lidarr_command(LidarrCommands.REFRESH_ARTIST)
 
 
 @pytest.mark.asyncio
-async def test_async_get_wanted(aresponses):
+async def test_async_get_wanted(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -787,9 +734,7 @@ async def test_async_get_wanted(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_wanted(recordid=0, missing=False)
+    data = await lidarr_client.async_get_wanted(recordid=0, missing=False)
     assert data.title == "string"
     assert data.disambiguation == "string"
     assert data.overview == "string"
@@ -882,15 +827,13 @@ async def test_async_get_wanted(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_wanted()
+    data = await lidarr_client.async_get_wanted()
     assert isinstance(data, LidarrWantedCutoff)
     assert isinstance(data.records[0], LidarrAlbum)
 
 
 @pytest.mark.asyncio
-async def test_async_parse(aresponses):
+async def test_async_parse(aresponses, lidarr_client: LidarrClient) -> None:
     """Test parsing track file name."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -903,9 +846,7 @@ async def test_async_parse(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_parse("test")
+    data = await lidarr_client.async_parse("test")
     assert data.title == "string"
     assert data.parsedAlbumInfo.albumTitle == "string"
     assert data.parsedAlbumInfo.artistName == "string"
@@ -928,7 +869,7 @@ async def test_async_parse(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_importlist(aresponses):
+async def test_async_get_importlist(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -941,9 +882,7 @@ async def test_async_get_importlist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_import_lists()
+    data = await lidarr_client.async_get_import_lists()
     assert data[0].enableAutomaticAdd is False
     assert data[0].shouldMonitor == "string"
     assert isinstance(data[0].qualityProfileId, int)
@@ -993,13 +932,11 @@ async def test_async_get_importlist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_import_lists(0)
+    await lidarr_client.async_get_import_lists(0)
 
 
 @pytest.mark.asyncio
-async def test_async_edit_importlist(aresponses):
+async def test_async_edit_importlist(aresponses, lidarr_client: LidarrClient) -> None:
     """Test editing import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1011,14 +948,12 @@ async def test_async_edit_importlist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_import_list(LidarrImportList("test"))
+    data = await lidarr_client.async_edit_import_list(LidarrImportList("test"))
     assert isinstance(data, LidarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_add_importlist(aresponses):
+async def test_async_add_importlist(aresponses, lidarr_client: LidarrClient) -> None:
     """Test adding import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1030,14 +965,12 @@ async def test_async_add_importlist(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_import_list(LidarrImportList("test"))
+    data = await lidarr_client.async_add_import_list(LidarrImportList("test"))
     assert isinstance(data, LidarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_test_import_lists(aresponses):
+async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) -> None:
     """Test import list testing."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1050,9 +983,8 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists(LidarrImportList("test")) is True
+    data = LidarrImportList("test")
+    assert await lidarr_client.async_test_import_lists(data) is True
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -1065,9 +997,7 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists() is True
+    assert await lidarr_client.async_test_import_lists() is True
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -1080,13 +1010,11 @@ async def test_async_test_import_lists(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    assert await client.async_test_import_lists() is False
+    assert await lidarr_client.async_test_import_lists() is False
 
 
 @pytest.mark.asyncio
-async def test_async_importlist_action(aresponses):
+async def test_async_importlist_action(aresponses, lidarr_client: LidarrClient) -> None:
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1098,14 +1026,13 @@ async def test_async_importlist_action(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-    data = await client.async_importlist_action(LidarrImportList({"name": "test"}))
+    data = LidarrImportList({"name": "test"})
+    data = await lidarr_client.async_importlist_action(data)
     assert isinstance(data, LidarrImportList)
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses):
+async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting_history."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1118,9 +1045,7 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(artist=True, album=True)
+    data = await lidarr_client.async_get_history(artist=True, album=True)
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
     assert data.sortKey == "date"
@@ -1273,9 +1198,7 @@ async def test_async_get_history(aresponses):
         match_querystring=True,
     )
     date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(date=date)
+    data = await lidarr_client.async_get_history(date=date)
     assert isinstance(data, LidarrAlbumHistory)
 
     aresponses.add(
@@ -1288,9 +1211,7 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(artist=0)
+    data = await lidarr_client.async_get_history(artist=0)
     assert isinstance(data, LidarrAlbumHistory)
 
     aresponses.add(
@@ -1303,16 +1224,16 @@ async def test_async_get_history(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_history(
-            artist=0, album=0, event_type=LidarrEventType.DOWNLOAD_FAILED
-        )
+    data = await lidarr_client.async_get_history(
+        artist=0, album=0, event_type=LidarrEventType.DOWNLOAD_FAILED
+    )
     assert isinstance(data, LidarrAlbumHistory)
 
 
 @pytest.mark.asyncio
-async def test_async_get_metadata_profiles(aresponses):
+async def test_async_get_metadata_profiles(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1325,9 +1246,7 @@ async def test_async_get_metadata_profiles(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_metadata_profiles()
+    data = await lidarr_client.async_get_metadata_profiles()
     assert data[0].name == "string"
     assert isinstance(data[0].primaryAlbumTypes[0].albumType.id, int)
     assert data[0].primaryAlbumTypes[0].albumType.name == "string"
@@ -1342,7 +1261,9 @@ async def test_async_get_metadata_profiles(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_edit_metadata_profile(aresponses):
+async def test_async_edit_metadata_profile(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
     """Test editing metadata profile."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1354,14 +1275,15 @@ async def test_async_edit_metadata_profile(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_metadata_profile(LidarrMetadataProfile("test"))
+    data = LidarrMetadataProfile("test")
+    data = await lidarr_client.async_edit_metadata_profile(data)
     assert isinstance(data, LidarrMetadataProfile)
 
 
 @pytest.mark.asyncio
-async def test_async_add_metadata_profile(aresponses):
+async def test_async_add_metadata_profile(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
     """Test adding metadata profile."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1373,14 +1295,13 @@ async def test_async_add_metadata_profile(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_add_metadata_profile(LidarrMetadataProfile("test"))
+    data = LidarrMetadataProfile("test")
+    data = await lidarr_client.async_add_metadata_profile(data)
     assert isinstance(data, LidarrMetadataProfile)
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses):
+async def test_async_get_queue(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1393,9 +1314,7 @@ async def test_async_get_queue(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_queue()
+    data = await lidarr_client.async_get_queue()
     assert isinstance(data.page, int)
     assert isinstance(data.page, int)
     assert data.sortKey == "timeleft"
@@ -1430,7 +1349,7 @@ async def test_async_get_queue(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_details(aresponses):
+async def test_async_get_queue_details(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1443,9 +1362,7 @@ async def test_async_get_queue_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_queue_details(artistid=0, albumids=[0])
+    data = await lidarr_client.async_get_queue_details(artistid=0, albumids=[0])
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].albumId, int)
     assert data[0].artist.status == "string"
@@ -1586,13 +1503,11 @@ async def test_async_get_queue_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_get_queue_details()
+    await lidarr_client.async_get_queue_details()
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses):
+async def test_async_get_release(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1605,9 +1520,7 @@ async def test_async_get_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_release(artistid=0, albumid=0)
+    data = await lidarr_client.async_get_release(artistid=0, albumid=0)
     assert data[0].guid == "string"
     assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
@@ -1646,7 +1559,7 @@ async def test_async_get_release(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_downlaod_release(aresponses):
+async def test_async_downlaod_release(aresponses, lidarr_client: LidarrClient) -> None:
     """Test downloading release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1658,14 +1571,14 @@ async def test_async_downlaod_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_download_release("test", 0)
+    data = await lidarr_client.async_download_release("test", 0)
     assert isinstance(data, LidarrRelease)
 
 
 @pytest.mark.asyncio
-async def test_async_get_pushed_release(aresponses):
+async def test_async_get_pushed_release(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
     """Test getting pushed release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1677,14 +1590,12 @@ async def test_async_get_pushed_release(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_pushed_release("test")
+    data = await lidarr_client.async_get_pushed_release("test")
     assert isinstance(data, LidarrRelease)
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses):
+async def test_async_get_rename(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1697,9 +1608,7 @@ async def test_async_get_rename(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_rename(0, albumid=0)
+    data = await lidarr_client.async_get_rename(0, albumid=0)
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].albumId, int)
     assert isinstance(data[0].trackNumbers[0], int)
@@ -1709,7 +1618,7 @@ async def test_async_get_rename(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_retag(aresponses):
+async def test_async_get_retag(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1722,9 +1631,7 @@ async def test_async_get_retag(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_retag(0, albumid=0)
+    data = await lidarr_client.async_get_retag(0, albumid=0)
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].albumId, int)
     assert isinstance(data[0].trackNumbers[0], int)
@@ -1736,7 +1643,7 @@ async def test_async_get_retag(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_search(aresponses):
+async def test_async_search(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1749,9 +1656,7 @@ async def test_async_search(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_search("test")
+    data = await lidarr_client.async_search("test")
     assert data[0].foreignId == "string"
     assert data[0].artist.status == "string"
     assert data[0].artist.ended is True
@@ -1790,7 +1695,7 @@ async def test_async_search(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses):
+async def test_async_get_tag_details(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1803,9 +1708,7 @@ async def test_async_get_tag_details(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_tags_details(tagid=0)
+    data = await lidarr_client.async_get_tags_details(tagid=0)
 
     assert isinstance(data.id, int)
     assert data.label == "string"
@@ -1817,7 +1720,7 @@ async def test_async_get_tag_details(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_tracks(aresponses):
+async def test_async_get_tracks(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting tracks."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1830,11 +1733,9 @@ async def test_async_get_tracks(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_tracks(
-            artistid=0, albumid=0, albumreleaseid=0, trackids=[0]
-        )
+    data = await lidarr_client.async_get_tracks(
+        artistid=0, albumid=0, albumreleaseid=0, trackids=[0]
+    )
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].trackFileId, int)
     assert isinstance(data[0].albumId, int)
@@ -1859,10 +1760,8 @@ async def test_async_get_tracks(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
     with pytest.raises(ArrException):
-        await client.async_get_tracks()
+        await lidarr_client.async_get_tracks()
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -1875,9 +1774,7 @@ async def test_async_get_tracks(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_tracks(trackids=0)
+    data = await lidarr_client.async_get_tracks(trackids=0)
     assert isinstance(data.artistId, int)
     assert isinstance(data.trackFileId, int)
     assert isinstance(data.albumId, int)
@@ -1926,7 +1823,7 @@ async def test_async_get_tracks(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_async_get_track_files(aresponses):
+async def test_async_get_track_files(aresponses, lidarr_client: LidarrClient) -> None:
     """Test getting track files."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1939,11 +1836,9 @@ async def test_async_get_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_track_files(
-            artistid=0, albumid=0, trackfileids=[0]
-        )
+    data = await lidarr_client.async_get_track_files(
+        artistid=0, albumid=0, trackfileids=[0]
+    )
     assert isinstance(data[0].artistId, int)
     assert isinstance(data[0].albumId, int)
     assert data[0].path == "string"
@@ -1974,9 +1869,7 @@ async def test_async_get_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_get_track_files(trackfileids=0)
+    data = await lidarr_client.async_get_track_files(trackfileids=0)
     assert isinstance(data.artistId, int)
     assert isinstance(data.albumId, int)
     assert data.path == "string"
@@ -2028,15 +1921,12 @@ async def test_async_get_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-
     with pytest.raises(ArrException):
-        await client.async_get_track_files()
+        await lidarr_client.async_get_track_files()
 
 
 @pytest.mark.asyncio
-async def test_async_edit_track_files(aresponses):
+async def test_async_edit_track_files(aresponses, lidarr_client: LidarrClient) -> None:
     """Test editing track files."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2048,9 +1938,7 @@ async def test_async_edit_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        data = await client.async_edit_track_files(LidarrTrackFile("test"))
+    data = await lidarr_client.async_edit_track_files(LidarrTrackFile("test"))
     assert isinstance(data, LidarrTrackFile)
 
     aresponses.add(
@@ -2066,13 +1954,13 @@ async def test_async_edit_track_files(aresponses):
     data = LidarrTrackFileEditor(
         {"trackFileIds": 0, "quality": {"quality": "test", "revision": "test"}}
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_edit_track_files(data)
+    await lidarr_client.async_edit_track_files(data)
 
 
 @pytest.mark.asyncio
-async def test_async_delete_track_files(aresponses):
+async def test_async_delete_track_files(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
     """Test deleting track files."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2084,9 +1972,7 @@ async def test_async_delete_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_track_files(0)
+    await lidarr_client.async_delete_track_files(0)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -2098,6 +1984,4 @@ async def test_async_delete_track_files(aresponses):
         ),
         match_querystring=True,
     )
-    async with ClientSession():
-        client = LidarrClient(host_configuration=TEST_HOST_CONFIGURATION)
-        await client.async_delete_track_files([0])
+    await lidarr_client.async_delete_track_files([0])

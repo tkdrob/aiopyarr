@@ -20,6 +20,7 @@ from .request_common import (
     _TagDetails,
 )
 from .sonarr_common import (
+    _SonarrAddOptions,
     _SonarrCommon,
     _SonarrCommon2,
     _SonarrEpisodeFile,
@@ -189,18 +190,20 @@ class SonarrSeries(_SonarrSeriesCommon):
 
 
 @dataclass(init=False)
-class SonarrSeriesLookup(_SonarrSeriesCommon):
-    """Sonarr series lookup attributes."""
+class SonarrSeriesAdd(SonarrSeries):
+    """Sonarr series add attributes."""
+
+    addOptions: _SonarrAddOptions | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.addOptions = _SonarrAddOptions(self.addOptions) or {}
 
 
 @dataclass(init=False)
-class SonarrSeriesUpdateParams(BaseModel):
-    """Sonarr series update parameters."""
-
-    profileId: int | None = None
-    title: str | None = None
-    titleSlug: str | None = None
-    tvdbId: int | None = None
+class SonarrSeriesLookup(_SonarrSeriesCommon):
+    """Sonarr series lookup attributes."""
 
 
 @dataclass(init=False)

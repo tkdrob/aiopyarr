@@ -13,7 +13,7 @@ lint: ## Lint all files
 	@python3 -m black --fast .
 	@python3 -m pylint aiopyarr tests
 	@python3 -m flake8 aiopyarr tests
-	@python3 -m mypy aiopyarr tests
+	@python3 -m mypy aiopyarr
 
 coverage: ## Check the coverage of the package
 	@python3 -m pytest tests --cov=aiopyarr --cov-report term-missing -vv

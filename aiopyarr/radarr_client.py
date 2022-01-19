@@ -24,7 +24,6 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
-from .decorator import api_command
 from .models.host_configuration import PyArrHostConfiguration
 from .models.radarr import (
     RadarrBlocklist,
@@ -47,7 +46,6 @@ from .models.radarr import (
     RadarrRename,
     RadarrTagDetails,
 )
-from .models.radarr_common import _RadarrMovieImages
 from .request_client import RequestClient
 
 
@@ -68,7 +66,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         base_api_path: str | None = None,
         request_timeout: float = 60,
         raw_response: bool = False,
-        api_ver: str | None = None,
+        api_ver: str = "v3",
         user_agent: str | None = None,
     ) -> None:
         """Initialize Radarr API."""
@@ -76,6 +74,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             port,
             request_timeout,
             raw_response,
+            api_ver,
             host_configuration,
             session,
             hostname,
@@ -85,7 +84,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            api_ver,
             user_agent,
         )
 
@@ -105,33 +103,18 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrMovie,
         )
 
-    async def async_add_movie(  # pylint: disable=too-many-arguments
-        self,
-        db_id: str,
-        quality_profile_id: int,
-        root_dir: str,
-        monitored: bool = True,
-        search_for_movie: bool = True,
-        tmdb: bool = True,
-    ) -> RadarrMovie:
-        """Add a movie to the database.
-
-        Args:
-            db_id: IMDB or TMDB ID
-            quality_profile_id: ID of the quality profile the movie will use
-            root_dir: location of the root DIR
-            monitored: should the movie be monitored.
-            search_for_movie: Should we search for the movie.
-            tmdb: Use TMDB IDs. Set to False to use IMDB.
-        """
-        movie_json = await self._async_construct_movie_json(
-            db_id, quality_profile_id, root_dir, monitored, search_for_movie, tmdb
-        )
+    async def async_add_movies(
+        self, data: RadarrMovie | list[RadarrMovie]
+    ) -> RadarrMovie | list[RadarrMovie]:
+        """Add movie to the database."""
         return await self._async_request(
-            "movie",
-            params=movie_json,
+            f"movie{'/import' if isinstance(data, list) else ''}",
+            data=data,
+            datatype=RadarrMovie,
             method=HTTPMethod.POST,
         )
+
+        # check /search for all
 
     async def async_edit_movies(
         self, data: RadarrMovie | RadarrMovieEditor, move_files: bool = False
@@ -308,9 +291,9 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    @api_command("config/naming", datatype=RadarrNamingConfig)
     async def async_get_naming_config(self) -> RadarrNamingConfig:
         """Get information about naming configuration."""
+        return await self._async_request("config/naming", datatype=RadarrNamingConfig)
 
     async def async_edit_naming_config(
         self, data: RadarrNamingConfig
@@ -572,40 +555,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params={MOVIE_ID: movieid},
             datatype=RadarrRename,
         )
-
-    async def _async_construct_movie_json(  # pylint: disable=too-many-arguments
-        self,
-        db_id: str,
-        quality_profile_id: int,
-        root_dir: str,
-        monitored: bool = True,
-        search_for_movie: bool = True,
-        tmdb: bool = True,
-    ) -> dict[str, str | int | dict[str, str] | list[_RadarrMovieImages]] | None:
-        """Search for movie on tmdb and returns Movie json to add.
-
-        Args:
-            db_id: imdb or tmdb id
-            quality_profile_id: ID of the quality profile the movie will use
-            root_dir: location of the root DIR
-            monitored: should the movie be monitored.
-            search_for_movie: Should we search for the movie.
-            tmdb: Use TMDB IDs. Set to False to use IMDB.
-        """
-        if not (movie := await self.async_lookup_movie(db_id, tmdb=tmdb)):
-            raise Exception("Movie Doesn't Exist")
-
-        return {
-            TITLE: movie[0].title or "",
-            "rootFolderPath": root_dir,
-            "qualityProfileId": quality_profile_id,
-            "year": movie[0].year or "",
-            "tmdbId": movie[0].tmdbId or "",
-            "images": movie[0].images or [],
-            "titleSlug": movie[0].titleSlug or "",
-            "monitored": str(monitored),
-            "addOptions": {"searchForMovie": str(search_for_movie)},
-        }
 
     # Import list exclusions are included in the UI but not in the API.
     async def async_get_import_list_exclusions(

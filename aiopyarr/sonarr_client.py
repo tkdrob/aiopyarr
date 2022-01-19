@@ -24,8 +24,7 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
-from .decorator import api_command
-from .exceptions import ArrException, ArrResourceNotFound
+from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
 from .models.request import Command
 from .models.sonarr import (
@@ -45,8 +44,8 @@ from .models.sonarr import (
     SonarrRelease,
     SonarrRename,
     SonarrSeries,
+    SonarrSeriesAdd,
     SonarrSeriesLookup,
-    SonarrSeriesUpdateParams,
     SonarrTagDetails,
     SonarrWantedMissing,
 )
@@ -70,7 +69,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         base_api_path: str | None = None,
         request_timeout: float = 30,
         raw_response: bool = False,
-        api_ver: str | None = None,
+        api_ver: str = "v3",
         user_agent: str | None = None,
     ) -> None:
         """Initialize Sonarr API."""
@@ -78,6 +77,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             port,
             request_timeout,
             raw_response,
+            api_ver,
             host_configuration,
             session,
             hostname,
@@ -87,7 +87,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            api_ver,
             user_agent,
         )
 
@@ -395,47 +394,16 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=SonarrSeries,
         )
 
-    async def async_add_series(  # pylint: disable=too-many-arguments
-        self,
-        tvdb_id: int,
-        quality_profile_id: int,
-        root_dir: str,
-        season_folder: bool = True,
-        monitored: bool = True,
-        ignore_episodes_with_files: bool = False,
-        ignore_episodes_without_files: bool = False,
-        search_for_missing_episodes: bool = False,
-    ) -> SonarrSeries:
-        """Add a new series to your collection.
-
-        Args:
-            tvdb_id: TDDB Id
-            quality_profile_id: Database id for quality profile
-            root_dir: Root folder location, full path will be created from this
-            season_folder: Create a folder for each season.
-            monitored: Monitor this series.
-            ignore_episodes_with_files: Ignore any episodes with existing files.
-            ignore_episodes_without_files: Ignore any episodes without existing files.
-            search_for_missing_episodes: Search for missing episodes to download.
-        """
-        series_json = await self._async_construct_series_json(
-            tvdb_id,
-            quality_profile_id,
-            root_dir,
-            season_folder,
-            monitored,
-            ignore_episodes_with_files,
-            ignore_episodes_without_files,
-            search_for_missing_episodes,
-        )
+    async def async_add_series(self, data: SonarrSeriesAdd) -> SonarrSeries:
+        """Add a new series to your collection."""
         return await self._async_request(
             "series",
-            data=series_json,
+            data=data,
             datatype=SonarrSeries,
             method=HTTPMethod.POST,
         )
 
-    async def async_edit_series(self, data: SonarrSeriesUpdateParams) -> SonarrSeries:
+    async def async_edit_series(self, data: SonarrSeries) -> SonarrSeries:
         """Edit an existing series."""
         return await self._async_request(
             "series",
@@ -465,7 +433,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         caching and augmentation proxy.
         """
         if term is None and seriesid is None:
-            raise ArrResourceNotFound(self, "A term or TVDB id must be included")
+            raise ArrException(self, "A term or TVDB id must be included")
         return await self._async_request(
             "series/lookup",
             datatype=SonarrSeriesLookup,
@@ -548,9 +516,9 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=SonarrBlocklist,
         )
 
-    @api_command("config/naming", datatype=SonarrNamingConfig)
     async def async_get_naming_config(self) -> SonarrNamingConfig:
         """Get information about naming configuration."""
+        return await self._async_request("config/naming", datatype=SonarrNamingConfig)
 
     async def async_edit_naming_config(
         self, data: SonarrNamingConfig
@@ -631,55 +599,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             f"tag/detail{'' if tagid is None else f'/{tagid}'}",
             datatype=SonarrTagDetails,
         )
-
-    async def _async_construct_series_json(  # pylint: disable=too-many-arguments
-        self,
-        tvdb_id: int,
-        quality_profile_id: int,
-        root_dir: str,
-        season_folder: bool = True,
-        monitored: bool = True,
-        ignore_episodes_with_files: bool = False,
-        ignore_episodes_without_files: bool = False,
-        search_for_missing_episodes: bool = False,
-    ) -> dict[str, Any] | None:
-        """Search for new shows on trakt and returns Series JSON to add.
-
-        Args:
-            tvdb_id: TVDB id to search
-            quality_profile_id: Database id for Quality profile
-            root_dir: Root directory for media
-            season_folder: Specify if a season folder should be created.
-            monitored: Specify if the series should be monitored.
-            ignore_episodes_with_files: Ignore episodes that already have files.
-            ignore_episodes_without_files: Ignore episodes that dont have any files.
-            search_for_missing_episodes: Search for any missing episodes and download them.
-        """
-        result = await self.async_lookup_series(seriesid=tvdb_id)
-        if not isinstance(result, list):
-            return None
-        series = result[0]
-        assert isinstance(series, dict)
-        if not monitored and series.get("seasons"):
-            for season in series["seasons"]:
-                season["monitored"] = False
-
-        return {
-            TITLE: series[TITLE],
-            "seasons": series["seasons"],
-            "rootFolderPath": root_dir,
-            "qualityProfileId": quality_profile_id,
-            "seasonFolder": season_folder,
-            "monitored": monitored,
-            "tvdbId": tvdb_id,
-            "images": series["images"],
-            "titleSlug": series["titleSlug"],
-            "addOptions": {
-                "ignoreEpisodesWithFiles": ignore_episodes_with_files,
-                "ignoreEpisodesWithoutFiles": ignore_episodes_without_files,
-                "searchForMissingEpisodes": search_for_missing_episodes,
-            },
-        }
 
     async def async_get_localization(self) -> Any:
         """Get localization strings."""
