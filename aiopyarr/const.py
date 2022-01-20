@@ -19,6 +19,11 @@ HEADERS = {
     "Connection": "keep-alive",
     "Content-Type": "application/json",
 }
+HEADERS_JS = {
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "application/javascript",
+    "Content-Type": "application/javascript",
+}
 IS_VALID = "isValid"
 MOVIE_ID = "movieId"
 NOTIFICATION = "notification"

@@ -6,6 +6,7 @@ import asyncio
 from copy import copy
 from datetime import datetime
 from json import dumps
+from re import search
 from typing import Any, Text
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
@@ -16,6 +17,7 @@ from .const import (
     ATTR_DATA,
     DESCENDING,
     HEADERS,
+    HEADERS_JS,
     IS_VALID,
     LOGGER,
     PAGE,
@@ -137,16 +139,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         if self._session and self._close_session:
             await self._session.close()
 
-    async def _async_request(
+    async def _async_request(  # pylint:disable=too-many-arguments
         self,
-        *args,
+        command: str,
         params: dict | None = None,
         data: Any = None,
         datatype: Any = None,
         method: HTTPMethod = HTTPMethod.GET,
-    ):
+    ) -> Any:
         """Send API request."""
-        command = args[0] if isinstance(args[0], str) else args[1]
         url = self._host.api_url(command)
         json = dumps(
             data,
@@ -157,7 +158,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         try:
             request = await self._session.request(
                 method=method.value,
-                url=self._host.api_url(command),
+                url=url,
                 params=params,
                 json=json,
                 verify_ssl=self._host.verify_ssl,
@@ -210,6 +211,27 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
         else:
             return response.data
+
+    async def async_try_zeroconf(self) -> tuple[str, str, str]:
+        """Get api information if login not required."""
+        try:
+            async with ClientSession(headers=HEADERS_JS) as session:
+                data = await (
+                    await session.request(
+                        method=HTTPMethod.GET.value,
+                        url=self._host.api_url("initialize", True),
+                        verify_ssl=self._host.verify_ssl,
+                        timeout=ClientTimeout(2),
+                    )
+                ).text()
+
+            # Type ingored as we are already catching errors
+            api_ver = str(search(r"apiRoot: '/api/(.*)'", data).group(1))  # type: ignore
+            api_token = str(search(r"apiKey: '(.*)'", data).group(1))  # type: ignore
+            base_api_path = str(search(r"urlBase: '(.*)'", data).group(1))  # type: ignore
+        except (AttributeError, asyncio.exceptions.TimeoutError) as ex:
+            raise ArrException(message="Failed to get api info automatically") from ex
+        return api_ver, api_token, base_api_path
 
     async def async_get_diskspace(self) -> list[Diskspace]:
         """Get information about diskspace."""

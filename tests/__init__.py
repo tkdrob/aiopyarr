@@ -3,7 +3,7 @@ import pathlib
 
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
 
-API_TOKEN = "ur1234567-0abc12de3f456gh7ij89k012"
+API_TOKEN = "1234567890abcdef1234567890abcdef"
 TEST_HOST_CONFIGURATION = PyArrHostConfiguration(
     api_token=API_TOKEN, ipaddress="127.0.0.1"
 )

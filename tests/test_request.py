@@ -40,6 +40,7 @@ from aiopyarr.readarr_client import ReadarrClient
 from aiopyarr.sonarr_client import SonarrClient
 
 from . import (
+    API_TOKEN,
     LIDARR_API,
     RADARR_API,
     READARR_API,
@@ -54,6 +55,43 @@ async def test_loop() -> None:
     """Test loop usage is handled correctly."""
     async with SonarrClient(host_configuration=TEST_HOST_CONFIGURATION) as sonarr:
         assert isinstance(sonarr, SonarrClient)
+
+
+@pytest.mark.asyncio
+async def test_async_try_zeroconf(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting api information if login not required."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text=load_fixture("common/initialize.js"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_try_zeroconf()
+    assert data == ("v3", API_TOKEN, "")
+
+
+@pytest.mark.asyncio
+async def test_async_try_zeroconf_failed(
+    aresponses, radarr_client: RadarrClient
+) -> None:
+    """Test getting api information if login not required."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrException):
+        await radarr_client.async_try_zeroconf()
 
 
 @pytest.mark.asyncio
