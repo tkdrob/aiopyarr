@@ -26,7 +26,7 @@
         "images": [
           {
             "url": "string",
-            "coverType": "string",
+            "coverType": "poster",
             "extension": "string"
           }
         ],
@@ -82,7 +82,7 @@
         }
       ],
       "downloadId": "string",
-      "protocol": "string",
+      "protocol": "unknown",
       "downloadClient": "string",
       "indexer": "string",
       "outputPath": "string",

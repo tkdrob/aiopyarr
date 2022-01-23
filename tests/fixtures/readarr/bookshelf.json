@@ -18,7 +18,7 @@
           "anyEditionOk": true,
           "ratings": {
             "votes": 0,
-            "value": 0
+            "value": 0.0
           },
           "releaseDate": "2021-12-10T10:00:06.987Z",
           "pageCount": 0,
@@ -59,7 +59,7 @@
               ],
               "ratings": {
                 "votes": 0,
-                "value": 0
+                "value": 0.0
               },
               "cleanTitle": "string",
               "monitored": true,
@@ -67,7 +67,7 @@
               "lastInfoSync": "2021-12-10T10:00:06.987Z",
               "added": "2021-12-10T10:00:06.987Z",
               "addOptions": {
-                "addType": "string",
+                "addType": "automatic",
                 "searchForNewBook": true
               },
               "authorMetadata": {
@@ -92,7 +92,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string"
+                      "coverType": "poster"
                     }
                   ],
                   "links": [
@@ -106,7 +106,7 @@
                   ],
                   "ratings": {
                     "votes": 0,
-                    "value": 0
+                    "value": 0.0
                   }
                 }
               },
@@ -126,10 +126,8 @@
                     0
                   ],
                   "addOptions": {
-                    "monitor": "string",
-                    "booksToMonitor": [
-                      "string"
-                    ],
+                    "monitor": "all",
+                    "booksToMonitor": ["string"],
                     "monitored": true,
                     "searchForMissingBooks": true
                   },
@@ -155,7 +153,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ],
                       "links": [
@@ -169,7 +167,7 @@
                       ],
                       "ratings": {
                         "votes": 0,
-                        "value": 0
+                        "value": 0.0
                       }
                     }
                   },
@@ -237,7 +235,7 @@
               ],
               "ratings": {
                 "votes": 0,
-                "value": 0
+                "value": 0.0
               },
               "cleanTitle": "string",
               "monitored": true,
@@ -245,7 +243,7 @@
               "lastInfoSync": "2021-12-10T10:00:06.987Z",
               "added": "2021-12-10T10:00:06.987Z",
               "addOptions": {
-                "addType": "string",
+                "addType": "automatic",
                 "searchForNewBook": true
               },
               "authorMetadata": {
@@ -270,7 +268,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string"
+                      "coverType": "poster"
                     }
                   ],
                   "links": [
@@ -284,7 +282,7 @@
                   ],
                   "ratings": {
                     "votes": 0,
-                    "value": 0
+                    "value": 0.0
                   }
                 }
               },
@@ -304,10 +302,8 @@
                     0
                   ],
                   "addOptions": {
-                    "monitor": "string",
-                    "booksToMonitor": [
-                      "string"
-                    ],
+                    "monitor": "all",
+                    "booksToMonitor": ["string"],
                     "monitored": true,
                     "searchForMissingBooks": true
                   },
@@ -333,7 +329,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ],
                       "links": [
@@ -342,12 +338,10 @@
                           "name": "string"
                         }
                       ],
-                      "genres": [
-                        "string"
-                      ],
+                      "genres": ["string" ],
                       "ratings": {
                         "votes": 0,
-                        "value": 0
+                        "value": 0.0
                       }
                     }
                   },
@@ -400,7 +394,7 @@
             "images": [
               {
                 "url": "string",
-                "coverType": "string"
+                "coverType": "poster"
               }
             ],
             "remotePoster": "string",
@@ -420,16 +414,14 @@
             ],
             "added": "2021-12-10T10:00:06.987Z",
             "addOptions": {
-              "monitor": "string",
-              "booksToMonitor": [
-                "string"
-              ],
+              "monitor": "all",
+              "booksToMonitor": ["string"],
               "monitored": true,
               "searchForMissingBooks": true
             },
             "ratings": {
               "votes": 0,
-              "value": 0
+              "value": 0.0
             },
             "statistics": {
               "bookFileCount": 0,
@@ -442,7 +434,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "string"
+              "coverType": "poster"
             }
           ],
           "links": [
@@ -459,7 +451,7 @@
           },
           "added": "2021-12-10T10:00:06.987Z",
           "addOptions": {
-            "addType": "string",
+            "addType": "automatic",
             "searchForNewBook": true
           },
           "remoteCover": "string",
@@ -483,7 +475,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string"
+                  "coverType": "poster"
                 }
               ],
               "links": [
@@ -494,7 +486,7 @@
               ],
               "ratings": {
                 "votes": 0,
-                "value": 0
+                "value": 0.0
               },
               "monitored": true,
               "manualAdd": true,
@@ -508,10 +500,8 @@
     }
   ],
   "monitoringOptions": {
-    "monitor": "string",
-    "booksToMonitor": [
-      "string"
-    ],
+    "monitor": "all",
+    "booksToMonitor": ["string"],
     "monitored": true
   }
 }

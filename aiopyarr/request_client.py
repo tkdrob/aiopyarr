@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import asyncio
 from copy import copy
-from datetime import datetime
-from json import dumps
 from re import search
 from typing import Any, Text
 
@@ -13,9 +11,7 @@ from aiohttp.client import ClientError, ClientSession, ClientTimeout
 
 from .const import (
     ALL,
-    ASCENDING,
     ATTR_DATA,
-    DESCENDING,
     HEADERS,
     HEADERS_JS,
     IS_VALID,
@@ -33,6 +29,7 @@ from .exceptions import (
     ArrException,
     ArrResourceNotFound,
 )
+from .models.base import todict
 from .models.host_configuration import PyArrHostConfiguration
 from .models.request import (
     Command,
@@ -55,6 +52,7 @@ from .models.request import (
     Localization,
     LogFile,
     Logs,
+    LogSortKeys,
     MediaManagementConfig,
     MetadataConfig,
     QualityDefinition,
@@ -63,6 +61,7 @@ from .models.request import (
     ReleaseProfile,
     RemotePathMapping,
     RootFolder,
+    SortDirection,
     SystemBackup,
     SystemStatus,
     SystemTask,
@@ -149,23 +148,17 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     ) -> Any:
         """Send API request."""
         url = self._host.api_url(command)
-        json = dumps(
-            data,
-            default=lambda o: o.isoformat() if isinstance(o, datetime) else o.__dict__,
-            sort_keys=True,
-            indent=2,
-        )
         try:
             request = await self._session.request(
                 method=method.value,
                 url=url,
                 params=params,
-                json=json,
-                verify_ssl=self._host.verify_ssl,
+                json=todict(data),
+                ssl=self._host.verify_ssl,
                 timeout=ClientTimeout(self._request_timeout),
             )
 
-            if request.status != 200:
+            if request.status >= 400:
 
                 if request.status == 401:
                     raise ArrAuthenticationException(self, request)
@@ -220,7 +213,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                     await session.request(
                         method=HTTPMethod.GET.value,
                         url=self._host.api_url("initialize", True),
-                        verify_ssl=self._host.verify_ssl,
+                        ssl=self._host.verify_ssl,
                         timeout=ClientTimeout(2),
                     )
                 ).text()
@@ -288,24 +281,22 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_key: str = "time",
-        ascending: bool = False,
+        sort_key: LogSortKeys = LogSortKeys.TIME,
+        sort_dir: SortDirection = SortDirection.DEFAULT,
     ) -> Logs:
         """Get logs.
 
         Args:
             page: Specifiy page to return.
             page_size: Number of items per page.
-            sort_key: Field to sort by id, level, logger, time, or message
-            ascending: Sort items in ascending order.
             filter_key: Key to filter by.
             filter_value: Value of the filter.
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_KEY: sort_key,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key.value,
+            SORT_DIRECTION: sort_dir.value,
         }
         return await self._async_request("log", params=params, datatype=Logs)
 
@@ -556,7 +547,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=FilesystemFolder,
         )
 
-    async def async_get_failed_health_checks(self) -> Health:
+    async def async_get_failed_health_checks(self) -> list[Health]:
         """Get information about failed health checks."""
         return await self._async_request("health", datatype=Health)
 
@@ -717,6 +708,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get image from application.
 
         imagetype: poster, banner, or fanart (logo only for Lidarr)
+                (others may be possible)
         size: large, medium, small
               pixel size: None for full size (500, 250), (70, 35), (360, 180)
               Does not apply to Lidarr
@@ -741,7 +733,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         _val = ""
         if hasattr(self, "async_get_albums"):
             _val = "album/" if alt else "artist/"
-        elif hasattr(self, "async_get_author"):
+        elif hasattr(self, "async_get_authors"):
             _val = "author/" if alt else "book/"
         _imgsize = f"-{val}" if size is not ImageSize.LARGE else ""
         _imgsize = "" if hasattr(self, "async_get_albums") else _imgsize
@@ -749,6 +741,12 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         _ext = "png" if imagetype == ImageType.LOGO else "jpg"
         cmd = f"mediacover/{_val}{imageid}/{imagetype}{_imgsize}.{_ext}"
         return await self._async_request(cmd)
+
+    async def async_mark_failed(self, recordid: int) -> None:
+        """Mark a history item as failed."""
+        return await self._async_request(
+            f"history/failed/{recordid}", method=HTTPMethod.POST
+        )
 
     async def async_get_media_management_configs(
         self, configid: int | None = None

@@ -53,7 +53,7 @@
     "airTime": "00:00",
     "images": [
       {
-        "coverType": "string",
+        "coverType": "poster",
         "url": "string"
       }
     ],

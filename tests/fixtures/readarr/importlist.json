@@ -1,7 +1,7 @@
 [
   {
     "enableAutomaticAdd": true,
-    "shouldMonitor": "string",
+    "shouldMonitor": "all",
     "shouldMonitorExisting": false,
     "shouldSearch": false,
     "rootFolderPath": "string",

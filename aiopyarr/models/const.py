@@ -1,20 +1,23 @@
 """PyArr model constants."""
 
+from enum import Enum
+
 CONVERT_TO_BOOL = ("downloadForced",)
 
 CONVERT_TO_FLOAT = (
     "ageHours",
     "ageMinutes",
-    "preferredWordScore",
 )
 
 CONVERT_TO_INTEGER = (
     "age",
     "fileId",
+    "foreignAuthorId",
     "foreignEditionId",
     "isbn13",
-    "protocol",
+    "preferredWordScore",
     "size",
+    "sizeleft",
     "titleSlug",
     "trackNumber",
     "tvdbId",
@@ -54,3 +57,16 @@ CONVERT_TO_DATETIME = (
     "stateChangeTime",
     "time",
 )
+
+CONVERT_TO_ENUM = (
+    "preferredProtocol",
+    "protocol",
+)
+
+
+class ProtocolType(Enum):
+    """Protocol type."""
+
+    UNKNOWN = 0
+    USENET = 1
+    TORRENT = 2

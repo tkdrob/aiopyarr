@@ -2,7 +2,7 @@
   {
     "enableUsenet": true,
     "enableTorrent": true,
-    "preferredProtocol": "string",
+    "preferredProtocol": "unknown",
     "usenetDelay": 0,
     "torrentDelay": 0,
     "bypassIfHighestQuality": true,

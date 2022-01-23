@@ -24,7 +24,7 @@
 			"qualityCutoffNotMet": false,
 			"date": "2020-02-16T14:03:43.6224911Z",
 			"downloadId": "string",
-			"eventType": "string",
+			"eventType": "grabbed",
 			"data": {
 				"indexer": "string",
 				"nzbInfoUrl": "string",
@@ -97,7 +97,7 @@
 					}
 				],
 				"artist": {
-					"status": "string",
+					"status": "ended",
 					"ended": false,
 					"artistName": "string",
 					"foreignArtistId": "string",
@@ -115,7 +115,7 @@
 					"images": [
 						{
 							"url": "string",
-							"coverType": "string",
+							"coverType": "poster",
 							"extension": "string"
 						}
 					],
@@ -145,7 +145,7 @@
 				"images": [
 					{
 						"url": "string",
-						"coverType": "string",
+						"coverType": "poster",
 						"extension": "string"
 					}
 				],
@@ -158,7 +158,7 @@
 				"id": 0
 			},
 			"artist": {
-				"status": "string",
+				"status": "ended",
 				"ended": false,
 				"artistName": "string",
 				"foreignArtistId": "string",
@@ -176,7 +176,7 @@
 				"images": [
 					{
 						"url": "string",
-						"coverType": "string",
+						"coverType": "poster",
 						"extension": "string"
 					}
 				],

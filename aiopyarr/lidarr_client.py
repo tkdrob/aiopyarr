@@ -11,8 +11,6 @@ from .const import (
     ALBUM_ID,
     ALL,
     ARTIST_ID,
-    ASCENDING,
-    DESCENDING,
     IS_VALID,
     PAGE,
     PAGE_SIZE,
@@ -39,20 +37,19 @@ from .models.lidarr import (
     LidarrMetadataProfile,
     LidarrParse,
     LidarrQueue,
-    LidarrQueueDetail,
+    LidarrQueueItem,
     LidarrRelease,
     LidarrRename,
     LidarrRetag,
     LidarrSearch,
+    LidarrSortKeys,
     LidarrTagDetails,
     LidarrTrack,
-    LidarrTrackDetails,
     LidarrTrackFile,
-    LidarrTrackFileDetails as FileDetails,
     LidarrTrackFileEditor,
     LidarrWantedCutoff,
 )
-from .models.request import Command
+from .models.request import Command, SortDirection
 from .request_client import RequestClient
 
 
@@ -199,23 +196,22 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        ascending: bool = False,
-        sort_key: str = "date",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: LidarrSortKeys = LidarrSortKeys.DATE,
     ) -> LidarrBlocklist:
         """Return blocklisted releases.
 
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Direction to sort items.
             sort_key: date, id, artistid, sourcetitle, quality,
-            indexer, path, or message.
+            indexer, path, or message. (Others do not apply)
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
         }
         return await self._async_request(
             "blacklist",
@@ -254,7 +250,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_wanted(  # pylint: disable=too-many-arguments
         self,
         recordid: int | None = None,
-        sortkey: str = TITLE,
+        sort_key: LidarrSortKeys = LidarrSortKeys.TITLE,
         page: int = 1,
         page_size: int = 10,
         missing: bool = True,
@@ -262,13 +258,13 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Get wanted albums not meeting cutoff or missing.
 
         Args:
-            sortkey: id, title, ratings, or quality".
+            sort_key: id, title, ratings, or quality". (Others do not apply)
             page: Page number to return.
             page_size: Number of items per page.
             missing: Search for missing or cutoff not met
         """
         params = {
-            SORT_KEY: sortkey,
+            SORT_KEY: sort_key.value,
             PAGE: page,
             PAGE_SIZE: page_size,
         }
@@ -288,8 +284,8 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         pagesize: int = 10,
-        sortkey: str = "date",
-        ascending: bool = True,
+        sort_key: LidarrSortKeys = LidarrSortKeys.DATE,
+        sort_dir: SortDirection = SortDirection.DEFAULT,
         artist: int | bool = False,
         album: int | bool = False,
         event_type: LidarrEventType | None = None,  # not working
@@ -297,7 +293,8 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> LidarrHistory | list[LidarrAlbumHistory]:
         """Get history.
 
-        sortkey: date, quality
+        sort_key: date, quality, title, id, artistid, path, ratings, or sourcetitle
+                (Others do not apply)
         artist: True, include artist info in response
                 int, search history by artist
         album: True, include album info in response
@@ -307,8 +304,8 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: pagesize,
-            SORT_KEY: sortkey,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_KEY: sort_key.value,
+            SORT_DIRECTION: sort_dir.value,
         }
         if event_type and event_type in LidarrEventType:
             params["eventType"] = event_type.value
@@ -330,8 +327,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params=params,
             datatype=LidarrHistory if _type else LidarrAlbumHistory,
         )
-
-    # history/failed POST
 
     async def async_get_import_lists(
         self, listid: int | None = None
@@ -419,7 +414,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_key: str = "timeleft",
+        sort_key: LidarrSortKeys = LidarrSortKeys.TIMELEFT,
         unknown_artists: bool = False,
         include_artist: bool = False,
         include_album: bool = False,
@@ -429,7 +424,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Args:
             page: page number
             page_size: number of results per page_size
-            sort_key: timeleft, title, id, or date
             unknown_artists: Include items with an unknown artist
             include_artist: Include the artist
             include_album: Include the album
@@ -437,7 +431,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_KEY: sort_key,
+            SORT_KEY: sort_key.value,
             "includeUnknownArtistItems": str(unknown_artists),
             "includeArtist": str(include_artist),
             "includeAlbum": str(include_album),
@@ -450,7 +444,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         albumids: list[int] | None = None,
         include_artist: bool = False,
         include_album: bool = True,
-    ) -> list[LidarrQueueDetail]:
+    ) -> list[LidarrQueueItem]:
         """Get details of all items in queue."""
         params: dict = {
             "includeArtist": str(include_artist),
@@ -463,7 +457,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "queue/details",
             params=params,
-            datatype=LidarrQueueDetail,
+            datatype=LidarrQueueItem,
         )
 
     async def async_get_release(
@@ -558,7 +552,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         albumid: int | None = None,
         albumreleaseid: int | None = None,
         trackids: int | list[int] | None = None,
-    ) -> LidarrTrackDetails | list[LidarrTrack]:
+    ) -> LidarrTrack | list[LidarrTrack]:
         """Get tracks based on specified ids.
 
         trackids: specify one integer to search database by track id only
@@ -583,7 +577,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"track{f'/{trackids}' if isinstance(trackids, int) else ''}",
             params=params,
-            datatype=LidarrTrackDetails if isinstance(trackids, int) else LidarrTrack,
+            datatype=LidarrTrack,
         )
 
     async def async_get_track_files(
@@ -592,7 +586,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         albumid: int | None = None,
         trackfileids: int | list[int] | None = None,
         unmapped: bool = False,  # Not sure what this does
-    ) -> FileDetails | list[LidarrTrackFile]:
+    ) -> LidarrTrackFile | list[LidarrTrackFile]:
         """Get track files based on specified ids.
 
         trackfileids: specify one integer to include audioTags for that id
@@ -611,7 +605,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"trackfile{f'/{trackfileids}' if isinstance(trackfileids, int) else ''}",
             params=params,
-            datatype=FileDetails if isinstance(trackfileids, int) else LidarrTrackFile,
+            datatype=LidarrTrackFile,
         )
 
     # documented, but may throw code 500

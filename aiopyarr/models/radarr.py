@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 from .base import BaseModel
@@ -23,7 +24,9 @@ from .request_common import (
     _Common3,
     _Common4,
     _Common7,
+    _Common8,
     _Editor,
+    _ImportListCommon,
     _MetadataFields,
     _Notification,
     _Quality,
@@ -52,6 +55,23 @@ class RadarrEventType(str, Enum):
     DOWNLOAD_FAILED = "downloadFailed"
     GRABBED = "grabbed"
     IMPORTED = "downloadFolderImported"
+    UNKNOWN = "unknown"
+
+
+class RadarrSortKeys(str, Enum):
+    """Radarr sort keys."""
+
+    DATE = "date"
+    ID = "id"
+    INDEXER = "indexer"
+    MESSAGE = "message"
+    MOVIE_ID = "movieid"
+    PATH = "path"
+    QUALITY = "quality"
+    RATINGS = "ratings"
+    SOURCE_TITLE = "sourcetitle"
+    TIMELEFT = "timeleft"
+    TITLE = "title"
 
 
 @dataclass(init=False)
@@ -101,24 +121,13 @@ class RadarrBlocklist(_RecordCommon):
 
 
 @dataclass(init=False)
-class RadarrQueueDetail(_Common4):
+class RadarrQueueDetail(_Common4, _Common8):
     """Radarr queue details attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
     errorMessage: str | None = None
-    id: int | None = None
     languages: list[_Common3] | None = None
     movieId: int | None = None
-    protocol: str | None = None
-    quality: _Quality | None = None
-    size: int | None = None
-    sizeleft: int | None = None
-    status: str | None = None
-    statusMessages: list[_StatusMessage] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadState: str | None = None
-    trackedDownloadStatus: str | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -144,15 +153,12 @@ class RadarrQueue(_RecordCommon):
 
 
 @dataclass(init=False)
-class RadarrImportList(_RadarrCommon, _RadarrCommon2):
+class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     """Radarr import attributes."""
 
-    configContract: str | None = None
     enableAuto: bool | None = None
     enabled: bool | None = None
-    listOrder: int | None = None
     listType: str | None = None
-    rootFolderPath: str | None = None
     searchOnAdd: bool | None = None
     shouldMonitor: bool | None = None
     tags: list[int | None] | None = None
@@ -208,7 +214,7 @@ class RadarrNamingConfig(BaseModel):
 class RadarrCalendar(_RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
-    digitalRelease: str | None = None
+    digitalRelease: datetime | None = None
     minimumAvailability: str | None = None
     qualityProfileId: int | None = None
     secondaryYearSourceId: int | None = None

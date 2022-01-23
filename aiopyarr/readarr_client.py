@@ -5,14 +5,12 @@ from datetime import datetime
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.models.request import Command, RootFolder
+from aiopyarr.models.request import Command, RootFolder, SortDirection
 
 from .const import (
     ALL,
-    ASCENDING,
     AUTHOR_ID,
     BOOK_ID,
-    DESCENDING,
     IS_VALID,
     NOTIFICATION,
     PAGE,
@@ -52,6 +50,7 @@ from .models.readarr import (
     ReadarrRetag,
     ReadarrSearch,
     ReadarrSeries,
+    ReadarrSortKeys,
     ReadarrTagDetails,
     ReadarrWantedCutoff,
     ReadarrWantedMissing,
@@ -97,7 +96,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             user_agent,
         )
 
-    async def async_get_author(
+    async def async_get_authors(  # TOD authors
         self, authorid: int | None = None
     ) -> ReadarrAuthor | list[ReadarrAuthor]:
         """Get info about specified author by id, leave blank for all."""
@@ -163,23 +162,22 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        ascending: bool = False,
-        sort_key: str = "date",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.DATE,
     ) -> ReadarrBlocklist:
         """Return blocklisted releases.
 
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Direction to sort items.
             sort_key: date, id, authorid, sourcetitle, quality,
-            indexer, path, message, or ratings.
+            indexer, path, message, or ratings. (Others do not apply)
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
         }
         return await self._async_request(
             "blocklist",
@@ -190,19 +188,19 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_wanted_missing(  # includeAuthor, sortDir not working
         self,
         recordid: int | None = None,
-        sortkey: str = TITLE,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.TITLE,
         page: int = 1,
         page_size: int = 10,
     ) -> ReadarrWantedMissing | ReadarrBook:
         """Get missing books.
 
         Args:
-            sortkey: id, title, ratings, or quality".
+            sort_key: id, title, ratings, bookid, or quality. (Others do not apply)
             page: Page number to return.
             page_size: Number of items per page.
         """
         params = {
-            SORT_KEY: sortkey,
+            SORT_KEY: sort_key.value,
             PAGE: page,
             PAGE_SIZE: page_size,
         }
@@ -215,19 +213,19 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_wanted_cutoff(  # includeAuthor, sortDir not working
         self,
         recordid: int | None = None,
-        sortkey: str = TITLE,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.TITLE,
         page: int = 1,
         page_size: int = 10,
     ) -> ReadarrWantedCutoff | ReadarrBook:
         """Get wanted books not meeting cutoff.
 
         Args:
-            sortkey: id, title, ratings, or quality".
+            sort_key: id, title, ratings, bookid, or quality". (others do not apply)
             page: Page number to return.
             page_size: Number of items per page.
         """
         params = {
-            SORT_KEY: sortkey,
+            SORT_KEY: sort_key.value,
             PAGE: page,
             PAGE_SIZE: page_size,
         }
@@ -241,7 +239,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_key: str = "timeleft",
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.TIMELEFT,
         unknown_authors: bool = False,
         include_author: bool = False,
         include_book: bool = False,
@@ -251,7 +249,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Args:
             page: page number
             page_size: number of results per page_size
-            sort_key: timeleft, title, id, or date
             unknown_authors: Include items with an unknown author
             include_author: Include the author
             include_book: Include the book
@@ -259,7 +256,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_KEY: sort_key,
+            SORT_KEY: sort_key.value,
             "includeUnknownAuthorItems": str(unknown_authors),
             "includeAuthor": str(include_author),
             "includeBook": str(include_book),

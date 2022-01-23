@@ -30,7 +30,7 @@
       "languageCutoffNotMet": false,
       "date": "2019-11-01T09:09:34.288036Z",
       "downloadId": "string",
-      "eventType": "string",
+      "eventType": "grabbed",
       "data": {
         "indexer": "string",
         "nzbInfoUrl": "string",

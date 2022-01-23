@@ -5,7 +5,8 @@ from datetime import datetime
 import pytest
 
 from aiopyarr.exceptions import ArrException
-from aiopyarr.models.request import Command
+from aiopyarr.models.const import ProtocolType
+from aiopyarr.models.request import Command, ImageType, SortDirection
 from aiopyarr.models.sonarr import (
     SonarrCommands,
     SonarrEpisode,
@@ -17,6 +18,7 @@ from aiopyarr.models.sonarr import (
     SonarrRelease,
     SonarrSeries,
     SonarrSeriesAdd,
+    SonarrSortKeys,
 )
 from aiopyarr.sonarr_client import SonarrClient
 
@@ -126,7 +128,7 @@ async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient):
     assert data.series.overview == "string"
     assert data.series.network == "string"
     assert data.series.airTime == "00:00"
-    assert data.series.images[0].coverType == "string"
+    assert data.series.images[0].coverType == ImageType.POSTER.value
     assert data.series.images[0].url == "string"
     assert isinstance(data.series.seasons[0].seasonNumber, int)
     assert data.series.seasons[0].monitored is False
@@ -252,8 +254,8 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "date"
-    assert data.sortDirection == "descending"
+    assert data.sortKey == SonarrSortKeys.DATE.value
+    assert data.sortDirection == SortDirection.DESCENDING.value
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].episodeId, int)
     assert isinstance(data.records[0].seriesId, int)
@@ -272,7 +274,7 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
     assert data.records[0].languageCutoffNotMet is False
     assert data.records[0].date == datetime(2019, 11, 1, 9, 9, 34, 288036)
     assert data.records[0].downloadId == "string"
-    assert data.records[0].eventType == "string"
+    assert data.records[0].eventType == SonarrEventType.GRABBED.value
     assert data.records[0].data.indexer == "string"
     assert data.records[0].data.nzbInfoUrl == "string"
     assert data.records[0].data.releaseGroup == "string"
@@ -285,13 +287,13 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
     assert data.records[0].data.importedPath == "string"
     assert data.records[0].data.downloadClient == "string"
     assert data.records[0].data.downloadClientName == "string"
-    assert isinstance(data.records[0].data.preferredWordScore, float)
+    assert isinstance(data.records[0].data.preferredWordScore, int)
     assert isinstance(data.records[0].data.size, int)
     assert data.records[0].data.downloadUrl == "string"
     assert data.records[0].data.guid == "string"
     assert isinstance(data.records[0].data.tvdbId, int)
     assert isinstance(data.records[0].data.tvRageId, int)
-    assert isinstance(data.records[0].data.protocol, int)
+    assert data.records[0].data.protocol is ProtocolType.UNKNOWN
     assert data.records[0].data.torrentInfoHash == "string"
     assert isinstance(data.records[0].id, int)
 
@@ -352,7 +354,7 @@ async def test_async_parse_title_or_path(aresponses, sonarr_client: SonarrClient
     assert data.series.overview == "string"
     assert data.series.network == "string"
     assert data.series.airTime == "00:00"
-    assert data.series.images[0].coverType == "string"
+    assert data.series.images[0].coverType == ImageType.POSTER.value
     assert data.series.images[0].url == "string"
     assert isinstance(data.series.seasons[0].seasonNumber, int)
     assert data.series.seasons[0].monitored is False
@@ -402,7 +404,7 @@ async def test_async_get_queue(aresponses, sonarr_client: SonarrClient):
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/queue?page=1&pageSize=20&sortDirection=ascending&sortKey=timeLeft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        f"/api/{SONARR_API}/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
         "GET",
         aresponses.Response(
             status=200,
@@ -415,40 +417,39 @@ async def test_async_get_queue(aresponses, sonarr_client: SonarrClient):
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "timeleft"
-    assert data.sortDirection == "ascending"
+    assert data.sortKey == SonarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
     assert isinstance(data.totalRecords, int)
-    assert isinstance(data.records[0].seriesId, int)
-    assert isinstance(data.records[0].episodeId, int)
-    assert data.records[0].series
-    assert data.records[0].episode
-    assert isinstance(data.records[0].language.id, int)
-    assert data.records[0].language.name == "string"
-    assert isinstance(data.records[0].quality.quality.id, int)
-    assert data.records[0].quality.quality.name == "string"
-    assert data.records[0].quality.quality.source == "string"
-    assert isinstance(data.records[0].quality.quality.resolution, int)
-    assert isinstance(data.records[0].quality.revision.version, int)
-    assert isinstance(data.records[0].quality.revision.real, int)
-    assert data.records[0].quality.revision.isRepack is False
-    assert isinstance(data.records[0].size, int)
-    assert data.records[0].title == "string"
-    assert isinstance(data.records[0].sizeleft, float)
-    assert data.records[0].timeleft == "00:00:00"
-    assert data.records[0].estimatedCompletionTime == datetime(
-        2020, 2, 9, 13, 14, 14, 379532
-    )
-    assert data.records[0].status == "string"
-    assert data.records[0].trackedDownloadStatus == "string"
-    assert data.records[0].trackedDownloadState == "string"
-    assert data.records[0].statusMessages[0].title == "string"
-    assert data.records[0].statusMessages[0].messages == ["string"]
-    assert data.records[0].downloadId == "string"
-    assert data.records[0].protocol == "string"
-    assert data.records[0].downloadClient == "string"
-    assert data.records[0].indexer == "string"
-    assert data.records[0].outputPath == "string"
-    assert isinstance(data.records[0].id, int)
+    _value = data.records[0]
+    assert isinstance(_value.seriesId, int)
+    assert isinstance(_value.episodeId, int)
+    assert _value.series
+    assert _value.episode
+    assert isinstance(_value.language.id, int)
+    assert _value.language.name == "string"
+    assert isinstance(_value.quality.quality.id, int)
+    assert _value.quality.quality.name == "string"
+    assert _value.quality.quality.source == "string"
+    assert isinstance(_value.quality.quality.resolution, int)
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
+    assert _value.quality.revision.isRepack is False
+    assert isinstance(_value.size, int)
+    assert _value.title == "string"
+    assert isinstance(_value.sizeleft, int)
+    assert _value.timeleft == "00:00:00"
+    assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532)
+    assert _value.status == "string"
+    assert _value.trackedDownloadStatus == "string"
+    assert _value.trackedDownloadState == "string"
+    assert _value.statusMessages[0].title == "string"
+    assert _value.statusMessages[0].messages == ["string"]
+    assert _value.downloadId == "string"
+    assert _value.protocol is ProtocolType.UNKNOWN
+    assert _value.downloadClient == "string"
+    assert _value.indexer == "string"
+    assert _value.outputPath == "string"
+    assert isinstance(_value.id, int)
 
 
 @pytest.mark.asyncio
@@ -510,14 +511,14 @@ async def test_async_get_release(aresponses, sonarr_client: SonarrClient):
     assert data[0].episodeRequested is False
     assert data[0].downloadAllowed is True
     assert isinstance(data[0].releaseWeight, int)
-    assert isinstance(data[0].preferredWordScore, float)
+    assert isinstance(data[0].preferredWordScore, int)
     assert data[0].sceneMapping.title == "string"
     assert isinstance(data[0].sceneMapping.seasonNumber, int)
     assert data[0].magnetUrl == "string"
     assert data[0].infoHash == "string"
     assert isinstance(data[0].seeders, int)
     assert isinstance(data[0].leechers, int)
-    assert data[0].protocol == "string"
+    assert data[0].protocol is ProtocolType.UNKNOWN
     assert data[0].isDaily is False
     assert data[0].isAbsoluteNumbering is False
     assert data[0].isPossibleSpecialEpisode is False
@@ -547,7 +548,7 @@ async def test_async_lookup_series(aresponses, sonarr_client: SonarrClient):
     assert data[0].overview == "string"
     assert data[0].network == "string"
     assert data[0].airTime == "00:00"
-    assert data[0].images[0].coverType == "string"
+    assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].images[0].remoteUrl == "string"
     assert data[0].remotePoster == "string"
@@ -660,7 +661,7 @@ async def test_async_get_series(aresponses, sonarr_client: SonarrClient):
     assert data.previousAiring == "string"
     assert data.network == "string"
     assert data.airTime == "00:00"
-    assert data.images[0].coverType == "string"
+    assert data.images[0].coverType == ImageType.POSTER.value
     assert data.images[0].url == "string"
     assert data.images[0].remoteUrl == "string"
     assert isinstance(data.seasons[0].seasonNumber, int)
@@ -708,7 +709,7 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=ascending",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default",
         "GET",
         aresponses.Response(
             status=200,
@@ -721,8 +722,8 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "airDateUtc"
-    assert data.sortDirection == "default"
+    assert data.sortKey == SonarrSortKeys.AIR_DATE_UTC.value
+    assert data.sortDirection == SortDirection.DEFAULT.value
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].seriesId, int)
     assert isinstance(data.records[0].episodeFileId, int)
@@ -744,7 +745,7 @@ async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient):
     """Test getting blocklist."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/blocklist?page=1&pageSize=10&sortDirection=descending&sortKey=date",
+        f"/api/{SONARR_API}/blocklist?page=1&pageSize=10&sortDirection=default&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
@@ -757,8 +758,8 @@ async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient):
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "date"
-    assert data.sortDirection == "descending"
+    assert data.sortKey == SonarrSortKeys.DATE.value
+    assert data.sortDirection == SortDirection.DESCENDING.value
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].seriesId, int)
     assert isinstance(data.records[0].episodeIds[0], int)
@@ -773,7 +774,7 @@ async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
     assert data.records[0].date == datetime(2021, 9, 19, 8, 14, 33, 582863)
-    assert data.records[0].protocol == "string"
+    assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
     assert isinstance(data.records[0].id, int)
@@ -906,7 +907,7 @@ async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient):
     assert data[0].quality.revision.isRepack is False
     assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert isinstance(data[0].sizeleft, float)
+    assert isinstance(data[0].sizeleft, int)
     assert data[0].timeleft == "00:00:00"
     assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840)
     assert data[0].status == "string"
@@ -915,7 +916,7 @@ async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient):
     assert data[0].statusMessages[0].title == "string"
     assert data[0].statusMessages[0].messages == ["string"]
     assert data[0].downloadId == "string"
-    assert data[0].protocol == "string"
+    assert data[0].protocol is ProtocolType.UNKNOWN
     assert data[0].downloadClient == "string"
     assert data[0].indexer == "string"
     assert data[0].outputPath == "string"
@@ -1073,7 +1074,7 @@ async def test_async_edit_episode(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/episode/0",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1090,7 +1091,7 @@ async def test_async_edit_episode_file_quality(aresponses, sonarr_client: Sonarr
         f"/api/{SONARR_API}/episodefile",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1179,7 +1180,7 @@ async def test_async_edit_series(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/series",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1212,7 +1213,7 @@ async def test_async_edit_import_list(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/importlist",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1308,7 +1309,7 @@ async def test_async_edit_naming_config(aresponses, sonarr_client: SonarrClient)
         f"/api/{SONARR_API}/config/naming",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1325,7 +1326,7 @@ async def test_async_edit_notification(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/notification",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,

@@ -7,11 +7,9 @@ LOGGER: Logger = getLogger(__package__)
 ALBUM_ID = "albumId"
 ALL = "all"
 ARTIST_ID = "artistId"
-ASCENDING = "ascending"
 ATTR_DATA = "data"
 AUTHOR_ID = "authorId"
 BOOK_ID = "bookId"
-DESCENDING = "descending"
 EPISODE_ID = "episodeId"
 HEADERS = {
     "Accept-Encoding": "gzip, deflate",

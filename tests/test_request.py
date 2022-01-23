@@ -13,24 +13,40 @@ from aiopyarr.exceptions import (
     ArrException,
 )
 from aiopyarr.lidarr_client import LidarrClient
+from aiopyarr.models.base import get_enum_value, todict
+from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.request import (
+    AllowFingerprintingType,
+    AuthenticationType,
+    CertificateValidationType,
     Command,
+    CommandPriorityType,
     Commands,
+    CommandStatusType,
+    CommandTriggerType,
     CustomFilter,
     DelayProfile,
     DownloadClient,
     DownloadClientConfig,
+    HealthType,
     HostConfig,
+    HostUpdateType,
+    ImageSize,
+    ImageType,
     ImportListExclusion,
     Indexer,
     IndexerConfig,
+    LogSortKeys,
     MediaManagementConfig,
     MetadataConfig,
+    ProxyType,
     QualityDefinition,
     QualityProfile,
     ReleaseProfile,
     RemotePathMapping,
+    RescanAfterRefreshType,
     RootFolder,
+    SortDirection,
     SystemBackup,
     Tag,
     UIConfig,
@@ -55,6 +71,34 @@ async def test_loop() -> None:
     """Test loop usage is handled correctly."""
     async with SonarrClient(host_configuration=TEST_HOST_CONFIGURATION) as sonarr:
         assert isinstance(sonarr, SonarrClient)
+
+
+@pytest.mark.asyncio
+async def test_todict(aresponses, radarr_client: RadarrClient) -> None:
+    """Test object conversion."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/movie/1?tmdbid=1",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/movie.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_movies(movieid=1)
+    data = todict(data)
+    assert data["added"] == "2018-12-28T05:56:49Z"
+    assert data["alternateTitles"][0]["movieId"] == 1
+    assert data["monitored"] is True
+    assert data["sizeOnDisk"] == 0
+
+
+def test_get_no_enum_value() -> None:
+    """Test getting no enum value."""
+    data = get_enum_value("test")
+    assert data == "test"
 
 
 @pytest.mark.asyncio
@@ -222,7 +266,7 @@ async def test_async_get_host_config(aresponses, radarr_client: RadarrClient) ->
     assert isinstance(data.backupRetention, int)
     assert data.bindAddress == "string"
     assert data.branch == "string"
-    assert data.certificateValidation == "string"
+    assert data.certificateValidation == CertificateValidationType.DISABLED.value
     assert data.consoleLogLevel == "string"
     assert data.enableSsl is True
     assert isinstance(data.id, int)
@@ -236,7 +280,7 @@ async def test_async_get_host_config(aresponses, radarr_client: RadarrClient) ->
     assert data.proxyHostname == "string"
     assert data.proxyPassword == "string"
     assert isinstance(data.proxyPort, int)
-    assert data.proxyType == "string"
+    assert data.proxyType == ProxyType.HTTP.value
     assert data.proxyUsername == "string"
     assert data.sslCertHash == "string"
     assert data.sslCertPassword == "string"
@@ -244,7 +288,7 @@ async def test_async_get_host_config(aresponses, radarr_client: RadarrClient) ->
     assert isinstance(data.sslPort, int)
     assert data.urlBase == "string"
     assert data.updateAutomatically is True
-    assert data.updateMechanism == "string"
+    assert data.updateMechanism == HostUpdateType.DOCKER.value
     assert data.updateScriptPath == "string"
     assert data.username == "string"
 
@@ -295,7 +339,7 @@ async def test_async_get_system_status(aresponses, radarr_client: RadarrClient) 
     data = await radarr_client.async_get_system_status()
 
     assert data.appData == "C:\\ProgramData\\Radarr"
-    assert data.authentication == "string"
+    assert data.authentication == AuthenticationType.NONE.value
     assert data.branch == "nightly"
     assert data.buildTime == datetime(2020, 9, 1, 23, 23, 23, 962197)
     assert data.isAdmin is False
@@ -371,7 +415,7 @@ async def test_async_get_logs(aresponses, sonarr_client: SonarrClient) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDirection=descending",
+        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDirection=default",
         "GET",
         aresponses.Response(
             status=200,
@@ -384,8 +428,8 @@ async def test_async_get_logs(aresponses, sonarr_client: SonarrClient) -> None:
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "logger"
-    assert data.sortDirection == "default"
+    assert data.sortKey == LogSortKeys.LOGGER.value
+    assert data.sortDirection == SortDirection.DEFAULT.value
     assert isinstance(data.totalRecords, int)
     assert data.records[0].time == datetime(2021, 11, 19, 9, 28, 26, 549994)
     assert data.records[0].level == "info"
@@ -530,15 +574,15 @@ async def test_async_get_command(aresponses, radarr_client: RadarrClient) -> Non
     assert data[0].body.name == "MessagingCleanup"
     assert data[0].body.lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46)
     assert data[0].body.lastStartTime == datetime(2021, 11, 29, 19, 57, 46)
-    assert data[0].body.trigger == "scheduled"
+    assert data[0].body.trigger == CommandTriggerType.SCHEDULED.value
     assert data[0].body.suppressMessages is False
-    assert data[0].priority == "low"
-    assert data[0].status == "completed"
+    assert data[0].priority == CommandPriorityType.LOW.value
+    assert data[0].status == CommandStatusType.COMPLETED.value
     assert data[0].queued == datetime(2021, 11, 29, 20, 3, 16)
     assert data[0].started == datetime(2021, 11, 29, 20, 3, 16)
     assert data[0].ended == datetime(2021, 11, 29, 20, 3, 16)
     assert data[0].duration == "00:00:00.0102456"
-    assert data[0].trigger == "scheduled"
+    assert data[0].trigger == CommandTriggerType.SCHEDULED.value
     assert data[0].stateChangeTime == datetime(2021, 11, 29, 20, 3, 16)
     assert data[0].sendUpdatesToClient is False
     assert data[0].updateScheduledTask is True
@@ -581,7 +625,7 @@ async def test_async_get_download_client(
     assert data.implementationName == "string"
     assert data.infoLink == "string"
     assert data.name == "string"
-    assert data.protocol == "string"
+    assert data.protocol is ProtocolType.UNKNOWN
     assert isinstance(data.priority, int)
     assert isinstance(data.tags[0], int)
 
@@ -697,7 +741,7 @@ async def test_async_get_failed_health_checks(
 
     assert data[0].message == "Enable Completed Download Handling"
     assert data[0].source == "ImportMechanismCheck"
-    assert data[0].type == "warning"
+    assert data[0].type == HealthType.WARNING.value
     assert (
         data[0].wikiUrl
         == "https://wiki.servarr.com/radarr/system#completed-failed-download-handling"
@@ -753,7 +797,7 @@ async def test_async_get_indexer(aresponses, radarr_client: RadarrClient) -> Non
     assert data.enableInteractiveSearch is True
     assert data.supportsRss is True
     assert data.supportsSearch is True
-    assert data.protocol == "string"
+    assert data.protocol is ProtocolType.UNKNOWN
     assert isinstance(data.priority, int)
     assert data.name == "string"
     assert isinstance(data.fields[0].order, int)
@@ -2359,7 +2403,7 @@ async def test_async_get_image(
         ),
         match_querystring=True,
     )
-    await sonarr_client.async_get_image(imageid=0, size="small")
+    await sonarr_client.async_get_image(imageid=0, size=ImageSize.SMALL)
 
     aresponses.add(
         "127.0.0.1:8989",
@@ -2371,7 +2415,7 @@ async def test_async_get_image(
         ),
         match_querystring=True,
     )
-    await sonarr_client.async_get_image(imageid=0, size="medium")
+    await sonarr_client.async_get_image(imageid=0, size=ImageSize.MEDIUM)
 
     aresponses.add(
         "127.0.0.1:8989",
@@ -2395,7 +2439,7 @@ async def test_async_get_image(
         ),
         match_querystring=True,
     )
-    await lidarr_client.async_get_image(imageid=0, size="medium")
+    await lidarr_client.async_get_image(imageid=0, size=ImageSize.MEDIUM)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -2407,7 +2451,7 @@ async def test_async_get_image(
         ),
         match_querystring=True,
     )
-    await lidarr_client.async_get_image(imageid=0, imagetype="logo")
+    await lidarr_client.async_get_image(imageid=0, imagetype=ImageType.LOGO)
 
     aresponses.add(
         "127.0.0.1:8686",
@@ -2419,11 +2463,11 @@ async def test_async_get_image(
         ),
         match_querystring=True,
     )
-    await lidarr_client.async_get_image(imageid=0, imagetype="logo", alt=True)
+    await lidarr_client.async_get_image(imageid=0, imagetype=ImageType.LOGO, alt=True)
 
 
 @pytest.mark.asyncio
-async def test_async_get_author_image(
+async def test_async_get_authors_image(
     aresponses, readarr_client: ReadarrClient
 ) -> None:
     """Test getting author image."""
@@ -2437,7 +2481,7 @@ async def test_async_get_author_image(
         ),
         match_querystring=True,
     )
-    await readarr_client.async_get_image(0, size="small", alt=True)
+    await readarr_client.async_get_image(0, size=ImageSize.SMALL, alt=True)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2449,7 +2493,7 @@ async def test_async_get_author_image(
         ),
         match_querystring=True,
     )
-    await readarr_client.async_get_image(0, size="medium", alt=True)
+    await readarr_client.async_get_image(0, size=ImageSize.MEDIUM, alt=True)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2477,7 +2521,7 @@ async def test_async_get_book_image(aresponses, readarr_client: ReadarrClient) -
         ),
         match_querystring=True,
     )
-    await readarr_client.async_get_image(0, size="small")
+    await readarr_client.async_get_image(0, size=ImageSize.SMALL)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2489,7 +2533,7 @@ async def test_async_get_book_image(aresponses, readarr_client: ReadarrClient) -
         ),
         match_querystring=True,
     )
-    await readarr_client.async_get_image(0, size="medium")
+    await readarr_client.async_get_image(0, size=ImageSize.MEDIUM)
 
     aresponses.add(
         "127.0.0.1:8787",
@@ -2522,7 +2566,7 @@ async def test_async_get_media_management_configs(
     )
     data = await radarr_client.async_get_media_management_configs()
 
-    assert data.allowFingerprinting == "newFiles"
+    assert data.allowFingerprinting == AllowFingerprintingType.NEW_FILES.value
     assert data.autoRenameFolders is True
     assert data.autoUnmonitorPreviouslyDownloadedBooks is False
     assert data.autoUnmonitorPreviouslyDownloadedEpisodes is False
@@ -2545,7 +2589,7 @@ async def test_async_get_media_management_configs(
     assert data.pathsDefaultStatic is False
     assert data.recycleBin == "/recycle/"
     assert isinstance(data.recycleBinCleanupDays, int)
-    assert data.rescanAfterRefresh == "afterManual"
+    assert data.rescanAfterRefresh == RescanAfterRefreshType.AFTER_MANUAL.value
     assert data.setPermissionsLinux is False
     assert data.skipFreeSpaceCheckWhenImporting is False
     assert data.watchLibraryForChanges is True
@@ -2851,7 +2895,7 @@ async def test_async_edit_host_config(aresponses, radarr_client: RadarrClient) -
         f"/api/{RADARR_API}/config/host",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -2868,7 +2912,7 @@ async def test_async_edit_ui_config(aresponses, radarr_client: RadarrClient) -> 
         f"/api/{RADARR_API}/config/ui",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3000,7 +3044,7 @@ async def test_async_edit_tag(aresponses, radarr_client: RadarrClient) -> None:
         f"/api/{RADARR_API}/tag",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3069,7 +3113,7 @@ async def test_async_edit_custom_filter(
         f"/api/{RADARR_API}/customfilter",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3125,7 +3169,7 @@ async def test_async_edit_download_client(
         f"/api/{RADARR_API}/downloadclient",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3207,7 +3251,7 @@ async def test_async_edit_download_client_config(
         f"/api/{RADARR_API}/config/downloadclient",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3245,7 +3289,7 @@ async def test_async_edit_import_list_exclusion(
         f"/api/{READARR_API}/importlistexclusion",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3301,7 +3345,7 @@ async def test_async_edit_indexer(aresponses, readarr_client: ReadarrClient) -> 
         f"/api/{READARR_API}/indexer",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3395,7 +3439,7 @@ async def test_async_edit_indexer_config(
         f"/api/{RADARR_API}/config/indexer",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3414,7 +3458,7 @@ async def test_async_edit_media_management_config(
         f"/api/{RADARR_API}/config/mediamanagement",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3434,7 +3478,7 @@ async def test_async_edit_metadata_config(
         f"/api/{RADARR_API}/metadata",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3582,7 +3626,7 @@ async def test_async_edit_quality_definition(
         f"/api/{RADARR_API}/qualitydefinition",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3619,7 +3663,7 @@ async def test_async_edit_quality_profile(
         f"/api/{RADARR_API}/qualityprofile",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3741,7 +3785,7 @@ async def test_async_edit_release_profile(
         f"/api/{READARR_API}/releaseprofile",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3815,7 +3859,7 @@ async def test_async_edit_remote_path_mapping(
         f"/api/{READARR_API}/remotepathmapping",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3913,7 +3957,7 @@ async def test_async_get_delay_profiles(
     data = await readarr_client.async_get_delay_profiles()
     assert data[0].enableUsenet is True
     assert data[0].enableTorrent is True
-    assert data[0].preferredProtocol == "string"
+    assert data[0].preferredProtocol is ProtocolType.UNKNOWN
     assert isinstance(data[0].usenetDelay, int)
     assert isinstance(data[0].torrentDelay, int)
     assert data[0].bypassIfHighestQuality is True
@@ -3951,7 +3995,7 @@ async def test_async_edit_delay_profile(
         f"/api/{READARR_API}/delayprofile",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3988,7 +4032,7 @@ async def test_async_delay_profile_reorder(
         f"/api/{READARR_API}/delayprofile/reorder/0?afterId=1",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -4012,6 +4056,22 @@ async def test_async_delete_metadata_profile(
         match_querystring=True,
     )
     await readarr_client.async_delete_metadata_profile(0)
+
+
+@pytest.mark.asyncio
+async def test_async_mark_failed(aresponses, sonarr_client: SonarrClient) -> None:
+    """Test mark history item as failed."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/history/failed/0",
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await sonarr_client.async_mark_failed(0)
 
 
 @pytest.mark.asyncio

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 from .base import BaseModel
@@ -10,7 +11,9 @@ from .request_common import (
     _Common3,
     _Common4,
     _Common7,
+    _Common8,
     _Fields,
+    _ImportListCommon,
     _Notification,
     _Quality,
     _RecordCommon,
@@ -52,6 +55,26 @@ class SonarrEventType(str, Enum):
     EPISODE_DELETED = "episodeFileDeleted"
     GRABBED = "grabbed"
     IMPORTED = "downloadFolderImported"
+
+
+class SonarrSortKeys(str, Enum):
+    """Sonarr sort keys."""
+
+    AIR_DATE_UTC = "airDateUtc"
+    DATE = "date"
+    EPISODE_ID = "episodeId"
+    EPISODE_TITLE = "episodetitle"
+    ID = "id"
+    INDEXER = "indexer"
+    MESSAGE = "message"
+    PATH = "path"
+    QUALITY = "quality"
+    RATINGS = "ratings"
+    SERIES_ID = "seriesId"
+    SERIES_TITLE = "series.Title"
+    SOURCE_TITLE = "sourcetitle"
+    TIMELEFT = "timeleft"
+    TITLE = "title"
 
 
 @dataclass(init=False)
@@ -210,7 +233,7 @@ class SonarrSeriesLookup(_SonarrSeriesCommon):
 class SonarrBlocklistSeries(_Common7):
     """Sonarr blocklist series attributes."""
 
-    date: str | None = None
+    date: datetime | None = None
     episodeIds: list[int] | None = None
     language: _Common3 | None = None
     message: str | None = None
@@ -276,32 +299,21 @@ class SonarrNotification(_Common3, _Notification):
 
 
 @dataclass(init=False)
-class SonarrQueueDetail(_Common4):
+class SonarrQueueDetail(_Common4, _Common8):
     """Sonarr queue detail attributes."""
 
     episode: _SonarrCommon | None = None
     episodeId: int | None = None
-    id: int | None = None
     language: _Common3 | None = None
-    protocol: str | None = None
-    quality: _Quality | None = None
     series: _SonarrSeries2 | None = None
     seriesId: int | None = None
-    size: float | None = None
-    sizeleft: float | None = None
-    status: str | None = None
-    statusMessages: list[_StatusMessage] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadState: str | None = None
-    trackedDownloadStatus: str | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
+        self.quality = _Quality(self.quality) or {}
         self.episode = _SonarrCommon(self.episode) or {}
         self.language = _Common3(self.language) or {}
-        self.quality = _Quality(self.quality) or {}
         self.series = _SonarrSeries2(self.series) or {}
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
@@ -325,20 +337,17 @@ class SonarrTagDetails(_TagDetails):
 
 
 @dataclass(init=False)
-class SonarrImportList(_Common3):
+class SonarrImportList(_ImportListCommon, _Common3):
     """Sonarr importlist attributes."""
 
-    configContract: str | None = None
     enableAutomaticAdd: bool | None = None
     fields: list[_Fields] | None = None
     implementation: str | None = None
     implementationName: str | None = None
     infoLink: str | None = None
     languageProfileId: int | None = None
-    listOrder: int | None = None
     listType: str | None = None
     qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
     seasonFolder: bool | None = None
     seriesType: str | None = None
     shouldMonitor: str | None = None

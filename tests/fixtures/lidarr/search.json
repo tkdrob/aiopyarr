@@ -20,7 +20,7 @@
       "images": [
         {
           "url": "string",
-          "coverType": "string",
+          "coverType": "poster",
           "extension": "string"
         }
       ],

@@ -3,9 +3,19 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 from .base import BaseModel
-from .request_common import _Common3, _Common6, _Fields, _Link, _Quality, _Ratings
+from .request import StatusType
+from .request_common import (
+    _Common3,
+    _Common6,
+    _Fields,
+    _ImportListCommon,
+    _Link,
+    _Quality,
+    _Ratings,
+)
 
 
 @dataclass(init=False)
@@ -70,7 +80,7 @@ class _LidarrCommon5(BaseModel):
 
     artist: _LidarrArtist | None = None
     artistId: int | None = None
-    date: str | None = None
+    date: datetime | None = None
     quality: _Quality | None = None
     sourceTitle: str | None = None
 
@@ -85,7 +95,7 @@ class _LidarrCommon5(BaseModel):
 class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     """Lidarr artist attributes."""
 
-    added: str | None = None
+    added: datetime | None = None
     allMusicId: str | None = None
     artistMetadataId: int | None = None
     artistName: str | None = None
@@ -101,7 +111,7 @@ class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     remotePoster: str | None = None
     sortName: str | None = None
     rootFolderPath: str | None = None
-    status: str | None = None
+    status: StatusType | None = None
     tadbId: int | None = None
     tags: list[int] | None = None
 
@@ -118,7 +128,7 @@ class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
     media: list[_LidarrMedia] | None = None
     mediumCount: int | None = None
     profileId: int | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     releases: list[_LidarrRelease] | None = None
     secondaryTypes: list[_Common3] | None = None
     title: str | None = None
@@ -178,11 +188,6 @@ class _LidarrStatistics(BaseModel):
 
 
 @dataclass(init=False)
-class LidarrAlbum(_LidarrAlbumCommon, _LidarrCommon3):
-    """Lidarr album attributes."""
-
-
-@dataclass(init=False)
 class _LidarrFields(_Fields):
     """Lidarr fields attributes."""
 
@@ -190,15 +195,13 @@ class _LidarrFields(_Fields):
 
 
 @dataclass(init=False)
-class _LidarrImportListPreset(BaseModel):
+class _LidarrImportListPreset(_ImportListCommon):
     """Lidarr import list preset attributes."""
 
-    configContract: str | None = None
     enableAutomaticAdd: bool | None = None
     fields: list[_LidarrFields] | None = None
     implementation: str | None = None
     infoLink: str | None = None
-    listOrder: int | None = None
     listType: str | None = None
     metadataProfileId: int | None = None
     name: str | None = None
@@ -263,3 +266,11 @@ class _LidarrMediaInfo(BaseModel):
     audioCodec: str | None = None
     audioFormat: str | None = None
     audioSampleRate: str | None = None
+
+
+@dataclass(init=False)
+class _LidarrAddOptions(BaseModel):
+    """Lidarr add options attributes."""
+
+    addType: str | None = None
+    searchForNewAlbum: bool | None = None
