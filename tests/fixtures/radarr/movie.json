@@ -24,7 +24,7 @@
   "physicalRelease": "2019-03-19T00:00:00Z",
   "images": [
     {
-      "coverType": "string",
+      "coverType": "poster",
       "url": "string",
       "remoteUrl": "string"
     }
@@ -124,7 +124,7 @@
     "tmdbId": 0,
     "images": [
       {
-        "coverType": "string",
+        "coverType": "poster",
         "url": "string",
         "remoteUrl": "string"
       }

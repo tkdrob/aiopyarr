@@ -6,12 +6,10 @@ from typing import Any
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.models.request import Command
+from aiopyarr.models.request import Command, SortDirection
 
 from .const import (
     ALL,
-    ASCENDING,
-    DESCENDING,
     IS_VALID,
     MOVIE_ID,
     NOTIFICATION,
@@ -44,6 +42,7 @@ from .models.radarr import (
     RadarrQueueDetail,
     RadarrRelease,
     RadarrRename,
+    RadarrSortKeys,
     RadarrTagDetails,
 )
 from .request_client import RequestClient
@@ -122,9 +121,9 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Edit movie properties of multiple movies at once."""
         params = {"moveFiles": str(move_files)}
         return await self._async_request(
-            "movie/editor" if hasattr(data, "movieIds") else "movie",
-            params=None if hasattr(data, "movieIds") else params,
-            data=data if hasattr(data, "movieIds") else None,
+            f"movie{'' if isinstance(data, RadarrMovie) else '/editor'}",
+            params=params if isinstance(data, RadarrMovie) else None,
+            data=data,
             datatype=RadarrMovie,
             method=HTTPMethod.PUT,
         )
@@ -198,22 +197,22 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        ascending: bool = False,
-        sort_key: str = "date",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: RadarrSortKeys = RadarrSortKeys.DATE,
     ) -> RadarrHistory:
         """Get movie history.
 
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Direction to sort items.
-            sort_key: date, id, movieid, title, sourcetitle, or quality
+            sort_key: date, id, movieid, title, sourcetitle, path, ratings, or quality
+                    (Others do not apply)
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
         }
         return await self._async_request(
             "history",
@@ -322,22 +321,22 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        ascending: bool = False,
-        sort_key: str = "date",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: RadarrSortKeys = RadarrSortKeys.DATE,
     ) -> RadarrBlocklist:
         """Return blocklisted releases.
 
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Direction to sort items.
-            sort_key: date, id, movieid, title, sourcetitle, or quality
+            sort_key: date, id, movieid, title, path, sourcetitle, ratings, or quality
+                    (Others do not apply)
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
         }
         return await self._async_request(
             "blocklist",
@@ -361,8 +360,8 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        ascending: bool = True,
-        sort_key: str = "timeLeft",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: RadarrSortKeys = RadarrSortKeys.TIMELEFT,
         include_unknown_movie_items: bool = False,
         include_movie: bool = False,
     ) -> RadarrQueue:
@@ -371,15 +370,13 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Cort by ascending or descending.
-            sort_key: date, id, movieid, title, sourcetitle, or quality.
             include_unknown_movie_items: Include unknown movie items.
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
             "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
             "includeMovie": str(include_movie),
         }

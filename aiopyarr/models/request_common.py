@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 from .base import BaseModel
+from .const import ProtocolType
 
 
 @dataclass(init=False)
@@ -76,7 +78,7 @@ class _Common4(BaseModel):
 
     downloadClient: str | None = None
     downloadId: str | None = None
-    estimatedCompletionTime: str | None = None
+    estimatedCompletionTime: datetime | None = None
     indexer: str | None = None
     outputPath: str | None = None
 
@@ -103,7 +105,24 @@ class _Common7(BaseModel):
 
     id: int | None = None
     indexer: str | None = None
-    protocol: str | None = None
+    protocol: ProtocolType | None = None
+
+
+@dataclass(init=False)
+class _Common8(BaseModel):
+    """Common attributes."""
+
+    id: int | None = None
+    protocol: ProtocolType | None = None
+    quality: _Quality | None = None
+    size: int | None = None
+    sizeleft: int | None = None
+    status: str | None = None
+    statusMessages: list[_StatusMessage] | None = None
+    timeleft: str | None = None
+    title: str | None = None
+    trackedDownloadState: str | None = None
+    trackedDownloadStatus: str | None = None
 
 
 @dataclass(init=False)
@@ -134,8 +153,8 @@ class _CommandBody(BaseModel):
     isExclusive: bool | None = None
     isNewMovie: bool | None = None
     isTypeExclusive: bool | None = None
-    lastExecutionTime: str | None = None
-    lastStartTime: str | None = None
+    lastExecutionTime: datetime | None = None
+    lastStartTime: datetime | None = None
     name: str | None = None
     requiresDiskAccess: bool | None = None
     sendUpdatesToClient: bool | None = None
@@ -172,9 +191,18 @@ class _FilesystemFolder(BaseModel):
 class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
-    lastModified: str | None = None
+    lastModified: datetime | None = None
     size: int | None = None
     type: str | None = None
+
+
+@dataclass(init=False)
+class _ImportListCommon(_FilesystemFolder):
+    """Import list common attributes."""
+
+    configContract: str | None = None
+    listOrder: int | None = None
+    rootFolderPath: str | None = None
 
 
 @dataclass(init=False)
@@ -1674,7 +1702,7 @@ class _LogRecord(BaseModel):
     level: str | None = None
     logger: str | None = None
     message: str | None = None
-    time: str | None = None
+    time: datetime | None = None
 
 
 @dataclass(init=False)
@@ -1717,8 +1745,8 @@ class _ReleaseCommon(BaseModel):
     infoUrl: str | None = None
     leechers: int | None = None
     magnetUrl: str | None = None
-    protocol: str | None = None
-    publishDate: str | None = None
+    protocol: ProtocolType | None = None
+    publishDate: datetime | None = None
     qualityWeight: int | None = None
     rejected: bool | None = None
     rejections: list[str] | None = None
@@ -1846,23 +1874,29 @@ class _RetagChange(BaseModel):
 
 
 @dataclass(init=False)
-class _HistoryData(BaseModel):
+class _HistoryCommon(BaseModel):
+    """History common attributes."""
+
+    age: int | None = None
+    ageHours: float | None = None
+    ageMinutes: float | None = None
+    downloadUrl: str | None = None
+    indexer: str | None = None
+    nzbInfoUrl: str | None = None
+    protocol: ProtocolType | None = None
+    publishedDate: datetime | None = None
+    releaseGroup: str | None = None
+    size: int | None = None
+    torrentInfoHash: str | None = None
+
+
+@dataclass(init=False)
+class _HistoryData(_HistoryCommon):
     """History data attributes."""
 
-    age: str | None = None
-    ageHours: str | None = None
-    ageMinutes: str | None = None
-    downloadForced: str | None = None
-    downloadUrl: str | None = None
-    guid: str | None = None
-    nzbInfoUrl: str | None = None
-    protocol: str | None = None
-    publishedDate: str | None = None
-    releaseGroup: str | None = None
-    size: str | None = None
-    torrentInfoHash: str | None = None
-    indexer: str | None = None
     downloadClient: str | None = None
+    downloadForced: bool | None = None
+    guid: str | None = None
 
 
 @dataclass(init=False)
@@ -1914,3 +1948,10 @@ class _Editor(BaseModel):
     qualityProfileId: int | None = None
     rootFolderPath: str | None = None
     tags: list[int | None] | None = None
+
+
+@dataclass(init=False)
+class _IsLoaded(BaseModel):
+    """Is loaded attribute."""
+
+    isLoaded: bool | None = None

@@ -1,6 +1,6 @@
 {
   "enable": true,
-  "protocol": "string",
+  "protocol": "unknown",
   "priority": 0,
   "name": "string",
   "fields": [

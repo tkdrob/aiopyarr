@@ -38,7 +38,6 @@
     "foreignAuthorId": "string",
     "titleSlug": "string",
     "overview": "string",
-    "disambiguation": "string",
     "links": [
       {
         "url": "string",
@@ -72,7 +71,7 @@
       "lastInfoSync": "2020-02-06T12:49:48.602Z",
       "added": "2020-02-06T12:49:48.602Z",
       "addOptions": {
-        "addType": "string",
+        "addType": "automatic",
         "searchForNewBook": true
       },
       "authorMetadata": {
@@ -86,7 +85,6 @@
           "sortNameLastFirst": "string",
           "aliases": ["string"],
           "overview": "string",
-          "disambiguation": "string",
           "gender": "string",
           "hometown": "string",
           "born": "2020-01-06T12:49:48.602Z",
@@ -95,7 +93,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "string",
+              "coverType": "poster",
               "extension": "string"
             }
           ],
@@ -128,7 +126,7 @@
           "metadataProfileId": 0,
           "tags": [0],
           "addOptions": {
-            "monitor": "string",
+            "monitor": "all",
             "booksToMonitor": ["string"],
             "monitored": true,
             "searchForMissingBooks": true
@@ -144,7 +142,6 @@
               "sortNameLastFirst": "string",
               "aliases": ["string"],
               "overview": "string",
-              "disambiguation": "string",
               "gender": "string",
               "hometown": "string",
               "born": "2020-01-06T12:49:48.603Z",
@@ -153,7 +150,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string",
+                  "coverType": "poster",
                   "extension": "string"
                 }
               ],
@@ -250,14 +247,13 @@
             "overview": "string",
             "format": "string",
             "isEbook": true,
-            "disambiguation": "string",
             "publisher": "string",
             "pageCount": 0,
             "releaseDate": "2020-01-06T12:49:48.603Z",
             "images": [
               {
                 "url": "string",
-                "coverType": "string",
+                "coverType": "poster",
                 "extension": "string"
               }
             ],
@@ -322,7 +318,7 @@
                       "metadataProfileId": 0,
                       "tags": [0],
                       "addOptions": {
-                        "monitor": "string",
+                        "monitor": "all",
                         "booksToMonitor": ["string"],
                         "monitored": true,
                         "searchForMissingBooks": true
@@ -338,7 +334,6 @@
                           "sortNameLastFirst": "string",
                           "aliases": ["string"],
                           "overview": "string",
-                          "disambiguation": "string",
                           "gender": "string",
                           "hometown": "string",
                           "born": "2020-01-06T12:49:48.603Z",
@@ -347,7 +342,7 @@
                           "images": [
                             {
                               "url": "string",
-                              "coverType": "string",
+                              "coverType": "poster",
                               "extension": "string"
                             }
                           ],
@@ -489,7 +484,7 @@
                   0
                 ],
                 "addOptions": {
-                  "monitor": "string",
+                  "monitor": "all",
                   "booksToMonitor": ["string"],
                   "monitored": true,
                   "searchForMissingBooks": true
@@ -507,7 +502,6 @@
                       "string"
                     ],
                     "overview": "string",
-                    "disambiguation": "string",
                     "gender": "string",
                     "hometown": "string",
                     "born": "2020-01-06T12:49:48.603Z",
@@ -516,7 +510,7 @@
                     "images": [
                       {
                         "url": "string",
-                        "coverType": "string",
+                        "coverType": "poster",
                         "extension": "string"
                       }
                     ],
@@ -667,7 +661,7 @@
       "lastInfoSync": "2020-01-06T12:49:48.603Z",
       "added": "2020-01-06T12:49:48.603Z",
       "addOptions": {
-        "addType": "string",
+        "addType": "automatic",
         "searchForNewBook": true
       },
       "authorMetadata": {
@@ -681,7 +675,6 @@
           "sortNameLastFirst": "string",
           "aliases": ["string"],
           "overview": "string",
-          "disambiguation": "string",
           "gender": "string",
           "hometown": "string",
           "born": "2020-01-06T12:49:48.603Z",
@@ -690,7 +683,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "string",
+              "coverType": "poster",
               "extension": "string"
             }
           ],
@@ -723,7 +716,7 @@
           "metadataProfileId": 0,
           "tags": [0],
           "addOptions": {
-            "monitor": "string",
+            "monitor": "all",
             "booksToMonitor": ["string"],
             "monitored": true,
             "searchForMissingBooks": true
@@ -739,7 +732,6 @@
               "sortNameLastFirst": "string",
               "aliases": ["string"],
               "overview": "string",
-              "disambiguation": "string",
               "gender": "string",
               "hometown": "string",
               "born": "2020-01-06T12:49:48.603Z",
@@ -748,7 +740,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string",
+                  "coverType": "poster",
                   "extension": "string"
                 }
               ],
@@ -847,14 +839,13 @@
             "overview": "string",
             "format": "string",
             "isEbook": true,
-            "disambiguation": "string",
             "publisher": "string",
             "pageCount": 0,
             "releaseDate": "2020-01-06T12:49:48.603Z",
             "images": [
               {
                 "url": "string",
-                "coverType": "string",
+                "coverType": "poster",
                 "extension": "string"
               }
             ],
@@ -919,7 +910,7 @@
                       "metadataProfileId": 0,
                       "tags": [0],
                       "addOptions": {
-                        "monitor": "string",
+                        "monitor": "all",
                         "booksToMonitor": ["string"],
                         "monitored": true,
                         "searchForMissingBooks": true
@@ -935,7 +926,6 @@
                           "sortNameLastFirst": "string",
                           "aliases": ["string"],
                           "overview": "string",
-                          "disambiguation": "string",
                           "gender": "string",
                           "hometown": "string",
                           "born": "2020-01-06T12:49:48.603Z",
@@ -944,7 +934,7 @@
                           "images": [
                             {
                               "url": "string",
-                              "coverType": "string",
+                              "coverType": "poster",
                               "extension": "string"
                             }
                           ],
@@ -1086,7 +1076,7 @@
                   0
                 ],
                 "addOptions": {
-                  "monitor": "string",
+                  "monitor": "all",
                   "booksToMonitor": ["string"],
                   "monitored": true,
                   "searchForMissingBooks": true
@@ -1102,7 +1092,6 @@
                     "sortNameLastFirst": "string",
                     "aliases": ["string"],
                     "overview": "string",
-                    "disambiguation": "string",
                     "gender": "string",
                     "hometown": "string",
                     "born": "2020-01-06T12:49:48.603Z",
@@ -1111,7 +1100,7 @@
                     "images": [
                       {
                         "url": "string",
-                        "coverType": "string",
+                        "coverType": "poster",
                         "extension": "string"
                       }
                     ],
@@ -1240,7 +1229,7 @@
     "images": [
       {
         "url": "string",
-        "coverType": "string",
+        "coverType": "poster",
         "extension": "string"
       }
     ],
@@ -1257,7 +1246,7 @@
     "tags": [0],
     "added": "2020-01-06T12:49:48.603Z",
     "addOptions": {
-      "monitor": "string",
+      "monitor": "all",
       "booksToMonitor": ["string"],
       "monitored": true,
       "searchForMissingBooks": true
@@ -1282,7 +1271,6 @@
       "title": "string",
       "authorTitle": "string",
       "seriesTitle": "string",
-      "disambiguation": "string",
       "overview": "string",
       "authorId": 0,
       "foreignBookId": "string",
@@ -1307,7 +1295,6 @@
         "foreignAuthorId": "string",
         "titleSlug": "string",
         "overview": "string",
-        "disambiguation": "string",
         "links": [
           {
             "url": "string",
@@ -1339,7 +1326,7 @@
           "lastInfoSync": "2020-01-06T12:49:48.603Z",
           "added": "2020-01-06T12:49:48.603Z",
           "addOptions": {
-            "addType": "string",
+            "addType": "automatic",
             "searchForNewBook": true
           },
           "authorMetadata": {
@@ -1353,7 +1340,6 @@
               "sortNameLastFirst": "string",
               "aliases": ["string"],
               "overview": "string",
-              "disambiguation": "string",
               "gender": "string",
               "hometown": "string",
               "born": "2020-01-06T12:49:48.603Z",
@@ -1362,7 +1348,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string",
+                  "coverType": "poster",
                   "extension": "string"
                 }
               ],
@@ -1395,7 +1381,7 @@
               "metadataProfileId": 0,
               "tags": [0],
               "addOptions": {
-                "monitor": "string",
+                "monitor": "all",
                 "booksToMonitor": ["string"],
                 "monitored": true,
                 "searchForMissingBooks": true
@@ -1411,7 +1397,6 @@
                   "sortNameLastFirst": "string",
                   "aliases": ["string"],
                   "overview": "string",
-                  "disambiguation": "string",
                   "gender": "string",
                   "hometown": "string",
                   "born": "2020-01-06T12:49:48.603Z",
@@ -1420,7 +1405,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string",
+                      "coverType": "poster",
                       "extension": "string"
                     }
                   ],
@@ -1517,14 +1502,13 @@
                 "overview": "string",
                 "format": "string",
                 "isEbook": true,
-                "disambiguation": "string",
                 "publisher": "string",
                 "pageCount": 0,
                 "releaseDate": "2020-01-06T12:49:48.604Z",
                 "images": [
                   {
                     "url": "string",
-                    "coverType": "string",
+                    "coverType": "poster",
                     "extension": "string"
                   }
                 ],
@@ -1589,7 +1573,7 @@
                           "metadataProfileId": 0,
                           "tags": [0],
                           "addOptions": {
-                            "monitor": "string",
+                            "monitor": "all",
                             "booksToMonitor": ["string"],
                             "monitored": true,
                             "searchForMissingBooks": true
@@ -1605,7 +1589,6 @@
                               "sortNameLastFirst": "string",
                               "aliases": ["string"],
                               "overview": "string",
-                              "disambiguation": "string",
                               "gender": "string",
                               "hometown": "string",
                               "born": "2020-01-06T12:49:48.604Z",
@@ -1614,7 +1597,7 @@
                               "images": [
                                 {
                                   "url": "string",
-                                  "coverType": "string",
+                                  "coverType": "poster",
                                   "extension": "string"
                                 }
                               ],
@@ -1754,7 +1737,7 @@
                     "metadataProfileId": 0,
                     "tags": [0],
                     "addOptions": {
-                      "monitor": "string",
+                      "monitor": "all",
                       "booksToMonitor": ["string"],
                       "monitored": true,
                       "searchForMissingBooks": true
@@ -1770,7 +1753,6 @@
                         "sortNameLastFirst": "string",
                         "aliases": ["string"],
                         "overview": "string",
-                        "disambiguation": "string",
                         "gender": "string",
                         "hometown": "string",
                         "born": "2020-01-06T12:49:48.604Z",
@@ -1779,7 +1761,7 @@
                         "images": [
                           {
                             "url": "string",
-                            "coverType": "string",
+                            "coverType": "poster",
                             "extension": "string"
                           }
                         ],
@@ -1928,7 +1910,7 @@
           "lastInfoSync": "2020-01-06T12:49:48.604Z",
           "added": "2020-01-06T12:49:48.604Z",
           "addOptions": {
-            "addType": "string",
+            "addType": "automatic",
             "searchForNewBook": true
           },
           "authorMetadata": {
@@ -1942,7 +1924,6 @@
               "sortNameLastFirst": "string",
               "aliases": ["string"],
               "overview": "string",
-              "disambiguation": "string",
               "gender": "string",
               "hometown": "string",
               "born": "2020-01-06T12:49:48.604Z",
@@ -1951,7 +1932,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string",
+                  "coverType": "poster",
                   "extension": "string"
                 }
               ],
@@ -1984,7 +1965,7 @@
               "metadataProfileId": 0,
               "tags": [0],
               "addOptions": {
-                "monitor": "string",
+                "monitor": "all",
                 "booksToMonitor": ["string"],
                 "monitored": true,
                 "searchForMissingBooks": true
@@ -2000,7 +1981,6 @@
                   "sortNameLastFirst": "string",
                   "aliases": ["string"],
                   "overview": "string",
-                  "disambiguation": "string",
                   "gender": "string",
                   "hometown": "string",
                   "born": "2020-01-06T12:49:48.604Z",
@@ -2009,7 +1989,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string",
+                      "coverType": "poster",
                       "extension": "string"
                     }
                   ],
@@ -2106,14 +2086,13 @@
                 "overview": "string",
                 "format": "string",
                 "isEbook": true,
-                "disambiguation": "string",
                 "publisher": "string",
                 "pageCount": 0,
                 "releaseDate": "2020-01-06T12:49:48.604Z",
                 "images": [
                   {
                     "url": "string",
-                    "coverType": "string",
+                    "coverType": "poster",
                     "extension": "string"
                   }
                 ],
@@ -2178,7 +2157,7 @@
                           "metadataProfileId": 0,
                           "tags": [0],
                           "addOptions": {
-                            "monitor": "string",
+                            "monitor": "all",
                             "booksToMonitor": ["string"],
                             "monitored": true,
                             "searchForMissingBooks": true
@@ -2194,7 +2173,6 @@
                               "sortNameLastFirst": "string",
                               "aliases": ["string"],
                               "overview": "string",
-                              "disambiguation": "string",
                               "gender": "string",
                               "hometown": "string",
                               "born": "2020-01-06T12:49:48.604Z",
@@ -2203,7 +2181,7 @@
                               "images": [
                                 {
                                   "url": "string",
-                                  "coverType": "string",
+                                  "coverType": "poster",
                                   "extension": "string"
                                 }
                               ],
@@ -2343,7 +2321,7 @@
                     "metadataProfileId": 0,
                     "tags": [0],
                     "addOptions": {
-                      "monitor": "string",
+                      "monitor": "all",
                       "booksToMonitor": ["string"],
                       "monitored": true,
                       "searchForMissingBooks": true
@@ -2359,7 +2337,6 @@
                         "sortNameLastFirst": "string",
                         "aliases": ["string"],
                         "overview": "string",
-                        "disambiguation": "string",
                         "gender": "string",
                         "hometown": "string",
                         "born": "2020-01-06T12:49:48.604Z",
@@ -2368,7 +2345,7 @@
                         "images": [
                           {
                             "url": "string",
-                            "coverType": "string",
+                            "coverType": "poster",
                             "extension": "string"
                           }
                         ],
@@ -2495,7 +2472,7 @@
         "images": [
           {
             "url": "string",
-            "coverType": "string",
+            "coverType": "poster",
             "extension": "string"
           }
         ],
@@ -2512,7 +2489,7 @@
         "tags": [0],
         "added": "2020-01-06T12:49:48.604Z",
         "addOptions": {
-          "monitor": "string",
+          "monitor": "all",
           "booksToMonitor": ["string"],
           "monitored": true,
           "searchForMissingBooks": true
@@ -2534,7 +2511,7 @@
       "images": [
         {
           "url": "string",
-          "coverType": "string",
+          "coverType": "poster",
           "extension": "string"
         }
       ],
@@ -2553,7 +2530,7 @@
       },
       "added": "2020-01-06T12:49:48.604Z",
       "addOptions": {
-        "addType": "string",
+        "addType": "automatic",
         "searchForNewBook": true
       },
       "remoteCover": "string",
@@ -2570,14 +2547,13 @@
           "overview": "string",
           "format": "string",
           "isEbook": true,
-          "disambiguation": "string",
           "publisher": "string",
           "pageCount": 0,
           "releaseDate": "2020-01-06T12:49:48.604Z",
           "images": [
             {
               "url": "string",
-              "coverType": "string",
+              "coverType": "poster",
               "extension": "string"
             }
           ],

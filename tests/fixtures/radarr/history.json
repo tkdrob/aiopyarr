@@ -57,11 +57,16 @@
         }
       ],
       "qualityCutoffNotMet": true,
-      "date": "string",
+      "date": "2020-02-20T21:34:52Z",
       "downloadId": "string",
-      "eventType": "string",
+      "eventType": "grabbed",
       "data": {
-        "reason": "Upgrade"
+        "fileId": "0",
+        "droppedPath": "string",
+        "importedPath": "string",
+        "downloadClient": "string",
+        "downloadClientName": "string",
+        "reason": "string"
       },
       "id": 0
     }

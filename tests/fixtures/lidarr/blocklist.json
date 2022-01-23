@@ -21,11 +21,11 @@
         }
       },
       "date": "2020-02-15T19:24:28.4760603Z",
-      "protocol": "string",
+      "protocol": "unknown",
       "indexer": "string",
       "message": "string",
       "artist": {
-        "status": "string",
+        "status": "ended",
         "ended": true,
         "artistName": "string",
         "foreignArtistId": "string",
@@ -43,7 +43,7 @@
         "images": [
           {
             "url": "string",
-            "coverType": "string",
+            "coverType": "poster",
             "extension": "string"
           }
         ],

@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
-from .base import BaseModel, get_datetime
+from .base import BaseModel
 from .request_common import (
     _Common3,
     _Common5,
@@ -134,7 +135,7 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Radarr movie history/blocklist attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
-    date: str | None = None
+    date: datetime | None = None
     movieId: int | None = None
     sourceTitle: str | None = None
 
@@ -157,6 +158,11 @@ class _RadarrNotificationMessage(BaseModel):
 class _RadarrMovieHistoryData(BaseModel):
     """Radarr movie history data attributes."""
 
+    downloadClient: str | None = None
+    downloadClientName: str | None = None
+    droppedPath: str | None = None
+    fileId: int | None = None
+    importedPath: str | None = None
     reason: str | None = None
 
 
@@ -182,23 +188,23 @@ class _RadarrMovieAlternateTitle(BaseModel):
 class _RadarrMovie(_RadarrCommon2, _Common6):
     """Radarr movie attributes."""
 
-    added: str | None = None
+    added: datetime | None = None
     alternateTitles: list[_RadarrMovieAlternateTitle] | None = None
     certification: str | None = None
     cleanTitle: str | None = None
     collection: _RadarrMovieCollection | None = None
-    digitalRelease: str | None = None
+    digitalRelease: datetime | None = None
     folderName: str | None = None
     genres: list[str] | None = None
     hasFile: bool | None = None
     images: list[_RadarrMovieImages] | None = None
     imdbId: str | None = None
-    inCinemas: str | None = None
+    inCinemas: datetime | None = None
     isAvailable: bool | None = None
     movieFile: _RadarrMovieFile | None = None
     originalTitle: str | None = None
     path: str | None = None
-    physicalRelease: str | None = None
+    physicalRelease: datetime | None = None
     ratings: _RadarrMovieRatings | None = None
     rootFolderPath: str | None = None
     runtime: int | None = None
@@ -209,7 +215,7 @@ class _RadarrMovie(_RadarrCommon2, _Common6):
     studio: str | None = None
     tags: list[int | None] | None = None
     title: str | None = None
-    titleSlug: str | None = None
+    titleSlug: int | None = None
     tmdbId: int | None = None
     website: str | None = None
     year: int | None = None
@@ -293,7 +299,7 @@ class _RadarrCustomFormats(BaseModel):
 class _RadarrMovieFile(_RadarrMovieCommon):
     """Radarr movie file attributes."""
 
-    dateAdded: str | None = None
+    dateAdded: datetime | None = None
     edition: str | None = None
     indexerFlags: int | None = None
     mediaInfo: _RadarrMovieFileMediaInfo | None = None
@@ -307,5 +313,4 @@ class _RadarrMovieFile(_RadarrMovieCommon):
 
     def __post_init__(self):
         super().__post_init__()
-        self.dateAdded = get_datetime(self.dateAdded)
         self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}

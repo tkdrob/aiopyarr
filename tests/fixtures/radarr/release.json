@@ -68,6 +68,6 @@
     "infoHash": "string",
     "seeders": 0,
     "leechers": 0,
-    "protocol": "string"
+    "protocol": "unknown"
   }
 ]

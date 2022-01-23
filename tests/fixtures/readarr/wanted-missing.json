@@ -1,7 +1,7 @@
 {
   "page": 1,
   "pageSize": 10,
-  "sortKey": "string",
+  "sortKey": "Books.Id",
   "sortDirection": "default",
   "totalRecords": 0,
   "records": [
@@ -42,7 +42,7 @@
         "images": [
           {
             "url": "string",
-            "coverType": "string",
+            "coverType": "poster",
             "extension": "string"
           }
         ],
@@ -75,7 +75,7 @@
       "images": [
         {
           "url": "string",
-          "coverType": "string",
+          "coverType": "poster",
           "extension": "string"
         }
       ],
@@ -111,7 +111,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "string",
+              "coverType": "poster",
               "extension": "string"
             }
           ],

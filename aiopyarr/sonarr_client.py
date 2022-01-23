@@ -9,8 +9,6 @@ from aiohttp.client import ClientSession
 
 from .const import (
     ALL,
-    ASCENDING,
-    DESCENDING,
     EPISODE_ID,
     IS_VALID,
     NOTIFICATION,
@@ -26,7 +24,7 @@ from .const import (
 )
 from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
-from .models.request import Command
+from .models.request import Command, SortDirection
 from .models.sonarr import (
     SonarrBlocklist,
     SonarrCalendar,
@@ -46,6 +44,7 @@ from .models.sonarr import (
     SonarrSeries,
     SonarrSeriesAdd,
     SonarrSeriesLookup,
+    SonarrSortKeys,
     SonarrTagDetails,
     SonarrWantedMissing,
 )
@@ -108,16 +107,14 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        ascending: bool = True,
-        sort_key: str = "timeLeft",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: SonarrSortKeys = SonarrSortKeys.TIMELEFT,
         include_unknown_series_items: bool = False,
         include_series: bool = False,
         include_episode: bool = False,
     ) -> SonarrQueue:
         """Get information about download queue.
 
-        ascending: Sort items in ascending order.
-        sort_key: series.Title, id, date, airDateUtc, or title.
         page: Page number to return.
         page_size: Number of items per page.
         id: Filter to a specific episode ID.
@@ -125,8 +122,8 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
             "includeUnknownSeriesItems": str(
                 include_unknown_series_items
             ),  # Unverified
@@ -266,14 +263,15 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_key: str = "date",
+        sort_key: SonarrSortKeys = SonarrSortKeys.DATE,
         recordid: int | None = None,
         event_type: SonarrEventType | None = None,
     ) -> SonarrHistory:
         """Get history (grabs/failures/completed).
 
         Args:
-            sort_key: id, date, or series.Title.
+            sort_key: series.title, id, seriesid, episodeid, date,
+                    quality, or sourcetitle (others do not apply)
             page: Page number to return.
             page_size: Number of items per page.
             id: Filter to a specific episode ID.
@@ -281,7 +279,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_KEY: sort_key,
+            SORT_KEY: sort_key.value,
         }
         if event_type and event_type in SonarrEventType:
             params["eventType"] = event_type.value
@@ -295,22 +293,22 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        sort_key: str = "airDateUtc",
-        ascending: bool = True,
+        sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
+        sort_dir: SortDirection = SortDirection.DEFAULT,
     ) -> SonarrWantedMissing:
         """Get missing episode (episodes without files).
 
         Args:
-            sort_date: airDateUtc, id, series.Title, or title.
+            sort_key: series.title, id, seriesid, airdateutc, ratings, or title
+            (others do not apply)
             page: Page number to return.
             page_size: Number of items per page.
-            ascending: Sort items in ascending order.
         """
         params = {
-            SORT_KEY: sort_key,
+            SORT_KEY: sort_key.value,
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
+            SORT_DIRECTION: sort_dir.value,
         }
         return await self._async_request(
             "wanted/missing",
@@ -493,22 +491,22 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 10,
-        ascending: bool = False,
-        sort_key: str = "date",
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: SonarrSortKeys = SonarrSortKeys.DATE,
     ) -> SonarrBlocklist:
         """Return blocklisted releases.
 
         Args:
             page: Page to be returned.
             page_size: Number of results per page.
-            ascending: Direction to sort items.
-            sort_key: id, date, or series.Title.
+            sort_key: series.title, id, seriesid, date, indexer,
+                    message, quality, or sourcetitle (Others do not apply)
         """
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: ASCENDING if ascending else DESCENDING,
-            SORT_KEY: sort_key,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
         }
         return await self._async_request(
             "blocklist",

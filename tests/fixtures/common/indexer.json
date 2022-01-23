@@ -4,7 +4,7 @@
   "enableInteractiveSearch": true,
   "supportsRss": true,
   "supportsSearch": true,
-  "protocol": "string",
+  "protocol": "unknown",
   "priority": 0,
   "name": "string",
   "fields": [

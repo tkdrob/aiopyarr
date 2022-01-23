@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 
 from .base import BaseModel, get_datetime
 from .request_common import (
@@ -12,6 +13,7 @@ from .request_common import (
     _Common5,
     _Common6,
     _CommonAttrs,
+    _HistoryCommon,
     _Quality,
     _QualityCommon,
     _Ratings,
@@ -31,8 +33,8 @@ class _SonarrSeriesAlternateTitle(BaseModel):
 class _SonarrCommon2(_SonarrSeriesAlternateTitle, _Common6):
     """Sonarr common attributes."""
 
-    airDate: str | None = None
-    airDateUtc: str | None = None
+    airDate: datetime | None = None
+    airDateUtc: datetime | None = None
     episodeFileId: int | None = None
     episodeNumber: int | None = None
     hasFile: bool | None = None
@@ -58,19 +60,19 @@ class _SonarrImages(_Common5):
 class _SonarrSeries2(_Common6):
     """Sonarr parse attributes."""
 
-    added: str | None = None
+    added: datetime | None = None
     airTime: str | None = None
     certification: str | None = None
     cleanTitle: str | None = None
     ended: bool | None = None
-    firstAired: str | None = None
+    firstAired: datetime | None = None
     folder: str | None = None
     genres: list[str] | None = None
     id: int | None = None
     images: list[_SonarrImages] | None = None
     imdbId: str | None = None
     languageProfileId: int | None = None
-    lastInfoSync: str | None = None
+    lastInfoSync: datetime | None = None
     network: str | None = None
     path: str | None = None
     qualityProfileId: int | None = None
@@ -83,7 +85,7 @@ class _SonarrSeries2(_Common6):
     status: str | None = None
     tags: list[int | None] | None = None
     title: str | None = None
-    titleSlug: str | None = None
+    titleSlug: int | None = None
     tvdbId: int | None = None
     tvMazeId: int | None = None
     tvRageId: int | None = None
@@ -101,7 +103,7 @@ class _SonarrSeries2(_Common6):
 class _SonarrEpisodeFile(_QualityCommon):
     """Sonarr episode file attributes."""
 
-    dateAdded: str | None = None
+    dateAdded: datetime | None = None
     id: int | None = None
     language: _SonarrQualityProfileValueAttr | None = None
     languageCutoffNotMet: bool | None = None
@@ -133,34 +135,23 @@ class _SonarrCommon(_SonarrCommon2):
 
 
 @dataclass(init=False)
-class _SonarrHistoryRecordData(_Common4):
+class _SonarrHistoryRecordData(_Common4, _HistoryCommon):
     """Sonarr history record data attributes."""
 
-    age: int | None = None
-    ageHours: float | None = None
-    ageMinutes: float | None = None
     approved: bool | None = None
     downloadAllowed: bool | None = None
     downloadClientName: str | None = None
-    downloadUrl: str | None = None
     droppedPath: str | None = None
     fileId: int | None = None
     guid: str | None = None
     importedPath: str | None = None
-    indexer: str | None = None
     indexerId: int | None = None
-    nzbInfoUrl: str | None = None
     preferredWordScore: int | None = None
-    protocol: int | None = None
-    publishedDate: str | None = None
     qualityWeight: int | None = None
     rejections: list[str] | None = None
-    releaseGroup: str | None = None
     sceneSource: bool | None = None
     seasonNumber: int | None = None
-    size: int | None = None
     title: str | None = None
-    torrentInfoHash: str | None = None
     tvdbId: str | None = None
     tvRageId: int | None = None
 
@@ -203,8 +194,6 @@ class _SonarrSeriesCommon(_SonarrSeries2):
     statistics: _SonarrSeasonStatistics | None = None
 
     def __post_init__(self):
-        self.added = get_datetime(self.added)
-        self.firstAired = get_datetime(self.firstAired)
         self.images = [_SonarrImages(image) for image in self.images or []]
         self.ratings = _Ratings(self.ratings) or {}
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
@@ -216,7 +205,7 @@ class _SonarrHistoryRecord(_Common2, _QualityCommon):
     """Sonarr history record attributes."""
 
     data: _SonarrHistoryRecordData | None = None
-    date: str | None = None
+    date: datetime | None = None
     episodeId: int | None = None
     id: int | None = None
     language: _Common3 | None = None

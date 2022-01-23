@@ -4,6 +4,7 @@ from datetime import datetime
 
 import pytest
 
+from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.radarr import (
     RadarrCommands,
     RadarrEventType,
@@ -14,8 +15,9 @@ from aiopyarr.models.radarr import (
     RadarrNamingConfig,
     RadarrNotification,
     RadarrRelease,
+    RadarrSortKeys,
 )
-from aiopyarr.models.request import Command
+from aiopyarr.models.request import Command, ImageType, SortDirection
 from aiopyarr.radarr_client import RadarrClient
 
 from . import RADARR_API, load_fixture
@@ -26,7 +28,7 @@ async def test_async_get_blocklist(aresponses, radarr_client: RadarrClient) -> N
     """Test getting blocklisted movies."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/blocklist?page=1&pageSize=20&sortDirection=descending&sortKey=date",
+        f"/api/{RADARR_API}/blocklist?page=1&pageSize=20&sortDirection=default&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
@@ -39,12 +41,15 @@ async def test_async_get_blocklist(aresponses, radarr_client: RadarrClient) -> N
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
+    assert data.sortDirection == SortDirection.ASCENDING.value
+    assert data.sortKey == RadarrSortKeys.DATE.value
+    assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].movieId, int)
     assert data.records[0].sourceTitle == "string"
-    assert data.records[0].date == "string"
+    assert data.records[0].date == datetime(2021, 9, 19, 14, 24, 13)
     assert isinstance(data.records[0].id, int)
     assert data.records[0].indexer == "string"
-    assert data.records[0].protocol == "string"
+    assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert isinstance(data.records[0].quality.quality.id, int)
     assert data.records[0].quality.quality.name == "string"
     assert data.records[0].quality.quality.source == "string"
@@ -72,9 +77,6 @@ async def test_async_get_blocklist(aresponses, radarr_client: RadarrClient) -> N
     assert spec.fields[0].value == "string"
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
-    assert data.sortDirection == "string"
-    assert data.sortKey == "string"
-    assert isinstance(data.totalRecords, int)
 
 
 @pytest.mark.asyncio
@@ -124,10 +126,10 @@ async def test_async_get_blocklist_movie(
     assert spec.fields[0].value == "string"
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
-    assert data[0].date == "string"
+    assert data[0].date == datetime(2019, 4, 10, 15, 9, 11)
     assert isinstance(data[0].id, int)
     assert data[0].indexer == "string"
-    assert data[0].protocol == "string"
+    assert data[0].protocol is ProtocolType.UNKNOWN
 
 
 @pytest.mark.asyncio
@@ -158,7 +160,7 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     assert data[0].overview == "string"
     assert data[0].physicalRelease == datetime(2021, 12, 3, 0, 0)
     assert data[0].digitalRelease == datetime(2020, 8, 11, 0, 0)
-    assert data[0].images[0].coverType == "string"
+    assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
     assert isinstance(data[0].year, int)
@@ -260,7 +262,7 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/history?page=1&pageSize=20&sortDirection=descending&sortKey=date",
+        f"/api/{RADARR_API}/history?page=1&pageSize=20&sortDirection=default&sortKey=date",
         "GET",
         aresponses.Response(
             status=200,
@@ -273,8 +275,8 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "date"
-    assert data.sortDirection == "descending"
+    assert data.sortKey == RadarrSortKeys.DATE.value
+    assert data.sortDirection == SortDirection.DESCENDING.value
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].movieId, int)
     assert data.records[0].sourceTitle == "string"
@@ -306,10 +308,15 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
     assert data.records[0].qualityCutoffNotMet is True
-    assert data.records[0].date == "string"
+    assert data.records[0].date == datetime(2020, 2, 20, 21, 34, 52)
     assert data.records[0].downloadId == "string"
-    assert data.records[0].eventType == "string"
-    assert data.records[0].data.reason == "Upgrade"
+    assert data.records[0].eventType == RadarrEventType.GRABBED.value
+    assert isinstance(data.records[0].data.fileId, int)
+    assert data.records[0].data.droppedPath == "string"
+    assert data.records[0].data.importedPath == "string"
+    assert data.records[0].data.downloadClient == "string"
+    assert data.records[0].data.downloadClientName == "string"
+    assert data.records[0].data.reason == "string"
     assert isinstance(data.records[0].id, int)
 
 
@@ -359,10 +366,14 @@ async def test_async_get_movie_history(aresponses, radarr_client: RadarrClient) 
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
     assert data[0].qualityCutoffNotMet is True
-    assert data[0].date == "string"
+    assert data[0].date == datetime(2020, 6, 16, 21, 19, 5)
     assert data[0].downloadId == "string"
-    assert data[0].eventType == "string"
-    assert data[0].data.reason == "Upgrade"
+    assert data[0].eventType == RadarrEventType.GRABBED.value
+    assert data[0].data.droppedPath == "string"
+    assert data[0].data.importedPath == "string"
+    assert data[0].data.downloadClient == "string"
+    assert data[0].data.downloadClientName == "string"
+    assert data[0].data.reason == "string"
     assert isinstance(data[0].id, int)
 
     aresponses.add(
@@ -459,7 +470,7 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert data.overview == "string"
     assert data.inCinemas == datetime(2020, 11, 6, 0, 0)
     assert data.physicalRelease == datetime(2019, 3, 19, 0, 0)
-    assert data.images[0].coverType == "string"
+    assert data.images[0].coverType == ImageType.POSTER.value
     assert data.images[0].url == "string"
     assert data.images[0].remoteUrl == "string"
     assert data.website == "string"
@@ -529,7 +540,7 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert isinstance(data.movieFile.id, int)
     assert data.collection.name == "string"
     assert isinstance(data.collection.tmdbId, int)
-    assert data.collection.images[0].coverType == "string"
+    assert data.collection.images[0].coverType == ImageType.POSTER.value
     assert data.collection.images[0].url == "string"
     assert data.collection.images[0].remoteUrl == "string"
     assert data.status == "string"
@@ -698,7 +709,7 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/queue?page=1&pageSize=20&sortDirection=ascending&sortKey=timeLeft&includeUnknownMovieItems=False&includeMovie=False",
+        f"/api/{RADARR_API}/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownMovieItems=False&includeMovie=False",
         "GET",
         aresponses.Response(
             status=200,
@@ -711,8 +722,8 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
-    assert data.sortKey == "timeleft"
-    assert data.sortDirection == "ascending"
+    assert data.sortKey == RadarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].movieId, int)
     assert isinstance(data.records[0].languages[0].id, int)
@@ -725,39 +736,28 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
     assert isinstance(data.records[0].quality.revision.version, int)
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is True
-    assert isinstance(data.records[0].customFormats[0].id, int)
-    assert data.records[0].customFormats[0].name == "string"
-    assert data.records[0].customFormats[0].includeCustomFormatWhenRenaming is True
-    assert data.records[0].customFormats[0].specifications[0].name == "string"
-    assert data.records[0].customFormats[0].specifications[0].implementation == "string"
-    assert (
-        data.records[0].customFormats[0].specifications[0].implementationName
-        == "string"
-    )
-    assert data.records[0].customFormats[0].specifications[0].infoLink == "string"
-    assert data.records[0].customFormats[0].specifications[0].negate is True
-    assert data.records[0].customFormats[0].specifications[0].required is True
-    assert isinstance(
-        data.records[0].customFormats[0].specifications[0].fields[0].order, int
-    )
-    assert data.records[0].customFormats[0].specifications[0].fields[0].name == "string"
-    assert (
-        data.records[0].customFormats[0].specifications[0].fields[0].label == "string"
-    )
-    assert (
-        data.records[0].customFormats[0].specifications[0].fields[0].helpText
-        == "string"
-    )
-    assert (
-        data.records[0].customFormats[0].specifications[0].fields[0].value == "string"
-    )
-    assert data.records[0].customFormats[0].specifications[0].fields[0].type == "string"
-    assert data.records[0].customFormats[0].specifications[0].fields[0].advanced is True
+    _value = data.records[0].customFormats[0]
+    assert isinstance(_value.id, int)
+    assert _value.name == "string"
+    assert _value.includeCustomFormatWhenRenaming is True
+    assert _value.specifications[0].name == "string"
+    assert _value.specifications[0].implementation == "string"
+    assert _value.specifications[0].implementationName == "string"
+    assert _value.specifications[0].infoLink == "string"
+    assert _value.specifications[0].negate is True
+    assert _value.specifications[0].required is True
+    assert isinstance(_value.specifications[0].fields[0].order, int)
+    assert _value.specifications[0].fields[0].name == "string"
+    assert _value.specifications[0].fields[0].label == "string"
+    assert _value.specifications[0].fields[0].helpText == "string"
+    assert _value.specifications[0].fields[0].value == "string"
+    assert _value.specifications[0].fields[0].type == "string"
+    assert _value.specifications[0].fields[0].advanced is True
     assert isinstance(data.records[0].size, int)
     assert data.records[0].title == "string"
     assert isinstance(data.records[0].sizeleft, int)
     assert data.records[0].timeleft == "string"
-    assert data.records[0].estimatedCompletionTime == "string"
+    assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "string"
@@ -765,7 +765,7 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
     assert data.records[0].statusMessages[0].messages == ["string"]
     assert data.records[0].errorMessage == "string"
     assert data.records[0].downloadId == "string"
-    assert data.records[0].protocol == "string"
+    assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].downloadClient == "string"
     assert data.records[0].indexer == "string"
     assert data.records[0].outputPath == "string"
@@ -826,7 +826,7 @@ async def test_async_get_queue_details(aresponses, radarr_client: RadarrClient) 
     assert data[0].statusMessages[0].messages == ["string"]
     assert data[0].errorMessage == "string"
     assert data[0].downloadId == "string"
-    assert data[0].protocol == "string"
+    assert data[0].protocol is ProtocolType.UNKNOWN
     assert data[0].downloadClient == "string"
     assert data[0].indexer == "string"
     assert data[0].outputPath == "string"
@@ -917,7 +917,7 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert data.movie.inCinemas == datetime(2000, 4, 25, 0, 0)
     assert data.movie.physicalRelease == datetime(2000, 7, 8, 0, 0)
     assert data.movie.digitalRelease == datetime(2000, 2, 1, 0, 0)
-    assert data.movie.images[0].coverType == "string"
+    assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
     assert isinstance(data.movie.year, int)
@@ -986,7 +986,7 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert isinstance(data.movie.movieFile.id, int)
     assert data.movie.collection.name == "string"
     assert isinstance(data.movie.collection.tmdbId, int)
-    assert data.movie.collection.images[0].coverType == "string"
+    assert data.movie.collection.images[0].coverType == ImageType.POSTER.value
     assert data.movie.collection.images[0].remoteUrl == "string"
     assert data.movie.collection.images[0].url == "string"
     assert isinstance(data.movie.id, int)
@@ -1056,7 +1056,7 @@ async def test_async_get_release(aresponses, radarr_client: RadarrClient) -> Non
     assert data[0].infoHash == "string"
     assert isinstance(data[0].seeders, int)
     assert isinstance(data[0].leechers, int)
-    assert data[0].protocol == "string"
+    assert data[0].protocol is ProtocolType.UNKNOWN
 
 
 @pytest.mark.asyncio
@@ -1139,7 +1139,7 @@ async def test_async_edit_movies(aresponses, radarr_client: RadarrClient) -> Non
         f"/api/{RADARR_API}/movie?moveFiles=False",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1152,7 +1152,7 @@ async def test_async_edit_movies(aresponses, radarr_client: RadarrClient) -> Non
         f"/api/{RADARR_API}/movie/editor",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1231,7 +1231,7 @@ async def test_async_edit_import_list(aresponses, radarr_client: RadarrClient) -
         f"/api/{RADARR_API}/importlist",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1329,7 +1329,7 @@ async def test_async_edit_naming_config(
         f"/api/{RADARR_API}/config/naming",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1346,7 +1346,7 @@ async def test_async_edit_notification(aresponses, radarr_client: RadarrClient) 
         f"/api/{RADARR_API}/notification",
         "PUT",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,

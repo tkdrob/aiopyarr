@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 from .base import BaseModel
@@ -29,8 +30,10 @@ from .request_common import (
     _Common3,
     _Common4,
     _Common6,
+    _Common8,
     _Editor,
     _Fields,
+    _ImportListCommon,
     _Link,
     _Notification,
     _Quality,
@@ -44,6 +47,14 @@ from .request_common import (
 )
 
 
+class ReadarrBookTypes(str, Enum):
+    """Readarr book types."""
+
+    ASIN = "asin"
+    GOODREADS = "goodreads"
+    ISBN = "isbn"
+
+
 class ReadarrCommands(str, Enum):
     """Readarr commands."""
 
@@ -54,14 +65,6 @@ class ReadarrCommands(str, Enum):
     REFRESH_BOOK = "RefreshBook"
     RENAME_AUTHOR = "RenameAuthor"
     RESCAN_FOLDERS = "RescanFolders"
-
-
-class ReadarrBookTypes(str, Enum):
-    """Readarr book types."""
-
-    ASIN = "asin"
-    GOODREADS = "goodreads"
-    ISBN = "isbn"
 
 
 class ReadarrEventType(str, Enum):
@@ -78,6 +81,31 @@ class ReadarrEventType(str, Enum):
     DOWNLOAD_IMPORTED = "downloadImported"
     GRABBED = "grabbed"
     UNKNOWN = "unknown"
+
+
+class ReadarrImportListType(str, Enum):
+    """Readarr import list types."""
+
+    PROGRAM = "program"
+    GOODREADS = "goodreads"
+    OTHER = "other"
+
+
+class ReadarrSortKeys(str, Enum):
+    """Readarr sort keys."""
+
+    AUTHOR_ID = "authorid"
+    BOOK_ID = "Books.Id"
+    DATE = "date"
+    ID = "id"
+    INDEXER = "indexer"
+    MESSAGE = "message"
+    PATH = "path"
+    QUALITY = "quality"
+    RATINGS = "ratings"
+    SOURCE_TITLE = "sourcetitle"
+    TIMELEFT = "timeleft"
+    TITLE = "title"
 
 
 @dataclass(init=False)
@@ -101,7 +129,7 @@ class ReadarrBook(_ReadarrBookCommon):
         """Post init."""
         super().__post_init__()
         self.author = ReadarrAuthor(self.author) or {}
-        self.editions = [_ReadarrEditionsValue(editn) for editn in self.editions or []]
+        self.editions = [_ReadarrEditionsValue(x) for x in self.editions or []]
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
 
@@ -150,7 +178,7 @@ class ReadarrBookFile(_QualityCommon):
     audioTags: _ReadarrAudioTags | None = None
     authorId: int | None = None
     bookId: int | None = None
-    dateAdded: str | None = None
+    dateAdded: datetime | None = None
     id: int | None = None
     mediaInfo: _ReadarrBookFileMediaInfo | None = None
     path: str | None = None
@@ -180,7 +208,7 @@ class ReadarrBookFileEditor(BaseModel):
 class ReadarrBookLookup(_Common6):
     """Readarr book lookup attributes."""
 
-    added: str | None = None
+    added: datetime | None = None
     anyEditionOk: bool | None = None
     author: ReadarrAuthor | None = None
     authorId: int | None = None
@@ -194,11 +222,11 @@ class ReadarrBookLookup(_Common6):
     links: list[_Link] | None = None
     pageCount: int | None = None
     ratings: _ReadarrRating | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     remoteCover: str | None = None
     seriesTitle: str | None = None
     title: str | None = None
-    titleSlug: str | None = None
+    titleSlug: int | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -309,21 +337,18 @@ class ReadarrHistory(_RecordCommon):
 
 
 @dataclass(init=False)
-class ReadarrImportList(_Common3):
+class ReadarrImportList(_ImportListCommon, _Common3):
     """Readarr importlist attributes."""
 
-    configContract: str | None = None
     enableAutomaticAdd: bool | None = None
     fields: list[_Fields] | None = None
     implementation: str | None = None
     implementationName: str | None = None
     infoLink: str | None = None
-    listOrder: int | None = None
     listType: str | None = None
     metadataProfileId: int | None = None
     monitorNewItems: str | None = None
     qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
     shouldMonitor: str | None = None
     shouldMonitorExisting: bool | None = None
     shouldSearch: bool | None = None
@@ -398,25 +423,14 @@ class ReadarrParse(BaseModel):
 
 
 @dataclass(init=False)
-class ReadarrQueueDetail(_Common4):
+class ReadarrQueueDetail(_Common4, _Common8):
     """Readarr queue detail attributes."""
 
     author: ReadarrAuthor | None = None
     authorId: int | None = None
     book: ReadarrBook | None = None
     bookId: int | None = None
-    downloadForced: str | None = None
-    id: int | None = None
-    protocol: str | None = None
-    quality: _Quality | None = None
-    size: int | None = None
-    sizeleft: int | None = None
-    status: str | None = None
-    statusMessages: list[_StatusMessage] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadState: str | None = None
-    trackedDownloadStatus: str | None = None
+    downloadForced: bool | None = None
 
     def __post_init__(self):
         """Post init."""
@@ -464,12 +478,9 @@ class ReadarrRename(_Rename):
 
 
 @dataclass(init=False)
-class ReadarrRetag(BaseModel):
+class ReadarrRetag(ReadarrRename):
     """Readarr retag attributes."""
 
-    authorId: int | None = None
-    bookFileId: int | None = None
-    bookId: int | None = None
     changes: list[_RetagChange] | None = None
     path: str | None = None
     trackNumbers: list[int] | None = None

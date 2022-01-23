@@ -60,7 +60,7 @@
     "infoHash": "string",
     "seeders": 0,
     "leechers": 0,
-    "protocol": "string",
+    "protocol": "unknown",
     "isDaily": false,
     "isAbsoluteNumbering": false,
     "isPossibleSpecialEpisode": false,

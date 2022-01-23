@@ -89,7 +89,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string"
+                  "coverType": "poster"
                 }
               ],
               "links": [
@@ -117,7 +117,7 @@
               "lastInfoSync": "2020-02-15T14:59:24.750Z",
               "added": "2020-02-15T14:59:24.750Z",
               "addOptions": {
-                "addType": "string",
+                "addType": "automatic",
                 "searchForNewAlbum": true
               },
               "artistMetadata": {
@@ -134,7 +134,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string"
+                      "coverType": "poster"
                     }
                   ],
                   "links": [
@@ -155,7 +155,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ]
                     }
@@ -178,7 +178,7 @@
                   "metadataProfileId": 0,
                   "tags": [0],
                   "addOptions": {
-                    "monitor": "string",
+                    "monitor": "all",
                     "albumsToMonitor": ["string"],
                     "monitored": true,
                     "searchForMissingAlbums": true
@@ -197,7 +197,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ],
                       "links": [
@@ -218,7 +218,7 @@
                           "images": [
                             {
                               "url": "string",
-                              "coverType": "string"
+                              "coverType": "poster"
                             }
                           ]
                         }
@@ -296,7 +296,7 @@
               "images": [
                 {
                   "url": "string",
-                  "coverType": "string"
+                  "coverType": "poster"
                 }
               ],
               "links": [
@@ -324,7 +324,7 @@
               "lastInfoSync": "2020-02-15T14:59:24.751Z",
               "added": "2020-02-15T14:59:24.751Z",
               "addOptions": {
-                "addType": "atring",
+                "addType": "automatic",
                 "searchForNewAlbum": true
               },
               "artistMetadata": {
@@ -341,7 +341,7 @@
                   "images": [
                     {
                       "url": "string",
-                      "coverType": "string"
+                      "coverType": "poster"
                     }
                   ],
                   "links": [
@@ -362,7 +362,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ]
                     }
@@ -385,7 +385,7 @@
                   "metadataProfileId": 0,
                   "tags": [0],
                   "addOptions": {
-                    "monitor": "string",
+                    "monitor": "all",
                     "albumsToMonitor": ["string"],
                     "monitored": true,
                     "searchForMissingAlbums": true
@@ -404,7 +404,7 @@
                       "images": [
                         {
                           "url": "string",
-                          "coverType": "string"
+                          "coverType": "poster"
                         }
                       ],
                       "links": [
@@ -427,7 +427,7 @@
                           "images": [
                             {
                               "url": "string",
-                              "coverType": "string"
+                              "coverType": "poster"
                             }
                           ]
                         }
@@ -496,7 +496,7 @@
             "images": [
               {
                 "url": "string",
-                "coverType": "string"
+                "coverType": "poster"
               }
             ],
             "members": [
@@ -506,7 +506,7 @@
                 "images": [
                   {
                     "url": "string",
-                    "coverType": "string"
+                    "coverType": "poster"
                   }
                 ]
               }
@@ -523,7 +523,7 @@
             "tags": [0],
             "added": "2020-02-15T14:59:24.751Z",
             "addOptions": {
-              "monitor": "string",
+              "monitor": "all",
               "albumsToMonitor": ["string"],
               "monitored": true,
               "searchForMissingAlbums": true
@@ -543,7 +543,7 @@
           "images": [
             {
               "url": "string",
-              "coverType": "string"
+              "coverType": "poster"
             }
           ],
           "links": [
@@ -559,7 +559,7 @@
             "sizeOnDisk": 0
           },
           "addOptions": {
-            "addType": "string",
+            "addType": "automatic",
             "searchForNewAlbum": true
           },
           "remoteCover": "string",
@@ -569,7 +569,7 @@
     }
   ],
   "monitoringOptions": {
-    "monitor": "string",
+    "monitor": "all",
     "albumsToMonitor": ["string"],
     "monitored": true
   }

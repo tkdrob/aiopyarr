@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum
 
 from .base import BaseModel
+from .const import ProtocolType
 from .request_common import (
     _CommandBody,
     _Common,
@@ -26,6 +28,29 @@ from .request_common import (
 )
 
 
+class AddTypes(str, Enum):
+    """Add types."""
+
+    AUTOMATIC = "automatic"
+    MANUAL = "manual"
+
+
+class AllowFingerprintingType(str, Enum):
+    """Allow fingerprinting type."""
+
+    ALL_FILES = "allFiles"
+    NEVER = "never"
+    NEW_FILES = "newFiles"
+
+
+class AuthenticationType(str, Enum):
+    """Authentication type."""
+
+    BASIC = "basic"
+    FORMS = "forms"
+    NONE = "none"
+
+
 class Commands(str, Enum):
     """Commands."""
 
@@ -44,6 +69,61 @@ class Commands(str, Enum):
     RSS_SYNC = "RssSync"
 
 
+class CertificateValidationType(str, Enum):
+    """Certificate validation type."""
+
+    DISABLED = "disabled"
+    DISABLED_LOCAL = "disabledForLocalAddresses"
+    ENABLED = "enabled"
+
+
+class CommandPriorityType(str, Enum):
+    """Command priority type."""
+
+    HIGH = "high"
+    LOW = "low"
+    NORMAL = "normal"
+
+
+class CommandStatusType(str, Enum):
+    """Command status type."""
+
+    QUEUED = "queued"
+    STARTED = "started"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    ABORTED = "aborted"
+    CANCELLED = "cancelled"
+    ORPHANED = "orphaned"
+
+
+class CommandTriggerType(str, Enum):
+    """Command trigger type."""
+
+    MANUAL = "manual"
+    SCHEDULED = "scheduled"
+    UNSPECIFIED = "unspecified"
+
+
+class HealthType(str, Enum):
+    """Health type."""
+
+    ERROR = "error"
+    NOTICE = "notice"
+    OK = "ok"
+    WARNING = "warning"
+
+
+class HostUpdateType(str, Enum):
+    """Host update type."""
+
+    APT = "apt"
+    BUILT_IN = "builtIn"
+    DOCKER = "docker"
+    EXTERNAL = "external"
+    SCRIPT = "script"
+
+
 class ImageSize(str, Enum):
     """Image size."""
 
@@ -56,9 +136,68 @@ class ImageType(str, Enum):
     """Image type."""
 
     BANNER = "banner"
+    COVER = "cover"
+    DISC = "disc"
     FANART = "fanart"
+    HEADSHOT = "headshot"
     LOGO = "logo"
     POSTER = "poster"
+    SCREENSHOT = "screenshot"
+    UNKNOWN = "unknown"
+
+
+class LogSortKeys(str, Enum):
+    """Log sort keys."""
+
+    ID = "id"
+    LEVEL = "level"
+    LOGGER = "logger"
+    MESSAGE = "message"
+    TIME = "time"
+
+
+class MonitoringOptionsType(str, Enum):
+    """Monitoring options type."""
+
+    ALL = "all"
+    EXISTING = "existing"
+    FIRST = "first"
+    FUTURE = "future"
+    LATEST = "latest"
+    MISSING = "missing"
+    NONE = "none"
+    UNKNOWN = "unknown"
+
+
+class ProxyType(str, Enum):
+    """Proxy type."""
+
+    HTTP = "http"
+    SOCKS4 = "socks4"
+    SOCKS5 = "socks5"
+
+
+class RescanAfterRefreshType(str, Enum):
+    """Rescan after refresh type."""
+
+    AFTER_MANUAL = "afterManual"
+    ALWAYS = "always"
+    NEVER = "never"
+
+
+class SortDirection(str, Enum):
+    """Sort direction type."""
+
+    ASCENDING = "ascending"
+    DEFAULT = "default"
+    DESCENDING = "descending"
+
+
+class StatusType(str, Enum):
+    """Status type."""
+
+    CONTINUING = "continuing"
+    ENDED = "ended"
 
 
 @dataclass(init=False)
@@ -90,7 +229,7 @@ class LogFile(BaseModel):
     downloadUrl: str | None = None
     filename: str | None = None
     id: int | None = None
-    lastWriteTime: str | None = None
+    lastWriteTime: datetime | None = None
 
 
 @dataclass(init=False)
@@ -103,7 +242,7 @@ class SystemBackup(_Common3):
     """System backup attributes."""
 
     path: str | None = None
-    time: str | None = None
+    time: datetime | None = None
     type: str | None = None
 
 
@@ -200,7 +339,7 @@ class SystemStatus(BaseModel):
     appData: str | None = None
     authentication: str | None = None
     branch: str | None = None
-    buildTime: str | None = None
+    buildTime: datetime | None = None
     isAdmin: bool | None = None
     isDebug: bool | None = None
     isDocker: bool | None = None
@@ -220,7 +359,7 @@ class SystemStatus(BaseModel):
     runtimeName: str | None = None
     runtimeVersion: str | None = None
     sqliteVersion: str | None = None
-    startTime: str | None = None
+    startTime: datetime | None = None
     startupPath: str | None = None
     urlBase: str | None = None
     version: str | None = None
@@ -233,14 +372,14 @@ class Command(_Common3):
     body: _CommandBody | None = None
     commandName: str | None = None
     duration: str | None = None
-    ended: str | None = None
-    lastExecutionTime: str | None = None
+    ended: datetime | None = None
+    lastExecutionTime: datetime | None = None
     message: str | None = None
     priority: str | None = None
-    queued: str | None = None
+    queued: datetime | None = None
     sendUpdatesToClient: bool | None = None
-    started: str | None = None
-    stateChangeTime: str | None = None
+    started: datetime | None = None
+    stateChangeTime: datetime | None = None
     status: str | None = None
     trigger: str | None = None
     updateScheduledTask: bool | None = None
@@ -259,7 +398,7 @@ class DownloadClient(_Common):
     enable: bool | None = None
     id: int | None = None
     priority: int | None = None
-    protocol: str | None = None
+    protocol: ProtocolType | None = None
     tags: list[int | None] | None = None
 
 
@@ -324,7 +463,7 @@ class Indexer(_Common3):
     implementationName: str | None = None
     infoLink: str | None = None
     priority: int | None = None
-    protocol: str | None = None
+    protocol: ProtocolType | None = None
     supportsRss: bool | None = None
     supportsSearch: bool | None = None
     tags: list[int | None] | None = None
@@ -499,9 +638,9 @@ class SystemTask(_Common3):
 
     interval: int | None = None
     lastDuration: str | None = None
-    lastExecution: str | None = None
-    lastStartTime: str | None = None
-    nextExecution: str | None = None
+    lastExecution: datetime | None = None
+    lastStartTime: datetime | None = None
+    nextExecution: datetime | None = None
     taskName: str | None = None
 
 
@@ -515,9 +654,9 @@ class Update(BaseModel):
     hash: str | None = None
     installable: bool | None = None
     installed: bool | None = None
-    installedOn: str | None = None
+    installedOn: datetime | None = None
     latest: bool | None = None
-    releaseDate: str | None = None
+    releaseDate: datetime | None = None
     url: str | None = None
     version: str | None = None
 
@@ -536,7 +675,7 @@ class DelayProfile(BaseModel):
     enableUsenet: bool | None = None
     id: int | None = None
     order: int | None = None
-    preferredProtocol: str | None = None
+    preferredProtocol: ProtocolType | None = None
     tags: list[int | None] | None = None
     torrentDelay: int | None = None
     usenetDelay: int | None = None

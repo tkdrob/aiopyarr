@@ -73,7 +73,7 @@
       "images": [
         {
           "url": "string",
-          "coverType": "string",
+          "coverType": "poster",
           "extension": "string"
         }
       ],
@@ -103,7 +103,7 @@
     "images": [
       {
         "url": "string",
-        "coverType": "string",
+        "coverType": "poster",
         "extension": "string"
       }
     ],

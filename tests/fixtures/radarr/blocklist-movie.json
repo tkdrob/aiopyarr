@@ -50,8 +50,8 @@
         ]
       }
     ],
-    "date": "string",
-    "protocol": "string",
+    "date": "2019-04-10T15:09:11Z",
+    "protocol": "unknown",
     "indexer": "string",
     "message": "string",
     "id": 0

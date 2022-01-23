@@ -55,7 +55,7 @@
       }
     ],
     "artist": {
-      "status": "string",
+      "status": "ended",
       "ended": true,
       "artistName": "string",
       "foreignArtistId": "string",
@@ -73,7 +73,7 @@
       "images": [
         {
           "url": "string",
-          "coverType": "string",
+          "coverType": "poster",
           "extension": "string"
         }
       ],
@@ -103,7 +103,7 @@
     "images": [
       {
         "url": "string",
-        "coverType": "string",
+        "coverType": "poster",
         "extension": "string"
       }
     ],
