@@ -9,6 +9,7 @@
       "completionMessage": "Completed",
       "requiresDiskAccess": false,
       "isExclusive": false,
+      "isNewMovie": false,
       "isTypeExclusive": false,
       "name": "MessagingCleanup",
       "lastExecutionTime": "2021-11-29T19:57:46Z",

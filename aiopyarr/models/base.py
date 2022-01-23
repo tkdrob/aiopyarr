@@ -7,7 +7,6 @@ from enum import Enum
 from re import search
 from typing import Any
 
-from ..const import LOGGER
 from .const import (
     CONVERT_TO_BOOL,
     CONVERT_TO_DATETIME,
@@ -101,9 +100,3 @@ class BaseModel:
 
     def __post_init__(self):
         """Post init."""
-        if hasattr(self, "completionMessage") and (
-            not hasattr(self, "clientUserAgent") or not hasattr(self, "lastStartTime")
-        ):
-            if self.__getattribute__("isNewMovie") is None:
-                self.__setattr__("isNewMovie", False)
-                LOGGER.debug("isNewMovie not included by API")
