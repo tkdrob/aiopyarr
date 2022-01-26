@@ -18,7 +18,6 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
     """API response model for PyArr Api."""
 
     data: dict[str, Any] | list[dict[str, Any]] | None = None
-    message: str | None = None
     result: APIResult | None = None
 
     def _generate_data(self, data: dict[str, Any] | list[dict[str, Any]]) -> Any:
@@ -27,6 +26,6 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
             return data
 
         if isinstance(data, list):
-            return [self._datatype(item, self._datatype) for item in data]
+            return [self._datatype(item) for item in data]
 
-        return self._datatype(data, self._datatype)
+        return self._datatype(data)

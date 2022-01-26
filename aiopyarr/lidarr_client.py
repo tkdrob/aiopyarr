@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from aiohttp.client import ClientSession
 
@@ -11,6 +12,8 @@ from .const import (
     ALBUM_ID,
     ALL,
     ARTIST_ID,
+    DATE,
+    EVENT_TYPE,
     IS_VALID,
     PAGE,
     PAGE_SIZE,
@@ -26,6 +29,7 @@ from .models.lidarr import (
     LidarrAlbumEditor,
     LidarrAlbumHistory,
     LidarrAlbumLookup,
+    LidarrAlbumStudio,
     LidarrArtist,
     LidarrArtistEditor,
     LidarrBlocklist,
@@ -34,7 +38,10 @@ from .models.lidarr import (
     LidarrEventType,
     LidarrHistory,
     LidarrImportList,
+    LidarrImportListActionType,
+    LidarrManualImport,
     LidarrMetadataProfile,
+    LidarrMetadataProvider,
     LidarrParse,
     LidarrQueue,
     LidarrQueueItem,
@@ -135,12 +142,11 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Delete the album with the given id."""
         return await self._async_request(f"album/{albumid}", method=HTTPMethod.DELETE)
 
-    async def async_album_studio(self, data: dict) -> list[LidarrAlbum]:
-        """Edit database with album studio."""
+    async def async_album_studio(self, data: LidarrAlbumStudio) -> None:
+        """Change monitoring status via album studio."""
         return await self._async_request(
             "albumstudio",
             data=data,
-            datatype=LidarrAlbum,
             method=HTTPMethod.POST,
         )
 
@@ -190,7 +196,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "album/lookup", params={TERM: term}, datatype=LidarrAlbumLookup
         )
 
-    # artist/import POST TODO
+    # artist/import POST not confirmed
 
     async def async_get_blocklist(
         self,
@@ -286,20 +292,14 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         pagesize: int = 10,
         sort_key: LidarrSortKeys = LidarrSortKeys.DATE,
         sort_dir: SortDirection = SortDirection.DEFAULT,
-        artist: int | bool = False,
-        album: int | bool = False,
-        event_type: LidarrEventType | None = None,  # not working
-        date: datetime | None = None,
-    ) -> LidarrHistory | list[LidarrAlbumHistory]:
+        event_type: LidarrEventType | None = None,
+        artist: bool = False,
+        album: bool = False,
+    ) -> LidarrHistory:
         """Get history.
 
         sort_key: date, quality, title, id, artistid, path, ratings, or sourcetitle
                 (Others do not apply)
-        artist: True, include artist info in response
-                int, search history by artist
-        album: True, include album info in response
-                int, specify album when artist: int is specified
-        date: Specify a datetime object to get history since that date
         """
         params = {
             PAGE: page,
@@ -308,24 +308,44 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             SORT_DIRECTION: sort_dir.value,
         }
         if event_type and event_type in LidarrEventType:
-            params["eventType"] = event_type.value
-        if isinstance(artist, bool):
+            params[EVENT_TYPE] = event_type.value
+        if artist is not None:
             params["includeArtist"] = str(artist)
-            command = f"history{'/since' if isinstance(date, datetime) else ''}"
-            if isinstance(album, bool):
-                params["includeAlbum"] = str(album)
-        else:
-            params[ARTIST_ID] = artist
-            if not isinstance(album, bool):
-                params[ALBUM_ID] = album
-            command = "history/artist"
-        if isinstance(date, datetime):
-            params["date"] = date.strftime("%Y-%m-%d")
-        _type = date is None and isinstance(artist, bool)
+        if album is not None:
+            params["includeAlbum"] = str(album)
         return await self._async_request(
-            command,
+            "history",
             params=params,
-            datatype=LidarrHistory if _type else LidarrAlbumHistory,
+            datatype=LidarrHistory,
+        )
+
+    async def async_get_history_since(
+        self,
+        date: datetime | None = None,
+        artistid: int | None = None,
+        event_type: LidarrEventType | None = None,
+    ) -> list[LidarrAlbumHistory]:
+        """Get history since specified date.
+
+        artist: True, include artist info in response
+                int, search history by artist
+        album: True, include album info in response
+                int, specify album when artist: int is specified
+        date: Specify a datetime object to get history since that date
+        """
+        if date is None and artistid is None:
+            raise ArrException(self, "Either date or artistid is required")
+        params: dict[str, int | str] = {}
+        if event_type and event_type in LidarrEventType:
+            params[EVENT_TYPE] = event_type.value
+        if isinstance(date, datetime):
+            params[DATE] = date.strftime("%Y-%m-%d")
+        elif artistid is not None:
+            params[ARTIST_ID] = artistid
+        return await self._async_request(
+            f"history/{'since' if isinstance(date, datetime) else 'artist'}",
+            params=params,
+            datatype=LidarrAlbumHistory,
         )
 
     async def async_get_import_lists(
@@ -367,13 +387,15 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
                     return False
         return True
 
-    # {name} not yet confirmed
-    async def async_importlist_action(self, data: LidarrImportList) -> LidarrImportList:
+    async def async_importlist_action(
+        self, action: LidarrImportListActionType, data: LidarrImportList | None = None
+    ) -> dict[str, Any]:
         """Perform import list action."""
+        if action is LidarrImportListActionType.GET_PLAYLISTS and data is None:
+            raise ArrException(self, "Data is required when calling getPlaylists")
         return await self._async_request(
-            f"importlist/action/{data.name}",
+            f"importlist/action/{action.value}",
             data=data,
-            datatype=LidarrImportList,
             method=HTTPMethod.POST,
         )
 
@@ -408,7 +430,23 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    # metadataprovider not working, 404
+    async def async_get_metadata_provider(self) -> LidarrMetadataProvider:
+        """Get metadata provider."""
+        return await self._async_request(
+            "config/metadataprovider",
+            datatype=LidarrMetadataProvider,
+        )
+
+    async def async_edit_metadata_provider(
+        self, data: LidarrMetadataProvider
+    ) -> LidarrMetadataProvider:
+        """Edit metadata provider."""
+        return await self._async_request(
+            "config/metadataprovider",
+            data=data,
+            datatype=LidarrMetadataProvider,
+            method=HTTPMethod.PUT,
+        )
 
     async def async_get_queue(  # pylint: disable=too-many-arguments
         self,
@@ -513,6 +551,37 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=LidarrRename,
         )
 
+    async def async_get_manual_import(  # pylint: disable=too-many-arguments
+        self,
+        downloadid: str,
+        artistid: int = 0,
+        folder: str | None = None,
+        filterexistingfiles: bool = True,
+        replaceexistingfiles: bool = True,
+    ) -> list[LidarrManualImport]:
+        """Get manual import."""
+        params = {
+            ARTIST_ID: artistid,
+            "downloadId": downloadid,
+            "filterExistingFiles": str(filterexistingfiles),
+            "folder": folder if folder is not None else "",
+            "replaceExistingFiles": str(replaceexistingfiles),
+        }
+        return await self._async_request(
+            "manualimport", params=params, datatype=LidarrManualImport
+        )
+
+    async def async_edit_manual_import(
+        self, data: LidarrManualImport
+    ) -> list[LidarrManualImport]:
+        """Get manual import."""
+        return await self._async_request(
+            "manualimport",
+            data=data,
+            datatype=LidarrManualImport,
+            method=HTTPMethod.PUT,
+        )
+
     async def async_get_retag(
         self, artistid: int, albumid: int | None = None
     ) -> list[LidarrRetag]:
@@ -585,11 +654,12 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         artistid: int | None = None,
         albumid: int | None = None,
         trackfileids: int | list[int] | None = None,
-        unmapped: bool = False,  # Not sure what this does
+        unmapped: bool = False,
     ) -> LidarrTrackFile | list[LidarrTrackFile]:
         """Get track files based on specified ids.
 
         trackfileids: specify one integer to include audioTags for that id
+        unmapped: True to instead get all files not matched to known albums
         """
         if artistid is None and albumid is None and trackfileids is None:
             raise ArrException(
@@ -608,7 +678,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=LidarrTrackFile,
         )
 
-    # documented, but may throw code 500
     async def async_edit_track_files(
         self, data: LidarrTrackFile | LidarrTrackFileEditor
     ) -> LidarrTrackFile | list[LidarrTrackFile]:
@@ -627,3 +696,7 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             data={"trackFileIds": ids} if isinstance(ids, list) else None,
             method=HTTPMethod.DELETE,
         )
+
+    async def async_get_languages(self, langid: int | None = None) -> Any:
+        """Get language profiles."""
+        raise NotImplementedError()

@@ -10,7 +10,9 @@ ARTIST_ID = "artistId"
 ATTR_DATA = "data"
 AUTHOR_ID = "authorId"
 BOOK_ID = "bookId"
+DATE = "date"
 EPISODE_ID = "episodeId"
+EVENT_TYPE = "eventType"
 HEADERS = {
     "Accept-Encoding": "gzip, deflate",
     "Accept": "application/json",

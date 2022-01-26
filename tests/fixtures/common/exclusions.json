@@ -4,5 +4,8 @@
   "artistName": "string",
   "authorName": "string",
   "title": "string",
-  "tvdbId": 0
+  "tvdbId": 0,
+  "tmdbId": 0,
+  "movieTitle": "string",
+  "movieYear": 0
 }

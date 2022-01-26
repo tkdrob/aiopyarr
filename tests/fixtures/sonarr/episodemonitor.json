@@ -1,0 +1,16 @@
+[
+  {
+    "seriesId": 0,
+    "episodeFileId": 0,
+    "seasonNumber": 0,
+    "episodeNumber": 0,
+    "title": "string",
+    "airDate": "2020-10-24",
+    "airDateUtc": "2020-10-24T05:00:00Z",
+    "overview": "string",
+    "hasFile": true,
+    "monitored": false,
+    "unverifiedSceneNumbering": false,
+    "id": 0
+  }
+]

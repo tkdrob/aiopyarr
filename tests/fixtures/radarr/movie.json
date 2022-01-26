@@ -45,7 +45,7 @@
   "cleanTitle": "string",
   "imdbId": "string",
   "tmdbId": 0,
-  "titleSlug": "string",
+  "titleSlug": "0",
   "certification": "string",
   "genres": ["string"],
   "tags": [0],

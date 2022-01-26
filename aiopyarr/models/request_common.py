@@ -30,11 +30,14 @@ class _Fields(_SelectOption):
     """Fields attributes."""
 
     advanced: bool | None = None
+    errors: list | None = None
     helpText: str | None = None
-    label: str | None = None
-    type: str | None = None
     hidden: str | None = None
+    label: str | None = None
+    pending: bool | None = None
     selectOptions: list[_SelectOptionExtended] | None = None
+    type: str | None = None
+    warnings: list | None = None
 
     def __post_init__(self):
         self.selectOptions = [
@@ -123,6 +126,18 @@ class _Common8(BaseModel):
     title: str | None = None
     trackedDownloadState: str | None = None
     trackedDownloadStatus: str | None = None
+
+
+@dataclass(init=False)
+class _Common9(BaseModel):
+    """Common attributes."""
+
+    certification: str | None = None
+    genres: list[str] | None = None
+    imdbId: str | None = None
+    runtime: int | None = None
+    title: str | None = None
+    year: int | None = None
 
 
 @dataclass(init=False)
@@ -1749,13 +1764,17 @@ class _ReleaseCommon(BaseModel):
     publishDate: datetime | None = None
     qualityWeight: int | None = None
     rejected: bool | None = None
-    rejections: list[str] | None = None
+    rejections: list[_Rejection] | None = None
     releaseWeight: int | None = None
     sceneSource: bool | None = None
     seeders: int | None = None
     size: int | None = None
     temporarilyRejected: bool | None = None
     title: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.rejections = [_Rejection(x) for x in self.rejections or []]
 
 
 @dataclass(init=False)
@@ -1880,11 +1899,16 @@ class _HistoryCommon(BaseModel):
     age: int | None = None
     ageHours: float | None = None
     ageMinutes: float | None = None
+    downloadClientName: str | None = None
     downloadUrl: str | None = None
+    droppedPath: str | None = None
+    fileId: int | None = None
+    importedPath: str | None = None
     indexer: str | None = None
     nzbInfoUrl: str | None = None
     protocol: ProtocolType | None = None
     publishedDate: datetime | None = None
+    reason: str | None = None
     releaseGroup: str | None = None
     size: int | None = None
     torrentInfoHash: str | None = None
@@ -1955,3 +1979,45 @@ class _IsLoaded(BaseModel):
     """Is loaded attribute."""
 
     isLoaded: bool | None = None
+
+
+@dataclass(init=False)
+class _Rejection(BaseModel):
+    """Rejection attributes."""
+
+    reason: str | None = None
+    type: str | None = None
+
+
+@dataclass(init=False)
+class _ManualImport(BaseModel):
+    """Manual import attributes."""
+
+    downloadId: str | None = None
+    id: int | None = None
+    name: str | None = None
+    path: str | None = None
+    quality: _Quality | None = None
+    qualityWeight: int | None = None
+    rejections: list[_Rejection] | None = None
+    size: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.quality = _Quality(self.quality) or {}
+        self.rejections = [_Rejection(x) for x in self.rejections or []]
+
+
+@dataclass(init=False)
+class _Monitor(BaseModel):
+    """Sonarr series monitor attributes."""
+
+    id: int | None = None
+    monitored: bool | None = None
+
+
+@dataclass(init=False)
+class _MonitorOption(BaseModel):
+    """Sonarr series monitor option attributes."""
+
+    monitor: str | None = None

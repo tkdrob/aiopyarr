@@ -4,17 +4,22 @@ from datetime import datetime
 
 import pytest
 
+from aiopyarr.exceptions import ArrException
 from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.radarr import (
     RadarrCommands,
     RadarrEventType,
     RadarrImportList,
+    RadarrImportListActionType,
+    RadarrManualImport,
     RadarrMovie,
     RadarrMovieEditor,
     RadarrMovieFile,
+    RadarrMovieHistory,
     RadarrNamingConfig,
     RadarrNotification,
     RadarrRelease,
+    RadarrRestriction,
     RadarrSortKeys,
 )
 from aiopyarr.models.request import Command, ImageType, SortDirection
@@ -177,7 +182,7 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     assert data[0].cleanTitle == "string"
     assert data[0].imdbId == "string"
     assert isinstance(data[0].tmdbId, int)
-    assert data[0].titleSlug == "string"
+    assert isinstance(data[0].titleSlug, int)
     assert data[0].genres == ["string"]
     assert data[0].tags == []
     assert data[0].added == datetime(2020, 7, 16, 13, 25, 37)
@@ -262,7 +267,7 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/history?page=1&pageSize=20&sortDirection=default&sortKey=date",
+        f"/api/{RADARR_API}/history?page=1&pageSize=20&sortKey=date&eventType=1",
         "GET",
         aresponses.Response(
             status=200,
@@ -271,7 +276,7 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
         ),
         match_querystring=True,
     )
-    data = await radarr_client.async_get_history()
+    data = await radarr_client.async_get_history(event_type=RadarrEventType.GRABBED)
 
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
@@ -310,7 +315,7 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
     assert data.records[0].qualityCutoffNotMet is True
     assert data.records[0].date == datetime(2020, 2, 20, 21, 34, 52)
     assert data.records[0].downloadId == "string"
-    assert data.records[0].eventType == RadarrEventType.GRABBED.value
+    assert data.records[0].eventType == RadarrEventType.GRABBED.name.lower()
     assert isinstance(data.records[0].data.fileId, int)
     assert data.records[0].data.droppedPath == "string"
     assert data.records[0].data.importedPath == "string"
@@ -321,8 +326,24 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_movie_history(aresponses, radarr_client: RadarrClient) -> None:
-    """Test getting movie history."""
+async def test_async_get_history_since(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting history since specified date."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/history/since?date=2020-11-30&eventType=1",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = await radarr_client.async_get_history_since(
+        date, event_type=RadarrEventType.GRABBED
+    )
+    assert isinstance(data, RadarrMovieHistory)
+
     aresponses.add(
         "127.0.0.1:7878",
         f"/api/{RADARR_API}/history/movie?movieId=0",
@@ -330,69 +351,17 @@ async def test_async_get_movie_history(aresponses, radarr_client: RadarrClient) 
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("radarr/history-movie.json"),
         ),
         match_querystring=True,
     )
-    data = await radarr_client.async_get_movie_history(recordid=0)
+    await radarr_client.async_get_history_since(movieid=0)
 
-    assert isinstance(data[0].movieId, int)
-    assert data[0].sourceTitle == "string"
-    assert isinstance(data[0].languages[0].id, int)
-    assert data[0].languages[0].name == "string"
-    assert isinstance(data[0].quality.quality.id, int)
-    assert data[0].quality.quality.name == "string"
-    assert data[0].quality.quality.source == "string"
-    assert isinstance(data[0].quality.quality.resolution, int)
-    assert data[0].quality.quality.modifier == "string"
-    assert isinstance(data[0].quality.revision.version, int)
-    assert isinstance(data[0].quality.revision.real, int)
-    assert data[0].quality.revision.isRepack is True
-    assert isinstance(data[0].customFormats[0].id, int)
-    assert data[0].customFormats[0].name == "string"
-    assert data[0].customFormats[0].includeCustomFormatWhenRenaming is True
-    spec = data[0].customFormats[0].specifications[0]
-    assert spec.name == "string"
-    assert spec.implementation == "string"
-    assert spec.implementationName == "string"
-    assert spec.infoLink == "string"
-    assert spec.negate is True
-    assert spec.required is True
-    assert isinstance(spec.fields[0].order, int)
-    assert spec.fields[0].name == "string"
-    assert spec.fields[0].label == "string"
-    assert spec.fields[0].helpText == "string"
-    assert spec.fields[0].value == "string"
-    assert spec.fields[0].type == "string"
-    assert spec.fields[0].advanced is True
-    assert data[0].qualityCutoffNotMet is True
-    assert data[0].date == datetime(2020, 6, 16, 21, 19, 5)
-    assert data[0].downloadId == "string"
-    assert data[0].eventType == RadarrEventType.GRABBED.value
-    assert data[0].data.droppedPath == "string"
-    assert data[0].data.importedPath == "string"
-    assert data[0].data.downloadClient == "string"
-    assert data[0].data.downloadClientName == "string"
-    assert data[0].data.reason == "string"
-    assert isinstance(data[0].id, int)
-
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/api/{RADARR_API}/history/movie?movieId=0&eventType=grabbed",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-        ),
-        match_querystring=True,
-    )
-    await radarr_client.async_get_movie_history(
-        recordid=0, event_type=RadarrEventType.GRABBED
-    )
+    with pytest.raises(ArrException):
+        await radarr_client.async_get_history_since()
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_list(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_import_lists(aresponses, radarr_client: RadarrClient) -> None:
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -435,6 +404,219 @@ async def test_async_get_import_list(aresponses, radarr_client: RadarrClient) ->
     assert data.infoLink == "string"
     assert isinstance(data.tags[0], int)
     assert isinstance(data.id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_get_import_list_movies(
+    aresponses, radarr_client: RadarrClient
+) -> None:
+    """Test getting import list movies."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/importlist/movie",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/importlistmovie.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_import_list_movies()
+    assert data[0].title == "string"
+    assert data[0].sortTitle == "string"
+    assert data[0].status == "released"
+    assert data[0].overview == "string"
+    assert data[0].inCinemas == datetime(2018, 3, 9, 0, 0)
+    assert data[0].physicalRelease == datetime(2018, 6, 10, 0, 0)
+    assert data[0].digitalRelease == datetime(2018, 5, 25, 0, 0)
+    assert data[0].images[0].coverType == ImageType.POSTER.value
+    assert data[0].images[0].url == "string"
+    assert data[0].website == "string"
+    assert data[0].remotePoster == "string"
+    assert isinstance(data[0].year, int)
+    assert data[0].youTubeTrailerId == "string"
+    assert data[0].studio == "string"
+    assert isinstance(data[0].runtime, int)
+    assert data[0].imdbId == "string"
+    assert isinstance(data[0].tmdbId, int)
+    assert data[0].folder == "string"
+    assert data[0].certification == "string"
+    assert data[0].genres == ["string"]
+    assert isinstance(data[0].ratings.imdb.votes, int)
+    assert isinstance(data[0].ratings.imdb.value, int)
+    assert data[0].ratings.imdb.type == "user"
+    assert isinstance(data[0].ratings.tmdb.votes, int)
+    assert isinstance(data[0].ratings.tmdb.value, float)
+    assert data[0].ratings.tmdb.type == "user"
+    assert isinstance(data[0].ratings.metacritic.votes, int)
+    assert isinstance(data[0].ratings.metacritic.value, int)
+    assert data[0].ratings.metacritic.type == "user"
+    assert isinstance(data[0].ratings.rottenTomatoes.votes, int)
+    assert isinstance(data[0].ratings.rottenTomatoes.value, int)
+    assert data[0].ratings.rottenTomatoes.type == "user"
+    assert data[0].collection.name == "string"
+    assert isinstance(data[0].collection.tmdbId, int)
+    assert data[0].collection.images[0].coverType == ImageType.POSTER.value
+    assert data[0].collection.images[0].url == "string"
+    assert data[0].collection.images[0].remoteUrl == "string"
+    assert data[0].isExcluded is False
+    assert data[0].isExisting is True
+    assert data[0].isRecommendation is False
+    assert isinstance(data[0].lists[0], int)
+
+
+@pytest.mark.asyncio
+async def test_async_get_extra_file(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting extra files info from specified movie id."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/extrafile?movieId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/extrafile.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_extra_file(0)
+    assert isinstance(data[0].movieId, int)
+    assert isinstance(data[0].movieFileId, int)
+    assert data[0].relativePath == "string"
+    assert data[0].extension == ".srt"
+    assert data[0].type == "subtitle"
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_get_restrictions(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting indexer restrictions."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/restriction",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/restriction.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_restrictions()
+    assert data[0].required == "string"
+    assert data[0].ignored == "string"
+    assert isinstance(data[0].tags[0], int)
+    assert isinstance(data[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/restriction/0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_get_restrictions(0)
+
+
+@pytest.mark.asyncio
+async def test_async_get_credits(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting credits."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/credit?movieId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/credit.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_credits(movieid=0)
+    assert data[0].personName == "string"
+    assert data[0].creditTmdbId == "string"
+    assert isinstance(data[0].personTmdbId, int)
+    assert isinstance(data[0].movieId, int)
+    assert data[0].images[0].coverType == ImageType.HEADSHOT.value
+    assert data[0].images[0].url == "string"
+    assert data[0].character == "string"
+    assert isinstance(data[0].order, int)
+    assert data[0].type == "cast"
+    assert isinstance(data[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/credit/0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_credits(creditid=0)
+
+
+@pytest.mark.asyncio
+async def test_async_get_alt_titles(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting alternate movie titles."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/alttitle?movieId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/alttitle.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_alt_titles(movieid=0)
+    assert data[0].sourceType == "tmdb"
+    assert isinstance(data[0].movieId, int)
+    assert data[0].title == "string"
+    assert isinstance(data[0].sourceId, int)
+    assert isinstance(data[0].votes, int)
+    assert isinstance(data[0].voteCount, int)
+    assert isinstance(data[0].language.id, int)
+    assert data[0].language.name == "English"
+    assert isinstance(data[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/alttitle/0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_get_alt_titles(alttitleid=0)
+
+
+@pytest.mark.asyncio
+async def test_async_get_indexer_flags(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting extra files info from specified movie id."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/indexerflag",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/indexerflag.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_indexer_flags()
+    assert isinstance(data[0].id, int)
+    assert data[0].name == "String"
+    assert data[0].nameLower == "string"
 
 
 @pytest.mark.asyncio
@@ -489,7 +671,7 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert data.cleanTitle == "string"
     assert data.imdbId == "string"
     assert isinstance(data.tmdbId, int)
-    assert data.titleSlug == "string"
+    assert isinstance(data.titleSlug, int)
     assert data.certification == "string"
     assert data.genres == ["string"]
     assert isinstance(data.tags[0], int)
@@ -934,7 +1116,7 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert data.movie.cleanTitle == "string"
     assert data.movie.imdbId == "string"
     assert isinstance(data.movie.tmdbId, int)
-    assert data.movie.titleSlug == "string"
+    assert isinstance(data.movie.titleSlug, int)
     assert data.movie.certification == "string"
     assert data.movie.genres == ["string"]
     assert isinstance(data.movie.tags[0], int)
@@ -1043,7 +1225,8 @@ async def test_async_get_release(aresponses, radarr_client: RadarrClient) -> Non
     assert data[0].rejected is False
     assert isinstance(data[0].tmdbId, int)
     assert isinstance(data[0].imdbId, int)
-    assert data[0].rejections == ["string"]
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
     assert data[0].publishDate == datetime(2022, 1, 7, 4, 20, 36)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
@@ -1101,6 +1284,106 @@ async def test_async_get_rename(aresponses, radarr_client: RadarrClient) -> None
 
 
 @pytest.mark.asyncio
+async def test_async_get_manual_import(aresponses, radarr_client: RadarrClient) -> None:
+    """Test getting manual import."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/manualimport?downloadId=abc123&filterExistingFiles=True&folder=",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/manualimport.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_manual_import("abc123", folder="")
+    assert data[0].path == "string"
+    assert data[0].relativePath == "string"
+    assert data[0].folderName == "string"
+    assert data[0].name == "string"
+    assert isinstance(data[0].size, int)
+    assert data[0].movie.title == "string"
+    assert data[0].movie.originalTitle == "string"
+    assert data[0].movie.alternateTitles[0].sourceType == "tmdb"
+    assert isinstance(data[0].movie.alternateTitles[0].movieId, int)
+    assert data[0].movie.alternateTitles[0].title == "string"
+    assert isinstance(data[0].movie.alternateTitles[0].sourceId, int)
+    assert isinstance(data[0].movie.alternateTitles[0].votes, int)
+    assert isinstance(data[0].movie.alternateTitles[0].voteCount, int)
+    assert isinstance(data[0].movie.alternateTitles[0].language.id, int)
+    assert data[0].movie.alternateTitles[0].language.name == "string"
+    assert isinstance(data[0].movie.alternateTitles[0].id, int)
+    assert isinstance(data[0].movie.secondaryYearSourceId, int)
+    assert data[0].movie.sortTitle == "string"
+    assert isinstance(data[0].movie.sizeOnDisk, int)
+    assert data[0].movie.status == "released"
+    assert data[0].movie.overview == "string"
+    assert data[0].movie.inCinemas == datetime(2010, 5, 20, 0, 0)
+    assert data[0].movie.images[0].coverType == "string"
+    assert data[0].movie.images[0].url == "string"
+    assert data[0].movie.website == "string"
+    assert isinstance(data[0].movie.year, int)
+    assert data[0].movie.hasFile is False
+    assert data[0].movie.youTubeTrailerId == "string"
+    assert data[0].movie.studio == "string"
+    assert data[0].movie.path == "string"
+    assert isinstance(data[0].movie.qualityProfileId, int)
+    assert data[0].movie.monitored is True
+    assert data[0].movie.minimumAvailability == "announced"
+    assert data[0].movie.isAvailable is True
+    assert data[0].movie.folderName == "string"
+    assert isinstance(data[0].movie.runtime, int)
+    assert data[0].movie.cleanTitle == "string"
+    assert data[0].movie.imdbId == "string"
+    assert isinstance(data[0].movie.tmdbId, int)
+    assert isinstance(data[0].movie.titleSlug, int)
+    assert data[0].movie.certification == "string"
+    assert data[0].movie.genres == ["string"]
+    assert isinstance(data[0].movie.tags[0], int)
+    assert data[0].movie.added == datetime(2019, 5, 31, 5, 1, 52)
+    assert isinstance(data[0].movie.ratings.imdb.votes, int)
+    assert isinstance(data[0].movie.ratings.imdb.value, int)
+    assert data[0].movie.ratings.imdb.type == "user"
+    assert isinstance(data[0].movie.id, int)
+    assert isinstance(data[0].quality.quality.id, int)
+    assert data[0].quality.quality.name == "string"
+    assert data[0].quality.quality.source == "string"
+    assert isinstance(data[0].quality.quality.resolution, int)
+    assert data[0].quality.quality.modifier == "none"
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
+    assert data[0].quality.revision.isRepack is False
+    assert isinstance(data[0].languages[0].id, int)
+    assert data[0].languages[0].name == "string"
+    assert data[0].releaseGroup == "string"
+    assert isinstance(data[0].qualityWeight, int)
+    assert data[0].downloadId == "string"
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_manual_import(
+    aresponses, radarr_client: RadarrClient
+) -> None:
+    """Test editing manual import."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/manualimport",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_edit_manual_import(RadarrManualImport("test"))
+    assert isinstance(data, RadarrManualImport)
+
+
+@pytest.mark.asyncio
 async def test_async_add_movies(aresponses, radarr_client: RadarrClient) -> None:
     """Test adding movies."""
     aresponses.add(
@@ -1108,7 +1391,7 @@ async def test_async_add_movies(aresponses, radarr_client: RadarrClient) -> None
         f"/api/{RADARR_API}/movie",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1121,7 +1404,7 @@ async def test_async_add_movies(aresponses, radarr_client: RadarrClient) -> None
         f"/api/{RADARR_API}/movie/import",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/movie-list.json"),
         ),
@@ -1197,7 +1480,7 @@ async def test_async_import_movies(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/movie/import",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/movie-import.json"),
         ),
@@ -1248,13 +1531,65 @@ async def test_async_add_import_list(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/importlist",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
     data = await radarr_client.async_add_import_list(RadarrImportList("test"))
     assert isinstance(data, RadarrImportList)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_restriction(aresponses, radarr_client: RadarrClient) -> None:
+    """Test editing indexer restriction."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/restriction",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_edit_restriction(RadarrRestriction("test"))
+    assert isinstance(data, RadarrRestriction)
+
+
+@pytest.mark.asyncio
+async def test_async_add_restriction(aresponses, radarr_client: RadarrClient) -> None:
+    """Test adding indexer restriction."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/restriction",
+        "POST",
+        aresponses.Response(
+            status=201,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_add_restriction(RadarrRestriction("test"))
+    assert isinstance(data, RadarrRestriction)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_restriction(
+    aresponses, radarr_client: RadarrClient
+) -> None:
+    """Test deleting indexer restriction."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/restriction/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_delete_restriction(0)
 
 
 @pytest.mark.asyncio
@@ -1265,7 +1600,7 @@ async def test_async_test_import_lists(aresponses, radarr_client: RadarrClient) 
         f"/api/{RADARR_API}/importlist/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1279,7 +1614,7 @@ async def test_async_test_import_lists(aresponses, radarr_client: RadarrClient) 
         f"/api/{RADARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1292,7 +1627,7 @@ async def test_async_test_import_lists(aresponses, radarr_client: RadarrClient) 
         f"/api/{RADARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -1306,7 +1641,7 @@ async def test_async_importlist_action(aresponses, radarr_client: RadarrClient) 
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/importlist/action/test",
+        f"/api/{RADARR_API}/importlist/action/getProfiles",
         "POST",
         aresponses.Response(
             status=200,
@@ -1314,9 +1649,7 @@ async def test_async_importlist_action(aresponses, radarr_client: RadarrClient) 
         ),
         match_querystring=True,
     )
-    data = RadarrImportList({"name": "test"})
-    data = await radarr_client.async_importlist_action(data)
-    assert isinstance(data, RadarrImportList)
+    await radarr_client.async_importlist_action(RadarrImportListActionType.GET_PROFILES)
 
 
 @pytest.mark.asyncio
@@ -1363,7 +1696,7 @@ async def test_async_add_notification(aresponses, radarr_client: RadarrClient) -
         f"/api/{RADARR_API}/notification",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1382,7 +1715,7 @@ async def test_async_test_notifications(
         f"/api/{RADARR_API}/notification/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1396,7 +1729,7 @@ async def test_async_test_notifications(
         f"/api/{RADARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1409,7 +1742,7 @@ async def test_async_test_notifications(
         f"/api/{RADARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -1426,7 +1759,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/command.json"),
         ),
@@ -1442,7 +1775,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/command.json"),
         ),
@@ -1458,7 +1791,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/command.json"),
         ),
@@ -1474,7 +1807,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/command.json"),
         ),
@@ -1490,7 +1823,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1503,7 +1836,7 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1522,7 +1855,7 @@ async def test_async_download_release(aresponses, radarr_client: RadarrClient) -
         f"/api/{RADARR_API}/release",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("radarr/release.json"),
         ),
@@ -1535,18 +1868,6 @@ async def test_async_download_release(aresponses, radarr_client: RadarrClient) -
 @pytest.mark.asyncio
 async def test_not_implemented(radarr_client: RadarrClient) -> None:
     """Test methods not implemented by the API."""
-    with pytest.raises(NotImplementedError):
-        await radarr_client.async_get_import_list_exclusions()
-
-    with pytest.raises(NotImplementedError):
-        await radarr_client.async_delete_import_list_exclusion(0)
-
-    with pytest.raises(NotImplementedError):
-        await radarr_client.async_edit_import_list_exclusion(0)
-
-    with pytest.raises(NotImplementedError):
-        await radarr_client.async_add_import_list_exclusion(0)
-
     with pytest.raises(NotImplementedError):
         await radarr_client.async_get_release_profiles(0)
 

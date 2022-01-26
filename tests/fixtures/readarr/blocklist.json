@@ -1,7 +1,7 @@
 {
   "page": 0,
   "pageSize": 0,
-  "sortKey": "date",
+  "sortKey": "books.releaseDate",
   "sortDirection": "default",
   "filters": [
     {
@@ -41,7 +41,7 @@
         "authorName": "string",
         "authorNameLastFirst": "string",
         "foreignAuthorId": "string",
-        "titleSlug": "string",
+        "titleSlug": "0",
         "overview": "string",
         "links": [
           {
@@ -53,7 +53,7 @@
           "id": 0,
           "authorMetadataId": 0,
           "foreignBookId": "string",
-          "titleSlug": "string",
+          "titleSlug": "0",
           "title": "string",
           "releaseDate": "2021-12-07T08:55:41.226Z",
           "links": [
@@ -83,7 +83,7 @@
             "value": {
               "id": 0,
               "foreignAuthorId": "string",
-              "titleSlug": "string",
+              "titleSlug": "0",
               "name": "string",
               "sortName": "string",
               "nameLastFirst": "string",
@@ -148,7 +148,7 @@
                 "value": {
                   "id": 0,
                   "foreignAuthorId": "string",
-                  "titleSlug": "string",
+                  "titleSlug": "0",
                   "name": "string",
                   "sortName": "string",
                   "nameLastFirst": "string",
@@ -262,7 +262,7 @@
                 "id": 0,
                 "bookId": 0,
                 "foreignEditionId": "string",
-                "titleSlug": "string",
+                "titleSlug": "0",
                 "isbn13": "string",
                 "asin": "string",
                 "title": "string",
@@ -354,7 +354,7 @@
                             "value": {
                               "id": 0,
                               "foreignAuthorId": "string",
-                              "titleSlug": "string",
+                              "titleSlug": "0",
                               "name": "string",
                               "sortName": "string",
                               "nameLastFirst": "string",
@@ -532,7 +532,7 @@
                       "value": {
                         "id": 0,
                         "foreignAuthorId": "string",
-                        "titleSlug": "string",
+                        "titleSlug": "0",
                         "name": "string",
                         "sortName": "string",
                         "nameLastFirst": "string",
@@ -687,7 +687,7 @@
           "id": 0,
           "authorMetadataId": 0,
           "foreignBookId": "string",
-          "titleSlug": "string",
+          "titleSlug": "0",
           "title": "string",
           "releaseDate": "2021-12-07T08:55:41.227Z",
           "links": [
@@ -717,7 +717,7 @@
             "value": {
               "id": 0,
               "foreignAuthorId": "string",
-              "titleSlug": "string",
+              "titleSlug": "0",
               "name": "string",
               "sortName": "string",
               "nameLastFirst": "string",
@@ -780,7 +780,7 @@
                 "value": {
                   "id": 0,
                   "foreignAuthorId": "string",
-                  "titleSlug": "string",
+                  "titleSlug": "0",
                   "name": "string",
                   "sortName": "string",
                   "nameLastFirst": "string",
@@ -894,7 +894,7 @@
                 "id": 0,
                 "bookId": 0,
                 "foreignEditionId": "string",
-                "titleSlug": "string",
+                "titleSlug": "0",
                 "isbn13": "string",
                 "asin": "string",
                 "title": "string",
@@ -984,7 +984,7 @@
                             "value": {
                               "id": 0,
                               "foreignAuthorId": "string",
-                              "titleSlug": "string",
+                              "titleSlug": "0",
                               "name": "string",
                               "sortName": "string",
                               "nameLastFirst": "string",
@@ -1160,7 +1160,7 @@
                       "value": {
                         "id": 0,
                         "foreignAuthorId": "string",
-                        "titleSlug": "string",
+                        "titleSlug": "0",
                         "name": "string",
                         "sortName": "string",
                         "nameLastFirst": "string",

@@ -1,0 +1,98 @@
+[
+  {
+    "path": "string",
+    "relativePath": "string",
+    "folderName": "string",
+    "name": "string",
+    "size": 0,
+    "movie": {
+      "title": "string",
+      "originalTitle": "string",
+      "alternateTitles": [
+        {
+          "sourceType": "tmdb",
+          "movieId": 0,
+          "title": "string",
+          "sourceId": 0,
+          "votes": 0,
+          "voteCount": 0,
+          "language": {
+            "id": 0,
+            "name": "string"
+          },
+          "id": 0
+        }
+      ],
+      "secondaryYearSourceId": 0,
+      "sortTitle": "string",
+      "sizeOnDisk": 0,
+      "status": "released",
+      "overview": "string",
+      "inCinemas": "2010-05-20T00:00:00Z",
+      "images": [
+        {
+          "coverType": "string",
+          "url": "string"
+        }
+      ],
+      "website": "string",
+      "year": 0,
+      "hasFile": false,
+      "youTubeTrailerId": "string",
+      "studio": "string",
+      "path": "string",
+      "qualityProfileId": 0,
+      "monitored": true,
+      "minimumAvailability": "announced",
+      "isAvailable": true,
+      "folderName": "string",
+      "runtime": 0,
+      "cleanTitle": "string",
+      "imdbId": "string",
+      "tmdbId": 0,
+      "titleSlug": "0",
+      "certification": "string",
+      "genres": ["string"],
+      "tags": [0],
+      "added": "2019-05-31T05:01:52Z",
+      "ratings": {
+        "imdb": {
+          "votes": 0,
+          "value": 0,
+          "type": "user"
+        }
+      },
+      "id": 0
+    },
+    "quality": {
+      "quality": {
+        "id": 0,
+        "name": "string",
+        "source": "string",
+        "resolution": 0,
+        "modifier": "none"
+      },
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "languages": [
+      {
+        "id": 0,
+        "name": "string"
+      }
+    ],
+    "releaseGroup": "string",
+    "qualityWeight": 0,
+    "downloadId": "string",
+    "rejections": [
+      {
+        "reason": "string",
+        "type": "permanent"
+      }
+    ],
+    "id": 0
+  }
+]

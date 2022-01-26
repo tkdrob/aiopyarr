@@ -7,17 +7,15 @@ from datetime import datetime
 
 from .base import BaseModel
 from .request_common import (
-    _Common2,
     _Common3,
     _Common5,
     _Common6,
     _Common7,
-    _HistoryData,
     _IsLoaded,
     _Link,
     _Quality,
-    _QualityCommon,
     _Ratings,
+    _SelectOption,
     _TitleInfo,
 )
 
@@ -538,23 +536,6 @@ class _ReadarrCountry(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrDuration(BaseModel):
-    """Readarr duration attributes."""
-
-    days: int | None = None
-    hours: int | None = None
-    milliseconds: int | None = None
-    minutes: int | None = None
-    seconds: int | None = None
-    ticks: int | None = None
-    totalDays: int | None = None
-    totalHours: int | None = None
-    totalMilliseconds: int | None = None
-    totalMinutes: int | None = None
-    totalSeconds: int | None = None
-
-
-@dataclass(init=False)
 class _ReadarrAudioTags(BaseModel):
     """Readarr audio tags attributes."""
 
@@ -570,7 +551,7 @@ class _ReadarrAudioTags(BaseModel):
     disambiguation: str | None = None
     discCount: int | None = None
     discNumber: int | None = None
-    duration: _ReadarrDuration | None = None
+    duration: str | None = None
     goodreadsId: str | None = None
     isbn: str | None = None
     label: str | None = None
@@ -593,7 +574,6 @@ class _ReadarrAudioTags(BaseModel):
     def __post_init__(self):
         """Post init."""
         self.country = _ReadarrCountry(self.country) or {}
-        self.duration = _ReadarrDuration(self.duration) or {}
         self.mediaInfo = (
             _ReadarrEditionsValueBookFilesValueMediaInfo(self.mediaInfo) or {}
         )
@@ -631,23 +611,6 @@ class _ReadarrParsedBookInfo(BaseModel):
 
 
 @dataclass(init=False)
-class _ReadarrHistoryRecord(_Common2, _QualityCommon):
-    """Readarr history record attributes."""
-
-    authorId: int | None = None
-    bookId: int | None = None
-    data: _HistoryData | None = None
-    date: datetime | None = None
-    id: int | None = None
-    sourceTitle: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.data = _HistoryData(self.data) or {}
-
-
-@dataclass(init=False)
 class _ReadarrSearchAuthor(_ReadarrCommon2, _ReadarrCommon3):
     """Readarr search author attributes."""
 
@@ -670,3 +633,11 @@ class _ReadarrSearchAuthor(_ReadarrCommon2, _ReadarrCommon3):
         self.links = [_Link(link) for link in self.links or []]
         self.ratings = _ReadarrRating(self.ratings) or {}
         self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
+
+
+@dataclass(init=False)
+class _ReadarrCategory(_SelectOption):
+    """Readarr category attributes."""
+
+    hint: str | None = None
+    parentValue: int | None = None

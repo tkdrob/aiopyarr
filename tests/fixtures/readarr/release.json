@@ -1,44 +1,49 @@
 [
   {
-      "guid": "string",
+    "guid": "string",
+    "quality": {
       "quality": {
-          "quality": {
-              "id": 0,
-              "name": "string"
-          },
-          "revision": {
-              "version": 0,
-              "real": 0,
-              "isRepack": false
-          }
+        "id": 0,
+        "name": "string"
       },
-      "qualityWeight": 0,
-      "age": 0,
-      "ageHours": 0.0,
-      "ageMinutes": 0.0,
-      "size": 0,
-      "indexerId": 0,
-      "indexer": "string",
-      "title": "string",
-      "discography": false,
-      "sceneSource": false,
-      "authorName": "string",
-      "bookTitle": "string",
-      "approved": false,
-      "temporarilyRejected": false,
-      "rejected": true,
-      "rejections": ["string"],
-      "publishDate": "2021-11-23T05:00:00Z",
-      "commentUrl": "string",
-      "downloadUrl": "string",
-      "infoUrl": "string",
-      "downloadAllowed": true,
-      "releaseWeight": 0,
-      "preferredWordScore": 0,
-      "magnetUrl": "string",
-      "infoHash": "string",
-      "seeders": 0,
-      "leechers": 0,
-      "protocol": "unknown"
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "qualityWeight": 0,
+    "age": 0,
+    "ageHours": 0.0,
+    "ageMinutes": 0.0,
+    "size": 0,
+    "indexerId": 0,
+    "indexer": "string",
+    "title": "string",
+    "discography": false,
+    "sceneSource": false,
+    "authorName": "string",
+    "bookTitle": "string",
+    "approved": false,
+    "temporarilyRejected": false,
+    "rejected": true,
+    "rejections": [
+      {
+        "reason": "string",
+        "type": "permanent"
+      }
+    ],
+    "publishDate": "2021-11-23T05:00:00Z",
+    "commentUrl": "string",
+    "downloadUrl": "string",
+    "infoUrl": "string",
+    "downloadAllowed": true,
+    "releaseWeight": 0,
+    "preferredWordScore": 0,
+    "magnetUrl": "string",
+    "infoHash": "string",
+    "seeders": 0,
+    "leechers": 0,
+    "protocol": "unknown"
   }
 ]

@@ -56,7 +56,6 @@ def todict(obj):
             if k in CONVERT_TO_INTEGER
             else todict(v)
             for k, v in obj.__dict__.items()
-            if not k.startswith("_")
         }
     if isinstance(obj, datetime):
         return f"{obj.isoformat()}Z"
@@ -67,8 +66,6 @@ def todict(obj):
 class BaseModel:
     """BaseModel."""
 
-    _datatype: Any = None
-
     def __init__(
         self,
         data: dict[str, Any] | list[dict[str, Any]],
@@ -78,23 +75,22 @@ class BaseModel:
         self._datatype = datatype
         if isinstance(data, dict):
             for key, value in data.items():
-                if hasattr(self, key):
-                    if hasattr(self, f"_generate_{key}"):
-                        value = self.__getattribute__(f"_generate_{key}")(value)
-                    elif key in CONVERT_TO_DATETIME:
-                        value = get_datetime(value)
-                    elif key in CONVERT_TO_ENUM:
-                        value = get_enum_value(value)
-                    elif key in CONVERT_TO_FLOAT and value is not None:
-                        value = float(value)
-                    elif key in CONVERT_TO_INTEGER and value is not None:
-                        try:
-                            value = int(value)
-                        except ValueError:
-                            pass
-                    elif key in CONVERT_TO_BOOL:
-                        value = False if value == "False" else bool(value)
-                    self.__setattr__(key, value)
+                if hasattr(self, key) and hasattr(self, "_generate_data"):
+                    value = self.__getattribute__("_generate_data")(value)
+                elif key in CONVERT_TO_DATETIME:
+                    value = get_datetime(value)
+                elif key in CONVERT_TO_ENUM:
+                    value = get_enum_value(value)
+                elif key in CONVERT_TO_FLOAT and value is not None:
+                    value = float(value)
+                elif key in CONVERT_TO_INTEGER and value is not None:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        pass
+                elif key in CONVERT_TO_BOOL:
+                    value = False if value == "False" else bool(value)
+                self.__setattr__(key, value)
 
         self.__post_init__()
 

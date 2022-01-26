@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from ..const import ALL
 from .base import BaseModel
 from .const import ProtocolType
 from .request_common import (
@@ -63,6 +64,7 @@ class Commands(str, Enum):
     DELETE_UPDATE_LOGS = "DeleteUpdateLogFiles"
     HOUSEKEEPING = "Housekeeping"
     IMPORT_LIST_SYNC = "ImportListSync"
+    MANUAL_IMPORT = "ManualImport"
     MESSAGING_CLEANUP = "MessagingCleanup"
     REFRESH_MONITORED_DOWNLOADS = "RefreshMonitoredDownloads"
     RENAME_FILES = "RenameFiles"
@@ -159,7 +161,7 @@ class LogSortKeys(str, Enum):
 class MonitoringOptionsType(str, Enum):
     """Monitoring options type."""
 
-    ALL = "all"
+    ALL = ALL
     EXISTING = "existing"
     FIRST = "first"
     FUTURE = "future"
@@ -446,7 +448,10 @@ class ImportListExclusion(BaseModel):
     authorName: str | None = None
     foreignId: str | None = None
     id: int | None = None
+    movieTitle: str | None = None
+    movieYear: int | None = None
     title: str | None = None
+    tmdbId: int | None = None
     tvdbId: int | None = None
 
 

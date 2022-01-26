@@ -54,7 +54,12 @@
   "rejected": false,
   "tmdbId": 0,
   "imdbId": 0,
-  "rejections": ["string"],
+  "rejections": [
+    {
+      "reason": "string",
+      "type": "permanent"
+    }
+  ],
   "publishDate": "2022-01-07T04:20:36Z",
   "commentUrl": "string",
   "downloadUrl": "string",

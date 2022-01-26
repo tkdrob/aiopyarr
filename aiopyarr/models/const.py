@@ -14,6 +14,7 @@ CONVERT_TO_INTEGER = (
     "fileId",
     "foreignAuthorId",
     "foreignEditionId",
+    "isbn",
     "isbn13",
     "preferredWordScore",
     "size",

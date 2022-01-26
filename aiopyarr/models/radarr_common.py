@@ -9,7 +9,7 @@ from .base import BaseModel
 from .request_common import (
     _Common3,
     _Common5,
-    _Common6,
+    _Common9,
     _CommonAttrs,
     _MetadataFields,
     _Quality,
@@ -117,6 +117,30 @@ class _RadarrCommon2(BaseModel):
 
 
 @dataclass(init=False)
+class _RadarrCommon3(_Common9):
+    """Radarr common attributes."""
+
+    collection: _RadarrMovieCollection | None = None
+    digitalRelease: datetime | None = None
+    images: list[_RadarrMovieImages] | None = None
+    inCinemas: datetime | None = None
+    physicalRelease: datetime | None = None
+    ratings: _RadarrMovieRatings | None = None
+    sortTitle: str | None = None
+    status: str | None = None
+    studio: str | None = None
+    tmdbId: int | None = None
+    website: str | None = None
+    youTubeTrailerId: str | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.collection = _RadarrMovieCollection(self.collection) or {}
+        self.images = [_RadarrMovieImages(image) for image in self.images or []]
+        self.ratings = _RadarrMovieRatings(self.ratings) or {}
+
+
+@dataclass(init=False)
 class _RadarrMovieCommon(BaseModel):
     """Radarr movie common attributes."""
 
@@ -185,56 +209,6 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
 
 @dataclass(init=False)
-class _RadarrMovie(_RadarrCommon2, _Common6):
-    """Radarr movie attributes."""
-
-    added: datetime | None = None
-    alternateTitles: list[_RadarrMovieAlternateTitle] | None = None
-    certification: str | None = None
-    cleanTitle: str | None = None
-    collection: _RadarrMovieCollection | None = None
-    digitalRelease: datetime | None = None
-    folderName: str | None = None
-    genres: list[str] | None = None
-    hasFile: bool | None = None
-    images: list[_RadarrMovieImages] | None = None
-    imdbId: str | None = None
-    inCinemas: datetime | None = None
-    isAvailable: bool | None = None
-    movieFile: _RadarrMovieFile | None = None
-    originalTitle: str | None = None
-    path: str | None = None
-    physicalRelease: datetime | None = None
-    ratings: _RadarrMovieRatings | None = None
-    rootFolderPath: str | None = None
-    runtime: int | None = None
-    secondaryYearSourceId: int | None = None
-    sizeOnDisk: int | None = None
-    sortTitle: str | None = None
-    status: str | None = None
-    studio: str | None = None
-    tags: list[int | None] | None = None
-    title: str | None = None
-    titleSlug: int | None = None
-    tmdbId: int | None = None
-    website: str | None = None
-    year: int | None = None
-    youTubeTrailerId: str | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.alternateTitles = [
-            _RadarrMovieAlternateTitle(alternateTitle)
-            for alternateTitle in self.alternateTitles or []
-        ]
-        self.images = [_RadarrMovieImages(image) for image in self.images or []]
-        self.movieFile = _RadarrMovieFile(self.movieFile) or {}
-        self.ratings = _RadarrMovieRatings(self.ratings) or {}
-        self.collection = _RadarrMovieCollection(self.collection) or {}
-
-
-@dataclass(init=False)
 class _RadarrParsedMovieInfo(BaseModel):
     """Radarr parsed movie info attributes."""
 
@@ -293,24 +267,3 @@ class _RadarrCustomFormats(BaseModel):
         self.specifications = [
             _RadarrCustomFormatsSpecs(x) for x in self.specifications or []
         ]
-
-
-@dataclass(init=False)
-class _RadarrMovieFile(_RadarrMovieCommon):
-    """Radarr movie file attributes."""
-
-    dateAdded: datetime | None = None
-    edition: str | None = None
-    indexerFlags: int | None = None
-    mediaInfo: _RadarrMovieFileMediaInfo | None = None
-    movieId: int | None = None
-    originalFilePath: str | None = None
-    path: str | None = None
-    qualityCutoffNotMet: bool | None = None
-    relativePath: str | None = None
-    sceneName: str | None = None
-    size: int | None = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
