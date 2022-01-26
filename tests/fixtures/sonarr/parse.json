@@ -78,7 +78,7 @@
     "seriesType": "string",
     "cleanTitle": "string",
     "imdbId": "string",
-    "titleSlug": "string",
+    "titleSlug": "0",
     "certification": "string",
     "genres": ["string"],
     "tags": [0],

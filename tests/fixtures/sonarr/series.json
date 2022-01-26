@@ -49,7 +49,7 @@
   "seriesType": "string",
   "cleanTitle": "string",
   "imdbId": "string",
-  "titleSlug": "string",
+  "titleSlug": "0",
   "rootFolderPath": "string",
   "certification": "string",
   "genres": ["string"],

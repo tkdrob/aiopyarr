@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from ..const import AUTHOR_ID, PATH, TITLE
 from .base import BaseModel
 from .readarr_common import (
     _ReadarrAddOptions,
@@ -17,8 +18,8 @@ from .readarr_common import (
     _ReadarrBlocklistRecord,
     _ReadarrBookCommon,
     _ReadarrBookFileMediaInfo,
+    _ReadarrCategory,
     _ReadarrEditionsValue,
-    _ReadarrHistoryRecord,
     _ReadarrImage,
     _ReadarrMetadataProfileValue,
     _ReadarrParsedBookInfo,
@@ -27,14 +28,17 @@ from .readarr_common import (
     _ReadarrSeriesLinks2,
 )
 from .request_common import (
+    _Common2,
     _Common3,
     _Common4,
     _Common6,
     _Common8,
     _Editor,
     _Fields,
+    _HistoryData,
     _ImportListCommon,
     _Link,
+    _ManualImport,
     _Notification,
     _Quality,
     _QualityCommon,
@@ -67,20 +71,18 @@ class ReadarrCommands(str, Enum):
     RESCAN_FOLDERS = "RescanFolders"
 
 
-class ReadarrEventType(str, Enum):
+class ReadarrEventType(Enum):
     """Readarr event types."""
 
-    AUTHOR_IMPORTED = "authorFolderImported"
-    BOOK_DELETED = "bookFileDeleted"
-    BOOK_IMPORT_INCOMPLETE = "bookImportIncomplete"
-    BOOK_IMPORTED = "bookFileImported"
-    BOOK_RENAMED = "bookFileRenamed"
-    BOOK_RETAGGED = "bookFileRetagged"
-    DOWNLOAD_FAILED = "downloadFailed"
-    DOWNLOAD_IGNORED = "downloadIgnored"
-    DOWNLOAD_IMPORTED = "downloadImported"
-    GRABBED = "grabbed"
-    UNKNOWN = "unknown"
+    BOOK_IMPORTED = 3
+    DELETED = 5
+    DOWNLOAD_FAILED = 4
+    DOWNLOAD_IMPORTED = 8
+    GRABBED = 1
+    IGNORED = 7
+    IMPORT_FAILED = 7
+    RENAMED = 6
+    RETAGGED = 9
 
 
 class ReadarrImportListType(str, Enum):
@@ -94,18 +96,23 @@ class ReadarrImportListType(str, Enum):
 class ReadarrSortKeys(str, Enum):
     """Readarr sort keys."""
 
-    AUTHOR_ID = "authorid"
+    AUTHOR_ID = AUTHOR_ID
     BOOK_ID = "Books.Id"
-    DATE = "date"
+    DATE = "books.releaseDate"
+    DOWNLOAD_CLIENT = "downloadClient"
     ID = "id"
     INDEXER = "indexer"
     MESSAGE = "message"
-    PATH = "path"
+    PATH = PATH
+    PROGRESS = "progress"
+    PROTOCOL = "protocol"
     QUALITY = "quality"
     RATINGS = "ratings"
+    SIZE = "size"
     SOURCE_TITLE = "sourcetitle"
+    STATUS = "status"
     TIMELEFT = "timeleft"
-    TITLE = "title"
+    TITLE = TITLE
 
 
 @dataclass(init=False)
@@ -326,14 +333,31 @@ class ReadarrDevelopmentConfig(BaseModel):
 
 
 @dataclass(init=False)
-class ReadarrHistory(_RecordCommon):
-    """Readarr history attributes."""
+class ReadarrBookHistory(_Common2, _QualityCommon):
+    """Readarr history record attributes."""
 
-    records: list[_ReadarrHistoryRecord] | None = None
+    authorId: int | None = None
+    bookId: int | None = None
+    data: _HistoryData | None = None
+    date: datetime | None = None
+    id: int | None = None
+    sourceTitle: str | None = None
 
     def __post_init__(self):
         """Post init."""
-        self.records = [_ReadarrHistoryRecord(record) for record in self.records or []]
+        super().__post_init__()
+        self.data = _HistoryData(self.data) or {}
+
+
+@dataclass(init=False)
+class ReadarrHistory(_RecordCommon):
+    """Readarr history attributes."""
+
+    records: list[ReadarrBookHistory] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.records = [ReadarrBookHistory(record) for record in self.records or []]
 
 
 @dataclass(init=False)
@@ -360,8 +384,8 @@ class ReadarrImportList(_ImportListCommon, _Common3):
 
 
 @dataclass(init=False)
-class ReadarrMetadataProviderConfig(BaseModel):
-    """Readarr metadata provider config attributes."""
+class ReadarrMetadataProvider(BaseModel):
+    """Readarr metadata provider attributes."""
 
     embedMetadata: bool | None = None
     id: int | None = None
@@ -523,3 +547,34 @@ class ReadarrTagDetails(_TagDetails):
     """Readarr tag details attributes."""
 
     authorIds: list[int] | None = None
+
+
+@dataclass(init=False)
+class ReadarrManualImport(_ManualImport):
+    """Readarr manual import attributes."""
+
+    additionalFile: bool | None = None
+    audioTags: _ReadarrAudioTags | None = None
+    author: ReadarrAuthor | None = None
+    book: ReadarrBook | None = None
+    disableReleaseSwitching: bool | None = None
+    foreignEditionId: int | None = None
+    replaceExistingFiles: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
+        self.author = ReadarrAuthor(self.author) or {}
+        self.book = ReadarrBook(self.book) or {}
+
+
+@dataclass(init=False)
+class ReadarrImportListOptions(BaseModel):
+    """Readarr import list options attributes."""
+
+    options: list[_ReadarrCategory] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.options = [_ReadarrCategory(option) for option in self.options or []]

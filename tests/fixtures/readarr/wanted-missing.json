@@ -13,7 +13,7 @@
       "overview": "string",
       "authorId": 0,
       "foreignBookId": "string",
-      "titleSlug": "string",
+      "titleSlug": "0",
       "monitored": true,
       "anyEditionOk": true,
       "ratings": {
@@ -31,7 +31,7 @@
         "authorName": "string",
         "authorNameLastFirst": "string",
         "foreignAuthorId": "string",
-        "titleSlug": "string",
+        "titleSlug": "0",
         "overview": "string",
         "links": [
           {
@@ -97,7 +97,7 @@
         {
           "bookId": 0,
           "foreignEditionId": "string",
-          "titleSlug": "string",
+          "titleSlug": "0",
           "asin": "string",
           "title": "string",
           "language": "string",

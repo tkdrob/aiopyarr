@@ -262,7 +262,7 @@ class _LidarrMediaInfo(BaseModel):
     audioBitrate: str | None = None
     audioBitRate: str | None = None
     audioBits: str | None = None
-    audioChannels: float | None = None
+    audioChannels: int | float | None = None
     audioCodec: str | None = None
     audioFormat: str | None = None
     audioSampleRate: str | None = None

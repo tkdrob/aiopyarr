@@ -93,6 +93,7 @@ async def test_todict(aresponses, radarr_client: RadarrClient) -> None:
     assert data["alternateTitles"][0]["movieId"] == 1
     assert data["monitored"] is True
     assert data["sizeOnDisk"] == 0
+    assert data["titleSlug"] == "0"
 
 
 def test_get_no_enum_value() -> None:
@@ -749,7 +750,7 @@ async def test_async_get_failed_health_checks(
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_list_exclusions(
+async def test_async_get_exclusions(
     aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test getting import list exclusions."""
@@ -760,20 +761,32 @@ async def test_async_get_import_list_exclusions(
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("common/importlistexclusion.json"),
+            text=load_fixture("common/exclusions.json"),
         ),
         match_querystring=True,
     )
-    data = await readarr_client.async_get_import_list_exclusions()
+    data = await readarr_client.async_get_exclusions()
     assert data.artistName == "string"
     assert data.authorName == "string"
     assert data.foreignId == "string"
     assert isinstance(data.id, int)
     assert data.title == "string"
     assert isinstance(data.tvdbId, int)
+    assert isinstance(data.tmdbId, int)
+    assert data.movieTitle == "string"
+    assert isinstance(data.movieYear, int)
 
-    with pytest.raises(NotImplementedError):
-        await radarr_client.async_get_import_list_exclusions()
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/exclusions",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_get_exclusions()
 
 
 @pytest.mark.asyncio
@@ -845,9 +858,7 @@ async def test_async_get_indexer_configs(
 
 
 @pytest.mark.asyncio
-async def test_async_get_languages(
-    aresponses, readarr_client: ReadarrClient, sonarr_client: SonarrClient
-) -> None:
+async def test_async_get_languages(aresponses, readarr_client: ReadarrClient) -> None:
     """Test getting languages."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -864,9 +875,6 @@ async def test_async_get_languages(
     assert isinstance(data.id, int)
     assert data.name == "Any"
     assert data.nameLower == "any"
-
-    with pytest.raises(NotImplementedError):
-        await sonarr_client.async_get_languages()
 
 
 @pytest.mark.asyncio
@@ -2878,7 +2886,7 @@ async def test_async_add_root_folder(aresponses, radarr_client: RadarrClient) ->
         f"/api/{RADARR_API}/rootfolder",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -2931,7 +2939,7 @@ async def test_async_command(
         f"/api/{RADARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -2944,7 +2952,7 @@ async def test_async_command(
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -2992,7 +3000,7 @@ async def test_async_restore_system_backup(
         f"/api/{RADARR_API}/system/backup/restore/0",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3010,7 +3018,7 @@ async def test_async_upload_system_backup(
         f"/api/{RADARR_API}/system/backup/restore/upload",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3077,7 +3085,7 @@ async def test_async_add_tag(aresponses, radarr_client: RadarrClient) -> None:
         f"/api/{RADARR_API}/tag",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3094,7 +3102,7 @@ async def test_async_add_custom_filter(aresponses, radarr_client: RadarrClient) 
         f"/api/{RADARR_API}/customfilter",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3150,7 +3158,7 @@ async def test_async_add_download_client(
         f"/api/{RADARR_API}/downloadclient",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3206,7 +3214,7 @@ async def test_async_test_download_clients(
         f"/api/{RADARR_API}/downloadclient/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3219,7 +3227,7 @@ async def test_async_test_download_clients(
         f"/api/{RADARR_API}/downloadclient/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -3232,7 +3240,7 @@ async def test_async_test_download_clients(
         f"/api/{RADARR_API}/downloadclient/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -3280,8 +3288,8 @@ async def test_async_delete_import_list(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_import_list_exclusion(
-    aresponses, readarr_client: ReadarrClient
+async def test_async_edit_exclusion(
+    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test editing import list exclusion."""
     aresponses.add(
@@ -3294,14 +3302,26 @@ async def test_async_edit_import_list_exclusion(
         ),
         match_querystring=True,
     )
-    data = ImportListExclusion("test")
-    data = await readarr_client.async_edit_import_list_exclusion(data)
+    _data = ImportListExclusion("test")
+    data = await readarr_client.async_edit_exclusion(_data)
     assert isinstance(data, ImportListExclusion)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/exclusions",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_edit_exclusion(_data)
 
 
 @pytest.mark.asyncio
-async def test_async_delete_import_list_exclusion(
-    aresponses, readarr_client: ReadarrClient
+async def test_async_delete_exclusion(
+    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting import list exclusion."""
     aresponses.add(
@@ -3314,12 +3334,24 @@ async def test_async_delete_import_list_exclusion(
         ),
         match_querystring=True,
     )
-    await readarr_client.async_delete_import_list_exclusion(0)
+    await readarr_client.async_delete_exclusion(0)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/exclusions/0",
+        "DELETE",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_delete_exclusion(0)
 
 
 @pytest.mark.asyncio
-async def test_async_add_import_list_exclusion(
-    aresponses, readarr_client: ReadarrClient
+async def test_async_add_exclusion(
+    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test adding import list exclusion."""
     aresponses.add(
@@ -3327,14 +3359,26 @@ async def test_async_add_import_list_exclusion(
         f"/api/{READARR_API}/importlistexclusion",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
-    data = ImportListExclusion({"id": 0})
-    data = await readarr_client.async_add_import_list_exclusion(data)
+    _data = ImportListExclusion({"id": 0})
+    data = await readarr_client.async_add_exclusion(_data)
     assert isinstance(data, ImportListExclusion)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/exclusions",
+        "POST",
+        aresponses.Response(
+            status=201,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await radarr_client.async_add_exclusion(_data)
 
 
 @pytest.mark.asyncio
@@ -3378,7 +3422,7 @@ async def test_async_add_indexer(aresponses, readarr_client: ReadarrClient) -> N
         f"/api/{READARR_API}/indexer",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3395,7 +3439,7 @@ async def test_async_test_indexers(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/indexer/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3407,7 +3451,7 @@ async def test_async_test_indexers(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/indexer/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -3420,7 +3464,7 @@ async def test_async_test_indexers(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/indexer/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -3515,7 +3559,7 @@ async def test_async_add_metadata_config(
         f"/api/{RADARR_API}/metadata",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3532,7 +3576,7 @@ async def test_async_test_metadata(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/metadata/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3544,7 +3588,7 @@ async def test_async_test_metadata(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/metadata/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -3557,7 +3601,7 @@ async def test_async_test_metadata(aresponses, radarr_client: RadarrClient) -> N
         f"/api/{RADARR_API}/metadata/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -3594,7 +3638,7 @@ async def test_async_test_all_notifications(
         f"/api/{RADARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -3607,7 +3651,7 @@ async def test_async_test_all_notifications(
         f"/api/{RADARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -3682,7 +3726,7 @@ async def test_async_add_quality_profile(
         f"/api/{RADARR_API}/qualityprofile",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3755,7 +3799,7 @@ async def test_async_queue_grab(aresponses, readarr_client: ReadarrClient) -> No
         f"/api/{READARR_API}/queue/grab/0",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3767,7 +3811,7 @@ async def test_async_queue_grab(aresponses, readarr_client: ReadarrClient) -> No
         f"/api/{READARR_API}/queue/grab/bulk",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3822,7 +3866,7 @@ async def test_async_add_release_profile(
         f"/api/{READARR_API}/releaseprofile",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3879,7 +3923,7 @@ async def test_async_add_remote_path_mapping(
         f"/api/{READARR_API}/remotepathmapping",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -3912,7 +3956,7 @@ async def test_async_system_shutdown(aresponses, readarr_client: ReadarrClient) 
         f"/api/{READARR_API}/system/shutdown",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/shutdown.json"),
         ),
@@ -3929,7 +3973,7 @@ async def test_async_system_restart(aresponses, readarr_client: ReadarrClient) -
         f"/api/{READARR_API}/system/restart",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/restart.json"),
         ),
@@ -3976,7 +4020,7 @@ async def test_async_add_delay_profile(
         f"/api/{READARR_API}/delayprofile",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -4066,7 +4110,7 @@ async def test_async_mark_failed(aresponses, sonarr_client: SonarrClient) -> Non
         f"/api/{SONARR_API}/history/failed/0",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,

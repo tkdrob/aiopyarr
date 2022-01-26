@@ -6,16 +6,22 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from ..const import DATE, EPISODE_ID, PATH, SERIES_ID
 from .base import BaseModel
 from .request_common import (
+    _Common2,
     _Common3,
     _Common4,
     _Common7,
     _Common8,
     _Fields,
     _ImportListCommon,
+    _ManualImport,
+    _Monitor,
+    _MonitorOption,
     _Notification,
     _Quality,
+    _QualityCommon,
     _RecordCommon,
     _ReleaseCommon,
     _Rename,
@@ -27,7 +33,9 @@ from .sonarr_common import (
     _SonarrCommon,
     _SonarrCommon2,
     _SonarrEpisodeFile,
-    _SonarrHistoryRecord,
+    _SonarrEpisodeHistoryData,
+    _SonarrEpisodeMonitor,
+    _SonarrLanguageItem,
     _SonarrParseEpisodeInfo,
     _SonarrSeries2,
     _SonarrSeriesAlternateTitle,
@@ -48,33 +56,41 @@ class SonarrCommands(str, Enum):
     SERIES_SEARCH = "SeriesSearch"
 
 
-class SonarrEventType(str, Enum):
+class SonarrEventType(Enum):
     """Sonarr event types."""
 
-    DOWNLOAD_FAILED = "downloadFailed"  # assumed
-    EPISODE_DELETED = "episodeFileDeleted"
-    GRABBED = "grabbed"
-    IMPORTED = "downloadFolderImported"
+    DELETED = 5
+    FAILED = 4
+    GRABBED = 1
+    IGNORED = 7
+    IMPORTED = 3
+    RENAMED = 6
 
 
 class SonarrSortKeys(str, Enum):
     """Sonarr sort keys."""
 
-    AIR_DATE_UTC = "airDateUtc"
-    DATE = "date"
-    EPISODE_ID = "episodeId"
-    EPISODE_TITLE = "episodetitle"
+    AIR_DATE_UTC = "episode.airDateUtc"
+    DATE = DATE
+    DOWNLOAD_CLIENT = "downloadClient"
+    EPISODE = "episode"
+    EPISODE_ID = EPISODE_ID
+    EPISODE_TITLE = "episode.title"
     ID = "id"
     INDEXER = "indexer"
+    LANGUAGE = "language"
     MESSAGE = "message"
-    PATH = "path"
+    PATH = PATH
+    PROGRESS = "progress"
+    PROTOCOL = "protocol"
     QUALITY = "quality"
     RATINGS = "ratings"
-    SERIES_ID = "seriesId"
-    SERIES_TITLE = "series.Title"
+    SERIES_ID = SERIES_ID
+    SERIES_TITLE = "series.sortTitle"
+    SIZE = "size"
     SOURCE_TITLE = "sourcetitle"
+    STATUS = "status"
     TIMELEFT = "timeleft"
-    TITLE = "title"
 
 
 @dataclass(init=False)
@@ -100,14 +116,34 @@ class SonarrEpisodeFile(_SonarrEpisodeFile):
 
 
 @dataclass(init=False)
-class SonarrHistory(_RecordCommon):
-    """Sonarr history attributes."""
+class SonarrEpisodeHistory(_Common2, _QualityCommon):
+    """Sonarr history record attributes."""
 
-    records: list[_SonarrHistoryRecord] | None = None
+    data: _SonarrEpisodeHistoryData | None = None
+    date: datetime | None = None
+    episodeId: int | None = None
+    id: int | None = None
+    language: _Common3 | None = None
+    languageCutoffNotMet: bool | None = None
+    seriesId: int | None = None
+    sourceTitle: str | None = None
 
     def __post_init__(self):
         """Post init."""
-        self.records = [_SonarrHistoryRecord(record) for record in self.records or []]
+        super().__post_init__()
+        self.data = _SonarrEpisodeHistoryData(self.data) or {}
+        self.language = _Common3(self.language) or {}
+
+
+@dataclass(init=False)
+class SonarrHistory(_RecordCommon):
+    """Sonarr history attributes."""
+
+    records: list[SonarrEpisodeHistory] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.records = [SonarrEpisodeHistory(record) for record in self.records or []]
 
 
 @dataclass(init=False)
@@ -356,3 +392,60 @@ class SonarrImportList(_ImportListCommon, _Common3):
     def __post_init__(self):
         """Post init."""
         self.fields = [_Fields(field) for field in self.fields or []]
+
+
+@dataclass(init=False)
+class SonarrManualImport(_ManualImport):
+    """Sonarr manual import attributes."""
+
+    episodes: list[SonarrEpisodeMonitor] | None = None
+    folderName: str | None = None
+    language: _Common3 | None = None
+    relativePath: str | None = None
+    seasonNumber: int | None = None
+    series: _SonarrSeries2 | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.episodes = [
+            SonarrEpisodeMonitor(episode) for episode in self.episodes or []
+        ]
+        self.language = _Common3(self.language) or {}
+        self.series = _SonarrSeries2(self.series) or {}
+
+
+@dataclass(init=False)
+class SonarrSeasonPass(BaseModel):
+    """Sonarr season pass attributes."""
+
+    monitoringOptions: _MonitorOption | None = None
+    series: list[_Monitor] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.monitoringOptions = _MonitorOption(self.monitoringOptions) or {}
+        self.series = [_Monitor(x) for x in self.series or []]
+
+
+@dataclass(init=False)
+class SonarrLanguage(BaseModel):
+    """Sonarr launguage attributes."""
+
+    cutoff: _Common3 | None = None
+    id: int | None = None
+    languages: list[_SonarrLanguageItem] | None = None
+    name: str | None = None
+    upgradeAllowed: bool | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.cutoff = _Common3(self.cutoff) or {}
+        self.languages = [_SonarrLanguageItem(x) for x in self.languages or []]
+
+
+@dataclass(init=False)
+class SonarrEpisodeMonitor(_SonarrEpisodeMonitor):
+    """Sonarr episode monitor attributes."""

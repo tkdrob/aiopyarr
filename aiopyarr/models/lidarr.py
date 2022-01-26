@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+from ..const import ARTIST_ID, DATE, PATH, TITLE
 from .base import BaseModel
 from .lidarr_common import (
     _LidarrAddOptions,
@@ -28,6 +29,9 @@ from .request_common import (
     _Editor,
     _HistoryData,
     _IsLoaded,
+    _ManualImport,
+    _Monitor,
+    _MonitorOption,
     _Quality,
     _Ratings,
     _RecordCommon,
@@ -51,22 +55,26 @@ class LidarrCommands(str, Enum):
     REFRESH_ARTIST = "RefreshArtist"
 
 
-class LidarrEventType(str, Enum):
+class LidarrEventType(Enum):
     """Lidarr event types."""
 
-    ALBUM_IMPORT_INCOMPLETE = "albumImportIncomplete"
-    ARTIST_FOLDER_IMPORTED = "artistFolderImported"
-    DELETED = "movieFileDeleted"
-    DOWNLOAD_FAILED = "downloadFailed"
-    DOWNLOAD_IGNORED = "downloadIgnored"
-    DOWNLOAD_IMPORTED = "downloadImported"
-    GRABBED = "grabbed"
-    IMPORTED = "downloadFolderImported"
-    TRACK_FILE_DELETED = "trackFileDeleted"
-    TRACK_FILE_IMPORTED = "trackFileImported"
-    TRACK_FILE_RETAGGED = "trackFileRetagged"
-    TRACKF_FILE_RENAMED = "trackFileRenamed"
-    UNKNOWN = "unknown"
+    DELETED = 5
+    DOWNLOAD_FAILED = 4
+    DOWNLOAD_IMPORTED = 8
+    GRABBED = 1
+    IGNORED = 7
+    IMPORT_FAILED = 7
+    RENAMED = 6
+    RETAGGED = 9
+    TRACK_IMPORTED = 3
+
+
+class LidarrImportListActionType(str, Enum):
+    """Lidarr import list action types."""
+
+    GET_PLAYLISTS = "getPlaylists"
+    GET_PROFILES = "getProfiles"
+    GET_TAGS = "getTags"
 
 
 class LidarrImportListType(str, Enum):
@@ -89,17 +97,23 @@ class LidarrImportListMonitorType(str, Enum):
 class LidarrSortKeys(str, Enum):
     """Lidarr sort keys."""
 
-    ARTIST_ID = "artistid"
-    DATE = "date"
+    ALBUM_TITLE = "albums.title"
+    ARTIST_ID = ARTIST_ID
+    DATE = DATE
+    DOWNLOAD_CLIENT = "downloadClient"
     ID = "id"
     INDEXER = "indexer"
     MESSAGE = "message"
-    PATH = "path"
+    PATH = PATH
+    PROGRESS = "progress"
+    PROTOCOL = "protocol"
     QUALITY = "quality"
     RATINGS = "ratings"
+    RELEASE_DATE = "albums.releaseDate"
     SOURCE_TITLE = "sourcetitle"
+    STATUS = "status"
     TIMELEFT = "timeleft"
-    TITLE = "title"
+    TITLE = TITLE
 
 
 @dataclass(init=False)
@@ -468,3 +482,49 @@ class LidarrArtistEditor(_Editor):
     """Lidarr artist editor attributes."""
 
     artistIds: list[int] | None = None
+
+
+@dataclass(init=False)
+class LidarrManualImport(_ManualImport):
+    """Lidarr manual import attributes."""
+
+    additionalFile: bool | None = None
+    album: LidarrAlbum | None = None
+    albumReleaseId: int | None = None
+    artist: _LidarrArtist | None = None
+    audioTags: _LidarrAudioTags | None = None
+    disableReleaseSwitching: bool | None = None
+    replaceExistingFiles: bool | None = None
+    tracks: list[LidarrTrack] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.album = LidarrAlbum(self.album) or {}
+        self.artist = LidarrArtist(self.artist) or {}
+        self.audioTags = _LidarrAudioTags(self.audioTags) or {}
+        self.tracks = [LidarrTrack(track) for track in self.tracks or []]
+
+
+@dataclass(init=False)
+class LidarrMetadataProvider(BaseModel):
+    """Lidarr metadata provider attributes."""
+
+    metadataSource: str | None = None
+    writeAudioTags: str | None = None
+    scrubAudioTags: bool | None = None
+    id: int | None = None
+
+
+@dataclass(init=False)
+class LidarrAlbumStudio(BaseModel):
+    """Lidarr album studio attributes."""
+
+    artist: list[_Monitor] | None = None
+    monitoringOptions: _MonitorOption | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.artist = [_Monitor(x) for x in self.artist or []]
+        self.monitoringOptions = _MonitorOption(self.monitoringOptions) or {}

@@ -359,9 +359,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             f"system/backup/restore/{backupid}", method=HTTPMethod.POST
         )
 
-    # Curently not working with postman, a second request must be made
-    # also requires Content-Type: multipart/form-data
-    # https://stackoverflow.com/questions/57553738/how-to-aiohttp-request-post-files-list-python-requests-module
+    # Curently not working, multipart body length limit exceeded
     async def async_upload_system_backup(self, data: bytes) -> None:
         """Upload a system backup."""
         return await self._async_request(
@@ -384,8 +382,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             datatype=Tag,
         )
 
-    # tag PUT may not work
-
     async def async_edit_tag(self, data: Tag) -> Tag:
         """Edit a tag by its database id."""
         return await self._async_request(
@@ -402,8 +398,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
-    # tag POST may not work, you can first create a tag by applying it to a movie
-
     async def async_add_tag(self, label: str) -> Tag:
         """Add a new tag.
 
@@ -411,7 +405,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """
         return await self._async_request(
             "tag",
-            data={"id": 0, "label": label},
+            data={"label": label},
             datatype=Tag,
             method=HTTPMethod.POST,
         )
@@ -561,46 +555,57 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     # importlist/schema, not that useful
 
     # Readarr asks for MusicBrainz id, api programming error
-    # Radarr has exclusion in UI, but no endpoint implemented
-    async def async_get_import_list_exclusions(
+    async def async_get_exclusions(
         self, clientid: int | None = None
     ) -> ImportListExclusion | list[ImportListExclusion]:
         """Get import list exclusions."""
+        if hasattr(self, "async_get_movies"):
+            command = "exclusions"
+        else:
+            command = "importlistexclusion"
         return await self._async_request(
-            f"importlistexclusion{'' if clientid is None else f'/{clientid}'}",
+            f"{command}{'' if clientid is None else f'/{clientid}'}",
             datatype=ImportListExclusion,
         )
 
-    async def async_edit_import_list_exclusion(
+    async def async_edit_exclusion(  # /bulk
         self, data: ImportListExclusion
     ) -> ImportListExclusion:
-        """Edit import list exclusion.
-
-        foreignId must be different than existing or the call will fail
-        """
+        """Edit import list exclusion."""
+        if hasattr(self, "async_get_movies"):
+            command = "exclusions"
+        else:
+            command = "importlistexclusion"
         return await self._async_request(
-            "importlistexclusion",
+            command,
             data=data,
             datatype=ImportListExclusion,
             method=HTTPMethod.PUT,
         )
 
-    async def async_delete_import_list_exclusion(self, clientid: int) -> None:
+    async def async_delete_exclusion(self, exclusionid: int) -> None:
         """Delete import list exclusion."""
+        if hasattr(self, "async_get_movies"):
+            command = "exclusions"
+        else:
+            command = "importlistexclusion"
         return await self._async_request(
-            f"importlistexclusion/{clientid}",
+            f"{command}{'' if exclusionid is None else f'/{exclusionid}'}",
             method=HTTPMethod.DELETE,
         )
 
-    async def async_add_import_list_exclusion(
+    async def async_add_exclusion(  # /bulk
         self, data: ImportListExclusion
     ) -> ImportListExclusion:
         """Add import list exclusion."""
-
+        if hasattr(self, "async_get_movies"):
+            command = "exclusions"
+        else:
+            command = "importlistexclusion"
         if data.id is not None:
             delattr(data, "id")
         return await self._async_request(
-            "importlistexclusion",
+            command,
             data=data,
             datatype=ImportListExclusion,
             method=HTTPMethod.POST,
@@ -680,13 +685,10 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    # initialize.js, can get api version, key(security issue), and urlbase
-    # can be done unauthenticated
-
     async def async_get_languages(
         self, langid: int | None = None
     ) -> Language | list[Language]:
-        """Get import list exclusions."""
+        """Get language profiles."""
         return await self._async_request(
             f"language{'' if langid is None else f'/{langid}'}",
             datatype=Language,
@@ -695,8 +697,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_get_localization(self) -> Localization:
         """Get localization strings."""
         return await self._async_request("localization", datatype=Localization)
-
-    # manualimport GET / PUT, not yet confirmed TODO
 
     async def async_get_image(
         self,
@@ -822,7 +822,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
-    # notification/schema, not that useful TODO try consolidating notifications
+    # notification/schema, not that useful
 
     async def async_test_all_notifications(self) -> bool:
         """Test all notification configurations."""
@@ -891,7 +891,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         )
 
     # qualityprofile/schema, not that useful
-
     async def async_delete_queue(
         self,
         ids: int | list[int],

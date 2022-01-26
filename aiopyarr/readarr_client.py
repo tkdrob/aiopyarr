@@ -5,12 +5,15 @@ from datetime import datetime
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.models.request import Command, RootFolder, SortDirection
+from aiopyarr.exceptions import ArrException
+from aiopyarr.models.request import Command, Indexer, RootFolder, SortDirection
 
 from .const import (
     ALL,
     AUTHOR_ID,
     BOOK_ID,
+    DATE,
+    EVENT_TYPE,
     IS_VALID,
     NOTIFICATION,
     PAGE,
@@ -30,16 +33,20 @@ from .models.readarr import (
     ReadarrBook,
     ReadarrBookFile,
     ReadarrBookFileEditor,
+    ReadarrBookHistory,
     ReadarrBookLookup,
     ReadarrBookshelf,
     ReadarrBookTypes,
     ReadarrCalendar,
     ReadarrCommands,
     ReadarrDevelopmentConfig,
+    ReadarrEventType,
     ReadarrHistory,
     ReadarrImportList,
+    ReadarrImportListOptions,
+    ReadarrManualImport,
     ReadarrMetadataProfile,
-    ReadarrMetadataProviderConfig,
+    ReadarrMetadataProvider,
     ReadarrNamingConfig,
     ReadarrNotification,
     ReadarrParse,
@@ -96,7 +103,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             user_agent,
         )
 
-    async def async_get_authors(  # TOD authors
+    async def async_get_authors(
         self, authorid: int | None = None
     ) -> ReadarrAuthor | list[ReadarrAuthor]:
         """Get info about specified author by id, leave blank for all."""
@@ -334,7 +341,10 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         fileid: int | list[int] | None = None,
         unmapped: bool = False,
     ) -> ReadarrBookFile:
-        """Return all books in your collection or book with matching book ID."""
+        """Return all books in your collection or book with matching book ID.
+
+        unmapped: True to instead get all files not matched to known books
+        """
         params: dict[str, str | int | list[int]] = {"unmapped": str(unmapped)}
         if not isinstance(fileid, int):
             if authorid is not None:
@@ -413,7 +423,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "config/development", datatype=ReadarrDevelopmentConfig
         )
 
-    # Documented, does not seem to work.
     async def async_edit_development_config(
         self, data: ReadarrDevelopmentConfig
     ) -> ReadarrDevelopmentConfig:
@@ -425,11 +434,61 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.PUT,
         )
 
-    async def async_get_history(self) -> ReadarrHistory:
-        """Get history."""
-        return await self._async_request("history", datatype=ReadarrHistory)
+    async def async_get_history(  # pylint: disable=too-many-arguments
+        self,
+        page: int = 1,
+        page_size: int = 20,
+        sort_dir: SortDirection = SortDirection.DEFAULT,
+        sort_key: ReadarrSortKeys = ReadarrSortKeys.DATE,
+        event_type: ReadarrEventType | None = None,
+    ) -> ReadarrHistory:
+        """Get history.
 
-    # history/since / history/author
+        Args:
+            page: Page to be returned.
+            page_size: Number of results per page.
+            sort_key: date, id, title, sourcetitle, path, ratings, or quality
+                    (Others do not apply)
+        """
+        params = {
+            PAGE: page,
+            PAGE_SIZE: page_size,
+            SORT_DIRECTION: sort_dir.value,
+            SORT_KEY: sort_key.value,
+        }
+        if event_type and event_type in ReadarrEventType:
+            params[EVENT_TYPE] = event_type.value
+        return await self._async_request(
+            "history", params=params, datatype=ReadarrHistory
+        )
+
+    async def async_get_history_since(
+        self,
+        event_type: ReadarrEventType | None = None,
+        date: datetime | None = None,
+        authorid: int | None = None,
+    ) -> list[ReadarrBookHistory]:
+        """Get history since specified date.
+
+        Args:
+            authorid: include to search history by author id (date will not apply)
+        Radarr permits a naked query but its required here to avoid excessively large
+        data sets where filtering should be used instead
+        """
+        if date is None and authorid is None:
+            raise ArrException(self, "Either date or authorid is required")
+        params: dict[str, int | str] = {}
+        if event_type and event_type in ReadarrEventType:
+            params[EVENT_TYPE] = event_type.value
+        if isinstance(date, datetime):
+            params[DATE] = date.strftime("%Y-%m-%d")
+        elif authorid is not None:
+            params[AUTHOR_ID] = authorid
+        return await self._async_request(
+            f"history/{'since' if isinstance(date, datetime) else 'author'}",
+            params=params,
+            datatype=ReadarrBookHistory,
+        )
 
     async def async_get_import_lists(
         self, listid: int | None = None
@@ -472,15 +531,14 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
                     return False
         return True
 
-    # {name} not yet confirmed
     async def async_importlist_action(
-        self, data: ReadarrImportList
-    ) -> ReadarrImportList:
-        """Perform import list action."""
+        self, data: Indexer, action: str = "newznabCategories"
+    ) -> ReadarrImportListOptions:
+        """Perform import list action. Other actions may be possible."""
         return await self._async_request(
-            f"importlist/action/{data.name}",
+            f"importlist/action/{action}",
             data=data,
-            datatype=ReadarrImportList,
+            datatype=ReadarrImportListOptions,
             method=HTTPMethod.POST,
         )
 
@@ -515,27 +573,22 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    # metadataprofile/schema, not that useful
-
-    # metadataprovider not working, 404
-    async def async_get_metadata_provider_configs(
-        self, providerid: int | None = None
-    ) -> ReadarrMetadataProviderConfig | list[ReadarrMetadataProviderConfig]:
-        """Get metadata provider configs."""
+    async def async_get_metadata_provider(self) -> ReadarrMetadataProvider:
+        """Get metadata provider."""
         return await self._async_request(
-            f"metadataprovider{'' if providerid is None else f'/{providerid}'}",
-            datatype=ReadarrMetadataProviderConfig,
+            "config/metadataprovider",
+            datatype=ReadarrMetadataProvider,
         )
 
-    async def async_edit_metadata_provider_config(
+    async def async_edit_metadata_provider(
         self,
-        data: ReadarrMetadataProviderConfig,
-    ) -> ReadarrMetadataProviderConfig:
-        """Edit a metadata provider config."""
+        data: ReadarrMetadataProvider,
+    ) -> ReadarrMetadataProvider:
+        """Edit metadata provider."""
         return await self._async_request(
-            f"metadataprovider/{data.id}",
+            "config/metadataprovider",
             data=data,
-            datatype=ReadarrMetadataProviderConfig,
+            datatype=ReadarrMetadataProvider,
             method=HTTPMethod.PUT,
         )
 
@@ -656,6 +709,37 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             "rename",
             params={AUTHOR_ID: authorid, BOOK_ID: bookid},
             datatype=ReadarrRename,
+        )
+
+    async def async_get_manual_import(  # pylint: disable=too-many-arguments
+        self,
+        downloadid: str,
+        authorid: int = 0,
+        folder: str | None = None,
+        filterexistingfiles: bool = True,
+        replaceexistingfiles: bool = True,
+    ) -> list[ReadarrManualImport]:
+        """Get manual import."""
+        params = {
+            AUTHOR_ID: authorid,
+            "downloadId": downloadid,
+            "filterExistingFiles": str(filterexistingfiles),
+            "folder": folder if folder is not None else "",
+            "replaceExistingFiles": str(replaceexistingfiles),
+        }
+        return await self._async_request(
+            "manualimport", params=params, datatype=ReadarrManualImport
+        )
+
+    async def async_edit_manual_import(
+        self, data: ReadarrManualImport
+    ) -> list[ReadarrManualImport]:
+        """Get manual import."""
+        return await self._async_request(
+            "manualimport",
+            data=data,
+            datatype=ReadarrManualImport,
+            method=HTTPMethod.PUT,
         )
 
     async def async_get_retag(

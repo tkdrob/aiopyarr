@@ -6,7 +6,7 @@
     "authorName": "string",
     "authorNameLastFirst": "string",
     "foreignAuthorId": "string",
-    "titleSlug": "string",
+    "titleSlug": "0",
     "overview": "string",
     "links": [
       {

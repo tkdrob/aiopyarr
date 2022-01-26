@@ -56,19 +56,7 @@
     "source": "string",
     "catalogNumber": "string",
     "disambiguation": "string",
-    "duration": {
-      "ticks": 0,
-      "days": 0,
-      "hours": 0,
-      "milliseconds": 0,
-      "minutes": 0,
-      "seconds": 0,
-      "totalDays": 0,
-      "totalHours": 0,
-      "totalMilliseconds": 0,
-      "totalMinutes": 0,
-      "totalSeconds": 0
-    },
+    "duration": "00:00:00",
     "quality": {
       "quality": {
         "id": 0,

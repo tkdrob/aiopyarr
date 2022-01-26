@@ -12,13 +12,17 @@ from aiopyarr.models.lidarr import (
     LidarrAlbum,
     LidarrAlbumEditor,
     LidarrAlbumHistory,
+    LidarrAlbumStudio,
     LidarrArtist,
     LidarrCommands,
     LidarrEventType,
     LidarrImportList,
+    LidarrImportListActionType,
     LidarrImportListMonitorType,
     LidarrImportListType,
+    LidarrManualImport,
     LidarrMetadataProfile,
+    LidarrMetadataProvider,
     LidarrRelease,
     LidarrSortKeys,
     LidarrTrackFile,
@@ -164,7 +168,7 @@ async def test_async_add_album(aresponses, lidarr_client: LidarrClient) -> None:
         f"/api/{LIDARR_API}/album",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -223,18 +227,22 @@ async def test_async_delete_album(aresponses, lidarr_client: LidarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_album_studio(aresponses, lidarr_client: LidarrClient) -> None:
-    """Test album studio."""
+    """Test setting monitor options in albumstudio."""
     aresponses.add(
         "127.0.0.1:8686",
         f"/api/{LIDARR_API}/albumstudio",
         "POST",
         aresponses.Response(
-            status=200,
+            status=202,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
-    await lidarr_client.async_album_studio("test")
+    data = LidarrAlbumStudio({"artist": [{"id": 0, "monitored": True}]})
+    await lidarr_client.async_album_studio(data)
+    assert isinstance(data.artist[0].id, int)
+    assert data.artist[0].monitored
+    assert data.monitoringOptions.monitor is None
 
 
 @pytest.mark.asyncio
@@ -377,7 +385,7 @@ async def test_async_add_artist(aresponses, lidarr_client: LidarrClient) -> None
         f"/api/{LIDARR_API}/artist",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -707,7 +715,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -720,7 +728,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -732,7 +740,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -744,7 +752,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -756,7 +764,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -768,7 +776,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -780,7 +788,7 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
         f"/api/{LIDARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1031,7 +1039,7 @@ async def test_async_add_importlist(aresponses, lidarr_client: LidarrClient) -> 
         f"/api/{LIDARR_API}/importlist",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1048,7 +1056,7 @@ async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) 
         f"/api/{LIDARR_API}/importlist/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1062,7 +1070,7 @@ async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) 
         f"/api/{LIDARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1075,7 +1083,7 @@ async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) 
         f"/api/{LIDARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -1089,7 +1097,7 @@ async def test_async_importlist_action(aresponses, lidarr_client: LidarrClient) 
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/importlist/action/test",
+        f"/api/{LIDARR_API}/importlist/action/getProfiles",
         "POST",
         aresponses.Response(
             status=200,
@@ -1097,9 +1105,12 @@ async def test_async_importlist_action(aresponses, lidarr_client: LidarrClient) 
         ),
         match_querystring=True,
     )
-    data = LidarrImportList({"name": "test"})
-    data = await lidarr_client.async_importlist_action(data)
-    assert isinstance(data, LidarrImportList)
+    await lidarr_client.async_importlist_action(LidarrImportListActionType.GET_PROFILES)
+
+    with pytest.raises(ArrException):
+        await lidarr_client.async_importlist_action(
+            LidarrImportListActionType.GET_PLAYLISTS
+        )
 
 
 @pytest.mark.asyncio
@@ -1107,7 +1118,7 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
     """Test getting_history."""
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/history?page=1&pageSize=10&sortKey=date&sortDirection=default&includeArtist=True&includeAlbum=True",
+        f"/api/{LIDARR_API}/history?page=1&pageSize=10&sortKey=date&sortDirection=default&eventType=1&includeArtist=True&includeAlbum=True",
         "GET",
         aresponses.Response(
             status=200,
@@ -1116,7 +1127,9 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
         ),
         match_querystring=True,
     )
-    data = await lidarr_client.async_get_history(artist=True, album=True)
+    data = await lidarr_client.async_get_history(
+        event_type=LidarrEventType.GRABBED, artist=True, album=True
+    )
     assert isinstance(data.page, int)
     assert isinstance(data.pageSize, int)
     assert data.sortKey == LidarrSortKeys.DATE.value
@@ -1134,7 +1147,7 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
     assert data.records[0].qualityCutoffNotMet is False
     assert data.records[0].date == datetime(2020, 2, 16, 14, 3, 43, 622491)
     assert data.records[0].downloadId == "string"
-    assert data.records[0].eventType == LidarrEventType.GRABBED.value
+    assert data.records[0].eventType == LidarrEventType.GRABBED.name.lower()
     assert data.records[0].data.indexer == "string"
     assert data.records[0].data.nzbInfoUrl == "string"
     assert data.records[0].data.releaseGroup == "string"
@@ -1258,9 +1271,13 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
     assert isinstance(data.records[0].artist.id, int)
     assert isinstance(data.records[0].id, int)
 
+
+@pytest.mark.asyncio
+async def test_async_get_history_since(aresponses, lidarr_client: LidarrClient) -> None:
+    """Test getting history since specified date."""
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/history/since?page=1&pageSize=10&sortKey=date&sortDirection=default&includeArtist=False&includeAlbum=False&date=2020-11-30",
+        f"/api/{LIDARR_API}/history/since?eventType=1&date=2020-11-30",
         "GET",
         aresponses.Response(
             status=200,
@@ -1269,12 +1286,14 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
         match_querystring=True,
     )
     date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
-    data = await lidarr_client.async_get_history(date=date)
+    data = await lidarr_client.async_get_history_since(
+        date=date, event_type=LidarrEventType.GRABBED
+    )
     assert isinstance(data, LidarrAlbumHistory)
 
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/history/artist?page=1&pageSize=10&sortKey=date&sortDirection=default&artistId=0",
+        f"/api/{LIDARR_API}/history/artist?artistId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -1282,12 +1301,11 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
         ),
         match_querystring=True,
     )
-    data = await lidarr_client.async_get_history(artist=0)
-    assert isinstance(data, LidarrAlbumHistory)
+    await lidarr_client.async_get_history_since(artistid=0)
 
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/history/artist?page=1&pageSize=10&sortKey=date&sortDirection=default&eventType=downloadFailed&artistId=0&albumId=0",
+        f"/api/{LIDARR_API}/history/artist?artistId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -1295,10 +1313,9 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
         ),
         match_querystring=True,
     )
-    data = await lidarr_client.async_get_history(
-        artist=0, album=0, event_type=LidarrEventType.DOWNLOAD_FAILED
-    )
-    assert isinstance(data, LidarrAlbumHistory)
+
+    with pytest.raises(ArrException):
+        await lidarr_client.async_get_history_since()
 
 
 @pytest.mark.asyncio
@@ -1361,7 +1378,7 @@ async def test_async_add_metadata_profile(
         f"/api/{LIDARR_API}/metadataprofile",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1644,7 +1661,8 @@ async def test_async_get_release(aresponses, lidarr_client: LidarrClient) -> Non
     assert data[0].approved is False
     assert data[0].temporarilyRejected is False
     assert data[0].rejected is True
-    assert data[0].rejections == ["string"]
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
     assert data[0].publishDate == datetime(2020, 2, 16, 20, 8, 16)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
@@ -1667,7 +1685,7 @@ async def test_async_downlaod_release(aresponses, lidarr_client: LidarrClient) -
         f"/api/{LIDARR_API}/release",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1716,6 +1734,198 @@ async def test_async_get_rename(aresponses, lidarr_client: LidarrClient) -> None
     assert isinstance(data[0].trackFileId, int)
     assert data[0].existingPath == "string"
     assert data[0].newPath == "string"
+
+
+@pytest.mark.asyncio
+async def test_async_get_manual_import(aresponses, lidarr_client: LidarrClient) -> None:
+    """Test getting manual import."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/manualimport?artistId=0&downloadId=abc123&filterExistingFiles=True&folder=&replaceExistingFiles=True",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/manualimport.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await lidarr_client.async_get_manual_import("abc123")
+    assert data[0].path == "string"
+    assert data[0].name == "string"
+    assert isinstance(data[0].size, int)
+    assert data[0].artist.status == StatusType.CONTINUING.value
+    assert data[0].artist.ended is False
+    assert data[0].artist.artistName == "string"
+    assert isinstance(data[0].artist.foreignArtistId, str)
+    assert isinstance(data[0].artist.tadbId, int)
+    assert isinstance(data[0].artist.discogsId, int)
+    assert data[0].artist.overview == "string"
+    assert data[0].artist.artistType == "Person"
+    assert data[0].artist.disambiguation == "string"
+    assert data[0].artist.links[0].url == "string"
+    assert data[0].artist.links[0].name == "discogs"
+    assert data[0].artist.images[0].url == "string"
+    assert data[0].artist.images[0].coverType == ImageType.BANNER.value
+    assert data[0].artist.images[0].extension == "string"
+    assert data[0].artist.path == "string"
+    assert isinstance(data[0].artist.qualityProfileId, int)
+    assert isinstance(data[0].artist.metadataProfileId, int)
+    assert data[0].artist.monitored is True
+    assert data[0].artist.genres == ["string"]
+    assert data[0].artist.cleanName == "string"
+    assert data[0].artist.sortName == "string"
+    assert isinstance(data[0].artist.tags[0], int)
+    assert data[0].artist.added == datetime(2020, 2, 20, 14, 6, 21, 541356)
+    assert isinstance(data[0].artist.ratings.votes, int)
+    assert isinstance(data[0].artist.ratings.value, float)
+    assert isinstance(data[0].artist.statistics.albumCount, int)
+    assert isinstance(data[0].artist.statistics.trackFileCount, int)
+    assert isinstance(data[0].artist.statistics.trackCount, int)
+    assert isinstance(data[0].artist.statistics.totalTrackCount, int)
+    assert isinstance(data[0].artist.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].artist.statistics.percentOfTracks, float)
+    assert isinstance(data[0].artist.id, int)
+    assert data[0].album.title == "string"
+    assert data[0].album.disambiguation == "string"
+    assert data[0].album.overview == "string"
+    assert isinstance(data[0].album.artistId, int)
+    assert isinstance(data[0].album.foreignAlbumId, str)
+    assert data[0].album.monitored is True
+    assert data[0].album.anyReleaseOk is True
+    assert isinstance(data[0].album.profileId, int)
+    assert isinstance(data[0].album.duration, int)
+    assert data[0].album.albumType == "string"
+    assert isinstance(data[0].album.secondaryTypes[0].id, int)
+    assert data[0].album.secondaryTypes[0].name == "string"
+    assert isinstance(data[0].album.mediumCount, int)
+    assert isinstance(data[0].album.ratings.votes, int)
+    assert isinstance(data[0].album.ratings.value, float)
+    assert data[0].album.releaseDate == datetime(2019, 7, 25, 0, 0)
+    assert isinstance(data[0].album.releases[0].id, int)
+    assert isinstance(data[0].album.releases[0].albumId, int)
+    assert data[0].album.releases[0].foreignReleaseId == "string"
+    assert data[0].album.releases[0].title == "string"
+    assert data[0].album.releases[0].status == "Official"
+    assert isinstance(data[0].album.releases[0].duration, int)
+    assert isinstance(data[0].album.releases[0].trackCount, int)
+    assert isinstance(data[0].album.releases[0].media[0].mediumNumber, int)
+    assert data[0].album.releases[0].media[0].mediumName == "string"
+    assert data[0].album.releases[0].media[0].mediumFormat == "string"
+    assert isinstance(data[0].album.releases[0].mediumCount, int)
+    assert data[0].album.releases[0].disambiguation == "string"
+    assert data[0].album.releases[0].country == ["string"]
+    assert data[0].album.releases[0].label == ["string"]
+    assert data[0].album.releases[0].format == "string"
+    assert data[0].album.releases[0].monitored is False
+    assert data[0].album.genres == ["string"]
+    assert isinstance(data[0].album.media[0].mediumNumber, int)
+    assert data[0].album.media[0].mediumName == "string"
+    assert data[0].album.media[0].mediumFormat == "string"
+    assert data[0].album.artist.status == StatusType.CONTINUING.value
+    assert data[0].album.artist.ended is False
+    assert data[0].album.artist.artistName == "string"
+    assert isinstance(data[0].album.artist.foreignArtistId, str)
+    assert isinstance(data[0].album.artist.tadbId, int)
+    assert isinstance(data[0].album.artist.discogsId, int)
+    assert data[0].album.artist.overview == "string"
+    assert data[0].album.artist.artistType == "Person"
+    assert data[0].album.artist.disambiguation == "string"
+    assert data[0].album.artist.links[0].url == "string"
+    assert data[0].album.artist.links[0].name == "discogs"
+    assert data[0].album.artist.images[0].url == "string"
+    assert data[0].album.artist.images[0].coverType == ImageType.BANNER.value
+    assert data[0].album.artist.images[0].extension == "string"
+    assert data[0].album.artist.path == "string"
+    assert isinstance(data[0].album.artist.qualityProfileId, int)
+    assert isinstance(data[0].album.artist.metadataProfileId, int)
+    assert data[0].album.artist.monitored is True
+    assert data[0].album.artist.genres == ["string"]
+    assert data[0].album.artist.cleanName == "string"
+    assert data[0].album.artist.sortName == "string"
+    assert isinstance(data[0].album.artist.tags[0], int)
+    assert data[0].album.artist.added == datetime(2020, 2, 20, 14, 6, 21, 541356)
+    assert isinstance(data[0].album.artist.ratings.votes, int)
+    assert isinstance(data[0].album.artist.ratings.value, float)
+    assert isinstance(data[0].album.artist.statistics.albumCount, int)
+    assert isinstance(data[0].album.artist.statistics.trackFileCount, int)
+    assert isinstance(data[0].album.artist.statistics.trackCount, int)
+    assert isinstance(data[0].album.artist.statistics.totalTrackCount, int)
+    assert isinstance(data[0].album.artist.statistics.sizeOnDisk, int)
+    assert isinstance(data[0].album.artist.statistics.percentOfTracks, float)
+    assert isinstance(data[0].album.artist.id, int)
+    assert data[0].album.images[0].url == "string"
+    assert data[0].album.images[0].coverType == ImageType.COVER.value
+    assert data[0].album.images[0].extension == "string"
+    assert data[0].album.links[0].url == "string"
+    assert data[0].album.links[0].name == "string"
+    assert isinstance(data[0].album.id, int)
+    assert isinstance(data[0].albumReleaseId, int)
+    assert isinstance(data[0].tracks[0].artistId, int)
+    assert isinstance(data[0].tracks[0].trackFileId, int)
+    assert isinstance(data[0].tracks[0].albumId, int)
+    assert data[0].tracks[0].explicit is False
+    assert isinstance(data[0].tracks[0].absoluteTrackNumber, int)
+    assert isinstance(data[0].tracks[0].trackNumber, int)
+    assert data[0].tracks[0].title == "string"
+    assert isinstance(data[0].tracks[0].duration, int)
+    assert isinstance(data[0].tracks[0].mediumNumber, int)
+    assert data[0].tracks[0].hasFile is False
+    assert isinstance(data[0].tracks[0].ratings.votes, int)
+    assert isinstance(data[0].tracks[0].ratings.value, float)
+    assert isinstance(data[0].tracks[0].id, int)
+    assert isinstance(data[0].quality.quality.id, int)
+    assert data[0].quality.quality.name == "string"
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
+    assert data[0].quality.revision.isRepack is False
+    assert isinstance(data[0].qualityWeight, int)
+    assert data[0].downloadId == "string"
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
+    assert data[0].audioTags.title == "string"
+    assert data[0].audioTags.cleanTitle == "string"
+    assert data[0].audioTags.artistTitle == "string"
+    assert data[0].audioTags.artistTitleInfo.title == "string"
+    assert isinstance(data[0].audioTags.artistTitleInfo.year, int)
+    assert isinstance(data[0].audioTags.discNumber, int)
+    assert isinstance(data[0].audioTags.discCount, int)
+    assert isinstance(data[0].audioTags.year, int)
+    assert data[0].audioTags.duration == "00:00:00.4800000"
+    assert isinstance(data[0].audioTags.quality.quality.id, int)
+    assert data[0].audioTags.quality.quality.name == "FLAC"
+    assert isinstance(data[0].audioTags.quality.revision.version, int)
+    assert isinstance(data[0].audioTags.quality.revision.real, int)
+    assert data[0].audioTags.quality.revision.isRepack is False
+    assert data[0].audioTags.mediaInfo.audioFormat == "string"
+    assert isinstance(data[0].audioTags.mediaInfo.audioBitrate, int)
+    assert isinstance(data[0].audioTags.mediaInfo.audioChannels, int)
+    assert isinstance(data[0].audioTags.mediaInfo.audioBits, int)
+    assert isinstance(data[0].audioTags.mediaInfo.audioSampleRate, int)
+    assert isinstance(data[0].audioTags.trackNumbers[0], int)
+    assert data[0].additionalFile is False
+    assert data[0].replaceExistingFiles is True
+    assert data[0].disableReleaseSwitching is False
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_manual_import(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
+    """Test editing manual import."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/manualimport",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await lidarr_client.async_edit_manual_import(LidarrManualImport("test"))
+    assert isinstance(data, LidarrManualImport)
 
 
 @pytest.mark.asyncio
@@ -2027,6 +2237,49 @@ async def test_async_get_track_files(aresponses, lidarr_client: LidarrClient) ->
 
 
 @pytest.mark.asyncio
+async def test_async_get_metadata_provider(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
+    """Test getting metadata provider."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/config/metadataprovider",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/config-metadataprovider.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await lidarr_client.async_get_metadata_provider()
+    assert data.metadataSource == ""
+    assert data.writeAudioTags == "no"
+    assert data.scrubAudioTags is False
+    assert isinstance(data.id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_metadata_provider(
+    aresponses, lidarr_client: LidarrClient
+) -> None:
+    """Test editing metadata provider."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/config/metadataprovider",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = LidarrMetadataProvider("test")
+    data = await lidarr_client.async_edit_metadata_provider(data)
+    assert isinstance(data, LidarrMetadataProvider)
+
+
+@pytest.mark.asyncio
 async def test_async_edit_track_files(aresponses, lidarr_client: LidarrClient) -> None:
     """Test editing track files."""
     aresponses.add(
@@ -2086,3 +2339,10 @@ async def test_async_delete_track_files(
         match_querystring=True,
     )
     await lidarr_client.async_delete_track_files([0])
+
+
+@pytest.mark.asyncio
+async def test_not_implemented(lidarr_client: LidarrClient):
+    """Test methods not implemented by the API."""
+    with pytest.raises(NotImplementedError):
+        await lidarr_client.async_get_languages()

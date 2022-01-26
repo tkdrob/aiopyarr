@@ -6,10 +6,13 @@ from typing import Any
 
 from aiohttp.client import ClientSession
 
+from aiopyarr.exceptions import ArrException
 from aiopyarr.models.request import Command, SortDirection
 
 from .const import (
     ALL,
+    DATE,
+    EVENT_TYPE,
     IS_VALID,
     MOVIE_ID,
     NOTIFICATION,
@@ -24,13 +27,20 @@ from .const import (
 )
 from .models.host_configuration import PyArrHostConfiguration
 from .models.radarr import (
+    RadarrAltTitle,
     RadarrBlocklist,
     RadarrBlocklistMovie,
     RadarrCalendar,
     RadarrCommands,
+    RadarrCredit,
     RadarrEventType,
+    RadarrExtraFile,
     RadarrHistory,
     RadarrImportList,
+    RadarrImportListActionType,
+    RadarrImportListMovie,
+    RadarrIndexerFlag,
+    RadarrManualImport,
     RadarrMovie,
     RadarrMovieEditor,
     RadarrMovieFile,
@@ -42,6 +52,7 @@ from .models.radarr import (
     RadarrQueueDetail,
     RadarrRelease,
     RadarrRename,
+    RadarrRestriction,
     RadarrSortKeys,
     RadarrTagDetails,
 )
@@ -112,8 +123,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrMovie,
             method=HTTPMethod.POST,
         )
-
-        # check /search for all
 
     async def async_edit_movies(
         self, data: RadarrMovie | RadarrMovieEditor, move_files: bool = False
@@ -197,8 +206,8 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         self,
         page: int = 1,
         page_size: int = 20,
-        sort_dir: SortDirection = SortDirection.DEFAULT,
         sort_key: RadarrSortKeys = RadarrSortKeys.DATE,
+        event_type: RadarrEventType | None = None,
     ) -> RadarrHistory:
         """Get movie history.
 
@@ -211,29 +220,39 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         params = {
             PAGE: page,
             PAGE_SIZE: page_size,
-            SORT_DIRECTION: sort_dir.value,
             SORT_KEY: sort_key.value,
         }
+        if event_type and event_type in RadarrEventType:
+            params[EVENT_TYPE] = event_type.value
         return await self._async_request(
             "history",
             params=params,
             datatype=RadarrHistory,
         )
 
-    async def async_get_movie_history(
-        self, recordid: int, event_type: RadarrEventType | None = None
+    async def async_get_history_since(
+        self,
+        date: datetime | None = None,
+        movieid: int | None = None,
+        event_type: RadarrEventType | None = None,
     ) -> list[RadarrMovieHistory]:
-        """Get history for a given movie in database by its database id.
+        """Get history since specified date.
 
-        Args:
-            id: Database id of movie
-            event_type: History event type to retrieve.
+        movieid: include to search history by movie id (date will not apply)
+        Radarr permits a naked query but its required here to avoid excessively large
+        data sets where filtering should be used instead
         """
-        params: dict[str, str | int] = {MOVIE_ID: recordid}
+        if date is None and movieid is None:
+            raise ArrException(self, "Either date or movieid is required")
+        params: dict[str, int | str] = {}
+        if isinstance(date, datetime):
+            params[DATE] = date.strftime("%Y-%m-%d")
+        elif movieid is not None:
+            params[MOVIE_ID] = movieid
         if event_type and event_type in RadarrEventType:
-            params["eventType"] = event_type.value
+            params[EVENT_TYPE] = event_type.value
         return await self._async_request(
-            "history/movie",
+            f"history/{'since' if isinstance(date, datetime) else 'movie'}",
             params=params,
             datatype=RadarrMovieHistory,
         )
@@ -241,10 +260,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     async def async_get_import_lists(
         self, listid: int | None = None
     ) -> RadarrImportList | list[RadarrImportList]:
-        """Get information about import list.
-
-        id: Get import list matching id. Leave blank for all.
-        """
+        """Get information about import lists."""
         return await self._async_request(
             f"importlist{'' if listid is None else f'/{listid}'}",
             datatype=RadarrImportList,
@@ -280,13 +296,93 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
                     return False
         return True
 
-    # {name} not yet confirmed
-    async def async_importlist_action(self, data: RadarrImportList) -> RadarrImportList:
+    async def async_get_import_list_movies(self) -> list[RadarrImportListMovie]:
+        """Get list of movies on configured import lists."""
+        return await self._async_request(
+            "importlist/movie",
+            datatype=RadarrImportListMovie,
+        )
+
+    async def async_get_extra_file(self, movieid: int) -> list[RadarrExtraFile]:
+        """Get extra files info from specified movie id."""
+        return await self._async_request(
+            "extrafile",
+            params={MOVIE_ID: movieid},
+            datatype=RadarrExtraFile,
+        )
+
+    async def async_get_restrictions(
+        self, restrictionid: int | None = None
+    ) -> RadarrRestriction | list[RadarrRestriction]:
+        """Get indexer restrictions."""
+        return await self._async_request(
+            f"restriction{'' if restrictionid is None else f'/{restrictionid}'}",
+            datatype=RadarrRestriction,
+        )
+
+    async def async_edit_restriction(
+        self, data: RadarrRestriction
+    ) -> RadarrRestriction:
+        """Edit indexer restriction."""
+        return await self._async_request(
+            "restriction",
+            data=data,
+            datatype=RadarrRestriction,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_add_restriction(self, data: RadarrRestriction) -> RadarrRestriction:
+        """Add indexer restriction."""
+        return await self._async_request(
+            "restriction",
+            data=data,
+            datatype=RadarrRestriction,
+            method=HTTPMethod.POST,
+        )
+
+    async def async_delete_restriction(self, restrictionid: int) -> None:
+        """Delete indexer restriction."""
+        return await self._async_request(
+            f"restriction/{restrictionid}",
+            datatype=RadarrRestriction,
+            method=HTTPMethod.DELETE,
+        )
+
+    async def async_get_credits(
+        self, creditid: int | None = None, movieid: int | None = None
+    ) -> RadarrCredit | list[RadarrCredit]:
+        """Get credits."""
+        return await self._async_request(
+            f"credit{'' if creditid is None else f'/{creditid}'}",
+            params=None if movieid is None else {MOVIE_ID: movieid},
+            datatype=RadarrCredit,
+        )
+
+    async def async_get_alt_titles(
+        self, alttitleid: int | None = None, movieid: int | None = None
+    ) -> RadarrAltTitle | list[RadarrAltTitle]:
+        """Get alternate movie titles."""
+        return await self._async_request(
+            f"alttitle{'' if alttitleid is None else f'/{alttitleid}'}",
+            params=None if movieid is None else {MOVIE_ID: movieid},
+            datatype=RadarrAltTitle,
+        )
+
+    # GET altyear
+
+    async def async_get_indexer_flags(self) -> list[RadarrIndexerFlag]:
+        """Get indexer flags."""
+        return await self._async_request(
+            "indexerflag",
+            datatype=RadarrIndexerFlag,
+        )
+
+    async def async_importlist_action(
+        self, action: RadarrImportListActionType
+    ) -> dict[str, Any]:
         """Perform import list action."""
         return await self._async_request(
-            f"importlist/action/{data.name}",
-            data=data,
-            datatype=RadarrImportList,
+            f"importlist/action/{action.value}",
             method=HTTPMethod.POST,
         )
 
@@ -344,7 +440,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrBlocklist,
         )
 
-    # Documented, not able to make it work
     async def async_get_blocklist_movie(
         self,
         bocklistid: int,
@@ -377,7 +472,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             PAGE_SIZE: page_size,
             SORT_DIRECTION: sort_dir.value,
             SORT_KEY: sort_key.value,
-            "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
+            "includeUnknownMovieItems": str(include_unknown_movie_items),
             "includeMovie": str(include_movie),
         }
         return await self._async_request("queue", params=params, datatype=RadarrQueue)
@@ -389,7 +484,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> list[RadarrQueueDetail]:
         """Get details of all items in queue."""
         params = {
-            "includeUnknownMovieItems": str(include_unknown_movie_items),  # Unverified
+            "includeUnknownMovieItems": str(include_unknown_movie_items),
             "includeMovie": str(include_movie),
         }
         return await self._async_request(
@@ -553,24 +648,32 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrRename,
         )
 
-    # Import list exclusions are included in the UI but not in the API.
-    async def async_get_import_list_exclusions(
-        self, clientid: int | None = None
-    ) -> Any:
-        """Get import list exclusions."""
-        raise NotImplementedError()
+    async def async_get_manual_import(
+        self,
+        downloadid: str,
+        folder: str | None = None,
+        filterexistingfiles: bool = True,
+    ) -> list[RadarrManualImport]:
+        """Get manual import."""
+        params = {
+            "downloadId": downloadid,
+            "filterExistingFiles": str(filterexistingfiles),
+            "folder": folder if folder is not None else "",
+        }
+        return await self._async_request(
+            "manualimport", params=params, datatype=RadarrManualImport
+        )
 
-    async def async_edit_import_list_exclusion(self, data: Any) -> Any:
-        """Edit import list exclusion."""
-        raise NotImplementedError()
-
-    async def async_delete_import_list_exclusion(self, clientid: int) -> Any:
-        """Delete import list exclusion."""
-        raise NotImplementedError()
-
-    async def async_add_import_list_exclusion(self, data: Any) -> Any:
-        """Add import list exclusion."""
-        raise NotImplementedError()
+    async def async_edit_manual_import(
+        self, data: RadarrManualImport
+    ) -> list[RadarrManualImport]:
+        """Get manual import."""
+        return await self._async_request(
+            "manualimport",
+            data=data,
+            datatype=RadarrManualImport,
+            method=HTTPMethod.PUT,
+        )
 
     async def async_get_release_profiles(self, profileid: int | None = None) -> Any:
         """Get release profiles."""

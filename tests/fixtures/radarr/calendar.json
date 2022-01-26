@@ -31,7 +31,7 @@
     "cleanTitle": "string",
     "imdbId": "string",
     "tmdbId": 0,
-    "titleSlug": "string",
+    "titleSlug": "0",
     "genres": ["string"],
     "tags": [],
     "added": "2020-07-16T13:25:37Z",

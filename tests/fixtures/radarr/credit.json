@@ -1,0 +1,18 @@
+[
+  {
+    "personName": "string",
+    "creditTmdbId": "string",
+    "personTmdbId": 0,
+    "movieId": 0,
+    "images": [
+      {
+        "coverType": "headshot",
+        "url": "string"
+      }
+    ],
+    "character": "string",
+    "order": 0,
+    "type": "cast",
+    "id": 0
+  }
+]

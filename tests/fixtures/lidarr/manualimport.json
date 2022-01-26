@@ -1,0 +1,245 @@
+[
+	{
+		"path": "string",
+		"name": "string",
+		"size": 0,
+		"artist": {
+			"status": "continuing",
+			"ended": false,
+			"artistName": "string",
+			"foreignArtistId": "string",
+			"tadbId": 0,
+			"discogsId": 0,
+			"overview": "string",
+			"artistType": "Person",
+			"disambiguation": "string",
+			"links": [
+				{
+					"url": "string",
+					"name": "discogs"
+				}
+			],
+			"images": [
+				{
+					"url": "string",
+					"coverType": "banner",
+					"extension": "string"
+				}
+			],
+			"path": "string",
+			"qualityProfileId": 0,
+			"metadataProfileId": 0,
+			"monitored": true,
+			"genres": ["string"],
+			"cleanName": "string",
+			"sortName": "string",
+			"tags": [0],
+			"added": "2020-02-20T14:06:21.5413564Z",
+			"ratings": {
+				"votes": 0,
+				"value": 0.0
+			},
+			"statistics": {
+				"albumCount": 0,
+				"trackFileCount": 0,
+				"trackCount": 0,
+				"totalTrackCount": 0,
+				"sizeOnDisk": 0,
+				"percentOfTracks": 0.0
+			},
+			"id": 0
+		},
+		"album": {
+			"title": "string",
+			"disambiguation": "string",
+			"overview": "string",
+			"artistId": 0,
+			"foreignAlbumId": "string",
+			"monitored": true,
+			"anyReleaseOk": true,
+			"profileId": 0,
+			"duration": 0,
+			"albumType": "string",
+			"secondaryTypes": [
+				{
+					"id": 0,
+					"name": "string"
+				}
+			],
+			"mediumCount": 0,
+			"ratings": {
+				"votes": 0,
+				"value": 0.0
+			},
+			"releaseDate": "2019-07-25T00:00:00Z",
+			"releases": [
+				{
+					"id": 0,
+					"albumId": 0,
+					"foreignReleaseId": "string",
+					"title": "string",
+					"status": "Official",
+					"duration": 0,
+					"trackCount": 0,
+					"media": [
+						{
+							"mediumNumber": 0,
+							"mediumName": "string",
+							"mediumFormat": "string"
+						}
+					],
+					"mediumCount": 0,
+					"disambiguation": "string",
+					"country": ["string"],
+					"label": ["string"],
+					"format": "string",
+					"monitored": false
+				}
+			],
+			"genres": ["string"],
+			"media": [
+				{
+					"mediumNumber": 0,
+					"mediumName": "string",
+					"mediumFormat": "string"
+				}
+			],
+			"artist": {
+				"status": "continuing",
+				"ended": false,
+				"artistName": "string",
+				"foreignArtistId": "string",
+				"tadbId": 0,
+				"discogsId": 0,
+				"overview": "string",
+				"artistType": "Person",
+				"disambiguation": "string",
+				"links": [
+					{
+						"url": "string",
+						"name": "discogs"
+					}
+				],
+				"images": [
+					{
+						"url": "string",
+						"coverType": "banner",
+						"extension": "string"
+					}
+				],
+				"path": "string",
+				"qualityProfileId": 0,
+				"metadataProfileId": 0,
+				"monitored": true,
+				"genres": ["string"],
+				"cleanName": "string",
+				"sortName": "string",
+				"tags": [0],
+				"added": "2020-02-20T14:06:21.5413564Z",
+				"ratings": {
+					"votes": 0,
+					"value": 0.0
+				},
+				"statistics": {
+					"albumCount": 0,
+					"trackFileCount": 0,
+					"trackCount": 0,
+					"totalTrackCount": 0,
+					"sizeOnDisk": 0,
+					"percentOfTracks": 0.0
+				},
+				"id": 0
+			},
+			"images": [
+				{
+					"url": "string",
+					"coverType": "cover",
+					"extension": "string"
+				}
+			],
+			"links": [
+				{
+					"url": "string",
+					"name": "string"
+				}
+			],
+			"id": 0
+		},
+		"albumReleaseId": 0,
+		"tracks": [
+			{
+				"artistId": 0,
+				"trackFileId": 0,
+				"albumId": 0,
+				"explicit": false,
+				"absoluteTrackNumber": 0,
+				"trackNumber": "0",
+				"title": "string",
+				"duration": 0,
+				"mediumNumber": 0,
+				"hasFile": false,
+				"ratings": {
+					"votes": 0,
+					"value": 0.0
+				},
+				"id": 0
+			}
+		],
+		"quality": {
+			"quality": {
+				"id": 0,
+				"name": "string"
+			},
+			"revision": {
+				"version": 0,
+				"real": 0,
+				"isRepack": false
+			}
+		},
+		"qualityWeight": 0,
+		"downloadId": "string",
+		"rejections": [
+			{
+				"reason": "string",
+				"type": "permanent"
+			}
+		],
+		"audioTags": {
+			"title": "string",
+			"cleanTitle": "string",
+			"artistTitle": "string",
+			"albumTitle": "string",
+			"artistTitleInfo": {
+				"title": "string",
+				"year": 0
+			},
+			"discNumber": 0,
+			"discCount": 0,
+			"year": 0,
+			"duration": "00:00:00.4800000",
+			"quality": {
+				"quality": {
+					"id": 0,
+					"name": "FLAC"
+				},
+				"revision": {
+					"version": 0,
+					"real": 0,
+					"isRepack": false
+				}
+			},
+			"mediaInfo": {
+				"audioFormat": "string",
+				"audioBitrate": 0,
+				"audioChannels": 0,
+				"audioBits": 0,
+				"audioSampleRate": 0
+			},
+			"trackNumbers": [0]
+		},
+		"additionalFile": false,
+		"replaceExistingFiles": true,
+		"disableReleaseSwitching": false,
+		"id": 0
+	}
+]

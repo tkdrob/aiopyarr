@@ -3,13 +3,14 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any
-from urllib.parse import quote
 
 from aiohttp.client import ClientSession
 
 from .const import (
     ALL,
+    DATE,
     EPISODE_ID,
+    EVENT_TYPE,
     IS_VALID,
     NOTIFICATION,
     PAGE,
@@ -31,9 +32,13 @@ from .models.sonarr import (
     SonarrCommands,
     SonarrEpisode,
     SonarrEpisodeFile,
+    SonarrEpisodeHistory,
+    SonarrEpisodeMonitor,
     SonarrEventType,
     SonarrHistory,
     SonarrImportList,
+    SonarrLanguage,
+    SonarrManualImport,
     SonarrNamingConfig,
     SonarrNotification,
     SonarrParse,
@@ -41,6 +46,7 @@ from .models.sonarr import (
     SonarrQueueDetail,
     SonarrRelease,
     SonarrRename,
+    SonarrSeasonPass,
     SonarrSeries,
     SonarrSeriesAdd,
     SonarrSeriesLookup,
@@ -124,9 +130,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             PAGE_SIZE: page_size,
             SORT_DIRECTION: sort_dir.value,
             SORT_KEY: sort_key.value,
-            "includeUnknownSeriesItems": str(
-                include_unknown_series_items
-            ),  # Unverified
+            "includeUnknownSeriesItems": str(include_unknown_series_items),
             "includeSeries": str(include_series),
             "includeEpisode": str(include_episode),
         }
@@ -140,9 +144,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     ) -> list[SonarrQueueDetail]:
         """Get details of all items in queue."""
         params = {
-            "includeUnknownSeriesItems": str(
-                include_unknown_series_items
-            ),  # Unverified
+            "includeUnknownSeriesItems": str(include_unknown_series_items),
             "includeSeries": str(include_series),
             "includeEpisode": str(include_episode),
         }
@@ -282,12 +284,39 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             SORT_KEY: sort_key.value,
         }
         if event_type and event_type in SonarrEventType:
-            params["eventType"] = event_type.value
+            params[EVENT_TYPE] = event_type.value
         if recordid is not None:
             params[EPISODE_ID] = recordid
         return await self._async_request(
             "history", datatype=SonarrHistory, params=params
         )
+
+    async def async_get_history_since(
+        self,
+        date: datetime | None = None,
+        seriesid: int | None = None,
+        event_type: SonarrEventType | None = None,
+    ) -> list[SonarrEpisodeHistory]:
+        """Get history since specified date.
+
+        seriesid: include to search history by series id (date will not apply)
+        """
+        if date is None and seriesid is None:
+            raise ArrException(self, "Either date or seriesid is required")
+        params: dict[str, int | str] = {}
+        if isinstance(date, datetime):
+            params[DATE] = date.strftime("%Y-%m-%d")
+        elif seriesid is not None:
+            params[SERIES_ID] = seriesid
+        if event_type and event_type in SonarrEventType:
+            params[EVENT_TYPE] = event_type.value
+        return await self._async_request(
+            f"history/{'since' if isinstance(date, datetime) else 'series'}",
+            params=params,
+            datatype=SonarrEpisodeHistory,
+        )
+
+    # POST history/failed
 
     async def async_get_wanted(
         self,
@@ -423,6 +452,8 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.DELETE,
         )
 
+    # POST series/import
+
     async def async_lookup_series(
         self, term: str | None = None, seriesid: int | None = None
     ) -> list[SonarrSeriesLookup]:
@@ -435,7 +466,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "series/lookup",
             datatype=SonarrSeriesLookup,
-            params={TERM: quote(term, safe="") if term else f"tvdb:{seriesid}"},
+            params={TERM: term if term else f"tvdb:{seriesid}"},
         )
 
     async def async_get_import_lists(
@@ -477,13 +508,55 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
                     return False
         return True
 
-    # {name} not yet confirmed
-    async def async_importlist_action(self, data: SonarrImportList) -> SonarrImportList:
-        """Perform import list action."""
+    async def async_season_pass(self, data: SonarrSeasonPass) -> None:
+        """Change monitoring status via season pass."""
         return await self._async_request(
-            f"importlist/action/{data.name}",
+            "seasonPass", data=data, method=HTTPMethod.POST
+        )
+
+    async def async_episode_monitor(
+        self, episodeids: list[int], monitored: bool = True
+    ) -> list[SonarrEpisodeMonitor]:
+        """Change monitoring status via season pass."""
+        return await self._async_request(
+            "episode/monitor",
+            data={"episodeIds": episodeids, "monitored": str(monitored)},
+            datatype=SonarrEpisodeMonitor,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_get_languages(  # type: ignore[override]
+        self, langid: int | None = None
+    ) -> SonarrLanguage | list[SonarrLanguage]:
+        """Get language profiles."""
+        return await self._async_request(
+            f"languageprofile{'' if langid is None else f'/{langid}'}",
+            datatype=SonarrLanguage,
+        )
+
+    async def async_edit_language(self, data: SonarrLanguage) -> SonarrLanguage:
+        """Edit language profiles."""
+        return await self._async_request(
+            "languageprofile",
             data=data,
-            datatype=SonarrImportList,
+            datatype=SonarrLanguage,
+            method=HTTPMethod.PUT,
+        )
+
+    async def async_delete_language(self, languageid: int) -> None:
+        """Delete language profiles."""
+        return await self._async_request(
+            f"languageprofile/{languageid}",
+            datatype=SonarrLanguage,
+            method=HTTPMethod.DELETE,
+        )
+
+    async def async_add_language(self, data: SonarrLanguage) -> SonarrLanguage:
+        """Add language profiles."""
+        return await self._async_request(
+            "languageprofile",
+            data=data,
+            datatype=SonarrLanguage,
             method=HTTPMethod.POST,
         )
 
@@ -586,6 +659,33 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=SonarrRename,
         )
 
+    async def async_get_manual_import(
+        self,
+        downloadid: str,
+        folder: str | None = None,
+        filterexistingfiles: bool = True,
+    ) -> list[SonarrManualImport]:
+        """Get manual import."""
+        params = {
+            "downloadId": downloadid,
+            "filterExistingFiles": str(filterexistingfiles),
+            "folder": folder if folder is not None else "",
+        }
+        return await self._async_request(
+            "manualimport", params=params, datatype=SonarrManualImport
+        )
+
+    async def async_edit_manual_import(
+        self, data: SonarrManualImport
+    ) -> list[SonarrManualImport]:
+        """Get manual import."""
+        return await self._async_request(
+            "manualimport",
+            data=data,
+            datatype=SonarrManualImport,
+            method=HTTPMethod.PUT,
+        )
+
     async def async_get_tags_details(
         self, tagid: int | None = None
     ) -> SonarrTagDetails | list[SonarrTagDetails]:
@@ -600,10 +700,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_localization(self) -> Any:
         """Get localization strings."""
-        raise NotImplementedError()
-
-    async def async_get_languages(self, langid: int | None = None) -> Any:
-        """Get import list exclusions."""
         raise NotImplementedError()
 
     async def async_delete_metadata_profile(self, profileid: int) -> Any:

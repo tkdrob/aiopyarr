@@ -1,0 +1,99 @@
+[
+  {
+    "path": "string",
+    "relativePath": "string",
+    "folderName": "string",
+    "name": "string",
+    "size": 0,
+    "series": {
+      "title": "string",
+      "sortTitle": "string",
+      "status": "continuing",
+      "ended": false,
+      "overview": "string",
+      "network": "string",
+      "airTime": "00:00",
+      "images": [
+        {
+          "coverType": "banner",
+          "url": "string"
+        }
+      ],
+      "seasons": [
+        {
+          "seasonNumber": 0,
+          "monitored": false
+        }
+      ],
+      "year": 0,
+      "path": "string",
+      "qualityProfileId": 0,
+      "languageProfileId": 0,
+      "seasonFolder": true,
+      "monitored": true,
+      "useSceneNumbering": false,
+      "runtime": 0,
+      "tvdbId": 0,
+      "tvRageId": 0,
+      "tvMazeId": 0,
+      "firstAired": "2020-08-29T00:00:00Z",
+      "seriesType": "standard",
+      "cleanTitle": "string",
+      "imdbId": "string",
+      "titleSlug": "0",
+      "certification": "string",
+      "genres": ["string"],
+      "tags": [0],
+      "added": "2019-05-19T05:33:56.69425Z",
+      "ratings": {
+        "votes": 0,
+        "value": 0.0
+      },
+      "id": 0
+    },
+    "seasonNumber": 0,
+    "episodes": [
+      {
+        "seriesId": 0,
+        "episodeFileId": 0,
+        "seasonNumber": 0,
+        "episodeNumber": 0,
+        "title": "string",
+        "airDate": "2020-10-05",
+        "airDateUtc": "2020-10-05T07:00:00Z",
+        "overview": "string",
+        "hasFile": true,
+        "monitored": true,
+        "absoluteEpisodeNumber": 0,
+        "unverifiedSceneNumbering": false,
+        "id": 0
+      }
+    ],
+    "quality": {
+      "quality": {
+        "id": 0,
+        "name": "string",
+        "source": "web",
+        "resolution": 0
+      },
+      "revision": {
+        "version": 0,
+        "real": 0,
+        "isRepack": false
+      }
+    },
+    "language": {
+      "id": 0,
+      "name": "string"
+    },
+    "qualityWeight": 0,
+    "downloadId": "string",
+    "rejections": [
+      {
+        "reason": "string",
+        "type": "permanent"
+      }
+    ],
+    "id": 0
+  }
+]

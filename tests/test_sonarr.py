@@ -6,16 +6,20 @@ import pytest
 
 from aiopyarr.exceptions import ArrException
 from aiopyarr.models.const import ProtocolType
-from aiopyarr.models.request import Command, ImageType, SortDirection
+from aiopyarr.models.request import Command, ImageType, SortDirection, StatusType
 from aiopyarr.models.sonarr import (
     SonarrCommands,
     SonarrEpisode,
     SonarrEpisodeFile,
+    SonarrEpisodeHistory,
     SonarrEventType,
     SonarrImportList,
+    SonarrLanguage,
+    SonarrManualImport,
     SonarrNamingConfig,
     SonarrNotification,
     SonarrRelease,
+    SonarrSeasonPass,
     SonarrSeries,
     SonarrSeriesAdd,
     SonarrSortKeys,
@@ -147,7 +151,7 @@ async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient):
     assert data.series.seriesType == "string"
     assert data.series.cleanTitle == "string"
     assert data.series.imdbId == "string"
-    assert data.series.titleSlug == "string"
+    assert isinstance(data.series.titleSlug, int)
     assert data.series.certification == "string"
     assert data.series.genres == ["string"]
     assert data.series.tags == [0]
@@ -239,7 +243,7 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/history?page=1&pageSize=10&sortKey=date&eventType=grabbed&episodeId=0",
+        f"/api/{SONARR_API}/history?page=1&pageSize=10&sortKey=date&eventType=1&episodeId=0",
         "GET",
         aresponses.Response(
             status=200,
@@ -274,7 +278,7 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
     assert data.records[0].languageCutoffNotMet is False
     assert data.records[0].date == datetime(2019, 11, 1, 9, 9, 34, 288036)
     assert data.records[0].downloadId == "string"
-    assert data.records[0].eventType == SonarrEventType.GRABBED.value
+    assert data.records[0].eventType == SonarrEventType.GRABBED.name.lower()
     assert data.records[0].data.indexer == "string"
     assert data.records[0].data.nzbInfoUrl == "string"
     assert data.records[0].data.releaseGroup == "string"
@@ -296,6 +300,41 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient):
     assert data.records[0].data.protocol is ProtocolType.UNKNOWN
     assert data.records[0].data.torrentInfoHash == "string"
     assert isinstance(data.records[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_get_history_since(aresponses, sonarr_client: SonarrClient):
+    """Test getting history since specified date."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/history/since?date=2020-11-30&eventType=1",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = await sonarr_client.async_get_history_since(
+        date=date, event_type=SonarrEventType.GRABBED
+    )
+    assert isinstance(data, SonarrEpisodeHistory)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/history/series?seriesId=0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await sonarr_client.async_get_history_since(seriesid=0)
+
+    with pytest.raises(ArrException):
+        await sonarr_client.async_get_history_since()
 
 
 @pytest.mark.asyncio
@@ -373,7 +412,7 @@ async def test_async_parse_title_or_path(aresponses, sonarr_client: SonarrClient
     assert data.series.seriesType == "string"
     assert data.series.cleanTitle == "string"
     assert data.series.imdbId == "string"
-    assert data.series.titleSlug == "string"
+    assert isinstance(data.series.titleSlug, int)
     assert data.series.certification == "string"
     assert data.series.genres == ["string"]
     assert isinstance(data.series.tags[0], int)
@@ -503,7 +542,8 @@ async def test_async_get_release(aresponses, sonarr_client: SonarrClient):
     assert data[0].rejected is True
     assert isinstance(data[0].tvdbId, int)
     assert isinstance(data[0].tvRageId, int)
-    assert data[0].rejections == ["string"]
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
     assert data[0].publishDate == datetime(2020, 1, 8, 15, 31, 3)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
@@ -569,7 +609,7 @@ async def test_async_lookup_series(aresponses, sonarr_client: SonarrClient):
     assert data[0].seriesType == "string"
     assert data[0].cleanTitle == "string"
     assert data[0].imdbId == "string"
-    assert data[0].titleSlug == "string"
+    assert isinstance(data[0].titleSlug, int)
     assert data[0].folder == "string"
     assert data[0].certification == "string"
     assert data[0].genres == ["string"]
@@ -687,7 +727,7 @@ async def test_async_get_series(aresponses, sonarr_client: SonarrClient):
     assert data.seriesType == "string"
     assert data.cleanTitle == "string"
     assert data.imdbId == "string"
-    assert data.titleSlug == "string"
+    assert isinstance(data.titleSlug, int)
     assert data.rootFolderPath == "string"
     assert data.certification == "string"
     assert data.genres == ["string"]
@@ -709,7 +749,7 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=episode.airDateUtc&page=1&pageSize=10&sortDirection=default",
         "GET",
         aresponses.Response(
             status=200,
@@ -738,6 +778,31 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data.records[0].absoluteEpisodeNumber, int)
     assert data.records[0].unverifiedSceneNumbering is False
     assert isinstance(data.records[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_get_languages(aresponses, sonarr_client: SonarrClient):
+    """Test getting language profiles."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/languageprofile",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/languageprofile.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_get_languages()
+    assert data[0].name == "string"
+    assert data[0].upgradeAllowed is True
+    assert isinstance(data[0].cutoff.id, int)
+    assert data[0].cutoff.name == "string"
+    assert isinstance(data[0].languages[0].language.id, int)
+    assert data[0].languages[0].language.name == "string"
+    assert data[0].languages[0].allowed is False
+    assert isinstance(data[0].id, int)
 
 
 @pytest.mark.asyncio
@@ -946,6 +1011,109 @@ async def test_async_get_rename(aresponses, sonarr_client: SonarrClient):
 
 
 @pytest.mark.asyncio
+async def test_async_get_manual_import(aresponses, sonarr_client: SonarrClient) -> None:
+    """Test getting manual import."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/manualimport?downloadId=abc123&filterExistingFiles=True&folder=",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/manualimport.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_get_manual_import("abc123", folder="")
+    assert data[0].path == "string"
+    assert data[0].relativePath == "string"
+    assert data[0].folderName == "string"
+    assert data[0].name == "string"
+    assert isinstance(data[0].size, int)
+    assert data[0].series.title == "string"
+    assert data[0].series.sortTitle == "string"
+    assert data[0].series.status == StatusType.CONTINUING.value
+    assert data[0].series.ended is False
+    assert data[0].series.overview == "string"
+    assert data[0].series.network == "string"
+    assert data[0].series.airTime == "00:00"
+    assert data[0].series.images[0].coverType == "banner"
+    assert data[0].series.images[0].url == "string"
+    assert isinstance(data[0].series.seasons[0].seasonNumber, int)
+    assert data[0].series.seasons[0].monitored is False
+    assert isinstance(data[0].series.year, int)
+    assert data[0].path == "string"
+    assert isinstance(data[0].series.qualityProfileId, int)
+    assert isinstance(data[0].series.languageProfileId, int)
+    assert data[0].series.seasonFolder is True
+    assert data[0].series.monitored is True
+    assert data[0].series.useSceneNumbering is False
+    assert isinstance(data[0].series.runtime, int)
+    assert isinstance(data[0].series.tvdbId, int)
+    assert isinstance(data[0].series.tvRageId, int)
+    assert isinstance(data[0].series.tvMazeId, int)
+    assert data[0].series.firstAired == datetime(2020, 8, 29, 0, 0)
+    assert data[0].series.seriesType == "standard"
+    assert data[0].series.cleanTitle == "string"
+    assert data[0].series.imdbId == "string"
+    assert isinstance(data[0].series.titleSlug, int)
+    assert data[0].series.certification == "string"
+    assert data[0].series.genres == ["string"]
+    assert isinstance(data[0].series.tags[0], int)
+    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 56, 694250)
+    assert isinstance(data[0].series.ratings.votes, int)
+    assert isinstance(data[0].series.ratings.value, float)
+    assert isinstance(data[0].series.id, int)
+    assert isinstance(data[0].seasonNumber, int)
+    assert isinstance(data[0].episodes[0].seriesId, int)
+    assert isinstance(data[0].episodes[0].episodeFileId, int)
+    assert isinstance(data[0].episodes[0].seasonNumber, int)
+    assert isinstance(data[0].episodes[0].episodeNumber, int)
+    assert data[0].episodes[0].title == "string"
+    assert data[0].episodes[0].airDate == datetime(2020, 10, 5, 0, 0)
+    assert data[0].episodes[0].airDateUtc == datetime(2020, 10, 5, 7, 0)
+    assert data[0].episodes[0].overview == "string"
+    assert data[0].episodes[0].hasFile is True
+    assert data[0].episodes[0].monitored is True
+    assert isinstance(data[0].episodes[0].absoluteEpisodeNumber, int)
+    assert data[0].episodes[0].unverifiedSceneNumbering is False
+    assert isinstance(data[0].episodes[0].id, int)
+    assert isinstance(data[0].quality.quality.id, int)
+    assert data[0].quality.quality.name == "string"
+    assert data[0].quality.quality.source == "web"
+    assert isinstance(data[0].quality.quality.resolution, int)
+    assert isinstance(data[0].quality.revision.version, int)
+    assert isinstance(data[0].quality.revision.real, int)
+    assert data[0].quality.revision.isRepack is False
+    assert isinstance(data[0].language.id, int)
+    assert data[0].language.name == "string"
+    assert isinstance(data[0].qualityWeight, int)
+    assert data[0].downloadId == "string"
+    assert data[0].rejections[0].reason == "string"
+    assert data[0].rejections[0].type == "permanent"
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_edit_manual_import(
+    aresponses, sonarr_client: SonarrClient
+) -> None:
+    """Test editing manual import."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/manualimport",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_edit_manual_import(SonarrManualImport("test"))
+    assert isinstance(data, SonarrManualImport)
+
+
+@pytest.mark.asyncio
 async def test_async_get_tag_details(aresponses, sonarr_client: SonarrClient):
     """Test getting tag details."""
     aresponses.add(
@@ -972,6 +1140,55 @@ async def test_async_get_tag_details(aresponses, sonarr_client: SonarrClient):
 
 
 @pytest.mark.asyncio
+async def test_async_season_pass(aresponses, sonarr_client: SonarrClient):
+    """Test setting monitor options in season pass."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/seasonPass",
+        "POST",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = SonarrSeasonPass({"series": [{"id": 0, "monitored": True}]})
+    await sonarr_client.async_season_pass(data)
+    assert isinstance(data.series[0].id, int)
+    assert data.series[0].monitored
+    assert data.monitoringOptions.monitor is None
+
+
+@pytest.mark.asyncio
+async def test_async_episode_monitor(aresponses, sonarr_client: SonarrClient):
+    """Test changing monitoring status via season pass."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/episode/monitor",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/episodemonitor.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_episode_monitor([0])
+    assert isinstance(data[0].seriesId, int)
+    assert isinstance(data[0].episodeFileId, int)
+    assert isinstance(data[0].seasonNumber, int)
+    assert isinstance(data[0].episodeNumber, int)
+    assert data[0].title == "string"
+    assert data[0].airDate == datetime(2020, 10, 24, 0, 0)
+    assert data[0].airDateUtc == datetime(2020, 10, 24, 5, 0)
+    assert data[0].overview == "string"
+    assert data[0].hasFile is True
+    assert data[0].monitored is False
+    assert data[0].unverifiedSceneNumbering is False
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
 async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
     """Test Sonarr commands."""
     aresponses.add(
@@ -979,7 +1196,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -994,7 +1211,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1008,7 +1225,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1020,7 +1237,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1034,7 +1251,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1046,7 +1263,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1058,7 +1275,7 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/command",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1125,7 +1342,7 @@ async def test_async_download_release(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/release",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1142,7 +1359,7 @@ async def test_async_push_release(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/release/push",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1159,7 +1376,7 @@ async def test_async_add_series(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/series",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1230,7 +1447,7 @@ async def test_async_add_import_list(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/importlist",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1247,7 +1464,7 @@ async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/importlist/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1261,7 +1478,7 @@ async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1274,7 +1491,7 @@ async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/importlist/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -1284,21 +1501,55 @@ async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient):
 
 
 @pytest.mark.asyncio
-async def test_async_importlist_action(aresponses, sonarr_client: SonarrClient):
-    """Test performing import list action."""
+async def test_async_edit_language(aresponses, sonarr_client: SonarrClient):
+    """Test editing language profiles."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/importlist/action/test",
-        "POST",
+        f"/api/{SONARR_API}/languageprofile",
+        "PUT",
+        aresponses.Response(
+            status=202,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = SonarrLanguage("test")
+    data = await sonarr_client.async_edit_language(data)
+    assert isinstance(data, SonarrLanguage)
+
+
+@pytest.mark.asyncio
+async def test_async_delete_language(aresponses, sonarr_client: SonarrClient):
+    """Test deleting language profiles."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/languageprofile/0",
+        "DELETE",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
-    data = SonarrImportList({"name": "test"})
-    data = await sonarr_client.async_importlist_action(data)
-    assert isinstance(data, SonarrImportList)
+    await sonarr_client.async_delete_language(0)
+
+
+@pytest.mark.asyncio
+async def test_async_add_language(aresponses, sonarr_client: SonarrClient):
+    """Test adding language profiles."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/languageprofile",
+        "POST",
+        aresponses.Response(
+            status=201,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    data = SonarrLanguage("test")
+    data = await sonarr_client.async_add_language(data)
+    assert isinstance(data, SonarrLanguage)
 
 
 @pytest.mark.asyncio
@@ -1343,7 +1594,7 @@ async def test_async_add_notification(aresponses, sonarr_client: SonarrClient):
         f"/api/{SONARR_API}/notification",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
@@ -1360,7 +1611,7 @@ async def test_async_test_notifications(aresponses, sonarr_client: SonarrClient)
         f"/api/{SONARR_API}/notification/test",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1374,7 +1625,7 @@ async def test_async_test_notifications(aresponses, sonarr_client: SonarrClient)
         f"/api/{SONARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation.json"),
         ),
@@ -1387,7 +1638,7 @@ async def test_async_test_notifications(aresponses, sonarr_client: SonarrClient)
         f"/api/{SONARR_API}/notification/testall",
         "POST",
         aresponses.Response(
-            status=200,
+            status=201,
             headers={"Content-Type": "application/json"},
             text=load_fixture("common/validation-failed.json"),
         ),
@@ -1401,9 +1652,6 @@ async def test_not_implemented(sonarr_client: SonarrClient):
     """Test methods not implemented by the API."""
     with pytest.raises(NotImplementedError):
         await sonarr_client.async_get_localization()
-
-    with pytest.raises(NotImplementedError):
-        await sonarr_client.async_get_languages()
 
     with pytest.raises(NotImplementedError):
         await sonarr_client.async_delete_metadata_profile(0)

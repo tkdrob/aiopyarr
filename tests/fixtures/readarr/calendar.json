@@ -8,7 +8,7 @@
     "overview": "string",
     "authorId": 0,
     "foreignBookId": "string",
-    "titleSlug": "string",
+    "titleSlug": "0",
     "monitored": true,
     "anyEditionOk": true,
     "ratings": {
@@ -29,7 +29,7 @@
       "authorName": "string",
       "authorNameLastFirst": "string",
       "foreignAuthorId": "string",
-      "titleSlug": "string",
+      "titleSlug": "0",
       "overview": "string",
       "disambiguation": "string",
       "links": [
@@ -42,7 +42,7 @@
         "id": 0,
         "authorMetadataId": 0,
         "foreignBookId": "string",
-        "titleSlug": "string",
+        "titleSlug": "0",
         "title": "string",
         "releaseDate": "2021-12-11T09:30:28.338Z",
         "links": [
@@ -72,7 +72,7 @@
           "value": {
             "id": 0,
             "foreignAuthorId": "string",
-            "titleSlug": "string",
+            "titleSlug": "0",
             "name": "string",
             "sortName": "string",
             "nameLastFirst": "string",
@@ -136,7 +136,7 @@
               "value": {
                 "id": 0,
                 "foreignAuthorId": "string",
-                "titleSlug": "string",
+                "titleSlug": "0",
                 "name": "string",
                 "sortName": "string",
                 "nameLastFirst": "string",
@@ -251,7 +251,7 @@
               "id": 0,
               "bookId": 0,
               "foreignEditionId": "string",
-              "titleSlug": "string",
+              "titleSlug": "0",
               "isbn13": "string",
               "asin": "string",
               "title": "string",
@@ -342,7 +342,7 @@
                           "value": {
                             "id": 0,
                             "foreignAuthorId": "string",
-                            "titleSlug": "string",
+                            "titleSlug": "0",
                             "name": "string",
                             "sortName": "string",
                             "nameLastFirst": "string",
@@ -517,7 +517,7 @@
                     "value": {
                       "id": 0,
                       "foreignAuthorId": "string",
-                      "titleSlug": "string",
+                      "titleSlug": "0",
                       "name": "string",
                       "sortName": "string",
                       "nameLastFirst": "string",
@@ -673,7 +673,7 @@
         "id": 0,
         "authorMetadataId": 0,
         "foreignBookId": "string",
-        "titleSlug": "string",
+        "titleSlug": "0",
         "title": "string",
         "releaseDate": "2021-12-11T09:30:28.339Z",
         "links": [
@@ -703,7 +703,7 @@
           "value": {
             "id": 0,
             "foreignAuthorId": "string",
-            "titleSlug": "string",
+            "titleSlug": "0",
             "name": "string",
             "sortName": "string",
             "nameLastFirst": "string",
@@ -767,7 +767,7 @@
               "value": {
                 "id": 0,
                 "foreignAuthorId": "string",
-                "titleSlug": "string",
+                "titleSlug": "0",
                 "name": "string",
                 "sortName": "string",
                 "nameLastFirst": "string",
@@ -882,7 +882,7 @@
               "id": 0,
               "bookId": 0,
               "foreignEditionId": "string",
-              "titleSlug": "string",
+              "titleSlug": "0",
               "isbn13": "string",
               "asin": "string",
               "title": "string",
@@ -971,7 +971,7 @@
                           "value": {
                             "id": 0,
                             "foreignAuthorId": "string",
-                            "titleSlug": "string",
+                            "titleSlug": "0",
                             "name": "string",
                             "sortName": "string",
                             "nameLastFirst": "string",
@@ -1146,7 +1146,7 @@
                     "value": {
                       "id": 0,
                       "foreignAuthorId": "string",
-                      "titleSlug": "string",
+                      "titleSlug": "0",
                       "name": "string",
                       "sortName": "string",
                       "nameLastFirst": "string",
@@ -1368,7 +1368,7 @@
         "id": 0,
         "bookId": 0,
         "foreignEditionId": "string",
-        "titleSlug": "string",
+        "titleSlug": "0",
         "isbn13": "string",
         "asin": "string",
         "title": "string",

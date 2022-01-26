@@ -7,11 +7,11 @@ from datetime import datetime
 
 from .base import BaseModel, get_datetime
 from .request_common import (
-    _Common2,
     _Common3,
     _Common4,
     _Common5,
     _Common6,
+    _Common9,
     _CommonAttrs,
     _HistoryCommon,
     _Quality,
@@ -57,43 +57,36 @@ class _SonarrImages(_Common5):
 
 
 @dataclass(init=False)
-class _SonarrSeries2(_Common6):
+class _SonarrSeries2(_Common6, _Common9):
     """Sonarr parse attributes."""
 
     added: datetime | None = None
     airTime: str | None = None
-    certification: str | None = None
     cleanTitle: str | None = None
     ended: bool | None = None
     firstAired: datetime | None = None
     folder: str | None = None
-    genres: list[str] | None = None
     id: int | None = None
     images: list[_SonarrImages] | None = None
-    imdbId: str | None = None
     languageProfileId: int | None = None
     lastInfoSync: datetime | None = None
     network: str | None = None
     path: str | None = None
     qualityProfileId: int | None = None
     ratings: _Ratings | None = None
-    runtime: int | None = None
     seasonFolder: bool | None = None
     seasons: list[_SonarrSeriesSeason] | None = None
     seriesType: str | None = None
     sortTitle: str | None = None
     status: str | None = None
     tags: list[int | None] | None = None
-    title: str | None = None
     titleSlug: int | None = None
     tvdbId: int | None = None
     tvMazeId: int | None = None
     tvRageId: int | None = None
     useSceneNumbering: bool | None = None
-    year: int | None = None
 
     def __post_init__(self):
-        super().__post_init__()
         self.images = [_SonarrImages(image) for image in self.images or []]
         self.ratings = _Ratings(self.ratings) or {}
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
@@ -122,12 +115,18 @@ class _SonarrEpisodeFile(_QualityCommon):
 
 
 @dataclass(init=False)
-class _SonarrCommon(_SonarrCommon2):
+class _SonarrEpisodeMonitor(_SonarrCommon2):
     """Sonarr common attributes."""
 
     absoluteEpisodeNumber: int | None = None
-    episodeFile: _SonarrEpisodeFile | None = None
     unverifiedSceneNumbering: bool | None = None
+
+
+@dataclass(init=False)
+class _SonarrCommon(_SonarrEpisodeMonitor):
+    """Sonarr common attributes."""
+
+    episodeFile: _SonarrEpisodeFile | None = None
 
     def __post_init__(self):
         super().__post_init__()
@@ -135,7 +134,7 @@ class _SonarrCommon(_SonarrCommon2):
 
 
 @dataclass(init=False)
-class _SonarrHistoryRecordData(_Common4, _HistoryCommon):
+class _SonarrEpisodeHistoryData(_Common4, _HistoryCommon):
     """Sonarr history record data attributes."""
 
     approved: bool | None = None
@@ -201,25 +200,6 @@ class _SonarrSeriesCommon(_SonarrSeries2):
 
 
 @dataclass(init=False)
-class _SonarrHistoryRecord(_Common2, _QualityCommon):
-    """Sonarr history record attributes."""
-
-    data: _SonarrHistoryRecordData | None = None
-    date: datetime | None = None
-    episodeId: int | None = None
-    id: int | None = None
-    language: _Common3 | None = None
-    languageCutoffNotMet: bool | None = None
-    seriesId: int | None = None
-    sourceTitle: str | None = None
-
-    def __post_init__(self):
-        super().__post_init__()
-        self.data = _SonarrHistoryRecordData(self.data) or {}
-        self.language = _Common3(self.language) or {}
-
-
-@dataclass(init=False)
 class _SonarrWantedMissingRecord(_SonarrCommon):
     """Sonarr wanted missing record attributes."""
 
@@ -269,3 +249,14 @@ class _SonarrAddOptions(BaseModel):
     ignoreEpisodesWithFiles: bool | None = None
     ignoreEpisodesWithoutFiles: bool | None = None
     searchForMissingEpisodes: bool | None = None
+
+
+@dataclass(init=False)
+class _SonarrLanguageItem(BaseModel):
+    """Sonarr language item attributes."""
+
+    language: _Common3 | None = None
+    allowed: bool | None = None
+
+    def __post_init__(self):
+        self.language = _Common3(self.language) or {}

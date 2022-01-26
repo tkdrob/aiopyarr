@@ -1,0 +1,10 @@
+[
+  {
+    "movieId": 0,
+    "movieFileId": 0,
+    "relativePath": "string",
+    "extension": ".srt",
+    "type": "subtitle",
+    "id": 0
+  }
+]
