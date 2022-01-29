@@ -225,19 +225,22 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_calendar(  # pylint: disable=too-many-arguments
         self,
-        start_date: datetime,
-        end_date: datetime,
-        calendarid: int | None = None,
+        start_date: datetime | None = None,
+        end_date: datetime | None = None,
+        albumid: int | None = None,
         unmonitored: bool = False,
     ) -> LidarrCalendar | list[LidarrCalendar]:
-        """Get calendar items."""
-        params = {
-            "start": start_date.strftime("%Y-%m-%d"),
-            "end": end_date.strftime("%Y-%m-%d"),
-            "unmonitored": str(unmonitored),
-        }
+        """Get calendar items.
+
+        albumid: Specify to get calendar of releases from album id
+        """
+        params = {"unmonitored": str(unmonitored)}
+        if start_date:
+            params["start"] = start_date.strftime("%Y-%m-%d")
+        if end_date:
+            params["end"] = end_date.strftime("%Y-%m-%d")
         return await self._async_request(
-            f"calendar{'' if calendarid is None else f'/{calendarid}'}",
+            f"calendar{'' if albumid is None else f'/{albumid}'}",
             params=params,
             datatype=LidarrCalendar,
         )

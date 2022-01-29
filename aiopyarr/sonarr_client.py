@@ -153,20 +153,26 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_get_calendar(
-        self, start_date: datetime | None = None, end_date: datetime | None = None
-    ) -> list[SonarrCalendar]:
-        """Get upcoming episodes, if start/end are not supplied episodes airing today.
+        self,
+        start_date: datetime | None = None,
+        end_date: datetime | None = None,
+        episodeid: int | None = None,
+    ) -> SonarrCalendar | list[SonarrCalendar]:
+        """Get upcoming episodes.
 
-        and tomorrow will be returned
+        If start/end not supplied episodes airing today and tomorrow will be returned
+        episodeid: Specify to get calendar info from episode id
         """
         params = {}
         if start_date:
-            params["start"] = (start_date.strftime("%Y-%m-%d"),)
+            params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
-            params["end"] = (end_date.strftime("%Y-%m-%d"),)
+            params["end"] = end_date.strftime("%Y-%m-%d")
 
         return await self._async_request(
-            "calendar", params=params, datatype=SonarrCalendar
+            f"calendar{'' if episodeid is None else f'/{episodeid}'}",
+            params=params,
+            datatype=SonarrCalendar,
         )
 
     async def async_sonarr_command(  # pylint: disable=too-many-arguments

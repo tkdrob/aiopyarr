@@ -142,7 +142,7 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/calendar?start=2020-11-30&end=2020-12-01&unmonitored=True",
+        f"/api/{RADARR_API}/calendar?unmonitored=True&start=2020-11-30&end=2020-12-01",
         "GET",
         aresponses.Response(
             status=200,

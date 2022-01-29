@@ -64,6 +64,18 @@ async def test_async_get_calendar(aresponses, sonarr_client: SonarrClient):
     assert data[0].downloading is False
     assert isinstance(data[0].id, int)
 
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/calendar/0",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+        ),
+        match_querystring=True,
+    )
+    await sonarr_client.async_get_calendar(episodeid=0)
+
 
 @pytest.mark.asyncio
 async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient):

@@ -614,7 +614,7 @@ async def test_async_get_calendar(aresponses, lidarr_client: LidarrClient) -> No
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/calendar?start=2020-11-30&end=2020-12-01&unmonitored=False",
+        f"/api/{LIDARR_API}/calendar?unmonitored=False&start=2020-11-30&end=2020-12-01",
         "GET",
         aresponses.Response(
             status=200,

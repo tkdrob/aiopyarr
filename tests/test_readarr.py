@@ -2733,7 +2733,7 @@ async def test_async_get_calendar(aresponses, readarr_client: ReadarrClient) -> 
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/calendar?start=2020-11-30&end=2020-12-01&unmonitored=False&includeAuthor=False",
+        f"/api/{READARR_API}/calendar?unmonitored=False&includeAuthor=False&start=2020-11-30&end=2020-12-01",
         "GET",
         aresponses.Response(
             status=200,

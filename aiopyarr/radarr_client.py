@@ -587,14 +587,17 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         )
 
     async def async_get_calendar(
-        self, start_date: datetime, end_date: datetime, unmonitored: bool = True
+        self,
+        start_date: datetime | None = None,
+        end_date: datetime | None = None,
+        unmonitored: bool = True,
     ) -> list[RadarrCalendar]:
         """Get a list of movies based on calendar parameters."""
-        params = {
-            "start": start_date.strftime("%Y-%m-%d"),
-            "end": end_date.strftime("%Y-%m-%d"),
-            "unmonitored": str(unmonitored),
-        }
+        params = {"unmonitored": str(unmonitored)}
+        if start_date:
+            params["start"] = start_date.strftime("%Y-%m-%d")
+        if end_date:
+            params["end"] = end_date.strftime("%Y-%m-%d")
         return await self._async_request(
             "calendar",
             params=params,
