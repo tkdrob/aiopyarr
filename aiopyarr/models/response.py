@@ -20,7 +20,7 @@ class PyArrResponse(BaseModel):  # pylint: disable=too-few-public-methods
     data: dict[str, Any] | list[dict[str, Any]] | None = None
     result: APIResult | None = None
 
-    def _generate_data(
+    def _generate_data(  # pylint: disable=no-self-use
         self, data: dict[str, Any] | list[dict[str, Any]], datatype: Any = None
     ) -> Any:
         """Generate data."""
