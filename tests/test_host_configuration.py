@@ -3,6 +3,7 @@
 from aiohttp.client import ClientSession
 import pytest
 
+from aiopyarr.const import HEADERS
 from aiopyarr.exceptions import ArrException
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
 from aiopyarr.radarr_client import RadarrClient
@@ -30,7 +31,6 @@ async def test_host_configuration(aresponses) -> None:
     async with ClientSession():
         client = RadarrClient(
             host_configuration=host_config,
-            user_agent="test",
             raw_response=True,
             api_ver="v4",
         )
@@ -46,8 +46,7 @@ async def test_host_configuration(aresponses) -> None:
     assert client._host.api_ver == "v4"
     url = client._host.api_url("test")
     assert url == "http://127.0.0.1:7000/api/v4/test"
-    assert client._session.headers["X-Api-Key"] == API_TOKEN
-    assert client._session.headers["User-Agent"] == "test"
+    assert HEADERS["X-Api-Key"] == API_TOKEN
 
     assert data[0]["freeSpace"]
     assert data[0]["label"]
@@ -73,7 +72,7 @@ async def test_host_configuration_with_hostname(aresponses) -> None:
         api_token=API_TOKEN, hostname="localhost", ipaddress="127.0.0.1", port=7000
     )
     async with ClientSession():
-        client = RadarrClient(host_configuration=host_config, user_agent="test")
+        client = RadarrClient(host_configuration=host_config)
         await client.async_get_system_status()
     assert client._host.api_token == API_TOKEN
     assert client._host.hostname == "localhost"
@@ -86,8 +85,7 @@ async def test_host_configuration_with_hostname(aresponses) -> None:
     assert client._host.api_ver == RADARR_API
     url = client._host.api_url("test")
     assert url == "http://localhost:7000/api/v3/test"
-    assert client._session.headers["X-Api-Key"] == API_TOKEN
-    assert client._session.headers["User-Agent"] == "test"
+    assert HEADERS["X-Api-Key"] == API_TOKEN
 
 
 @pytest.mark.asyncio
@@ -113,7 +111,7 @@ async def test_host_configuration_with_url(aresponses) -> None:
         url="http://localhost:7878",
     )
     async with ClientSession():
-        client = RadarrClient(host_configuration=host_config, user_agent="test")
+        client = RadarrClient(host_configuration=host_config)
         await client.async_get_system_status()
     assert client._host.api_token == API_TOKEN
     assert client._host.hostname is None
@@ -126,8 +124,7 @@ async def test_host_configuration_with_url(aresponses) -> None:
     assert client._host.api_ver == RADARR_API
     url = client._host.api_url("test")
     assert url == "http://localhost:7878/api/v3/test"
-    assert client._session.headers["X-Api-Key"] == API_TOKEN
-    assert client._session.headers["User-Agent"] == "test"
+    assert HEADERS["X-Api-Key"] == API_TOKEN
 
 
 @pytest.mark.asyncio
@@ -162,7 +159,7 @@ async def test_no_host_configuration_given(aresponses) -> None:
     assert client._host.base_api_path == "/radarr"
     assert client._host.url is None
     assert client._host.api_ver == RADARR_API
-    assert client._session.headers["X-Api-Key"] == API_TOKEN
+    assert HEADERS["X-Api-Key"] == API_TOKEN
 
 
 @pytest.mark.asyncio

@@ -76,7 +76,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     """Base class for API Client."""
 
     _close_session = False
-    _from_aenter = False
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -93,7 +92,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         ssl: bool | None = None,
         verify_ssl: bool | None = None,
         base_api_path: str | None = None,
-        user_agent: str | None = None,
     ) -> None:
         """Initialize."""
         if host_configuration is None:
@@ -116,11 +114,8 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         if base_api_path is not None:
             host_configuration.base_api_path = base_api_path
         host_configuration.api_ver = api_ver
-
         if session is None:
-            if user_agent:
-                HEADERS["User-Agent"] = user_agent
-            session = ClientSession(headers=HEADERS)
+            session = ClientSession()
             self._close_session = True
 
         self._host = host_configuration
@@ -130,7 +125,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
     async def __aenter__(self) -> RequestClient:
         """Async enter."""
-        self._from_aenter = True
         return self
 
     async def __aexit__(self, *exc_info) -> None:
@@ -154,8 +148,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 url=url,
                 params=params,
                 json=todict(data),
-                ssl=self._host.verify_ssl,
+                headers=HEADERS,
                 timeout=ClientTimeout(self._request_timeout),
+                ssl=self._host.verify_ssl,
             )
 
             if request.status >= 400:
@@ -208,15 +203,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     async def async_try_zeroconf(self) -> tuple[str, str, str]:
         """Get api information if login not required."""
         try:
-            async with ClientSession(headers=HEADERS_JS) as session:
-                data = await (
-                    await session.request(
-                        method=HTTPMethod.GET.value,
-                        url=self._host.api_url("initialize", True),
-                        ssl=self._host.verify_ssl,
-                        timeout=ClientTimeout(2),
-                    )
-                ).text()
+            data = await (
+                await self._session.request(
+                    method=HTTPMethod.GET.value,
+                    url=self._host.api_url("initialize", True),
+                    headers=HEADERS_JS,
+                    timeout=ClientTimeout(2),
+                    ssl=self._host.verify_ssl,
+                )
+            ).text()
 
             # Type ingored as we are already catching errors
             api_ver = str(search(r"apiRoot: '/api/(.*)'", data).group(1))  # type: ignore

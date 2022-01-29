@@ -75,7 +75,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         request_timeout: float = 30,
         raw_response: bool = False,
         api_ver: str = "v3",
-        user_agent: str | None = None,
     ) -> None:
         """Initialize Sonarr API."""
         super().__init__(
@@ -92,7 +91,6 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            user_agent,
         )
 
     async def async_get_episode_files(
