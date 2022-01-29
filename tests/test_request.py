@@ -13,7 +13,7 @@ from aiopyarr.exceptions import (
     ArrException,
 )
 from aiopyarr.lidarr_client import LidarrClient
-from aiopyarr.models.base import get_enum_value, todict
+from aiopyarr.models.base import get_enum_value
 from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.request import (
     AllowFingerprintingType,
@@ -74,7 +74,7 @@ async def test_loop() -> None:
 
 
 @pytest.mark.asyncio
-async def test_todict(aresponses, radarr_client: RadarrClient) -> None:
+async def test_attributes(aresponses, radarr_client: RadarrClient) -> None:
     """Test object conversion."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -88,12 +88,34 @@ async def test_todict(aresponses, radarr_client: RadarrClient) -> None:
         match_querystring=True,
     )
     data = await radarr_client.async_get_movies(movieid=1)
-    data = todict(data)
+    data = data.attributes
     assert data["added"] == "2018-12-28T05:56:49Z"
     assert data["alternateTitles"][0]["movieId"] == 1
     assert data["monitored"] is True
     assert data["sizeOnDisk"] == 0
     assert data["titleSlug"] == "0"
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/command",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/commands.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_commands()
+    data = data[0].attributes
+
+    assert data["name"] == "MessagingCleanup"
+    assert data["body"]["sendUpdatesToClient"] is False
+    assert data["body"]["completionMessage"] == "Completed"
+    assert data["body"]["lastExecutionTime"] == "2021-11-29T19:57:46Z"
+    assert data["body"]["trigger"] == CommandTriggerType.SCHEDULED.value
+    assert data["priority"] == CommandPriorityType.LOW.value
+    assert data["queued"] == "2021-11-29T20:03:16Z"
 
 
 def test_get_no_enum_value() -> None:

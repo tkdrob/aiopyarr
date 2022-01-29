@@ -7,6 +7,7 @@ from enum import Enum
 from re import search
 from typing import Any
 
+from ..const import ATTR_DATA
 from .const import (
     CONVERT_TO_BOOL,
     CONVERT_TO_DATETIME,
@@ -42,24 +43,30 @@ def get_enum_value(val: str) -> str | Enum:
     return val
 
 
-def todict(obj):
+def toraw(obj):
     """Convert object to dict."""
     if isinstance(obj, dict):
-        return {k: todict(v) for k, v in obj.items()}
+        return {k: toraw(v) for k, v in obj.items()}
     if hasattr(obj, "__iter__") and not isinstance(obj, str):
-        return [todict(v) for v in obj]
-    if hasattr(obj, "__dict__"):
-        return {
-            k: v
-            if isinstance(v, bool)
-            else str(v)
-            if k in CONVERT_TO_INTEGER
-            else todict(v)
-            for k, v in obj.__dict__.items()
-        }
+        return [toraw(v) for v in obj]
+    if hasattr(obj, "attributes"):
+        return obj.attributes
     if isinstance(obj, datetime):
         return f"{obj.isoformat()}Z"
     return obj
+
+
+def generate_data(
+    data: dict[str, Any] | list[dict[str, Any]], datatype: Any = None
+) -> Any:
+    """Generate data."""
+    if datatype is None:
+        return data
+
+    if isinstance(data, list):
+        return [datatype(item) for item in data]
+
+    return datatype(data)
 
 
 @dataclass(init=False)
@@ -72,10 +79,11 @@ class BaseModel:
         datatype: Any = None,
     ) -> None:
         """Init."""
+        self.basedata = None
         if isinstance(data, dict):
             for key, value in data.items():
-                if hasattr(self, key) and hasattr(self, "_generate_data"):
-                    value = self.__getattribute__("_generate_data")(value, datatype)
+                if key == ATTR_DATA:
+                    value = generate_data(value, datatype)
                 elif key in CONVERT_TO_DATETIME:
                     value = get_datetime(value)
                 elif key in CONVERT_TO_ENUM:
@@ -95,3 +103,15 @@ class BaseModel:
 
     def __post_init__(self):
         """Post init."""
+
+    @property
+    def attributes(self):
+        """Return attributes of the object."""
+        return {
+            k: v
+            if isinstance(v, bool)
+            else str(v)
+            if k in CONVERT_TO_INTEGER
+            else toraw(v)
+            for k, v in self.__dict__.items()
+        }

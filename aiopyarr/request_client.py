@@ -29,7 +29,7 @@ from .exceptions import (
     ArrException,
     ArrResourceNotFound,
 )
-from .models.base import todict
+from .models.base import BaseModel, toraw
 from .models.host_configuration import PyArrHostConfiguration
 from .models.request import (
     Command,
@@ -69,7 +69,6 @@ from .models.request import (
     UIConfig,
     Update,
 )
-from .models.response import PyArrResponse
 
 
 class RequestClient:  # pylint: disable=too-many-public-methods
@@ -147,7 +146,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 method=method.value,
                 url=url,
                 params=params,
-                json=todict(data),
+                json=toraw(data),
                 headers=HEADERS,
                 timeout=ClientTimeout(self._request_timeout),
                 ssl=self._host.verify_ssl,
@@ -166,15 +165,15 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
             _result: dict = await request.json()
 
-            response = PyArrResponse(
-                data={ATTR_DATA: _result},
-                datatype=datatype,
-            )
-
             LOGGER.debug("Requesting %s returned %s", url, _result)
 
             if self._raw_response:
                 return _result
+
+            response = BaseModel(
+                data={ATTR_DATA: _result},
+                datatype=datatype,
+            )
 
         except ClientError as exception:
             raise ArrConnectionException(
@@ -197,8 +196,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         except (Exception, BaseException) as ex:
             raise ArrException(self, ex) from ex
 
-        else:
-            return response.data
+        return response.basedata
 
     async def async_try_zeroconf(self) -> tuple[str, str, str]:
         """Get api information if login not required."""

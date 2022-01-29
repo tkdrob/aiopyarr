@@ -7,6 +7,7 @@ import pytest
 
 from aiopyarr.const import ATTR_DATA
 from aiopyarr.exceptions import ArrException
+from aiopyarr.models.base import BaseModel
 from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.readarr import (
     ReadarrAuthor,
@@ -45,7 +46,6 @@ from aiopyarr.models.request import (
     SortDirection,
     StatusType,
 )
-from aiopyarr.models.response import PyArrResponse
 from aiopyarr.readarr_client import ReadarrClient
 
 from . import READARR_API, load_fixture
@@ -6234,14 +6234,14 @@ async def test_async_get_tag_details(aresponses, readarr_client: ReadarrClient) 
 @pytest.mark.asyncio
 async def test_readarr_bookshelf() -> None:
     """Test readarr bookshelf model."""
-    item = PyArrResponse(
+    item = BaseModel(
         data={ATTR_DATA: json.loads(load_fixture("readarr/bookshelf.json"))},
         datatype=ReadarrBookshelf,
     )
-    assert isinstance(item.data, ReadarrBookshelf)
-    assert isinstance(item.data.authors[0].id, int)
-    assert item.data.authors[0].monitored is True
-    _value = item.data.authors[0].books[0]
+    assert isinstance(item.basedata, ReadarrBookshelf)
+    assert isinstance(item.basedata.authors[0].id, int)
+    assert item.basedata.authors[0].monitored is True
+    _value = item.basedata.authors[0].books[0]
     assert isinstance(_value.id, int)
     assert _value.title == "string"
     assert _value.authorTitle == "string"
@@ -6257,7 +6257,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert isinstance(_value.pageCount, int)
     assert _value.genres[0] == "string"
-    _value = item.data.authors[0].books[0].author
+    _value = item.basedata.authors[0].books[0].author
     assert isinstance(_value.id, int)
     assert isinstance(_value.authorMetadataId, int)
     assert _value.status == "string"
@@ -6286,7 +6286,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.nextBook.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _value.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.nextBook.addOptions.searchForNewBook is True
-    _value = item.data.authors[0].books[0].author.nextBook.authorMetadata.value
+    _value = item.basedata.authors[0].books[0].author.nextBook.authorMetadata.value
     assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert isinstance(_value.titleSlug, int)
@@ -6307,7 +6307,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.genres[0] == "string"
     assert isinstance(_value.ratings.votes, int)
     assert isinstance(_value.ratings.value, float)
-    _value = item.data.authors[0].books[0].author.nextBook.author.value
+    _value = item.basedata.authors[0].books[0].author.nextBook.author.value
     assert isinstance(_value.id, int)
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
@@ -6368,7 +6368,7 @@ async def test_readarr_bookshelf() -> None:
     assert isinstance(_value.series, _ReadarrAuthorValueSeries)
     assert _value.name == "string"
     assert _value.foreignAuthorId == "string"
-    _book = item.data.authors[0].books[0].author.nextBook
+    _book = item.basedata.authors[0].books[0].author.nextBook
     assert isinstance(_book.editions, _ReadarrEditions)
     assert isinstance(_book.bookFiles, _ReadarrEditionsValueBookFiles)
     assert isinstance(_book.seriesLinks, _ReadarrSeriesLinks)
@@ -6390,7 +6390,7 @@ async def test_readarr_bookshelf() -> None:
     assert _book.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
     assert _book.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _book.addOptions.searchForNewBook is True
-    _value = item.data.authors[0].books[0].author.lastBook.authorMetadata.value
+    _value = item.basedata.authors[0].books[0].author.lastBook.authorMetadata.value
     assert isinstance(_value.id, int)
     assert _value.foreignAuthorId == "string"
     assert isinstance(_value.titleSlug, int)
@@ -6411,7 +6411,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.genres[0] == "string"
     assert isinstance(_value.ratings.votes, int)
     assert isinstance(_value.ratings.value, float)
-    _value = item.data.authors[0].books[0].author.lastBook.author.value
+    _value = item.basedata.authors[0].books[0].author.lastBook.author.value
     assert isinstance(_value.id, int)
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
@@ -6472,11 +6472,11 @@ async def test_readarr_bookshelf() -> None:
     assert isinstance(_value.series, _ReadarrAuthorValueSeries)
     assert _value.name == "string"
     assert _value.foreignAuthorId == "string"
-    _book = item.data.authors[0].books[0].author.lastBook
+    _book = item.basedata.authors[0].books[0].author.lastBook
     assert isinstance(_book.editions, _ReadarrEditions)
     assert isinstance(_book.bookFiles, _ReadarrEditionsValueBookFiles)
     assert isinstance(_book.seriesLinks, _ReadarrSeriesLinks)
-    _value = item.data.authors[0].books[0]
+    _value = item.basedata.authors[0].books[0]
     assert _value.author.images[0].url == "string"
     assert _value.author.images[0].coverType == ImageType.POSTER.value
     assert _value.author.remotePoster == "string"
@@ -6514,7 +6514,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.addOptions.searchForNewBook is True
     assert _value.remoteCover == "string"
-    _editions = item.data.authors[0].books[0].editions[0]
+    _editions = item.basedata.authors[0].books[0].editions[0]
     assert isinstance(_editions.id, int)
     assert isinstance(_editions.bookId, int)
     assert _editions.foreignEditionId == "string"
@@ -6539,10 +6539,10 @@ async def test_readarr_bookshelf() -> None:
     assert _editions.manualAdd is True
     assert _editions.remoteCover == "string"
     assert _editions.grabbed is True
-    assert item.data.authors[0].books[0].grabbed is True
-    assert item.data.monitoringOptions.monitor == MonitoringOptionsType.ALL.value
-    assert item.data.monitoringOptions.booksToMonitor[0] == "string"
-    assert item.data.monitoringOptions.monitored is True
+    assert item.basedata.authors[0].books[0].grabbed is True
+    assert item.basedata.monitoringOptions.monitor == MonitoringOptionsType.ALL.value
+    assert item.basedata.monitoringOptions.booksToMonitor[0] == "string"
+    assert item.basedata.monitoringOptions.monitored is True
 
 
 @pytest.mark.asyncio
