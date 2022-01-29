@@ -83,7 +83,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         request_timeout: float = 10,
         raw_response: bool = False,
         api_ver: str = "v1",
-        user_agent: str | None = None,
     ) -> None:
         """Initialize Readarr API."""
         super().__init__(
@@ -100,7 +99,6 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            user_agent,
         )
 
     async def async_get_authors(

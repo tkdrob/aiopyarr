@@ -78,7 +78,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         request_timeout: float = 10,
         raw_response: bool = False,
         api_ver: str = "v1",
-        user_agent: str | None = None,
     ) -> None:
         """Initialize Lidarr API."""
         super().__init__(
@@ -95,7 +94,6 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             ssl,
             verify_ssl,
             base_api_path,
-            user_agent,
         )
 
     async def async_get_albums(
