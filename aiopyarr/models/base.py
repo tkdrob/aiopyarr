@@ -72,11 +72,10 @@ class BaseModel:
         datatype: Any = None,
     ) -> None:
         """Init."""
-        self._datatype = datatype
         if isinstance(data, dict):
             for key, value in data.items():
                 if hasattr(self, key) and hasattr(self, "_generate_data"):
-                    value = self.__getattribute__("_generate_data")(value)
+                    value = self.__getattribute__("_generate_data")(value, datatype)
                 elif key in CONVERT_TO_DATETIME:
                     value = get_datetime(value)
                 elif key in CONVERT_TO_ENUM:
