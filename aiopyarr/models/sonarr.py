@@ -97,6 +97,13 @@ class SonarrSortKeys(str, Enum):
 class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
     """Sonarr calendar attributes."""
 
+    series: _SonarrSeries2 | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.series = _SonarrSeries2(self.series) or {}
+
 
 @dataclass(init=False)
 class SonarrEpisode(_SonarrCommon):
