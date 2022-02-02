@@ -177,7 +177,7 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             params["includeSeries"] = "True"
 
         if include_episode_file:
-            params["includeEpisodeFile"] =  "True"
+            params["includeEpisodeFile"] = "True"
 
         if include_unmonitored:
             params["includeUnmonitored"] = "True"
