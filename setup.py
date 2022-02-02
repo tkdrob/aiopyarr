@@ -9,7 +9,7 @@ setup(
     version="master",
     author="Robert Hillis",
     author_email="tkdrob4390@yahoo.com",
-    description="An Asynchronous Sonarr and Radarr API for Python.",
+    description="An Asynchronous Lidarr, Radarr, Readarr, Sonarr APIs for Python.",
     long_description=readme,
     long_description_content_type="text/markdown",
     url="https://github.com/tkdrob/aiopyarr",
