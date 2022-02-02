@@ -157,13 +157,22 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         start_date: datetime | None = None,
         end_date: datetime | None = None,
         episodeid: int | None = None,
+        include_series: bool = False,
+        include_episode_file: bool = False,
+        include_episode_images: bool = False,
+        include_unmonitored: bool = False,
     ) -> SonarrCalendar | list[SonarrCalendar]:
         """Get upcoming episodes.
 
         If start/end not supplied episodes airing today and tomorrow will be returned
         episodeid: Specify to get calendar info from episode id
         """
-        params = {}
+        params = {
+            "includeSeries": str(include_series),
+            "includeEpisodeFile": str(include_episode_file),
+            "includeEpisodeImages": str(include_episode_images),
+            "includeUnmonitored": str(include_unmonitored),
+        }
         if start_date:
             params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
