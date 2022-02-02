@@ -78,6 +78,116 @@ async def test_async_get_calendar(aresponses, sonarr_client: SonarrClient):
 
 
 @pytest.mark.asyncio
+async def test_async_get_calendar_extended(aresponses, sonarr_client: SonarrClient):
+    """Test getting calendar sith extended parameters."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/calendar?start=2020-11-30&end=2020-12-01&includeSeries=True&includeEpisodeFile=True&includeUnmonitored=True",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/calendar-extended.json"),
+        ),
+        match_querystring=True,
+    )
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = await sonarr_client.async_get_calendar(
+        start_date=start,
+        end_date=end,
+        include_series=True,
+        include_episode_file=True,
+        include_unmonitored=True,
+    )
+
+    assert isinstance(data[0].seriesId, int)
+    assert isinstance(data[0].episodeFileId, int)
+    assert isinstance(data[0].seasonNumber, int)
+    assert isinstance(data[0].episodeNumber, int)
+    assert data[0].title == "string"
+    assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
+    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30)
+    assert data[0].overview == "string"
+    assert data[0].hasFile is True
+    assert data[0].monitored is True
+    assert isinstance(data[0].sceneEpisodeNumber, int)
+    assert isinstance(data[0].sceneSeasonNumber, int)
+    assert isinstance(data[0].tvDbEpisodeId, int)
+    assert data[0].unverifiedSceneNumbering is False
+    assert data[0].downloading is False
+    assert isinstance(data[0].id, int)
+
+    assert isinstance(data[0].episodeFile.seriesId, int)
+    assert isinstance(data[0].episodeFile.seasonNumber, int)
+    assert data[0].episodeFile.relativePath == "string"
+    assert data[0].episodeFile.path == "string"
+    assert isinstance(data[0].episodeFile.size, int)
+    assert data[0].episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081)
+    assert data[0].episodeFile.releaseGroup == "string"
+    assert isinstance(data[0].episodeFile.language.id, int)
+    assert data[0].episodeFile.language.name == "string"
+    assert isinstance(data[0].episodeFile.quality.quality.id, int)
+    assert data[0].episodeFile.quality.quality.name == "string"
+    assert data[0].episodeFile.quality.quality.source == "string"
+    assert isinstance(data[0].episodeFile.quality.quality.resolution, int)
+    assert isinstance(data[0].episodeFile.quality.revision.version, int)
+    assert isinstance(data[0].episodeFile.quality.revision.real, int)
+    assert data[0].episodeFile.quality.revision.isRepack is False
+    assert isinstance(data[0].episodeFile.mediaInfo.audioBitrate, int)
+    assert isinstance(data[0].episodeFile.mediaInfo.audioChannels, float)
+    assert data[0].episodeFile.mediaInfo.audioCodec == "string"
+    assert data[0].episodeFile.mediaInfo.audioLanguages == "string"
+    assert isinstance(data[0].episodeFile.mediaInfo.audioStreamCount, int)
+    assert isinstance(data[0].episodeFile.mediaInfo.videoBitDepth, int)
+    assert isinstance(data[0].episodeFile.mediaInfo.videoBitrate, int)
+    assert data[0].episodeFile.mediaInfo.videoCodec == "string"
+    assert isinstance(data[0].episodeFile.mediaInfo.videoFps, float)
+    assert data[0].episodeFile.mediaInfo.resolution == "string"
+    assert data[0].episodeFile.mediaInfo.runTime == "00:00"
+    assert data[0].episodeFile.mediaInfo.scanType == "string"
+    assert data[0].episodeFile.mediaInfo.subtitles == "string"
+    assert data[0].episodeFile.qualityCutoffNotMet is False
+    assert data[0].episodeFile.languageCutoffNotMet is False
+
+    assert data[0].series
+    assert data[0].series.title == "string"
+    assert data[0].series.sortTitle == "string"
+    assert data[0].series.status == "string"
+    assert data[0].series.ended is True
+    assert data[0].series.overview == "string"
+    assert data[0].series.network == "string"
+    assert data[0].series.airTime == "00:00"
+    assert data[0].series.images[0].coverType == ImageType.POSTER.value
+    assert data[0].series.images[0].url == "string"
+    assert isinstance(data[0].series.seasons[0].seasonNumber, int)
+    assert data[0].series.seasons[0].monitored is False
+    assert isinstance(data[0].series.year, int)
+    assert data[0].series.path == "string"
+    assert isinstance(data[0].series.qualityProfileId, int)
+    assert isinstance(data[0].series.languageProfileId, int)
+    assert data[0].series.seasonFolder is True
+    assert data[0].series.monitored is True
+    assert data[0].series.useSceneNumbering is False
+    assert isinstance(data[0].series.runtime, int)
+    assert isinstance(data[0].series.tvdbId, int)
+    assert isinstance(data[0].series.tvRageId, int)
+    assert isinstance(data[0].series.tvMazeId, int)
+    assert data[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data[0].series.seriesType == "string"
+    assert data[0].series.cleanTitle == "string"
+    assert data[0].series.imdbId == "string"
+    assert isinstance(data[0].series.titleSlug, int)
+    assert data[0].series.certification == "string"
+    assert data[0].series.genres == ["string"]
+    assert data[0].series.tags == [0]
+    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert isinstance(data[0].series.ratings.votes, int)
+    assert isinstance(data[0].series.ratings.value, float)
+    assert isinstance(data[0].series.id, int)
+
+
+@pytest.mark.asyncio
 async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient):
     """Test getting episodes."""
     aresponses.add(
