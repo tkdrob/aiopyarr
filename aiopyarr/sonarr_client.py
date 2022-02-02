@@ -167,12 +167,19 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         If start/end not supplied episodes airing today and tomorrow will be returned
         episodeid: Specify to get calendar info from episode id
         """
-        params = {
-            "includeSeries": str(include_series),
-            "includeEpisodeFile": str(include_episode_file),
-            "includeEpisodeImages": str(include_episode_images),
-            "includeUnmonitored": str(include_unmonitored),
-        }
+        params = {}
+        if include_series:
+            params["includeSeries"] = "True"
+
+        if include_episode_file:
+            params["includeEpisodeFile"] = "True"
+
+        if include_episode_images:
+            params["includeEpisodeImages"] = "True"
+
+        if include_unmonitored:
+            params["includeUnmonitored"] = "True"
+
         if start_date:
             params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
