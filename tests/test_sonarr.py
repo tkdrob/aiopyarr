@@ -937,41 +937,41 @@ async def test_async_get_wanted_extended(aresponses, sonarr_client: SonarrClient
     assert data.records[0].unverifiedSceneNumbering is False
     assert isinstance(data.records[0].id, int)
 
-    assert data[0].series
-    assert data[0].series.title == "string"
-    assert data[0].series.sortTitle == "string"
-    assert data[0].series.status == "string"
-    assert data[0].series.ended is True
-    assert data[0].series.overview == "string"
-    assert data[0].series.network == "string"
-    assert data[0].series.airTime == "00:00"
-    assert data[0].series.images[0].coverType == ImageType.POSTER.value
-    assert data[0].series.images[0].url == "string"
-    assert isinstance(data[0].series.seasons[0].seasonNumber, int)
-    assert data[0].series.seasons[0].monitored is False
-    assert isinstance(data[0].series.year, int)
-    assert data[0].series.path == "string"
-    assert isinstance(data[0].series.qualityProfileId, int)
-    assert isinstance(data[0].series.languageProfileId, int)
-    assert data[0].series.seasonFolder is True
-    assert data[0].series.monitored is True
-    assert data[0].series.useSceneNumbering is False
-    assert isinstance(data[0].series.runtime, int)
-    assert isinstance(data[0].series.tvdbId, int)
-    assert isinstance(data[0].series.tvRageId, int)
-    assert isinstance(data[0].series.tvMazeId, int)
-    assert data[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
-    assert data[0].series.seriesType == "string"
-    assert data[0].series.cleanTitle == "string"
-    assert data[0].series.imdbId == "string"
-    assert isinstance(data[0].series.titleSlug, int)
-    assert data[0].series.certification == "string"
-    assert data[0].series.genres == ["string"]
-    assert data[0].series.tags == [0]
-    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
-    assert isinstance(data[0].series.ratings.votes, int)
-    assert isinstance(data[0].series.ratings.value, float)
-    assert isinstance(data[0].series.id, int)
+    assert data.records[0].series
+    assert data.records[0].series.title == "string"
+    assert data.records[0].series.sortTitle == "string"
+    assert data.records[0].series.status == "string"
+    assert data.records[0].series.ended is True
+    assert data.records[0].series.overview == "string"
+    assert data.records[0].series.network == "string"
+    assert data.records[0].series.airTime == "00:00"
+    assert data.records[0].series.images[0].coverType == ImageType.POSTER.value
+    assert data.records[0].series.images[0].url == "string"
+    assert isinstance(data.records[0].series.seasons[0].seasonNumber, int)
+    assert data.records[0].series.seasons[0].monitored is False
+    assert isinstance(data.records[0].series.year, int)
+    assert data.records[0].series.path == "string"
+    assert isinstance(data.records[0].series.qualityProfileId, int)
+    assert isinstance(data.records[0].series.languageProfileId, int)
+    assert data.records[0].series.seasonFolder is True
+    assert data.records[0].series.monitored is True
+    assert data.records[0].series.useSceneNumbering is False
+    assert isinstance(data.records[0].series.runtime, int)
+    assert isinstance(data.records[0].series.tvdbId, int)
+    assert isinstance(data.records[0].series.tvRageId, int)
+    assert isinstance(data.records[0].series.tvMazeId, int)
+    assert data.records[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data.records[0].series.seriesType == "string"
+    assert data.records[0].series.cleanTitle == "string"
+    assert data.records[0].series.imdbId == "string"
+    assert isinstance(data.records[0].series.titleSlug, int)
+    assert data.records[0].series.certification == "string"
+    assert data.records[0].series.genres == ["string"]
+    assert data.records[0].series.tags == [0]
+    assert data.records[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert isinstance(data.records[0].series.ratings.votes, int)
+    assert isinstance(data.records[0].series.ratings.value, float)
+    assert isinstance(data.records[0].series.id, int)
 
 
 @pytest.mark.asyncio
