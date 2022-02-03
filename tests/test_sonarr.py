@@ -912,7 +912,7 @@ async def test_async_get_wanted_extended(aresponses, sonarr_client: SonarrClient
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
-            text=load_fixture("sonarr/wantedmissing.json"),
+            text=load_fixture("sonarr/wantedmissing-extended.json"),
         ),
         match_querystring=True,
     )
