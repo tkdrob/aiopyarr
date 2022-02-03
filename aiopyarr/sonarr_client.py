@@ -335,12 +335,13 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     # POST history/failed
 
-    async def async_get_wanted(
+    async def async_get_wanted(  # pylint: disable=too-many-arguments
         self,
         page: int = 1,
         page_size: int = 10,
         sort_key: SonarrSortKeys = SonarrSortKeys.AIR_DATE_UTC,
         sort_dir: SortDirection = SortDirection.DEFAULT,
+        include_series: bool = False,
     ) -> SonarrWantedMissing:
         """Get missing episode (episodes without files).
 
@@ -356,6 +357,10 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             PAGE_SIZE: page_size,
             SORT_DIRECTION: sort_dir.value,
         }
+
+        if include_series:
+            params["includeSeries"] = "True"
+
         return await self._async_request(
             "wanted/missing",
             params=params,
