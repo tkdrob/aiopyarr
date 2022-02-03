@@ -206,7 +206,13 @@ class _SonarrWantedMissingRecord(_SonarrCommon):
     downloading: bool | None = None
     sceneEpisodeNumber: int | None = None
     sceneSeasonNumber: int | None = None
+    series: _SonarrSeries2 | None = None
     tvDbEpisodeId: int | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.series = _SonarrSeries2(self.series) or {}
 
 
 @dataclass(init=False)
