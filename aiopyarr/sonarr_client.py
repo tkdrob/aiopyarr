@@ -152,11 +152,14 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=SonarrQueueDetail,
         )
 
-    async def async_get_calendar(
+    async def async_get_calendar(  # pylint: disable=too-many-arguments
         self,
         start_date: datetime | None = None,
         end_date: datetime | None = None,
         episodeid: int | None = None,
+        include_series: bool = False,
+        include_episode_file: bool = False,
+        include_unmonitored: bool = False,
     ) -> SonarrCalendar | list[SonarrCalendar]:
         """Get upcoming episodes.
 
@@ -164,10 +167,20 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         episodeid: Specify to get calendar info from episode id
         """
         params = {}
+
         if start_date:
             params["start"] = start_date.strftime("%Y-%m-%d")
         if end_date:
             params["end"] = end_date.strftime("%Y-%m-%d")
+
+        if include_series:
+            params["includeSeries"] = "True"
+
+        if include_episode_file:
+            params["includeEpisodeFile"] = "True"
+
+        if include_unmonitored:
+            params["includeUnmonitored"] = "True"
 
         return await self._async_request(
             f"calendar{'' if episodeid is None else f'/{episodeid}'}",
