@@ -903,6 +903,78 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
 
 
 @pytest.mark.asyncio
+async def test_async_get_wanted_extended(aresponses, sonarr_client: SonarrClient):
+    """Test getting wanted."""
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=episode.airDateUtc&page=1&pageSize=10&sortDirection=default&includeSeries=True",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/wantedmissing-extended.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_get_wanted(include_series=True)
+
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
+    assert data.sortKey == SonarrSortKeys.AIR_DATE_UTC.value
+    assert data.sortDirection == SortDirection.DEFAULT.value
+    assert isinstance(data.totalRecords, int)
+    assert isinstance(data.records[0].seriesId, int)
+    assert isinstance(data.records[0].episodeFileId, int)
+    assert isinstance(data.records[0].seasonNumber, int)
+    assert isinstance(data.records[0].episodeNumber, int)
+    assert data.records[0].title == "string"
+    assert data.records[0].airDate == datetime(2010, 3, 7, 0, 0)
+    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0)
+    assert data.records[0].overview == "string"
+    assert data.records[0].hasFile is False
+    assert data.records[0].monitored is True
+    assert isinstance(data.records[0].absoluteEpisodeNumber, int)
+    assert data.records[0].unverifiedSceneNumbering is False
+    assert isinstance(data.records[0].id, int)
+
+    assert data.records[0].series
+    assert data.records[0].series.title == "string"
+    assert data.records[0].series.sortTitle == "string"
+    assert data.records[0].series.status == "string"
+    assert data.records[0].series.ended is True
+    assert data.records[0].series.overview == "string"
+    assert data.records[0].series.network == "string"
+    assert data.records[0].series.airTime == "00:00"
+    assert data.records[0].series.images[0].coverType == ImageType.POSTER.value
+    assert data.records[0].series.images[0].url == "string"
+    assert isinstance(data.records[0].series.seasons[0].seasonNumber, int)
+    assert data.records[0].series.seasons[0].monitored is False
+    assert isinstance(data.records[0].series.year, int)
+    assert data.records[0].series.path == "string"
+    assert isinstance(data.records[0].series.qualityProfileId, int)
+    assert isinstance(data.records[0].series.languageProfileId, int)
+    assert data.records[0].series.seasonFolder is True
+    assert data.records[0].series.monitored is True
+    assert data.records[0].series.useSceneNumbering is False
+    assert isinstance(data.records[0].series.runtime, int)
+    assert isinstance(data.records[0].series.tvdbId, int)
+    assert isinstance(data.records[0].series.tvRageId, int)
+    assert isinstance(data.records[0].series.tvMazeId, int)
+    assert data.records[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data.records[0].series.seriesType == "string"
+    assert data.records[0].series.cleanTitle == "string"
+    assert data.records[0].series.imdbId == "string"
+    assert isinstance(data.records[0].series.titleSlug, int)
+    assert data.records[0].series.certification == "string"
+    assert data.records[0].series.genres == ["string"]
+    assert data.records[0].series.tags == [0]
+    assert data.records[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert isinstance(data.records[0].series.ratings.votes, int)
+    assert isinstance(data.records[0].series.ratings.value, float)
+    assert isinstance(data.records[0].series.id, int)
+
+
+@pytest.mark.asyncio
 async def test_async_get_languages(aresponses, sonarr_client: SonarrClient):
     """Test getting language profiles."""
     aresponses.add(
