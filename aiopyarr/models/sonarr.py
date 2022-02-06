@@ -70,7 +70,7 @@ class SonarrEventType(Enum):
 class SonarrSortKeys(str, Enum):
     """Sonarr sort keys."""
 
-    AIR_DATE_UTC = "episode.airDateUtc"
+    AIR_DATE_UTC = "airDateUtc"
     DATE = DATE
     DOWNLOAD_CLIENT = "downloadClient"
     EPISODE = "episode"
