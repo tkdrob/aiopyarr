@@ -1,5 +1,6 @@
 aiohttp>=3.6.1,<4.0
 aresponses>=2.1.4
+attr
 black>=21.11b1
 isort>=5.10.1
 flake8>=4.0.1

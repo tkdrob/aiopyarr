@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+import attr
+
 from ..const import ALL
 from .base import BaseModel
 from .const import ProtocolType
@@ -206,10 +208,10 @@ class StatusType(str, Enum):
 class Diskspace(BaseModel):
     """Diskspace attributes."""
 
-    freeSpace: int | None = None
-    label: str | None = None
-    path: str | None = None
-    totalSpace: int | None = None
+    freeSpace: int = attr.ib(type=int)
+    label: str = attr.ib(type=str)
+    path: str = attr.ib(type=str)
+    totalSpace: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
@@ -227,11 +229,11 @@ class Logs(_RecordCommon):
 class LogFile(BaseModel):
     """Log file attributes."""
 
-    contentsUrl: str | None = None
-    downloadUrl: str | None = None
-    filename: str | None = None
-    id: int | None = None
-    lastWriteTime: datetime | None = None
+    contentsUrl: str = attr.ib(type=str)
+    downloadUrl: str = attr.ib(type=str)
+    filename: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    lastWriteTime: datetime = attr.ib(type=datetime)
 
 
 @dataclass(init=False)
@@ -243,19 +245,19 @@ class Tag(_Tag):
 class SystemBackup(_Common3):
     """System backup attributes."""
 
-    path: str | None = None
-    time: datetime | None = None
-    type: str | None = None
+    path: str = attr.ib(type=str)
+    time: datetime = attr.ib(type=datetime)
+    type: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class CustomFilter(BaseModel):
     """Custom filter attributes."""
 
-    id: int | None = None
+    id: int = attr.ib(type=int)
     filters: list[_CustomFilterAttr] | None = None
-    label: str | None = None
-    type: str | None = None
+    label: str = attr.ib(type=str)
+    type: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -266,9 +268,9 @@ class CustomFilter(BaseModel):
 class RootFolder(BaseModel):
     """Root folder attributes."""
 
-    freeSpace: int | None = None
-    id: int | None = None
-    path: str | None = None
+    freeSpace: int = attr.ib(type=int)
+    id: int = attr.ib(type=int)
+    path: str = attr.ib(type=str)
     unmappedFolders: list[FilesystemFolder] | None = None
 
     def __post_init__(self):
@@ -282,109 +284,109 @@ class RootFolder(BaseModel):
 class HostConfig(BaseModel):
     """Host config attributes."""
 
-    analyticsEnabled: bool | None = None
-    apiKey: str | None = None
-    authenticationMethod: str | None = None
-    backupFolder: str | None = None
-    backupInterval: int | None = None
-    backupRetention: int | None = None
-    bindAddress: str | None = None
-    branch: str | None = None
-    certificateValidation: str | None = None
-    consoleLogLevel: str | None = None
-    enableSsl: bool | None = None
-    id: int | None = None
-    launchBrowser: bool | None = None
-    logLevel: str | None = None
-    password: str | None = None
-    port: int | None = None
-    proxyBypassFilter: str | None = None
-    proxyBypassLocalAddresses: bool | None = None
-    proxyEnabled: bool | None = None
-    proxyHostname: str | None = None
-    proxyPassword: str | None = None
-    proxyPort: int | None = None
-    proxyType: str | None = None
-    proxyUsername: str | None = None
-    sslCertHash: str | None = None
-    sslCertPassword: str | None = None
-    sslCertPath: str | None = None
-    sslPort: int | None = None
-    updateAutomatically: bool | None = None
-    updateMechanism: str | None = None
-    updateScriptPath: str | None = None
-    urlBase: str | None = None
-    username: str | None = None
+    analyticsEnabled: bool = attr.ib(type=bool)
+    apiKey: str = attr.ib(type=str)
+    authenticationMethod: str = attr.ib(type=str)
+    backupFolder: str = attr.ib(type=str)
+    backupInterval: int = attr.ib(type=int)
+    backupRetention: int = attr.ib(type=int)
+    bindAddress: str = attr.ib(type=str)
+    branch: str = attr.ib(type=str)
+    certificateValidation: str = attr.ib(type=str)
+    consoleLogLevel: str = attr.ib(type=str)
+    enableSsl: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    launchBrowser: bool = attr.ib(type=bool)
+    logLevel: str = attr.ib(type=str)
+    password: str = attr.ib(type=str)
+    port: int = attr.ib(type=int)
+    proxyBypassFilter: str = attr.ib(type=str)
+    proxyBypassLocalAddresses: bool = attr.ib(type=bool)
+    proxyEnabled: bool = attr.ib(type=bool)
+    proxyHostname: str = attr.ib(type=str)
+    proxyPassword: str = attr.ib(type=str)
+    proxyPort: int = attr.ib(type=int)
+    proxyType: str = attr.ib(type=str)
+    proxyUsername: str = attr.ib(type=str)
+    sslCertHash: str = attr.ib(type=str)
+    sslCertPassword: str = attr.ib(type=str)
+    sslCertPath: str = attr.ib(type=str)
+    sslPort: int = attr.ib(type=int)
+    updateAutomatically: bool = attr.ib(type=bool)
+    updateMechanism: str = attr.ib(type=str)
+    updateScriptPath: str = attr.ib(type=str)
+    urlBase: str = attr.ib(type=str)
+    username: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class UIConfig(BaseModel):
     """UI config attributes."""
 
-    calendarWeekColumnHeader: str | None = None
-    enableColorImpairedMode: bool | None = None
-    firstDayOfWeek: int | None = None
-    id: int | None = None
-    longDateFormat: str | None = None
-    movieInfoLanguage: int | None = None
-    movieRuntimeFormat: str | None = None
-    shortDateFormat: str | None = None
-    showRelativeDates: bool | None = None
-    timeFormat: str | None = None
-    uiLanguage: int | None = None
+    calendarWeekColumnHeader: str = attr.ib(type=str)
+    enableColorImpairedMode: bool = attr.ib(type=bool)
+    firstDayOfWeek: int = attr.ib(type=int)
+    id: int = attr.ib(type=int)
+    longDateFormat: str = attr.ib(type=str)
+    movieInfoLanguage: int = attr.ib(type=int)
+    movieRuntimeFormat: str = attr.ib(type=str)
+    shortDateFormat: str = attr.ib(type=str)
+    showRelativeDates: bool = attr.ib(type=bool)
+    timeFormat: str = attr.ib(type=str)
+    uiLanguage: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class SystemStatus(BaseModel):
     """System status attributes."""
 
-    appData: str | None = None
-    authentication: str | None = None
-    branch: str | None = None
-    buildTime: datetime | None = None
-    isAdmin: bool | None = None
-    isDebug: bool | None = None
-    isDocker: bool | None = None
-    isLinux: bool | None = None
-    isMono: bool | None = None
-    isMonoRuntime: bool | None = None
-    isNetCore: bool | None = None
-    isOsx: bool | None = None
-    isProduction: bool | None = None
-    isUserInteractive: bool | None = None
-    isWindows: bool | None = None
-    migrationVersion: int | None = None
-    mode: str | None = None
-    osName: str | None = None
-    osVersion: str | None = None
-    packageUpdateMechanism: str | None = None
-    runtimeName: str | None = None
-    runtimeVersion: str | None = None
-    sqliteVersion: str | None = None
-    startTime: datetime | None = None
-    startupPath: str | None = None
-    urlBase: str | None = None
-    version: str | None = None
+    appData: str = attr.ib(type=str)
+    authentication: str = attr.ib(type=str)
+    branch: str = attr.ib(type=str)
+    buildTime: datetime = attr.ib(type=datetime)
+    isAdmin: bool = attr.ib(type=bool)
+    isDebug: bool = attr.ib(type=bool)
+    isDocker: bool = attr.ib(type=bool)
+    isLinux: bool = attr.ib(type=bool)
+    isMono: bool = attr.ib(type=bool)
+    isMonoRuntime: bool = attr.ib(type=bool)
+    isNetCore: bool = attr.ib(type=bool)
+    isOsx: bool = attr.ib(type=bool)
+    isProduction: bool = attr.ib(type=bool)
+    isUserInteractive: bool = attr.ib(type=bool)
+    isWindows: bool = attr.ib(type=bool)
+    migrationVersion: int = attr.ib(type=int)
+    mode: str = attr.ib(type=str)
+    osName: str = attr.ib(type=str)
+    osVersion: str = attr.ib(type=str)
+    packageUpdateMechanism: str = attr.ib(type=str)
+    runtimeName: str = attr.ib(type=str)
+    runtimeVersion: str = attr.ib(type=str)
+    sqliteVersion: str = attr.ib(type=str)
+    startTime: datetime = attr.ib(type=datetime)
+    startupPath: str = attr.ib(type=str)
+    urlBase: str = attr.ib(type=str)
+    version: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class Command(_Common3):
     """Command attributes."""
 
-    body: _CommandBody | None = None
-    commandName: str | None = None
-    duration: str | None = None
-    ended: datetime | None = None
-    lastExecutionTime: datetime | None = None
-    message: str | None = None
-    priority: str | None = None
-    queued: datetime | None = None
-    sendUpdatesToClient: bool | None = None
-    started: datetime | None = None
-    stateChangeTime: datetime | None = None
-    status: str | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
+    body: _CommandBody = attr.ib(type=_CommandBody)
+    commandName: str = attr.ib(type=str)
+    duration: str = attr.ib(type=str)
+    ended: datetime = attr.ib(type=datetime)
+    lastExecutionTime: datetime = attr.ib(type=datetime)
+    message: str = attr.ib(type=str)
+    priority: str = attr.ib(type=str)
+    queued: datetime = attr.ib(type=datetime)
+    sendUpdatesToClient: bool = attr.ib(type=bool)
+    started: datetime = attr.ib(type=datetime)
+    stateChangeTime: datetime = attr.ib(type=datetime)
+    status: str = attr.ib(type=str)
+    trigger: str = attr.ib(type=str)
+    updateScheduledTask: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -396,25 +398,25 @@ class Command(_Common3):
 class DownloadClient(_Common):
     """Download client attributes."""
 
-    configContract: str | None = None
-    enable: bool | None = None
-    id: int | None = None
-    priority: int | None = None
-    protocol: ProtocolType | None = None
-    tags: list[int | None] | None = None
+    configContract: str = attr.ib(type=str)
+    enable: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    priority: int = attr.ib(type=int)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+    tags: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class DownloadClientConfig(BaseModel):
     """Download client configuration attributes."""
 
-    autoRedownloadFailed: bool | None = None
-    checkForFinishedDownloadInterval: int | None = None
-    downloadClientWorkingFolders: str | None = None
-    enableCompletedDownloadHandling: bool | None = None
-    id: int | None = None
-    removeCompletedDownloads: bool | None = None
-    removeFailedDownloads: bool | None = None
+    autoRedownloadFailed: bool = attr.ib(type=bool)
+    checkForFinishedDownloadInterval: int = attr.ib(type=int)
+    downloadClientWorkingFolders: str = attr.ib(type=str)
+    enableCompletedDownloadHandling: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    removeCompletedDownloads: bool = attr.ib(type=bool)
+    removeFailedDownloads: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
@@ -422,8 +424,8 @@ class Filesystem(BaseModel):
     """Filesystem attributes."""
 
     directories: list[_FilesystemDirectory] | None = None
-    files: list | None = None
-    parent: str | None = None
+    files: list = attr.ib(type=list)
+    parent: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -434,44 +436,44 @@ class Filesystem(BaseModel):
 class Health(BaseModel):
     """Health attributes."""
 
-    message: str | None = None
-    source: str | None = None
-    type: str | None = None
-    wikiUrl: str | None = None
+    message: str = attr.ib(type=str)
+    source: str = attr.ib(type=str)
+    type: str = attr.ib(type=str)
+    wikiUrl: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class ImportListExclusion(BaseModel):
     """Import list exclusion attributes."""
 
-    artistName: str | None = None
-    authorName: str | None = None
-    foreignId: str | None = None
+    artistName: str = attr.ib(type=str)
+    authorName: str = attr.ib(type=str)
+    foreignId: str = attr.ib(type=str)
     id: int | None = None
-    movieTitle: str | None = None
-    movieYear: int | None = None
-    title: str | None = None
-    tmdbId: int | None = None
-    tvdbId: int | None = None
+    movieTitle: str = attr.ib(type=str)
+    movieYear: int = attr.ib(type=int)
+    title: str = attr.ib(type=str)
+    tmdbId: int = attr.ib(type=int)
+    tvdbId: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class Indexer(_Common3):
     """Indexer attributes."""
 
-    configContract: str | None = None
-    enableAutomaticSearch: bool | None = None
-    enableInteractiveSearch: bool | None = None
-    enableRss: bool | None = None
+    configContract: str = attr.ib(type=str)
+    enableAutomaticSearch: bool = attr.ib(type=bool)
+    enableInteractiveSearch: bool = attr.ib(type=bool)
+    enableRss: bool = attr.ib(type=bool)
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    priority: int | None = None
-    protocol: ProtocolType | None = None
-    supportsRss: bool | None = None
-    supportsSearch: bool | None = None
-    tags: list[int | None] | None = None
+    implementation: str = attr.ib(type=str)
+    implementationName: str = attr.ib(type=str)
+    infoLink: str = attr.ib(type=str)
+    priority: int = attr.ib(type=int)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+    supportsRss: bool = attr.ib(type=bool)
+    supportsSearch: bool = attr.ib(type=bool)
+    tags: list[int] = attr.ib(type=list[int])
 
     def __post_init__(self):
         """Post init."""
@@ -482,29 +484,29 @@ class Indexer(_Common3):
 class IndexerConfig(BaseModel):
     """Indexer configuration attributes."""
 
-    allowHardcodedSubs: bool | None = None
-    availabilityDelay: int | None = None
-    id: int | None = None
-    maximumSize: int | None = None
-    minimumAge: int | None = None
-    preferIndexerFlags: bool | None = None
-    retention: int | None = None
-    rssSyncInterval: int | None = None
-    whitelistedHardcodedSubs: str | None = None
+    allowHardcodedSubs: bool = attr.ib(type=bool)
+    availabilityDelay: int = attr.ib(type=int)
+    id: int = attr.ib(type=int)
+    maximumSize: int = attr.ib(type=int)
+    minimumAge: int = attr.ib(type=int)
+    preferIndexerFlags: bool = attr.ib(type=bool)
+    retention: int = attr.ib(type=int)
+    rssSyncInterval: int = attr.ib(type=int)
+    whitelistedHardcodedSubs: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class Language(_Common3):
     """Language attributes."""
 
-    nameLower: str | None = None
+    nameLower: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class Localization(BaseModel):
     """Localization attributes."""
 
-    Strings: _LocalizationStrings | None = None
+    Strings: _LocalizationStrings = attr.ib(type=_LocalizationStrings)
 
     def __post_init__(self):
         """Post init."""
@@ -515,46 +517,46 @@ class Localization(BaseModel):
 class MediaManagementConfig(BaseModel):
     """Media management config attributes."""
 
-    allowFingerprinting: str | None = None
-    autoRenameFolders: bool | None = None
-    autoUnmonitorPreviouslyDownloadedBooks: bool | None = None
-    autoUnmonitorPreviouslyDownloadedEpisodes: bool | None = None
-    autoUnmonitorPreviouslyDownloadedMovies: bool | None = None
-    chmodFolder: str | None = None
-    chownGroup: str | None = None
-    copyUsingHardlinks: bool | None = None
-    createEmptyAuthorFolders: bool | None = None
-    createEmptyMovieFolders: bool | None = None
-    createEmptySeriesFolders: bool | None = None
-    deleteEmptyFolders: bool | None = None
-    downloadPropersAndRepacks: str | None = None
-    enableMediaInfo: bool | None = None
-    episodeTitleRequired: str | None = None
-    extraFileExtensions: str | None = None
-    fileDate: str | None = None
-    id: int | None = None
-    importExtraFiles: bool | None = None
-    minimumFreeSpaceWhenImporting: int | None = None
-    pathsDefaultStatic: bool | None = None
-    recycleBin: str | None = None
-    recycleBinCleanupDays: int | None = None
-    rescanAfterRefresh: str | None = None
-    setPermissionsLinux: bool | None = None
-    skipFreeSpaceCheckWhenImporting: bool | None = None
-    watchLibraryForChanges: bool | None = None
+    allowFingerprinting: str = attr.ib(type=str)
+    autoRenameFolders: bool = attr.ib(type=bool)
+    autoUnmonitorPreviouslyDownloadedBooks: bool = attr.ib(type=bool)
+    autoUnmonitorPreviouslyDownloadedEpisodes: bool = attr.ib(type=bool)
+    autoUnmonitorPreviouslyDownloadedMovies: bool = attr.ib(type=bool)
+    chmodFolder: str = attr.ib(type=str)
+    chownGroup: str = attr.ib(type=str)
+    copyUsingHardlinks: bool = attr.ib(type=bool)
+    createEmptyAuthorFolders: bool = attr.ib(type=bool)
+    createEmptyMovieFolders: bool = attr.ib(type=bool)
+    createEmptySeriesFolders: bool = attr.ib(type=bool)
+    deleteEmptyFolders: bool = attr.ib(type=bool)
+    downloadPropersAndRepacks: str = attr.ib(type=str)
+    enableMediaInfo: bool = attr.ib(type=bool)
+    episodeTitleRequired: str = attr.ib(type=str)
+    extraFileExtensions: str = attr.ib(type=str)
+    fileDate: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    importExtraFiles: bool = attr.ib(type=bool)
+    minimumFreeSpaceWhenImporting: int = attr.ib(type=int)
+    pathsDefaultStatic: bool = attr.ib(type=bool)
+    recycleBin: str = attr.ib(type=str)
+    recycleBinCleanupDays: int = attr.ib(type=int)
+    rescanAfterRefresh: str = attr.ib(type=str)
+    setPermissionsLinux: bool = attr.ib(type=bool)
+    skipFreeSpaceCheckWhenImporting: bool = attr.ib(type=bool)
+    watchLibraryForChanges: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class MetadataConfig(_Common3):
     """Metadata config attributes."""
 
-    configContract: str | None = None
-    enable: bool | None = None
+    configContract: str = attr.ib(type=str)
+    enable: bool = attr.ib(type=bool)
     fields: list[_MetadataFields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    tags: list[int | None] | None = None
+    implementation: str = attr.ib(type=str)
+    implementationName: str = attr.ib(type=str)
+    infoLink: str = attr.ib(type=str)
+    tags: list[int] = attr.ib(type=list[int])
 
     def __post_init__(self):
         """Post init."""
@@ -565,13 +567,13 @@ class MetadataConfig(_Common3):
 class QualityDefinition(BaseModel):
     """Quality definition attributes."""
 
-    id: int | None = None
-    maxSize: float | None = None
-    minSize: float | None = None
-    preferredSize: int | None = None
-    quality: _QualityInfo | None = None
-    title: str | None = None
-    weight: int | None = None
+    id: int = attr.ib(type=int)
+    maxSize: float = attr.ib(type=float)
+    minSize: float = attr.ib(type=float)
+    preferredSize: int = attr.ib(type=int)
+    quality: _QualityInfo = attr.ib(type=_QualityInfo)
+    title: str = attr.ib(type=str)
+    weight: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -582,13 +584,13 @@ class QualityDefinition(BaseModel):
 class QualityProfile(_Common3):
     """Quality profile attributes."""
 
-    cutoff: int | None = None
-    cutoffFormatScore: int | None = None
-    formatItems: list | None = None
+    cutoff: int = attr.ib(type=int)
+    cutoffFormatScore: int = attr.ib(type=int)
+    formatItems: list = attr.ib(type=list)
     items: list[_QualityProfileItems] | None = None
-    language: _Common3 | None = None
-    minFormatScore: int | None = None
-    upgradeAllowed: bool | None = None
+    language: _Common3 = attr.ib(type=_Common3)
+    minFormatScore: int = attr.ib(type=int)
+    upgradeAllowed: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -600,27 +602,27 @@ class QualityProfile(_Common3):
 class QueueStatus(BaseModel):
     """Queue status attributes."""
 
-    count: int | None = None
-    errors: bool | None = None
-    totalCount: int | None = None
-    unknownCount: int | None = None
-    unknownErrors: bool | None = None
-    unknownWarnings: bool | None = None
-    warnings: bool | None = None
+    count: int = attr.ib(type=int)
+    errors: bool = attr.ib(type=bool)
+    totalCount: int = attr.ib(type=int)
+    unknownCount: int = attr.ib(type=int)
+    unknownErrors: bool = attr.ib(type=bool)
+    unknownWarnings: bool = attr.ib(type=bool)
+    warnings: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class ReleaseProfile(BaseModel):
     """Release profile attributes."""
 
-    enabled: bool | None = None
-    id: int | None = None
-    ignored: str | None = None
-    includePreferredWhenRenaming: bool | None = None
-    indexerId: int | None = None
+    enabled: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    ignored: str = attr.ib(type=str)
+    includePreferredWhenRenaming: bool = attr.ib(type=bool)
+    indexerId: int = attr.ib(type=int)
     preferred: list[_ReleaseProfilePreferred] | None = None
-    required: str | None = None
-    tags: list[int | None] | None = None
+    required: str = attr.ib(type=str)
+    tags: list[int] = attr.ib(type=list[int])
 
     def __post_init__(self):
         """Post init."""
@@ -631,39 +633,39 @@ class ReleaseProfile(BaseModel):
 class RemotePathMapping(BaseModel):
     """Remote path mapping attributes."""
 
-    host: str | None = None
-    id: int | None = None
-    localPath: str | None = None
-    remotePath: str | None = None
+    host: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    localPath: str = attr.ib(type=str)
+    remotePath: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class SystemTask(_Common3):
     """System task attributes."""
 
-    interval: int | None = None
-    lastDuration: str | None = None
-    lastExecution: datetime | None = None
-    lastStartTime: datetime | None = None
-    nextExecution: datetime | None = None
-    taskName: str | None = None
+    interval: int = attr.ib(type=int)
+    lastDuration: str = attr.ib(type=str)
+    lastExecution: datetime = attr.ib(type=datetime)
+    lastStartTime: datetime = attr.ib(type=datetime)
+    nextExecution: datetime = attr.ib(type=datetime)
+    taskName: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class Update(BaseModel):
     """Update attributes."""
 
-    branch: str | None = None
-    changes: _UpdateChanges | None = None
-    fileName: str | None = None
-    hash: str | None = None
-    installable: bool | None = None
-    installed: bool | None = None
-    installedOn: datetime | None = None
-    latest: bool | None = None
-    releaseDate: datetime | None = None
-    url: str | None = None
-    version: str | None = None
+    branch: str = attr.ib(type=str)
+    changes: _UpdateChanges = attr.ib(type=_UpdateChanges)
+    fileName: str = attr.ib(type=str)
+    hash: str = attr.ib(type=str)
+    installable: bool = attr.ib(type=bool)
+    installed: bool = attr.ib(type=bool)
+    installedOn: datetime = attr.ib(type=datetime)
+    latest: bool = attr.ib(type=bool)
+    releaseDate: datetime = attr.ib(type=datetime)
+    url: str = attr.ib(type=str)
+    version: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -675,19 +677,19 @@ class Update(BaseModel):
 class DelayProfile(BaseModel):
     """Delay profile attributes."""
 
-    bypassIfHighestQuality: bool | None = None
-    enableTorrent: bool | None = None
-    enableUsenet: bool | None = None
-    id: int | None = None
-    order: int | None = None
-    preferredProtocol: ProtocolType | None = None
-    tags: list[int | None] | None = None
-    torrentDelay: int | None = None
-    usenetDelay: int | None = None
+    bypassIfHighestQuality: bool = attr.ib(type=bool)
+    enableTorrent: bool = attr.ib(type=bool)
+    enableUsenet: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    order: int = attr.ib(type=int)
+    preferredProtocol: ProtocolType = attr.ib(type=ProtocolType)
+    tags: list[int] = attr.ib(type=list[int])
+    torrentDelay: int = attr.ib(type=int)
+    usenetDelay: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
 
-    relativePath: str | None = None
+    relativePath: str = attr.ib(type=str)

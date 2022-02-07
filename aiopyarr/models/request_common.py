@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
+import attr
+
 from .base import BaseModel
 from .const import ProtocolType
 
@@ -13,31 +15,31 @@ from .const import ProtocolType
 class _SelectOption(BaseModel):
     """Select option attributes."""
 
-    name: str | None = None
-    order: int | None = None
-    value: str | list[str] | int | None = None
+    name: str = attr.ib(type=str)
+    order: int = attr.ib(type=int)
+    value: str | list[str] | int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _SelectOptionExtended(_SelectOption):
     """Select options extended attributes."""
 
-    dividerAfter: bool | None = None
+    dividerAfter: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class _Fields(_SelectOption):
     """Fields attributes."""
 
-    advanced: bool | None = None
-    errors: list | None = None
-    helpText: str | None = None
-    hidden: str | None = None
-    label: str | None = None
-    pending: bool | None = None
+    advanced: bool = attr.ib(type=bool)
+    errors: list = attr.ib(list)
+    helpText: str = attr.ib(type=str)
+    hidden: str = attr.ib(type=str)
+    label: str = attr.ib(type=str)
+    pending: bool = attr.ib(type=bool)
     selectOptions: list[_SelectOptionExtended] | None = None
-    type: str | None = None
-    warnings: list | None = None
+    type: str = attr.ib(type=str)
+    warnings: list = attr.ib(list)
 
     def __post_init__(self):
         self.selectOptions = [
@@ -50,10 +52,10 @@ class _Common(BaseModel):
     """Common attributes."""
 
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    name: str | None = None
+    implementation: str = attr.ib(type=str)
+    implementationName: str = attr.ib(type=str)
+    infoLink: str = attr.ib(type=str)
+    name: str = attr.ib(type=str)
 
     def __post_init__(self):
         self.fields = [_Fields(field) for field in self.fields or []]
@@ -63,1144 +65,1183 @@ class _Common(BaseModel):
 class _Common2(BaseModel):
     """Common attributes."""
 
-    downloadId: str | None = None
-    eventType: str | None = None
+    downloadId: str = attr.ib(type=str)
+    eventType: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common3(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    name: str | None = None
+    id: int = attr.ib(type=int)
+    name: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common4(BaseModel):
     """Common attributes."""
 
-    downloadClient: str | None = None
-    downloadId: str | None = None
-    estimatedCompletionTime: datetime | None = None
-    indexer: str | None = None
-    outputPath: str | None = None
+    downloadClient: str = attr.ib(type=str)
+    downloadId: str = attr.ib(type=str)
+    estimatedCompletionTime: datetime = attr.ib(type=datetime)
+    indexer: str = attr.ib(type=str)
+    outputPath: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common5(BaseModel):
     """Common attributes."""
 
-    coverType: str | None = None
-    url: str | None = None
+    coverType: str = attr.ib(type=str)
+    url: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common6(BaseModel):
     """Common attributes."""
 
-    monitored: bool | None = None
-    overview: str | None = None
+    monitored: bool = attr.ib(type=bool)
+    overview: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common7(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    indexer: str | None = None
-    protocol: ProtocolType | None = None
+    id: int = attr.ib(type=int)
+    indexer: str = attr.ib(type=str)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+
+
+@dataclass(init=False)
+class _QualityInfo(_Common3):
+    """Quality info attributes."""
+
+    modifier: str = attr.ib(type=str)
+    resolution: int = attr.ib(type=int)
+    source: str = attr.ib(type=str)
+
+
+@dataclass(init=False)
+class _Revision(BaseModel):
+    """Revision attributes."""
+
+    isRepack: bool = attr.ib(type=bool)
+    real: int = attr.ib(type=int)
+    version: int = attr.ib(type=int)
+
+
+@dataclass(init=False)
+class _Quality(BaseModel):
+    """Quality attributes."""
+
+    quality: _QualityInfo = attr.ib(type=_QualityInfo)
+    revision: _Revision = attr.ib(type=_Revision)
+
+    def __post_init__(self):
+        """Post init."""
+        self.quality = _QualityInfo(self.quality) or {}
+        self.revision = _Revision(self.revision) or {}
 
 
 @dataclass(init=False)
 class _Common8(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    protocol: ProtocolType | None = None
-    quality: _Quality | None = None
-    size: int | None = None
-    sizeleft: int | None = None
-    status: str | None = None
+    id: int = attr.ib(type=int)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+    quality: _Quality = attr.ib(type=_Quality)
+    size: int = attr.ib(type=int)
+    sizeleft: int = attr.ib(type=int)
+    status: str = attr.ib(type=str)
     statusMessages: list[_StatusMessage] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadState: str | None = None
-    trackedDownloadStatus: str | None = None
+    timeleft: str = attr.ib(type=str)
+    title: str = attr.ib(type=str)
+    trackedDownloadState: str = attr.ib(type=str)
+    trackedDownloadStatus: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Common9(BaseModel):
     """Common attributes."""
 
-    certification: str | None = None
-    genres: list[str] | None = None
-    imdbId: str | None = None
-    runtime: int | None = None
-    title: str | None = None
-    year: int | None = None
+    certification: str = attr.ib(type=str)
+    genres: list[str] = attr.ib(list[str])
+    imdbId: str = attr.ib(type=str)
+    runtime: int = attr.ib(type=int)
+    title: str = attr.ib(type=str)
+    year: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _CommonAttrs(BaseModel):
     """Common attributes."""
 
-    audioBitrate: str | None = None
-    audioChannels: float | None = None
-    audioCodec: str | None = None
-    audioLanguages: str | None = None
-    audioStreamCount: int | None = None
-    resolution: str | None = None
-    runTime: str | None = None
-    scanType: str | None = None
-    subtitles: str | None = None
-    videoBitDepth: int | None = None
-    videoBitrate: int | None = None
-    videoCodec: str | None = None
-    videoDynamicRangeType: str | None = None
-    videoFps: float | None = None
+    audioBitrate: str = attr.ib(type=str)
+    audioChannels: float = attr.ib(type=float)
+    audioCodec: str = attr.ib(type=str)
+    audioLanguages: str = attr.ib(type=str)
+    audioStreamCount: int = attr.ib(type=int)
+    resolution: str = attr.ib(type=str)
+    runTime: str = attr.ib(type=str)
+    scanType: str = attr.ib(type=str)
+    subtitles: str = attr.ib(type=str)
+    videoBitDepth: int = attr.ib(type=int)
+    videoBitrate: int = attr.ib(type=int)
+    videoCodec: str = attr.ib(type=str)
+    videoDynamicRangeType: str = attr.ib(type=str)
+    videoFps: float = attr.ib(type=float)
 
 
 @dataclass(init=False)
 class _CommandBody(BaseModel):
     """Command body attributes."""
 
-    completionMessage: str | None = None
-    isExclusive: bool | None = None
-    isNewMovie: bool | None = None
-    isTypeExclusive: bool | None = None
-    lastExecutionTime: datetime | None = None
-    lastStartTime: datetime | None = None
-    name: str | None = None
-    requiresDiskAccess: bool | None = None
-    sendUpdatesToClient: bool | None = None
-    suppressMessages: bool | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
+    completionMessage: str = attr.ib(type=str)
+    isExclusive: bool = attr.ib(type=bool)
+    isNewMovie: bool = attr.ib(type=bool)
+    isTypeExclusive: bool = attr.ib(type=bool)
+    lastExecutionTime: datetime = attr.ib(type=datetime)
+    lastStartTime: datetime = attr.ib(type=datetime)
+    name: str = attr.ib(type=str)
+    requiresDiskAccess: bool = attr.ib(type=bool)
+    sendUpdatesToClient: bool = attr.ib(type=bool)
+    suppressMessages: bool = attr.ib(type=bool)
+    trigger: str = attr.ib(type=str)
+    updateScheduledTask: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class _CustomFilterAttr(BaseModel):
     """Custom filter attributes."""
 
-    key: str | None = None
-    type: str | None = None
-    value: list[str] | None = None
+    key: str = attr.ib(type=str)
+    type: str = attr.ib(type=str)
+    value: list[str] = attr.ib(list[str])
 
 
 @dataclass(init=False)
 class _MetadataFields(_Fields):
     """Metadata fields attributes."""
 
-    section: str | None = None
+    section: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _FilesystemFolder(BaseModel):
     """Filesystem folder attributes."""
 
-    name: str | None = None
-    path: str | None = None
+    name: str = attr.ib(type=str)
+    path: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
-    lastModified: datetime | None = None
-    size: int | None = None
-    type: str | None = None
+    lastModified: datetime = attr.ib(type=datetime)
+    size: int = attr.ib(type=int)
+    type: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _ImportListCommon(_FilesystemFolder):
     """Import list common attributes."""
 
-    configContract: str | None = None
-    listOrder: int | None = None
-    rootFolderPath: str | None = None
+    configContract: str = attr.ib(type=str)
+    listOrder: int = attr.ib(type=int)
+    rootFolderPath: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _LocalizationStrings(BaseModel):
     """Localization strings attributes."""
 
-    About: str | None = None
-    Absolute: str | None = None
-    AcceptConfirmationModal: str | None = None
-    Actions: str | None = None
-    Activity: str | None = None
-    Add: str | None = None
-    AddCustomFormat: str | None = None
-    AddDelayProfile: str | None = None
-    AddDownloadClient: str | None = None
-    Added: str | None = None
-    AddedAuthorSettings: str | None = None
-    AddedToDownloadQueue: str | None = None
-    AddExclusion: str | None = None
-    AddImportListExclusionHelpText: str | None = None
-    AddIndexer: str | None = None
-    AddingTag: str | None = None
-    AddList: str | None = None
-    AddListExclusion: str | None = None
-    AddMissing: str | None = None
-    AddMovie: str | None = None
-    AddMovies: str | None = None
-    AddMoviesMonitored: str | None = None
-    AddNew: str | None = None
-    AddNewItem: str | None = None
-    AddNewMessage: str | None = None
-    AddNewMovie: str | None = None
-    AddNewTmdbIdMessage: str | None = None
-    AddNotification: str | None = None
-    AddQualityProfile: str | None = None
-    AddRemotePathMapping: str | None = None
-    AddRestriction: str | None = None
-    AddRootFolder: str | None = None
-    AddToDownloadQueue: str | None = None
-    AdvancedSettingsHiddenClickToShow: str | None = None
-    AdvancedSettingsShownClickToHide: str | None = None
-    AfterManualRefresh: str | None = None
-    Age: str | None = None
-    Agenda: str | None = None
-    AgeWhenGrabbed: str | None = None
-    All: str | None = None
-    AllAuthorBooks: str | None = None
-    AllBooks: str | None = None
-    AllExpandedCollapseAll: str | None = None
-    AllExpandedExpandAll: str | None = None
-    AllFiles: str | None = None
-    AllMoviesHiddenDueToFilter: str | None = None
-    AllMoviesInPathHaveBeenImported: str | None = None
-    AllowAuthorChangeClickToChangeAuthor: str | None = None
-    AllowedLanguages: str | None = None
-    AllowFingerprinting: str | None = None
-    AllowFingerprintingHelpText: str | None = None
-    AllowFingerprintingHelpTextWarning: str | None = None
-    AllowHardcodedSubs: str | None = None
-    AllowHardcodedSubsHelpText: str | None = None
-    AllResultsHiddenFilter: str | None = None
-    AlreadyInYourLibrary: str | None = None
-    AlternateTitles: str | None = None
-    AlternateTitleslength1Title: str | None = None
-    AlternateTitleslength1Titles: str | None = None
-    AlternativeTitle: str | None = None
-    Always: str | None = None
-    AnalyseVideoFiles: str | None = None
-    Analytics: str | None = None
-    AnalyticsEnabledHelpText: str | None = None
-    AnalyticsEnabledHelpTextWarning: str | None = None
-    Announced: str | None = None
-    AnnouncedMsg: str | None = None
-    AnyEditionOkHelpText: str | None = None
-    ApiKey: str | None = None
-    APIKey: str | None = None
-    ApiKeyHelpTextWarning: str | None = None
-    AppDataDirectory: str | None = None
-    AppDataLocationHealthCheckMessage: str | None = None
-    Apply: str | None = None
-    ApplyTags: str | None = None
-    ApplyTagsHelpTexts1: str | None = None
-    ApplyTagsHelpTexts2: str | None = None
-    ApplyTagsHelpTexts3: str | None = None
-    ApplyTagsHelpTexts4: str | None = None
-    AptUpdater: str | None = None
-    AreYouSureYouWantToDeleteFormat: str | None = None
-    AreYouSureYouWantToDeleteThisDelayProfile: str | None = None
-    AreYouSureYouWantToDeleteThisImportListExclusion: str | None = None
-    AreYouSureYouWantToDeleteThisRemotePathMapping: str | None = None
-    AreYouSureYouWantToRemoveSelectedItemFromQueue: str | None = None
-    AreYouSureYouWantToRemoveSelectedItemsFromQueue: str | None = None
-    AreYouSureYouWantToRemoveTheSelectedItemsFromBlocklist: str | None = None
-    AreYouSureYouWantToResetYourAPIKey: str | None = None
-    AsAllDayHelpText: str | None = None
-    ASIN: str | None = None
-    AudioFileMetadata: str | None = None
-    AudioInfo: str | None = None
-    AuthBasic: str | None = None
-    Authentication: str | None = None
-    AuthenticationMethodHelpText: str | None = None
-    AuthForm: str | None = None
-    Author: str | None = None
-    AuthorClickToChangeBook: str | None = None
-    AuthorEditor: str | None = None
-    AuthorFolderFormat: str | None = None
-    AuthorIndex: str | None = None
-    AuthorNameHelpText: str | None = None
-    Authors: str | None = None
-    Automatic: str | None = None
-    AutomaticallySwitchEdition: str | None = None
-    AutomaticSearch: str | None = None
-    AutoRedownloadFailedHelpText: str | None = None
-    AutoUnmonitorPreviouslyDownloadedBooksHelpText: str | None = None
-    AutoUnmonitorPreviouslyDownloadedMoviesHelpText: str | None = None
-    AvailabilityDelay: str | None = None
-    AvailabilityDelayHelpText: str | None = None
-    Backup: str | None = None
-    BackupFolderHelpText: str | None = None
-    BackupIntervalHelpText: str | None = None
-    BackupNow: str | None = None
-    BackupRetentionHelpText: str | None = None
-    Backups: str | None = None
-    BeforeUpdate: str | None = None
-    BindAddress: str | None = None
-    BindAddressHelpText: str | None = None
-    BindAddressHelpTextWarning: str | None = None
-    Blocklist: str | None = None
-    Blocklisted: str | None = None
-    BlocklistHelpText: str | None = None
-    BlocklistRelease: str | None = None
-    BlocklistReleases: str | None = None
-    Book: str | None = None
-    BookAvailableButMissing: str | None = None
-    BookDownloaded: str | None = None
-    BookEditor: str | None = None
-    BookFileCountBookCountTotalTotalBookCountInterp: str | None = None
-    BookFileCounttotalBookCountBooksDownloadedInterp: str | None = None
-    BookFilesCountMessage: str | None = None
-    BookHasNotAired: str | None = None
-    BookIndex: str | None = None
-    BookIsDownloading: str | None = None
-    BookIsDownloadingInterp: str | None = None
-    BookIsNotMonitored: str | None = None
-    BookList: str | None = None
-    BookMissingFromDisk: str | None = None
-    BookMonitoring: str | None = None
-    BookNaming: str | None = None
-    Books: str | None = None
-    BooksTotal: str | None = None
-    BookStudio: str | None = None
-    BookTitle: str | None = None
-    Branch: str | None = None
-    BranchUpdate: str | None = None
-    BranchUpdateMechanism: str | None = None
-    BuiltIn: str | None = None
-    BypassDelayIfHighestQuality: str | None = None
-    BypassDelayIfHighestQualityHelpText: str | None = None
-    BypassProxyForLocalAddresses: str | None = None
-    Calendar: str | None = None
-    CalendarOptions: str | None = None
-    CalendarWeekColumnHeaderHelpText: str | None = None
-    CalibreContentServer: str | None = None
-    CalibreContentServerText: str | None = None
-    CalibreHost: str | None = None
-    CalibreLibrary: str | None = None
-    CalibreMetadata: str | None = None
-    CalibreNotCalibreWeb: str | None = None
-    CalibreOutputFormat: str | None = None
-    CalibreOutputProfile: str | None = None
-    CalibrePassword: str | None = None
-    CalibrePort: str | None = None
-    CalibreSettings: str | None = None
-    CalibreUrlBase: str | None = None
-    CalibreUsername: str | None = None
-    Cancel: str | None = None
-    CancelMessageText: str | None = None
-    CancelPendingTask: str | None = None
-    CancelProcessing: str | None = None
-    CantFindMovie: str | None = None
-    Cast: str | None = None
-    CatalogNumber: str | None = None
-    CertificateValidation: str | None = None
-    CertificateValidationHelpText: str | None = None
-    Certification: str | None = None
-    CertificationCountry: str | None = None
-    CertificationCountryHelpText: str | None = None
-    CertValidationNoLocal: str | None = None
-    ChangeFileDate: str | None = None
-    ChangeHasNotBeenSavedYet: str | None = None
-    CheckDownloadClientForDetails: str | None = None
-    CheckForFinishedDownloadsInterval: str | None = None
-    ChmodFolder: str | None = None
-    ChmodFolderHelpText: str | None = None
-    ChmodFolderHelpTextWarning: str | None = None
-    ChmodGroup: str | None = None
-    ChmodGroupHelpText: str | None = None
-    ChmodGroupHelpTextWarning: str | None = None
-    ChooseAnotherFolder: str | None = None
-    ChownGroup: str | None = None
-    ChownGroupHelpText: str | None = None
-    ChownGroupHelpTextWarning: str | None = None
-    CleanLibraryLevel: str | None = None
-    Clear: str | None = None
-    ClickToChangeLanguage: str | None = None
-    ClickToChangeMovie: str | None = None
-    ClickToChangeQuality: str | None = None
-    ClickToChangeReleaseGroup: str | None = None
-    ClientPriority: str | None = None
-    CloneCustomFormat: str | None = None
-    CloneFormatTag: str | None = None
-    CloneIndexer: str | None = None
-    CloneProfile: str | None = None
-    Close: str | None = None
-    CloseCurrentModal: str | None = None
-    CollapseMultipleBooks: str | None = None
-    CollapseMultipleBooksHelpText: str | None = None
-    Collection: str | None = None
-    ColonReplacement: str | None = None
-    ColonReplacementFormatHelpText: str | None = None
-    Columns: str | None = None
-    CompletedDownloadHandling: str | None = None
-    Component: str | None = None
-    Conditions: str | None = None
-    Connect: str | None = None
-    Connection: str | None = None
-    ConnectionLost: str | None = None
-    ConnectionLostAutomaticMessage: str | None = None
-    ConnectionLostMessage: str | None = None
-    Connections: str | None = None
-    ConnectSettings: str | None = None
-    ConnectSettingsSummary: str | None = None
-    ConsideredAvailable: str | None = None
-    ConsoleLogLevel: str | None = None
-    Continuing: str | None = None
-    ContinuingAllBooksDownloaded: str | None = None
-    ContinuingMoreBooksAreExpected: str | None = None
-    ContinuingNoAdditionalBooksAreExpected: str | None = None
-    CopyToClipboard: str | None = None
-    CopyUsingHardlinksHelpText: str | None = None
-    CopyUsingHardlinksHelpTextWarning: str | None = None
-    CouldNotConnectSignalR: str | None = None
-    CouldNotFindResults: str | None = None
-    Country: str | None = None
-    CreateEmptyAuthorFolders: str | None = None
-    CreateEmptyAuthorFoldersHelpText: str | None = None
-    CreateEmptyMovieFolders: str | None = None
-    CreateEmptyMovieFoldersHelpText: str | None = None
-    CreateGroup: str | None = None
-    Crew: str | None = None
-    CurrentlyInstalled: str | None = None
-    Custom: str | None = None
-    CustomFilters: str | None = None
-    CustomFormat: str | None = None
-    CustomFormatHelpText: str | None = None
-    CustomFormatJSON: str | None = None
-    CustomFormats: str | None = None
-    CustomFormatScore: str | None = None
-    CustomFormatsSettings: str | None = None
-    CustomFormatsSettingsSummary: str | None = None
-    CustomFormatUnknownCondition: str | None = None
-    CustomFormatUnknownConditionOption: str | None = None
-    Cutoff: str | None = None
-    CutoffFormatScoreHelpText: str | None = None
-    CutoffHelpText: str | None = None
-    CutoffUnmet: str | None = None
-    Date: str | None = None
-    Dates: str | None = None
-    Day: str | None = None
-    Days: str | None = None
-    DBMigration: str | None = None
-    Debug: str | None = None
-    DefaultCase: str | None = None
-    DefaultDelayProfile: str | None = None
-    DefaultMetadataProfileIdHelpText: str | None = None
-    DefaultMonitorOptionHelpText: str | None = None
-    DefaultQualityProfileIdHelpText: str | None = None
-    DefaultReadarrTags: str | None = None
-    DefaultTagsHelpText: str | None = None
-    DelayingDownloadUntilInterp: str | None = None
-    DelayProfile: str | None = None
-    DelayProfiles: str | None = None
-    Delete: str | None = None
-    DeleteBackup: str | None = None
-    DeleteBackupMessageText: str | None = None
-    DeleteBookFile: str | None = None
-    DeleteBookFileMessageText: str | None = None
-    DeleteCustomFormat: str | None = None
-    Deleted: str | None = None
-    DeleteDelayProfile: str | None = None
-    DeleteDelayProfileMessageText: str | None = None
-    DeletedMsg: str | None = None
-    DeleteDownloadClient: str | None = None
-    DeleteDownloadClientMessageText: str | None = None
-    DeleteEmptyFolders: str | None = None
-    DeleteEmptyFoldersHelpText: str | None = None
-    DeleteFile: str | None = None
-    DeleteFileLabel: str | None = None
-    DeleteFilesHelpText: str | None = None
-    DeleteFilesLabel: str | None = None
-    DeleteHeader: str | None = None
-    DeleteImportList: str | None = None
-    DeleteImportListExclusion: str | None = None
-    DeleteImportListExclusionMessageText: str | None = None
-    DeleteImportListMessageText: str | None = None
-    DeleteIndexer: str | None = None
-    DeleteIndexerMessageText: str | None = None
-    DeleteList: str | None = None
-    DeleteListMessageText: str | None = None
-    DeleteMetadataProfile: str | None = None
-    DeleteMetadataProfileMessageText: str | None = None
-    DeleteMovieFolderHelpText: str | None = None
-    DeleteMovieFolderLabel: str | None = None
-    DeleteNotification: str | None = None
-    DeleteNotificationMessageText: str | None = None
-    DeleteQualityProfile: str | None = None
-    DeleteQualityProfileMessageText: str | None = None
-    DeleteReleaseProfile: str | None = None
-    DeleteReleaseProfileMessageText: str | None = None
-    DeleteRestriction: str | None = None
-    DeleteRestrictionHelpText: str | None = None
-    DeleteRootFolder: str | None = None
-    DeleteRootFolderMessageText: str | None = None
-    DeleteSelectedBookFiles: str | None = None
-    DeleteSelectedBookFilesMessageText: str | None = None
-    DeleteSelectedMovie: str | None = None
-    DeleteSelectedMovieFiles: str | None = None
-    DeleteSelectedMovieFilesMessage: str | None = None
-    DeleteTag: str | None = None
-    DeleteTagMessageText: str | None = None
-    DeleteTheMovieFolder: str | None = None
-    DestinationPath: str | None = None
-    DestinationRelativePath: str | None = None
-    DetailedProgressBar: str | None = None
-    DetailedProgressBarHelpText: str | None = None
-    Details: str | None = None
-    Development: str | None = None
-    DigitalRelease: str | None = None
-    Disabled: str | None = None
-    DiscCount: str | None = None
-    DiscNumber: str | None = None
-    Discord: str | None = None
-    DiscordUrlInSlackNotification: str | None = None
-    Discover: str | None = None
-    DiskSpace: str | None = None
-    Docker: str | None = None
-    DockerUpdater: str | None = None
-    Donations: str | None = None
-    DoneEditingGroups: str | None = None
-    DoNotPrefer: str | None = None
-    DoNotUpgradeAutomatically: str | None = None
-    Download: str | None = None
-    DownloadClient: str | None = None
-    DownloadClientCheckDownloadingToRoot: str | None = None
-    DownloadClientCheckNoneAvailableMessage: str | None = None
-    DownloadClientCheckUnableToCommunicateMessage: str | None = None
-    DownloadClients: str | None = None
-    DownloadClientSettings: str | None = None
-    DownloadClientsSettingsSummary: str | None = None
-    DownloadClientStatusCheckAllClientMessage: str | None = None
-    DownloadClientStatusCheckSingleClientMessage: str | None = None
-    DownloadClientUnavailable: str | None = None
-    Downloaded: str | None = None
-    DownloadedAndMonitored: str | None = None
-    DownloadedButNotMonitored: str | None = None
-    DownloadFailed: str | None = None
-    DownloadFailedCheckDownloadClientForMoreDetails: str | None = None
-    DownloadFailedInterp: str | None = None
-    Downloading: str | None = None
-    DownloadPropersAndRepacks: str | None = None
-    DownloadPropersAndRepacksHelpText1: str | None = None
-    DownloadPropersAndRepacksHelpText2: str | None = None
-    DownloadPropersAndRepacksHelpTexts1: str | None = None
-    DownloadPropersAndRepacksHelpTexts2: str | None = None
-    DownloadPropersAndRepacksHelpTextWarning: str | None = None
-    DownloadWarning: str | None = None
-    DownloadWarningCheckDownloadClientForMoreDetails: str | None = None
-    Edit: str | None = None
-    EditAuthor: str | None = None
-    EditCustomFormat: str | None = None
-    EditDelayProfile: str | None = None
-    EditGroups: str | None = None
-    EditIndexer: str | None = None
-    Edition: str | None = None
-    EditionsHelpText: str | None = None
-    EditListExclusion: str | None = None
-    EditMovie: str | None = None
-    EditMovieFile: str | None = None
-    EditPerson: str | None = None
-    EditQualityProfile: str | None = None
-    EditRemotePathMapping: str | None = None
-    EditRestriction: str | None = None
-    EmbedMetadataHelpText: str | None = None
-    EmbedMetadataInBookFiles: str | None = None
-    Enable: str | None = None
-    EnableAutoHelpText: str | None = None
-    EnableAutomaticAdd: str | None = None
-    EnableAutomaticAddHelpText: str | None = None
-    EnableAutomaticSearch: str | None = None
-    EnableAutomaticSearchHelpText: str | None = None
-    EnableAutomaticSearchHelpTextWarning: str | None = None
-    EnableColorImpairedMode: str | None = None
-    EnableColorImpairedModeHelpText: str | None = None
-    EnableCompletedDownloadHandlingHelpText: str | None = None
-    Enabled: str | None = None
-    EnabledHelpText: str | None = None
-    EnableHelpText: str | None = None
-    EnableInteractiveSearch: str | None = None
-    EnableInteractiveSearchHelpText: str | None = None
-    EnableInteractiveSearchHelpTextWarning: str | None = None
-    EnableMediaInfoHelpText: str | None = None
-    EnableProfile: str | None = None
-    EnableRSS: str | None = None
-    EnableSSL: str | None = None
-    EnableSslHelpText: str | None = None
-    Ended: str | None = None
-    EndedAllBooksDownloaded: str | None = None
-    EntityName: str | None = None
-    Episode: str | None = None
-    EpisodeDoesNotHaveAnAbsoluteEpisodeNumber: str | None = None
-    Error: str | None = None
-    ErrorLoadingContents: str | None = None
-    ErrorLoadingPreviews: str | None = None
-    ErrorRestoringBackup: str | None = None
-    Events: str | None = None
-    EventType: str | None = None
-    Exception: str | None = None
-    Excluded: str | None = None
-    ExcludeMovie: str | None = None
-    ExcludeTitle: str | None = None
-    Existing: str | None = None
-    ExistingBooks: str | None = None
-    ExistingItems: str | None = None
-    ExistingMovies: str | None = None
-    ExistingTag: str | None = None
-    ExistingTagsScrubbed: str | None = None
-    ExportCustomFormat: str | None = None
-    Extension: str | None = None
-    ExternalUpdater: str | None = None
-    ExtraFileExtensionsHelpTexts1: str | None = None
-    ExtraFileExtensionsHelpTexts2: str | None = None
-    Failed: str | None = None
-    FailedDownloadHandling: str | None = None
-    FailedLoadingSearchResults: str | None = None
-    FailedToLoadMovieFromAPI: str | None = None
-    FailedToLoadQueue: str | None = None
-    FeatureRequests: str | None = None
-    FileDateHelpText: str | None = None
-    FileDetails: str | None = None
-    FileManagement: str | None = None
-    Filename: str | None = None
-    FileNames: str | None = None
-    FileNameTokens: str | None = None
-    Files: str | None = None
-    FilesTotal: str | None = None
-    FileWasDeletedByUpgrade: str | None = None
-    FileWasDeletedByViaUI: str | None = None
-    Filter: str | None = None
-    FilterAnalyticsEvents: str | None = None
-    FilterAuthor: str | None = None
-    FilterPlaceHolder: str | None = None
-    Filters: str | None = None
-    FilterSentryEventsHelpText: str | None = None
-    FirstBook: str | None = None
-    FirstDayOfWeek: str | None = None
-    Fixed: str | None = None
-    FocusSearchBox: str | None = None
-    Folder: str | None = None
-    FolderMoveRenameWarning: str | None = None
-    Folders: str | None = None
-    FollowPerson: str | None = None
-    Forecast: str | None = None
-    ForeignIdHelpText: str | None = None
-    Formats: str | None = None
-    ForMoreInformationOnTheIndividualDownloadClients: str | None = None
-    ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons: str | None = (
-        None
+    About: str = attr.ib(type=str)
+    Absolute: str = attr.ib(type=str)
+    AcceptConfirmationModal: str = attr.ib(type=str)
+    Actions: str = attr.ib(type=str)
+    Activity: str = attr.ib(type=str)
+    Add: str = attr.ib(type=str)
+    AddCustomFormat: str = attr.ib(type=str)
+    AddDelayProfile: str = attr.ib(type=str)
+    AddDownloadClient: str = attr.ib(type=str)
+    Added: str = attr.ib(type=str)
+    AddedAuthorSettings: str = attr.ib(type=str)
+    AddedToDownloadQueue: str = attr.ib(type=str)
+    AddExclusion: str = attr.ib(type=str)
+    AddImportListExclusionHelpText: str = attr.ib(type=str)
+    AddIndexer: str = attr.ib(type=str)
+    AddingTag: str = attr.ib(type=str)
+    AddList: str = attr.ib(type=str)
+    AddListExclusion: str = attr.ib(type=str)
+    AddMissing: str = attr.ib(type=str)
+    AddMovie: str = attr.ib(type=str)
+    AddMovies: str = attr.ib(type=str)
+    AddMoviesMonitored: str = attr.ib(type=str)
+    AddNew: str = attr.ib(type=str)
+    AddNewItem: str = attr.ib(type=str)
+    AddNewMessage: str = attr.ib(type=str)
+    AddNewMovie: str = attr.ib(type=str)
+    AddNewTmdbIdMessage: str = attr.ib(type=str)
+    AddNotification: str = attr.ib(type=str)
+    AddQualityProfile: str = attr.ib(type=str)
+    AddRemotePathMapping: str = attr.ib(type=str)
+    AddRestriction: str = attr.ib(type=str)
+    AddRootFolder: str = attr.ib(type=str)
+    AddToDownloadQueue: str = attr.ib(type=str)
+    AdvancedSettingsHiddenClickToShow: str = attr.ib(type=str)
+    AdvancedSettingsShownClickToHide: str = attr.ib(type=str)
+    AfterManualRefresh: str = attr.ib(type=str)
+    Age: str = attr.ib(type=str)
+    Agenda: str = attr.ib(type=str)
+    AgeWhenGrabbed: str = attr.ib(type=str)
+    All: str = attr.ib(type=str)
+    AllAuthorBooks: str = attr.ib(type=str)
+    AllBooks: str = attr.ib(type=str)
+    AllExpandedCollapseAll: str = attr.ib(type=str)
+    AllExpandedExpandAll: str = attr.ib(type=str)
+    AllFiles: str = attr.ib(type=str)
+    AllMoviesHiddenDueToFilter: str = attr.ib(type=str)
+    AllMoviesInPathHaveBeenImported: str = attr.ib(type=str)
+    AllowAuthorChangeClickToChangeAuthor: str = attr.ib(type=str)
+    AllowedLanguages: str = attr.ib(type=str)
+    AllowFingerprinting: str = attr.ib(type=str)
+    AllowFingerprintingHelpText: str = attr.ib(type=str)
+    AllowFingerprintingHelpTextWarning: str = attr.ib(type=str)
+    AllowHardcodedSubs: str = attr.ib(type=str)
+    AllowHardcodedSubsHelpText: str = attr.ib(type=str)
+    AllResultsHiddenFilter: str = attr.ib(type=str)
+    AlreadyInYourLibrary: str = attr.ib(type=str)
+    AlternateTitles: str = attr.ib(type=str)
+    AlternateTitleslength1Title: str = attr.ib(type=str)
+    AlternateTitleslength1Titles: str = attr.ib(type=str)
+    AlternativeTitle: str = attr.ib(type=str)
+    Always: str = attr.ib(type=str)
+    AnalyseVideoFiles: str = attr.ib(type=str)
+    Analytics: str = attr.ib(type=str)
+    AnalyticsEnabledHelpText: str = attr.ib(type=str)
+    AnalyticsEnabledHelpTextWarning: str = attr.ib(type=str)
+    Announced: str = attr.ib(type=str)
+    AnnouncedMsg: str = attr.ib(type=str)
+    AnyEditionOkHelpText: str = attr.ib(type=str)
+    ApiKey: str = attr.ib(type=str)
+    APIKey: str = attr.ib(type=str)
+    ApiKeyHelpTextWarning: str = attr.ib(type=str)
+    AppDataDirectory: str = attr.ib(type=str)
+    AppDataLocationHealthCheckMessage: str = attr.ib(type=str)
+    Apply: str = attr.ib(type=str)
+    ApplyTags: str = attr.ib(type=str)
+    ApplyTagsHelpTexts1: str = attr.ib(type=str)
+    ApplyTagsHelpTexts2: str = attr.ib(type=str)
+    ApplyTagsHelpTexts3: str = attr.ib(type=str)
+    ApplyTagsHelpTexts4: str = attr.ib(type=str)
+    AptUpdater: str = attr.ib(type=str)
+    AreYouSureYouWantToDeleteFormat: str = attr.ib(type=str)
+    AreYouSureYouWantToDeleteThisDelayProfile: str = attr.ib(type=str)
+    AreYouSureYouWantToDeleteThisImportListExclusion: str = attr.ib(type=str)
+    AreYouSureYouWantToDeleteThisRemotePathMapping: str = attr.ib(type=str)
+    AreYouSureYouWantToRemoveSelectedItemFromQueue: str = attr.ib(type=str)
+    AreYouSureYouWantToRemoveSelectedItemsFromQueue: str = attr.ib(type=str)
+    AreYouSureYouWantToRemoveTheSelectedItemsFromBlocklist: str = attr.ib(type=str)
+    AreYouSureYouWantToResetYourAPIKey: str = attr.ib(type=str)
+    AsAllDayHelpText: str = attr.ib(type=str)
+    ASIN: str = attr.ib(type=str)
+    AudioFileMetadata: str = attr.ib(type=str)
+    AudioInfo: str = attr.ib(type=str)
+    AuthBasic: str = attr.ib(type=str)
+    Authentication: str = attr.ib(type=str)
+    AuthenticationMethodHelpText: str = attr.ib(type=str)
+    AuthForm: str = attr.ib(type=str)
+    Author: str = attr.ib(type=str)
+    AuthorClickToChangeBook: str = attr.ib(type=str)
+    AuthorEditor: str = attr.ib(type=str)
+    AuthorFolderFormat: str = attr.ib(type=str)
+    AuthorIndex: str = attr.ib(type=str)
+    AuthorNameHelpText: str = attr.ib(type=str)
+    Authors: str = attr.ib(type=str)
+    Automatic: str = attr.ib(type=str)
+    AutomaticallySwitchEdition: str = attr.ib(type=str)
+    AutomaticSearch: str = attr.ib(type=str)
+    AutoRedownloadFailedHelpText: str = attr.ib(type=str)
+    AutoUnmonitorPreviouslyDownloadedBooksHelpText: str = attr.ib(type=str)
+    AutoUnmonitorPreviouslyDownloadedMoviesHelpText: str = attr.ib(type=str)
+    AvailabilityDelay: str = attr.ib(type=str)
+    AvailabilityDelayHelpText: str = attr.ib(type=str)
+    Backup: str = attr.ib(type=str)
+    BackupFolderHelpText: str = attr.ib(type=str)
+    BackupIntervalHelpText: str = attr.ib(type=str)
+    BackupNow: str = attr.ib(type=str)
+    BackupRetentionHelpText: str = attr.ib(type=str)
+    Backups: str = attr.ib(type=str)
+    BeforeUpdate: str = attr.ib(type=str)
+    BindAddress: str = attr.ib(type=str)
+    BindAddressHelpText: str = attr.ib(type=str)
+    BindAddressHelpTextWarning: str = attr.ib(type=str)
+    Blocklist: str = attr.ib(type=str)
+    Blocklisted: str = attr.ib(type=str)
+    BlocklistHelpText: str = attr.ib(type=str)
+    BlocklistRelease: str = attr.ib(type=str)
+    BlocklistReleases: str = attr.ib(type=str)
+    Book: str = attr.ib(type=str)
+    BookAvailableButMissing: str = attr.ib(type=str)
+    BookDownloaded: str = attr.ib(type=str)
+    BookEditor: str = attr.ib(type=str)
+    BookFileCountBookCountTotalTotalBookCountInterp: str = attr.ib(type=str)
+    BookFileCounttotalBookCountBooksDownloadedInterp: str = attr.ib(type=str)
+    BookFilesCountMessage: str = attr.ib(type=str)
+    BookHasNotAired: str = attr.ib(type=str)
+    BookIndex: str = attr.ib(type=str)
+    BookIsDownloading: str = attr.ib(type=str)
+    BookIsDownloadingInterp: str = attr.ib(type=str)
+    BookIsNotMonitored: str = attr.ib(type=str)
+    BookList: str = attr.ib(type=str)
+    BookMissingFromDisk: str = attr.ib(type=str)
+    BookMonitoring: str = attr.ib(type=str)
+    BookNaming: str = attr.ib(type=str)
+    Books: str = attr.ib(type=str)
+    BooksTotal: str = attr.ib(type=str)
+    BookStudio: str = attr.ib(type=str)
+    BookTitle: str = attr.ib(type=str)
+    Branch: str = attr.ib(type=str)
+    BranchUpdate: str = attr.ib(type=str)
+    BranchUpdateMechanism: str = attr.ib(type=str)
+    BuiltIn: str = attr.ib(type=str)
+    BypassDelayIfHighestQuality: str = attr.ib(type=str)
+    BypassDelayIfHighestQualityHelpText: str = attr.ib(type=str)
+    BypassProxyForLocalAddresses: str = attr.ib(type=str)
+    Calendar: str = attr.ib(type=str)
+    CalendarOptions: str = attr.ib(type=str)
+    CalendarWeekColumnHeaderHelpText: str = attr.ib(type=str)
+    CalibreContentServer: str = attr.ib(type=str)
+    CalibreContentServerText: str = attr.ib(type=str)
+    CalibreHost: str = attr.ib(type=str)
+    CalibreLibrary: str = attr.ib(type=str)
+    CalibreMetadata: str = attr.ib(type=str)
+    CalibreNotCalibreWeb: str = attr.ib(type=str)
+    CalibreOutputFormat: str = attr.ib(type=str)
+    CalibreOutputProfile: str = attr.ib(type=str)
+    CalibrePassword: str = attr.ib(type=str)
+    CalibrePort: str = attr.ib(type=str)
+    CalibreSettings: str = attr.ib(type=str)
+    CalibreUrlBase: str = attr.ib(type=str)
+    CalibreUsername: str = attr.ib(type=str)
+    Cancel: str = attr.ib(type=str)
+    CancelMessageText: str = attr.ib(type=str)
+    CancelPendingTask: str = attr.ib(type=str)
+    CancelProcessing: str = attr.ib(type=str)
+    CantFindMovie: str = attr.ib(type=str)
+    Cast: str = attr.ib(type=str)
+    CatalogNumber: str = attr.ib(type=str)
+    CertificateValidation: str = attr.ib(type=str)
+    CertificateValidationHelpText: str = attr.ib(type=str)
+    Certification: str = attr.ib(type=str)
+    CertificationCountry: str = attr.ib(type=str)
+    CertificationCountryHelpText: str = attr.ib(type=str)
+    CertValidationNoLocal: str = attr.ib(type=str)
+    ChangeFileDate: str = attr.ib(type=str)
+    ChangeHasNotBeenSavedYet: str = attr.ib(type=str)
+    CheckDownloadClientForDetails: str = attr.ib(type=str)
+    CheckForFinishedDownloadsInterval: str = attr.ib(type=str)
+    ChmodFolder: str = attr.ib(type=str)
+    ChmodFolderHelpText: str = attr.ib(type=str)
+    ChmodFolderHelpTextWarning: str = attr.ib(type=str)
+    ChmodGroup: str = attr.ib(type=str)
+    ChmodGroupHelpText: str = attr.ib(type=str)
+    ChmodGroupHelpTextWarning: str = attr.ib(type=str)
+    ChooseAnotherFolder: str = attr.ib(type=str)
+    ChownGroup: str = attr.ib(type=str)
+    ChownGroupHelpText: str = attr.ib(type=str)
+    ChownGroupHelpTextWarning: str = attr.ib(type=str)
+    CleanLibraryLevel: str = attr.ib(type=str)
+    Clear: str = attr.ib(type=str)
+    ClickToChangeLanguage: str = attr.ib(type=str)
+    ClickToChangeMovie: str = attr.ib(type=str)
+    ClickToChangeQuality: str = attr.ib(type=str)
+    ClickToChangeReleaseGroup: str = attr.ib(type=str)
+    ClientPriority: str = attr.ib(type=str)
+    CloneCustomFormat: str = attr.ib(type=str)
+    CloneFormatTag: str = attr.ib(type=str)
+    CloneIndexer: str = attr.ib(type=str)
+    CloneProfile: str = attr.ib(type=str)
+    Close: str = attr.ib(type=str)
+    CloseCurrentModal: str = attr.ib(type=str)
+    CollapseMultipleBooks: str = attr.ib(type=str)
+    CollapseMultipleBooksHelpText: str = attr.ib(type=str)
+    Collection: str = attr.ib(type=str)
+    ColonReplacement: str = attr.ib(type=str)
+    ColonReplacementFormatHelpText: str = attr.ib(type=str)
+    Columns: str = attr.ib(type=str)
+    CompletedDownloadHandling: str = attr.ib(type=str)
+    Component: str = attr.ib(type=str)
+    Conditions: str = attr.ib(type=str)
+    Connect: str = attr.ib(type=str)
+    Connection: str = attr.ib(type=str)
+    ConnectionLost: str = attr.ib(type=str)
+    ConnectionLostAutomaticMessage: str = attr.ib(type=str)
+    ConnectionLostMessage: str = attr.ib(type=str)
+    Connections: str = attr.ib(type=str)
+    ConnectSettings: str = attr.ib(type=str)
+    ConnectSettingsSummary: str = attr.ib(type=str)
+    ConsideredAvailable: str = attr.ib(type=str)
+    ConsoleLogLevel: str = attr.ib(type=str)
+    Continuing: str = attr.ib(type=str)
+    ContinuingAllBooksDownloaded: str = attr.ib(type=str)
+    ContinuingMoreBooksAreExpected: str = attr.ib(type=str)
+    ContinuingNoAdditionalBooksAreExpected: str = attr.ib(type=str)
+    CopyToClipboard: str = attr.ib(type=str)
+    CopyUsingHardlinksHelpText: str = attr.ib(type=str)
+    CopyUsingHardlinksHelpTextWarning: str = attr.ib(type=str)
+    CouldNotConnectSignalR: str = attr.ib(type=str)
+    CouldNotFindResults: str = attr.ib(type=str)
+    Country: str = attr.ib(type=str)
+    CreateEmptyAuthorFolders: str = attr.ib(type=str)
+    CreateEmptyAuthorFoldersHelpText: str = attr.ib(type=str)
+    CreateEmptyMovieFolders: str = attr.ib(type=str)
+    CreateEmptyMovieFoldersHelpText: str = attr.ib(type=str)
+    CreateGroup: str = attr.ib(type=str)
+    Crew: str = attr.ib(type=str)
+    CurrentlyInstalled: str = attr.ib(type=str)
+    Custom: str = attr.ib(type=str)
+    CustomFilters: str = attr.ib(type=str)
+    CustomFormat: str = attr.ib(type=str)
+    CustomFormatHelpText: str = attr.ib(type=str)
+    CustomFormatJSON: str = attr.ib(type=str)
+    CustomFormats: str = attr.ib(type=str)
+    CustomFormatScore: str = attr.ib(type=str)
+    CustomFormatsSettings: str = attr.ib(type=str)
+    CustomFormatsSettingsSummary: str = attr.ib(type=str)
+    CustomFormatUnknownCondition: str = attr.ib(type=str)
+    CustomFormatUnknownConditionOption: str = attr.ib(type=str)
+    Cutoff: str = attr.ib(type=str)
+    CutoffFormatScoreHelpText: str = attr.ib(type=str)
+    CutoffHelpText: str = attr.ib(type=str)
+    CutoffUnmet: str = attr.ib(type=str)
+    Date: str = attr.ib(type=str)
+    Dates: str = attr.ib(type=str)
+    Day: str = attr.ib(type=str)
+    Days: str = attr.ib(type=str)
+    DBMigration: str = attr.ib(type=str)
+    Debug: str = attr.ib(type=str)
+    DefaultCase: str = attr.ib(type=str)
+    DefaultDelayProfile: str = attr.ib(type=str)
+    DefaultMetadataProfileIdHelpText: str = attr.ib(type=str)
+    DefaultMonitorOptionHelpText: str = attr.ib(type=str)
+    DefaultQualityProfileIdHelpText: str = attr.ib(type=str)
+    DefaultReadarrTags: str = attr.ib(type=str)
+    DefaultTagsHelpText: str = attr.ib(type=str)
+    DelayingDownloadUntilInterp: str = attr.ib(type=str)
+    DelayProfile: str = attr.ib(type=str)
+    DelayProfiles: str = attr.ib(type=str)
+    Delete: str = attr.ib(type=str)
+    DeleteBackup: str = attr.ib(type=str)
+    DeleteBackupMessageText: str = attr.ib(type=str)
+    DeleteBookFile: str = attr.ib(type=str)
+    DeleteBookFileMessageText: str = attr.ib(type=str)
+    DeleteCustomFormat: str = attr.ib(type=str)
+    Deleted: str = attr.ib(type=str)
+    DeleteDelayProfile: str = attr.ib(type=str)
+    DeleteDelayProfileMessageText: str = attr.ib(type=str)
+    DeletedMsg: str = attr.ib(type=str)
+    DeleteDownloadClient: str = attr.ib(type=str)
+    DeleteDownloadClientMessageText: str = attr.ib(type=str)
+    DeleteEmptyFolders: str = attr.ib(type=str)
+    DeleteEmptyFoldersHelpText: str = attr.ib(type=str)
+    DeleteFile: str = attr.ib(type=str)
+    DeleteFileLabel: str = attr.ib(type=str)
+    DeleteFilesHelpText: str = attr.ib(type=str)
+    DeleteFilesLabel: str = attr.ib(type=str)
+    DeleteHeader: str = attr.ib(type=str)
+    DeleteImportList: str = attr.ib(type=str)
+    DeleteImportListExclusion: str = attr.ib(type=str)
+    DeleteImportListExclusionMessageText: str = attr.ib(type=str)
+    DeleteImportListMessageText: str = attr.ib(type=str)
+    DeleteIndexer: str = attr.ib(type=str)
+    DeleteIndexerMessageText: str = attr.ib(type=str)
+    DeleteList: str = attr.ib(type=str)
+    DeleteListMessageText: str = attr.ib(type=str)
+    DeleteMetadataProfile: str = attr.ib(type=str)
+    DeleteMetadataProfileMessageText: str = attr.ib(type=str)
+    DeleteMovieFolderHelpText: str = attr.ib(type=str)
+    DeleteMovieFolderLabel: str = attr.ib(type=str)
+    DeleteNotification: str = attr.ib(type=str)
+    DeleteNotificationMessageText: str = attr.ib(type=str)
+    DeleteQualityProfile: str = attr.ib(type=str)
+    DeleteQualityProfileMessageText: str = attr.ib(type=str)
+    DeleteReleaseProfile: str = attr.ib(type=str)
+    DeleteReleaseProfileMessageText: str = attr.ib(type=str)
+    DeleteRestriction: str = attr.ib(type=str)
+    DeleteRestrictionHelpText: str = attr.ib(type=str)
+    DeleteRootFolder: str = attr.ib(type=str)
+    DeleteRootFolderMessageText: str = attr.ib(type=str)
+    DeleteSelectedBookFiles: str = attr.ib(type=str)
+    DeleteSelectedBookFilesMessageText: str = attr.ib(type=str)
+    DeleteSelectedMovie: str = attr.ib(type=str)
+    DeleteSelectedMovieFiles: str = attr.ib(type=str)
+    DeleteSelectedMovieFilesMessage: str = attr.ib(type=str)
+    DeleteTag: str = attr.ib(type=str)
+    DeleteTagMessageText: str = attr.ib(type=str)
+    DeleteTheMovieFolder: str = attr.ib(type=str)
+    DestinationPath: str = attr.ib(type=str)
+    DestinationRelativePath: str = attr.ib(type=str)
+    DetailedProgressBar: str = attr.ib(type=str)
+    DetailedProgressBarHelpText: str = attr.ib(type=str)
+    Details: str = attr.ib(type=str)
+    Development: str = attr.ib(type=str)
+    DigitalRelease: str = attr.ib(type=str)
+    Disabled: str = attr.ib(type=str)
+    DiscCount: str = attr.ib(type=str)
+    DiscNumber: str = attr.ib(type=str)
+    Discord: str = attr.ib(type=str)
+    DiscordUrlInSlackNotification: str = attr.ib(type=str)
+    Discover: str = attr.ib(type=str)
+    DiskSpace: str = attr.ib(type=str)
+    Docker: str = attr.ib(type=str)
+    DockerUpdater: str = attr.ib(type=str)
+    Donations: str = attr.ib(type=str)
+    DoneEditingGroups: str = attr.ib(type=str)
+    DoNotPrefer: str = attr.ib(type=str)
+    DoNotUpgradeAutomatically: str = attr.ib(type=str)
+    Download: str = attr.ib(type=str)
+    DownloadClient: str = attr.ib(type=str)
+    DownloadClientCheckDownloadingToRoot: str = attr.ib(type=str)
+    DownloadClientCheckNoneAvailableMessage: str = attr.ib(type=str)
+    DownloadClientCheckUnableToCommunicateMessage: str = attr.ib(type=str)
+    DownloadClients: str = attr.ib(type=str)
+    DownloadClientSettings: str = attr.ib(type=str)
+    DownloadClientsSettingsSummary: str = attr.ib(type=str)
+    DownloadClientStatusCheckAllClientMessage: str = attr.ib(type=str)
+    DownloadClientStatusCheckSingleClientMessage: str = attr.ib(type=str)
+    DownloadClientUnavailable: str = attr.ib(type=str)
+    Downloaded: str = attr.ib(type=str)
+    DownloadedAndMonitored: str = attr.ib(type=str)
+    DownloadedButNotMonitored: str = attr.ib(type=str)
+    DownloadFailed: str = attr.ib(type=str)
+    DownloadFailedCheckDownloadClientForMoreDetails: str = attr.ib(type=str)
+    DownloadFailedInterp: str = attr.ib(type=str)
+    Downloading: str = attr.ib(type=str)
+    DownloadPropersAndRepacks: str = attr.ib(type=str)
+    DownloadPropersAndRepacksHelpText1: str = attr.ib(type=str)
+    DownloadPropersAndRepacksHelpText2: str = attr.ib(type=str)
+    DownloadPropersAndRepacksHelpTexts1: str = attr.ib(type=str)
+    DownloadPropersAndRepacksHelpTexts2: str = attr.ib(type=str)
+    DownloadPropersAndRepacksHelpTextWarning: str = attr.ib(type=str)
+    DownloadWarning: str = attr.ib(type=str)
+    DownloadWarningCheckDownloadClientForMoreDetails: str = attr.ib(type=str)
+    Edit: str = attr.ib(type=str)
+    EditAuthor: str = attr.ib(type=str)
+    EditCustomFormat: str = attr.ib(type=str)
+    EditDelayProfile: str = attr.ib(type=str)
+    EditGroups: str = attr.ib(type=str)
+    EditIndexer: str = attr.ib(type=str)
+    Edition: str = attr.ib(type=str)
+    EditionsHelpText: str = attr.ib(type=str)
+    EditListExclusion: str = attr.ib(type=str)
+    EditMovie: str = attr.ib(type=str)
+    EditMovieFile: str = attr.ib(type=str)
+    EditPerson: str = attr.ib(type=str)
+    EditQualityProfile: str = attr.ib(type=str)
+    EditRemotePathMapping: str = attr.ib(type=str)
+    EditRestriction: str = attr.ib(type=str)
+    EmbedMetadataHelpText: str = attr.ib(type=str)
+    EmbedMetadataInBookFiles: str = attr.ib(type=str)
+    Enable: str = attr.ib(type=str)
+    EnableAutoHelpText: str = attr.ib(type=str)
+    EnableAutomaticAdd: str = attr.ib(type=str)
+    EnableAutomaticAddHelpText: str = attr.ib(type=str)
+    EnableAutomaticSearch: str = attr.ib(type=str)
+    EnableAutomaticSearchHelpText: str = attr.ib(type=str)
+    EnableAutomaticSearchHelpTextWarning: str = attr.ib(type=str)
+    EnableColorImpairedMode: str = attr.ib(type=str)
+    EnableColorImpairedModeHelpText: str = attr.ib(type=str)
+    EnableCompletedDownloadHandlingHelpText: str = attr.ib(type=str)
+    Enabled: str = attr.ib(type=str)
+    EnabledHelpText: str = attr.ib(type=str)
+    EnableHelpText: str = attr.ib(type=str)
+    EnableInteractiveSearch: str = attr.ib(type=str)
+    EnableInteractiveSearchHelpText: str = attr.ib(type=str)
+    EnableInteractiveSearchHelpTextWarning: str = attr.ib(type=str)
+    EnableMediaInfoHelpText: str = attr.ib(type=str)
+    EnableProfile: str = attr.ib(type=str)
+    EnableRSS: str = attr.ib(type=str)
+    EnableSSL: str = attr.ib(type=str)
+    EnableSslHelpText: str = attr.ib(type=str)
+    Ended: str = attr.ib(type=str)
+    EndedAllBooksDownloaded: str = attr.ib(type=str)
+    EntityName: str = attr.ib(type=str)
+    Episode: str = attr.ib(type=str)
+    EpisodeDoesNotHaveAnAbsoluteEpisodeNumber: str = attr.ib(type=str)
+    Error: str = attr.ib(type=str)
+    ErrorLoadingContents: str = attr.ib(type=str)
+    ErrorLoadingPreviews: str = attr.ib(type=str)
+    ErrorRestoringBackup: str = attr.ib(type=str)
+    Events: str = attr.ib(type=str)
+    EventType: str = attr.ib(type=str)
+    Exception: str = attr.ib(type=str)
+    Excluded: str = attr.ib(type=str)
+    ExcludeMovie: str = attr.ib(type=str)
+    ExcludeTitle: str = attr.ib(type=str)
+    Existing: str = attr.ib(type=str)
+    ExistingBooks: str = attr.ib(type=str)
+    ExistingItems: str = attr.ib(type=str)
+    ExistingMovies: str = attr.ib(type=str)
+    ExistingTag: str = attr.ib(type=str)
+    ExistingTagsScrubbed: str = attr.ib(type=str)
+    ExportCustomFormat: str = attr.ib(type=str)
+    Extension: str = attr.ib(type=str)
+    ExternalUpdater: str = attr.ib(type=str)
+    ExtraFileExtensionsHelpTexts1: str = attr.ib(type=str)
+    ExtraFileExtensionsHelpTexts2: str = attr.ib(type=str)
+    Failed: str = attr.ib(type=str)
+    FailedDownloadHandling: str = attr.ib(type=str)
+    FailedLoadingSearchResults: str = attr.ib(type=str)
+    FailedToLoadMovieFromAPI: str = attr.ib(type=str)
+    FailedToLoadQueue: str = attr.ib(type=str)
+    FeatureRequests: str = attr.ib(type=str)
+    FileDateHelpText: str = attr.ib(type=str)
+    FileDetails: str = attr.ib(type=str)
+    FileManagement: str = attr.ib(type=str)
+    Filename: str = attr.ib(type=str)
+    FileNames: str = attr.ib(type=str)
+    FileNameTokens: str = attr.ib(type=str)
+    Files: str = attr.ib(type=str)
+    FilesTotal: str = attr.ib(type=str)
+    FileWasDeletedByUpgrade: str = attr.ib(type=str)
+    FileWasDeletedByViaUI: str = attr.ib(type=str)
+    Filter: str = attr.ib(type=str)
+    FilterAnalyticsEvents: str = attr.ib(type=str)
+    FilterAuthor: str = attr.ib(type=str)
+    FilterPlaceHolder: str = attr.ib(type=str)
+    Filters: str = attr.ib(type=str)
+    FilterSentryEventsHelpText: str = attr.ib(type=str)
+    FirstBook: str = attr.ib(type=str)
+    FirstDayOfWeek: str = attr.ib(type=str)
+    Fixed: str = attr.ib(type=str)
+    FocusSearchBox: str = attr.ib(type=str)
+    Folder: str = attr.ib(type=str)
+    FolderMoveRenameWarning: str = attr.ib(type=str)
+    Folders: str = attr.ib(type=str)
+    FollowPerson: str = attr.ib(type=str)
+    Forecast: str = attr.ib(type=str)
+    ForeignIdHelpText: str = attr.ib(type=str)
+    Formats: str = attr.ib(type=str)
+    ForMoreInformationOnTheIndividualDownloadClients: str = attr.ib(type=str)
+    ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons: str = (
+        attr.ib(type=str)
     )
-    ForMoreInformationOnTheIndividualImportListsClinkOnTheInfoButtons: str | None = None
-    ForMoreInformationOnTheIndividualIndexers: str | None = None
-    ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons: str | None = None
-    ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons: str | None = None
-    FreeSpace: str | None = None
-    From: str | None = None
-    FutureBooks: str | None = None
-    FutureDays: str | None = None
-    FutureDaysHelpText: str | None = None
-    General: str | None = None
-    GeneralSettings: str | None = None
-    GeneralSettingsSummary: str | None = None
-    Genres: str | None = None
-    Global: str | None = None
-    GoToAuthorListing: str | None = None
-    GoToInterp: str | None = None
-    Grab: str | None = None
-    Grabbed: str | None = None
-    GrabID: str | None = None
-    GrabRelease: str | None = None
-    GrabReleaseMessageText: str | None = None
-    GrabSelected: str | None = None
-    Group: str | None = None
-    HardlinkCopyFiles: str | None = None
-    HasMonitoredBooksNoMonitoredBooksForThisAuthor: str | None = None
-    HasPendingChangesNoChanges: str | None = None
-    HasPendingChangesSaveChanges: str | None = None
-    HaveNotAddedMovies: str | None = None
-    Health: str | None = None
-    HealthNoIssues: str | None = None
-    HelpText: str | None = None
-    HiddenClickToShow: str | None = None
-    HideAdvanced: str | None = None
-    HideBooks: str | None = None
-    History: str | None = None
-    HomePage: str | None = None
-    Host: str | None = None
-    HostHelpText: str | None = None
-    Hostname: str | None = None
-    Hours: str | None = None
-    HttpHttps: str | None = None
-    ICalFeed: str | None = None
-    ICalHttpUrlHelpText: str | None = None
-    iCalLink: str | None = None
-    ICalLink: str | None = None
-    IconForCutoffUnmet: str | None = None
-    IconTooltip: str | None = None
+    ForMoreInformationOnTheIndividualImportListsClinkOnTheInfoButtons: str = attr.ib(
+        type=str
+    )
+    ForMoreInformationOnTheIndividualIndexers: str = attr.ib(type=str)
+    ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons: str = attr.ib(
+        type=str
+    )
+    ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons: str = attr.ib(type=str)
+    FreeSpace: str = attr.ib(type=str)
+    From: str = attr.ib(type=str)
+    FutureBooks: str = attr.ib(type=str)
+    FutureDays: str = attr.ib(type=str)
+    FutureDaysHelpText: str = attr.ib(type=str)
+    General: str = attr.ib(type=str)
+    GeneralSettings: str = attr.ib(type=str)
+    GeneralSettingsSummary: str = attr.ib(type=str)
+    Genres: str = attr.ib(type=str)
+    Global: str = attr.ib(type=str)
+    GoToAuthorListing: str = attr.ib(type=str)
+    GoToInterp: str = attr.ib(type=str)
+    Grab: str = attr.ib(type=str)
+    Grabbed: str = attr.ib(type=str)
+    GrabID: str = attr.ib(type=str)
+    GrabRelease: str = attr.ib(type=str)
+    GrabReleaseMessageText: str = attr.ib(type=str)
+    GrabSelected: str = attr.ib(type=str)
+    Group: str = attr.ib(type=str)
+    HardlinkCopyFiles: str = attr.ib(type=str)
+    HasMonitoredBooksNoMonitoredBooksForThisAuthor: str = attr.ib(type=str)
+    HasPendingChangesNoChanges: str = attr.ib(type=str)
+    HasPendingChangesSaveChanges: str = attr.ib(type=str)
+    HaveNotAddedMovies: str = attr.ib(type=str)
+    Health: str = attr.ib(type=str)
+    HealthNoIssues: str = attr.ib(type=str)
+    HelpText: str = attr.ib(type=str)
+    HiddenClickToShow: str = attr.ib(type=str)
+    HideAdvanced: str = attr.ib(type=str)
+    HideBooks: str = attr.ib(type=str)
+    History: str = attr.ib(type=str)
+    HomePage: str = attr.ib(type=str)
+    Host: str = attr.ib(type=str)
+    HostHelpText: str = attr.ib(type=str)
+    Hostname: str = attr.ib(type=str)
+    Hours: str = attr.ib(type=str)
+    HttpHttps: str = attr.ib(type=str)
+    ICalFeed: str = attr.ib(type=str)
+    ICalHttpUrlHelpText: str = attr.ib(type=str)
+    iCalLink: str = attr.ib(type=str)
+    ICalLink: str = attr.ib(type=str)
+    IconForCutoffUnmet: str = attr.ib(type=str)
+    IconTooltip: str = attr.ib(type=str)
     IfYouDontAddAnImportListExclusionAndTheAuthorHasAMetadataProfileOtherThanNoneThenThisBookMayBeReaddedDuringTheNextAuthorRefresh: str | None = (
         None
     )
-    Ignored: str | None = None
-    IgnoredAddresses: str | None = None
-    IgnoreDeletedBooks: str | None = None
-    IgnoreDeletedMovies: str | None = None
-    IgnoredHelpText: str | None = None
-    IgnoredMetaHelpText: str | None = None
-    IgnoredPlaceHolder: str | None = None
-    IllRestartLater: str | None = None
-    Images: str | None = None
-    IMDb: str | None = None
-    ImdbRating: str | None = None
-    ImdbVotes: str | None = None
-    Import: str | None = None
-    ImportCustomFormat: str | None = None
-    Imported: str | None = None
-    ImportedTo: str | None = None
-    ImportErrors: str | None = None
-    ImportExistingMovies: str | None = None
-    ImportExtraFiles: str | None = None
-    ImportExtraFilesHelpText: str | None = None
-    ImportFailed: str | None = None
-    ImportFailedInterp: str | None = None
-    ImportFailures: str | None = None
-    ImportHeader: str | None = None
-    ImportIncludeQuality: str | None = None
-    Importing: str | None = None
-    ImportLibrary: str | None = None
-    ImportListExclusions: str | None = None
-    ImportListMissingRoot: str | None = None
-    ImportListMultipleMissingRoots: str | None = None
-    ImportLists: str | None = None
-    ImportListSettings: str | None = None
-    ImportListSpecificSettings: str | None = None
-    ImportListStatusCheckAllClientMessage: str | None = None
-    ImportListStatusCheckSingleClientMessage: str | None = None
-    ImportListSyncIntervalHelpText: str | None = None
-    ImportMechanismHealthCheckMessage: str | None = None
-    ImportMovies: str | None = None
-    ImportNotForDownloads: str | None = None
-    ImportRootPath: str | None = None
-    ImportTipsMessage: str | None = None
-    InCinemas: str | None = None
-    InCinemasDate: str | None = None
-    InCinemasMsg: str | None = None
-    IncludeCustomFormatWhenRenaming: str | None = None
-    IncludeCustomFormatWhenRenamingHelpText: str | None = None
-    IncludeHealthWarningsHelpText: str | None = None
-    IncludePreferredWhenRenaming: str | None = None
-    IncludeRadarrRecommendations: str | None = None
-    IncludeRecommendationsHelpText: str | None = None
-    IncludeUnknownAuthorItemsHelpText: str | None = None
-    IncludeUnknownMovieItemsHelpText: str | None = None
-    IncludeUnmonitored: str | None = None
-    Indexer: str | None = None
-    IndexerDownloadClientHelpText: str | None = None
-    IndexerFlags: str | None = None
-    IndexerIdHelpText: str | None = None
-    IndexerIdHelpTextWarning: str | None = None
-    IndexerIdvalue0IncludeInPreferredWordsRenamingFormat: str | None = None
-    IndexerIdvalue0OnlySupportedWhenIndexerIsSetToAll: str | None = None
-    IndexerJackettAll: str | None = None
-    IndexerLongTermStatusCheckAllClientMessage: str | None = None
-    IndexerLongTermStatusCheckSingleClientMessage: str | None = None
-    IndexerPriority: str | None = None
-    IndexerPriorityHelpText: str | None = None
-    IndexerRssHealthCheckNoAvailableIndexers: str | None = None
-    IndexerRssHealthCheckNoIndexers: str | None = None
-    Indexers: str | None = None
-    IndexerSearchCheckNoAutomaticMessage: str | None = None
-    IndexerSearchCheckNoAvailableIndexersMessage: str | None = None
-    IndexerSearchCheckNoInteractiveMessage: str | None = None
-    IndexerSettings: str | None = None
-    IndexersSettingsSummary: str | None = None
-    IndexerStatusCheckAllClientMessage: str | None = None
-    IndexerStatusCheckSingleClientMessage: str | None = None
-    IndexerTagHelpText: str | None = None
-    Info: str | None = None
-    InstallLatest: str | None = None
-    InteractiveImport: str | None = None
-    InteractiveImportErrLanguage: str | None = None
-    InteractiveImportErrMovie: str | None = None
-    InteractiveImportErrQuality: str | None = None
-    InteractiveSearch: str | None = None
-    Interval: str | None = None
-    InvalidFormat: str | None = None
-    ISBN: str | None = None
-    IsCalibreLibraryHelpText: str | None = None
-    IsCutoffCutoff: str | None = None
-    IsCutoffUpgradeUntilThisQualityIsMetOrExceeded: str | None = None
-    IsExpandedHideBooks: str | None = None
-    IsExpandedHideFileInfo: str | None = None
-    IsExpandedShowBooks: str | None = None
-    IsExpandedShowFileInfo: str | None = None
+    Ignored: str = attr.ib(type=str)
+    IgnoredAddresses: str = attr.ib(type=str)
+    IgnoreDeletedBooks: str = attr.ib(type=str)
+    IgnoreDeletedMovies: str = attr.ib(type=str)
+    IgnoredHelpText: str = attr.ib(type=str)
+    IgnoredMetaHelpText: str = attr.ib(type=str)
+    IgnoredPlaceHolder: str = attr.ib(type=str)
+    IllRestartLater: str = attr.ib(type=str)
+    Images: str = attr.ib(type=str)
+    IMDb: str = attr.ib(type=str)
+    ImdbRating: str = attr.ib(type=str)
+    ImdbVotes: str = attr.ib(type=str)
+    Import: str = attr.ib(type=str)
+    ImportCustomFormat: str = attr.ib(type=str)
+    Imported: str = attr.ib(type=str)
+    ImportedTo: str = attr.ib(type=str)
+    ImportErrors: str = attr.ib(type=str)
+    ImportExistingMovies: str = attr.ib(type=str)
+    ImportExtraFiles: str = attr.ib(type=str)
+    ImportExtraFilesHelpText: str = attr.ib(type=str)
+    ImportFailed: str = attr.ib(type=str)
+    ImportFailedInterp: str = attr.ib(type=str)
+    ImportFailures: str = attr.ib(type=str)
+    ImportHeader: str = attr.ib(type=str)
+    ImportIncludeQuality: str = attr.ib(type=str)
+    Importing: str = attr.ib(type=str)
+    ImportLibrary: str = attr.ib(type=str)
+    ImportListExclusions: str = attr.ib(type=str)
+    ImportListMissingRoot: str = attr.ib(type=str)
+    ImportListMultipleMissingRoots: str = attr.ib(type=str)
+    ImportLists: str = attr.ib(type=str)
+    ImportListSettings: str = attr.ib(type=str)
+    ImportListSpecificSettings: str = attr.ib(type=str)
+    ImportListStatusCheckAllClientMessage: str = attr.ib(type=str)
+    ImportListStatusCheckSingleClientMessage: str = attr.ib(type=str)
+    ImportListSyncIntervalHelpText: str = attr.ib(type=str)
+    ImportMechanismHealthCheckMessage: str = attr.ib(type=str)
+    ImportMovies: str = attr.ib(type=str)
+    ImportNotForDownloads: str = attr.ib(type=str)
+    ImportRootPath: str = attr.ib(type=str)
+    ImportTipsMessage: str = attr.ib(type=str)
+    InCinemas: str = attr.ib(type=str)
+    InCinemasDate: str = attr.ib(type=str)
+    InCinemasMsg: str = attr.ib(type=str)
+    IncludeCustomFormatWhenRenaming: str = attr.ib(type=str)
+    IncludeCustomFormatWhenRenamingHelpText: str = attr.ib(type=str)
+    IncludeHealthWarningsHelpText: str = attr.ib(type=str)
+    IncludePreferredWhenRenaming: str = attr.ib(type=str)
+    IncludeRadarrRecommendations: str = attr.ib(type=str)
+    IncludeRecommendationsHelpText: str = attr.ib(type=str)
+    IncludeUnknownAuthorItemsHelpText: str = attr.ib(type=str)
+    IncludeUnknownMovieItemsHelpText: str = attr.ib(type=str)
+    IncludeUnmonitored: str = attr.ib(type=str)
+    Indexer: str = attr.ib(type=str)
+    IndexerDownloadClientHelpText: str = attr.ib(type=str)
+    IndexerFlags: str = attr.ib(type=str)
+    IndexerIdHelpText: str = attr.ib(type=str)
+    IndexerIdHelpTextWarning: str = attr.ib(type=str)
+    IndexerIdvalue0IncludeInPreferredWordsRenamingFormat: str = attr.ib(type=str)
+    IndexerIdvalue0OnlySupportedWhenIndexerIsSetToAll: str = attr.ib(type=str)
+    IndexerJackettAll: str = attr.ib(type=str)
+    IndexerLongTermStatusCheckAllClientMessage: str = attr.ib(type=str)
+    IndexerLongTermStatusCheckSingleClientMessage: str = attr.ib(type=str)
+    IndexerPriority: str = attr.ib(type=str)
+    IndexerPriorityHelpText: str = attr.ib(type=str)
+    IndexerRssHealthCheckNoAvailableIndexers: str = attr.ib(type=str)
+    IndexerRssHealthCheckNoIndexers: str = attr.ib(type=str)
+    Indexers: str = attr.ib(type=str)
+    IndexerSearchCheckNoAutomaticMessage: str = attr.ib(type=str)
+    IndexerSearchCheckNoAvailableIndexersMessage: str = attr.ib(type=str)
+    IndexerSearchCheckNoInteractiveMessage: str = attr.ib(type=str)
+    IndexerSettings: str = attr.ib(type=str)
+    IndexersSettingsSummary: str = attr.ib(type=str)
+    IndexerStatusCheckAllClientMessage: str = attr.ib(type=str)
+    IndexerStatusCheckSingleClientMessage: str = attr.ib(type=str)
+    IndexerTagHelpText: str = attr.ib(type=str)
+    Info: str = attr.ib(type=str)
+    InstallLatest: str = attr.ib(type=str)
+    InteractiveImport: str = attr.ib(type=str)
+    InteractiveImportErrLanguage: str = attr.ib(type=str)
+    InteractiveImportErrMovie: str = attr.ib(type=str)
+    InteractiveImportErrQuality: str = attr.ib(type=str)
+    InteractiveSearch: str = attr.ib(type=str)
+    Interval: str = attr.ib(type=str)
+    InvalidFormat: str = attr.ib(type=str)
+    ISBN: str = attr.ib(type=str)
+    IsCalibreLibraryHelpText: str = attr.ib(type=str)
+    IsCutoffCutoff: str = attr.ib(type=str)
+    IsCutoffUpgradeUntilThisQualityIsMetOrExceeded: str = attr.ib(type=str)
+    IsExpandedHideBooks: str = attr.ib(type=str)
+    IsExpandedHideFileInfo: str = attr.ib(type=str)
+    IsExpandedShowBooks: str = attr.ib(type=str)
+    IsExpandedShowFileInfo: str = attr.ib(type=str)
     IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnAuthorOrImportList: str | None = (
         None
     )
     IsInUseCantDeleteAQualityProfileThatIsAttachedToAnAuthorOrImportList: str | None = (
         None
     )
-    IsShowingMonitoredMonitorSelected: str | None = None
-    IsShowingMonitoredUnmonitorSelected: str | None = None
-    IsTagUsedCannotBeDeletedWhileInUse: str | None = None
-    KeepAndUnmonitorMovie: str | None = None
-    KeyboardShortcuts: str | None = None
-    Label: str | None = None
-    Language: str | None = None
-    LanguageHelpText: str | None = None
-    Languages: str | None = None
-    Large: str | None = None
-    LastDuration: str | None = None
-    LastExecution: str | None = None
-    LastUsed: str | None = None
-    LastWriteTime: str | None = None
-    LatestBook: str | None = None
-    LaunchBrowserHelpText: str | None = None
-    Letterboxd: str | None = None
-    Level: str | None = None
-    LibraryHelpText: str | None = None
-    LinkHere: str | None = None
-    Links: str | None = None
-    ListExclusions: str | None = None
-    Lists: str | None = None
-    ListSettings: str | None = None
-    ListsSettingsSummary: str | None = None
-    ListSyncLevelHelpText: str | None = None
-    ListSyncLevelHelpTextWarning: str | None = None
-    ListTagsHelpText: str | None = None
-    ListUpdateInterval: str | None = None
-    LoadingBookFilesFailed: str | None = None
-    LoadingBooksFailed: str | None = None
-    LoadingMovieCreditsFailed: str | None = None
-    LoadingMovieExtraFilesFailed: str | None = None
-    LoadingMovieFilesFailed: str | None = None
-    Local: str | None = None
-    LocalPath: str | None = None
-    LocalPathHelpText: str | None = None
-    Location: str | None = None
-    LogFiles: str | None = None
-    Logging: str | None = None
-    LogLevel: str | None = None
-    LogLevelTraceHelpTextWarning: str | None = None
-    LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily: str | None = None
-    LogOnly: str | None = None
-    LogRotateHelpText: str | None = None
-    LogRotation: str | None = None
-    Logs: str | None = None
-    LogSQL: str | None = None
-    LogSqlHelpText: str | None = None
-    LongDateFormat: str | None = None
-    LookingForReleaseProfiles1: str | None = None
-    LookingForReleaseProfiles2: str | None = None
-    LowerCase: str | None = None
-    MaintenanceRelease: str | None = None
-    Manual: str | None = None
-    ManualDownload: str | None = None
-    ManualImport: str | None = None
-    ManualImportSelectLanguage: str | None = None
-    ManualImportSelectMovie: str | None = None
-    ManualImportSelectQuality: str | None = None
-    ManualImportSetReleaseGroup: str | None = None
-    MappedDrivesRunningAsService: str | None = None
-    MarkAsFailed: str | None = None
-    MarkAsFailedMessageText: str | None = None
-    MassBookSearch: str | None = None
-    MassBookSearchWarning: str | None = None
-    MassMovieSearch: str | None = None
-    Max: str | None = None
-    MaximumLimits: str | None = None
-    MaximumSize: str | None = None
-    MaximumSizeHelpText: str | None = None
-    Mechanism: str | None = None
-    MediaInfo: str | None = None
-    MediaManagement: str | None = None
-    MediaManagementSettings: str | None = None
-    MediaManagementSettingsSummary: str | None = None
-    Medium: str | None = None
-    MediumFormat: str | None = None
-    MegabytesPerMinute: str | None = None
-    Message: str | None = None
-    Metadata: str | None = None
-    MetadataConsumers: str | None = None
-    MetadataProfile: str | None = None
-    MetadataProfileIdHelpText: str | None = None
-    MetadataProfiles: str | None = None
-    MetadataProviderSource: str | None = None
-    MetadataSettings: str | None = None
-    MetadataSettingsSummary: str | None = None
-    MetadataSource: str | None = None
-    MetadataSourceHelpText: str | None = None
-    MIA: str | None = None
-    Min: str | None = None
-    MinAvailability: str | None = None
-    MinFormatScoreHelpText: str | None = None
-    MinimumAge: str | None = None
-    MinimumAgeHelpText: str | None = None
-    MinimumAvailability: str | None = None
-    MinimumCustomFormatScore: str | None = None
-    MinimumFreeSpace: str | None = None
-    MinimumFreeSpaceWhenImportingHelpText: str | None = None
-    MinimumLimits: str | None = None
-    MinimumPages: str | None = None
-    MinimumPopularity: str | None = None
-    MinPagesHelpText: str | None = None
-    MinPopularityHelpText: str | None = None
-    Minutes: str | None = None
-    MinutesHundredTwenty: str | None = None
-    MinutesNinety: str | None = None
-    MinutesSixty: str | None = None
-    Missing: str | None = None
-    MissingBooks: str | None = None
-    MissingBooksAuthorMonitored: str | None = None
-    MissingBooksAuthorNotMonitored: str | None = None
-    MissingFromDisk: str | None = None
-    MissingMonitoredAndConsideredAvailable: str | None = None
-    MissingNotMonitored: str | None = None
-    Mode: str | None = None
-    Monday: str | None = None
-    Monitor: str | None = None
-    MonitorAuthor: str | None = None
-    MonitorBook: str | None = None
-    MonitorBookExistingOnlyWarning: str | None = None
-    Monitored: str | None = None
-    MonitoredAuthorIsMonitored: str | None = None
-    MonitoredAuthorIsUnmonitored: str | None = None
-    MonitoredHelpText: str | None = None
-    MonitoredOnly: str | None = None
-    MonitoredStatus: str | None = None
-    Monitoring: str | None = None
-    MonitoringOptions: str | None = None
-    MonitoringOptionsHelpText: str | None = None
-    MonitorMovie: str | None = None
-    MonitorNewItems: str | None = None
-    MonitorNewItemsHelpText: str | None = None
-    MonoVersion: str | None = None
-    Month: str | None = None
-    Months: str | None = None
-    More: str | None = None
-    MoreControlCFText: str | None = None
-    MoreDetails: str | None = None
-    MoreInfo: str | None = None
-    MountCheckMessage: str | None = None
-    MoveFiles: str | None = None
-    MoveFolders1: str | None = None
-    MoveFolders2: str | None = None
-    Movie: str | None = None
-    MovieAlreadyExcluded: str | None = None
-    MovieChat: str | None = None
-    MovieDetailsNextMovie: str | None = None
-    MovieDetailsPreviousMovie: str | None = None
-    MovieEditor: str | None = None
-    MovieExcludedFromAutomaticAdd: str | None = None
-    MovieFiles: str | None = None
-    MovieFilesTotaling: str | None = None
-    MovieFolderFormat: str | None = None
-    MovieID: str | None = None
-    MovieIndex: str | None = None
-    MovieIndexScrollBottom: str | None = None
-    MovieIndexScrollTop: str | None = None
-    MovieInfoLanguage: str | None = None
-    MovieInfoLanguageHelpText: str | None = None
-    MovieInfoLanguageHelpTextWarning: str | None = None
-    MovieInvalidFormat: str | None = None
-    MovieIsDownloading: str | None = None
-    MovieIsDownloadingInterp: str | None = None
-    MovieIsMonitored: str | None = None
-    MovieIsOnImportExclusionList: str | None = None
-    MovieIsRecommend: str | None = None
-    MovieIsUnmonitored: str | None = None
-    MovieNaming: str | None = None
-    Movies: str | None = None
-    MoviesSelectedInterp: str | None = None
-    MovieTitle: str | None = None
-    MovieTitleHelpText: str | None = None
-    MovieYear: str | None = None
-    MovieYearHelpText: str | None = None
-    MultiLanguage: str | None = None
-    MusicBrainzAuthorID: str | None = None
-    MusicBrainzBookID: str | None = None
-    MusicbrainzId: str | None = None
-    MusicBrainzRecordingID: str | None = None
-    MusicBrainzReleaseID: str | None = None
-    MusicBrainzTrackID: str | None = None
-    MustContain: str | None = None
-    MustNotContain: str | None = None
-    Name: str | None = None
-    NameFirstLast: str | None = None
-    NameLastFirst: str | None = None
-    NameStyle: str | None = None
-    NamingSettings: str | None = None
-    Negate: str | None = None
-    Negated: str | None = None
-    NegateHelpText: str | None = None
-    NetCore: str | None = None
-    NETCore: str | None = None
-    New: str | None = None
-    NewBooks: str | None = None
-    NextExecution: str | None = None
-    No: str | None = None
-    NoAltTitle: str | None = None
-    NoBackupsAreAvailable: str | None = None
-    NoChange: str | None = None
-    NoChanges: str | None = None
-    NoEventsFound: str | None = None
-    NoHistory: str | None = None
-    NoHistoryBlocklist: str | None = None
-    NoLeaveIt: str | None = None
-    NoLimitForAnyRuntime: str | None = None
-    NoLinks: str | None = None
-    NoListRecommendations: str | None = None
-    NoLogFiles: str | None = None
-    NoMatchFound: str | None = None
-    NoMinimumForAnyRuntime: str | None = None
-    NoMoveFilesSelf: str | None = None
-    NoMoviesExist: str | None = None
-    NoName: str | None = None
-    NoResultsFound: str | None = None
-    NoTagsHaveBeenAddedYet: str | None = None
-    NotAvailable: str | None = None
-    NotificationTriggers: str | None = None
-    NotificationTriggersHelpText: str | None = None
-    NotMonitored: str | None = None
-    NoUpdatesAreAvailable: str | None = None
-    NoVideoFilesFoundSelectedFolder: str | None = None
-    OAuthPopupMessage: str | None = None
-    Ok: str | None = None
-    OnApplicationUpdate: str | None = None
-    OnApplicationUpdateHelpText: str | None = None
-    OnBookRetagHelpText: str | None = None
-    OnDownloadFailureHelpText: str | None = None
-    OnDownloadHelpText: str | None = None
-    OnGrab: str | None = None
-    OnGrabHelpText: str | None = None
-    OnHealthIssue: str | None = None
-    OnHealthIssueHelpText: str | None = None
-    OnImport: str | None = None
-    OnImportFailureHelpText: str | None = None
-    OnLatestVersion: str | None = None
-    OnlyTorrent: str | None = None
-    OnlyUsenet: str | None = None
-    OnMovieDelete: str | None = None
-    OnMovieDeleteHelpText: str | None = None
-    OnMovieFileDelete: str | None = None
-    OnMovieFileDeleteForUpgrade: str | None = None
-    OnMovieFileDeleteForUpgradeHelpText: str | None = None
-    OnMovieFileDeleteHelpText: str | None = None
-    OnReleaseImportHelpText: str | None = None
-    OnRename: str | None = None
-    OnRenameHelpText: str | None = None
-    OnUpgrade: str | None = None
-    OnUpgradeHelpText: str | None = None
-    OpenBrowserOnStart: str | None = None
-    OpenThisModal: str | None = None
-    Options: str | None = None
-    Organize: str | None = None
-    OrganizeAndRename: str | None = None
-    OrganizeConfirm: str | None = None
-    OrganizeModalAllPathsRelative: str | None = None
-    OrganizeModalDisabled: str | None = None
-    OrganizeModalNamingPattern: str | None = None
-    OrganizeModalSuccess: str | None = None
-    OrganizeSelectedMovies: str | None = None
-    Original: str | None = None
-    Other: str | None = None
-    OutputFormatHelpText: str | None = None
-    OutputPath: str | None = None
-    Overview: str | None = None
-    OverviewOptions: str | None = None
-    PackageVersion: str | None = None
-    PageSize: str | None = None
-    PageSizeHelpText: str | None = None
-    Password: str | None = None
-    PasswordHelpText: str | None = None
-    PastDays: str | None = None
-    PastDaysHelpText: str | None = None
-    Path: str | None = None
-    PathHelpText: str | None = None
-    PathHelpTextWarning: str | None = None
-    Paused: str | None = None
-    Peers: str | None = None
-    Pending: str | None = None
-    PendingChangesDiscardChanges: str | None = None
-    PendingChangesMessage: str | None = None
-    PendingChangesStayReview: str | None = None
-    Permissions: str | None = None
-    PhysicalRelease: str | None = None
-    PhysicalReleaseDate: str | None = None
-    Port: str | None = None
-    PortHelpText: str | None = None
-    PortHelpTextWarning: str | None = None
-    PortNumber: str | None = None
-    PosterOptions: str | None = None
-    Posters: str | None = None
-    PosterSize: str | None = None
-    PreferAndUpgrade: str | None = None
-    PreferIndexerFlags: str | None = None
-    PreferIndexerFlagsHelpText: str | None = None
-    Preferred: str | None = None
-    PreferredHelpTexts1: str | None = None
-    PreferredHelpTexts2: str | None = None
-    PreferredHelpTexts3: str | None = None
-    PreferredSize: str | None = None
-    PreferTorrent: str | None = None
-    PreferUsenet: str | None = None
-    Presets: str | None = None
-    PreviewRename: str | None = None
-    PreviewRenameHelpText: str | None = None
-    PreviewRetag: str | None = None
-    Priority: str | None = None
-    PriorityHelpText: str | None = None
-    PrioritySettings: str | None = None
-    ProcessingFolders: str | None = None
-    Profiles: str | None = None
-    ProfilesSettingsSummary: str | None = None
-    Progress: str | None = None
-    Proper: str | None = None
-    PropersAndRepacks: str | None = None
-    Protocol: str | None = None
-    ProtocolHelpText: str | None = None
-    Proxy: str | None = None
-    ProxyBypassFilterHelpText: str | None = None
-    ProxyCheckBadRequestMessage: str | None = None
-    ProxyCheckFailedToTestMessage: str | None = None
-    ProxyCheckResolveIpMessage: str | None = None
-    ProxyPasswordHelpText: str | None = None
-    ProxyType: str | None = None
-    ProxyUsernameHelpText: str | None = None
-    PtpOldSettingsCheckMessage: str | None = None
-    PublishedDate: str | None = None
-    Publisher: str | None = None
-    Qualities: str | None = None
-    QualitiesHelpText: str | None = None
-    Quality: str | None = None
-    QualityCutoffHasNotBeenMet: str | None = None
-    QualityDefinitions: str | None = None
-    QualityLimitsHelpText: str | None = None
-    QualityOrLangCutoffHasNotBeenMet: str | None = None
-    QualityProfile: str | None = None
-    QualityProfileDeleteConfirm: str | None = None
-    QualityProfileIdHelpText: str | None = None
-    QualityProfileInUse: str | None = None
-    QualityProfiles: str | None = None
-    QualitySettings: str | None = None
-    QualitySettingsSummary: str | None = None
-    Queue: str | None = None
-    Queued: str | None = None
-    QueueIsEmpty: str | None = None
-    QuickImport: str | None = None
-    RadarrCalendarFeed: str | None = None
-    RadarrSupportsAnyDownloadClient: str | None = None
-    RadarrSupportsAnyIndexer: str | None = None
-    RadarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow: str | None = None
-    RadarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow: str | None = None
-    RadarrTags: str | None = None
-    RadarrUpdated: str | None = None
-    Ratings: str | None = None
+    IsShowingMonitoredMonitorSelected: str = attr.ib(type=str)
+    IsShowingMonitoredUnmonitorSelected: str = attr.ib(type=str)
+    IsTagUsedCannotBeDeletedWhileInUse: str = attr.ib(type=str)
+    KeepAndUnmonitorMovie: str = attr.ib(type=str)
+    KeyboardShortcuts: str = attr.ib(type=str)
+    Label: str = attr.ib(type=str)
+    Language: str = attr.ib(type=str)
+    LanguageHelpText: str = attr.ib(type=str)
+    Languages: str = attr.ib(type=str)
+    Large: str = attr.ib(type=str)
+    LastDuration: str = attr.ib(type=str)
+    LastExecution: str = attr.ib(type=str)
+    LastUsed: str = attr.ib(type=str)
+    LastWriteTime: str = attr.ib(type=str)
+    LatestBook: str = attr.ib(type=str)
+    LaunchBrowserHelpText: str = attr.ib(type=str)
+    Letterboxd: str = attr.ib(type=str)
+    Level: str = attr.ib(type=str)
+    LibraryHelpText: str = attr.ib(type=str)
+    LinkHere: str = attr.ib(type=str)
+    Links: str = attr.ib(type=str)
+    ListExclusions: str = attr.ib(type=str)
+    Lists: str = attr.ib(type=str)
+    ListSettings: str = attr.ib(type=str)
+    ListsSettingsSummary: str = attr.ib(type=str)
+    ListSyncLevelHelpText: str = attr.ib(type=str)
+    ListSyncLevelHelpTextWarning: str = attr.ib(type=str)
+    ListTagsHelpText: str = attr.ib(type=str)
+    ListUpdateInterval: str = attr.ib(type=str)
+    LoadingBookFilesFailed: str = attr.ib(type=str)
+    LoadingBooksFailed: str = attr.ib(type=str)
+    LoadingMovieCreditsFailed: str = attr.ib(type=str)
+    LoadingMovieExtraFilesFailed: str = attr.ib(type=str)
+    LoadingMovieFilesFailed: str = attr.ib(type=str)
+    Local: str = attr.ib(type=str)
+    LocalPath: str = attr.ib(type=str)
+    LocalPathHelpText: str = attr.ib(type=str)
+    Location: str = attr.ib(type=str)
+    LogFiles: str = attr.ib(type=str)
+    Logging: str = attr.ib(type=str)
+    LogLevel: str = attr.ib(type=str)
+    LogLevelTraceHelpTextWarning: str = attr.ib(type=str)
+    LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily: str = attr.ib(
+        type=str
+    )
+    LogOnly: str = attr.ib(type=str)
+    LogRotateHelpText: str = attr.ib(type=str)
+    LogRotation: str = attr.ib(type=str)
+    Logs: str = attr.ib(type=str)
+    LogSQL: str = attr.ib(type=str)
+    LogSqlHelpText: str = attr.ib(type=str)
+    LongDateFormat: str = attr.ib(type=str)
+    LookingForReleaseProfiles1: str = attr.ib(type=str)
+    LookingForReleaseProfiles2: str = attr.ib(type=str)
+    LowerCase: str = attr.ib(type=str)
+    MaintenanceRelease: str = attr.ib(type=str)
+    Manual: str = attr.ib(type=str)
+    ManualDownload: str = attr.ib(type=str)
+    ManualImport: str = attr.ib(type=str)
+    ManualImportSelectLanguage: str = attr.ib(type=str)
+    ManualImportSelectMovie: str = attr.ib(type=str)
+    ManualImportSelectQuality: str = attr.ib(type=str)
+    ManualImportSetReleaseGroup: str = attr.ib(type=str)
+    MappedDrivesRunningAsService: str = attr.ib(type=str)
+    MarkAsFailed: str = attr.ib(type=str)
+    MarkAsFailedMessageText: str = attr.ib(type=str)
+    MassBookSearch: str = attr.ib(type=str)
+    MassBookSearchWarning: str = attr.ib(type=str)
+    MassMovieSearch: str = attr.ib(type=str)
+    Max: str = attr.ib(type=str)
+    MaximumLimits: str = attr.ib(type=str)
+    MaximumSize: str = attr.ib(type=str)
+    MaximumSizeHelpText: str = attr.ib(type=str)
+    Mechanism: str = attr.ib(type=str)
+    MediaInfo: str = attr.ib(type=str)
+    MediaManagement: str = attr.ib(type=str)
+    MediaManagementSettings: str = attr.ib(type=str)
+    MediaManagementSettingsSummary: str = attr.ib(type=str)
+    Medium: str = attr.ib(type=str)
+    MediumFormat: str = attr.ib(type=str)
+    MegabytesPerMinute: str = attr.ib(type=str)
+    Message: str = attr.ib(type=str)
+    Metadata: str = attr.ib(type=str)
+    MetadataConsumers: str = attr.ib(type=str)
+    MetadataProfile: str = attr.ib(type=str)
+    MetadataProfileIdHelpText: str = attr.ib(type=str)
+    MetadataProfiles: str = attr.ib(type=str)
+    MetadataProviderSource: str = attr.ib(type=str)
+    MetadataSettings: str = attr.ib(type=str)
+    MetadataSettingsSummary: str = attr.ib(type=str)
+    MetadataSource: str = attr.ib(type=str)
+    MetadataSourceHelpText: str = attr.ib(type=str)
+    MIA: str = attr.ib(type=str)
+    Min: str = attr.ib(type=str)
+    MinAvailability: str = attr.ib(type=str)
+    MinFormatScoreHelpText: str = attr.ib(type=str)
+    MinimumAge: str = attr.ib(type=str)
+    MinimumAgeHelpText: str = attr.ib(type=str)
+    MinimumAvailability: str = attr.ib(type=str)
+    MinimumCustomFormatScore: str = attr.ib(type=str)
+    MinimumFreeSpace: str = attr.ib(type=str)
+    MinimumFreeSpaceWhenImportingHelpText: str = attr.ib(type=str)
+    MinimumLimits: str = attr.ib(type=str)
+    MinimumPages: str = attr.ib(type=str)
+    MinimumPopularity: str = attr.ib(type=str)
+    MinPagesHelpText: str = attr.ib(type=str)
+    MinPopularityHelpText: str = attr.ib(type=str)
+    Minutes: str = attr.ib(type=str)
+    MinutesHundredTwenty: str = attr.ib(type=str)
+    MinutesNinety: str = attr.ib(type=str)
+    MinutesSixty: str = attr.ib(type=str)
+    Missing: str = attr.ib(type=str)
+    MissingBooks: str = attr.ib(type=str)
+    MissingBooksAuthorMonitored: str = attr.ib(type=str)
+    MissingBooksAuthorNotMonitored: str = attr.ib(type=str)
+    MissingFromDisk: str = attr.ib(type=str)
+    MissingMonitoredAndConsideredAvailable: str = attr.ib(type=str)
+    MissingNotMonitored: str = attr.ib(type=str)
+    Mode: str = attr.ib(type=str)
+    Monday: str = attr.ib(type=str)
+    Monitor: str = attr.ib(type=str)
+    MonitorAuthor: str = attr.ib(type=str)
+    MonitorBook: str = attr.ib(type=str)
+    MonitorBookExistingOnlyWarning: str = attr.ib(type=str)
+    Monitored: str = attr.ib(type=str)
+    MonitoredAuthorIsMonitored: str = attr.ib(type=str)
+    MonitoredAuthorIsUnmonitored: str = attr.ib(type=str)
+    MonitoredHelpText: str = attr.ib(type=str)
+    MonitoredOnly: str = attr.ib(type=str)
+    MonitoredStatus: str = attr.ib(type=str)
+    Monitoring: str = attr.ib(type=str)
+    MonitoringOptions: str = attr.ib(type=str)
+    MonitoringOptionsHelpText: str = attr.ib(type=str)
+    MonitorMovie: str = attr.ib(type=str)
+    MonitorNewItems: str = attr.ib(type=str)
+    MonitorNewItemsHelpText: str = attr.ib(type=str)
+    MonoVersion: str = attr.ib(type=str)
+    Month: str = attr.ib(type=str)
+    Months: str = attr.ib(type=str)
+    More: str = attr.ib(type=str)
+    MoreControlCFText: str = attr.ib(type=str)
+    MoreDetails: str = attr.ib(type=str)
+    MoreInfo: str = attr.ib(type=str)
+    MountCheckMessage: str = attr.ib(type=str)
+    MoveFiles: str = attr.ib(type=str)
+    MoveFolders1: str = attr.ib(type=str)
+    MoveFolders2: str = attr.ib(type=str)
+    Movie: str = attr.ib(type=str)
+    MovieAlreadyExcluded: str = attr.ib(type=str)
+    MovieChat: str = attr.ib(type=str)
+    MovieDetailsNextMovie: str = attr.ib(type=str)
+    MovieDetailsPreviousMovie: str = attr.ib(type=str)
+    MovieEditor: str = attr.ib(type=str)
+    MovieExcludedFromAutomaticAdd: str = attr.ib(type=str)
+    MovieFiles: str = attr.ib(type=str)
+    MovieFilesTotaling: str = attr.ib(type=str)
+    MovieFolderFormat: str = attr.ib(type=str)
+    MovieID: str = attr.ib(type=str)
+    MovieIndex: str = attr.ib(type=str)
+    MovieIndexScrollBottom: str = attr.ib(type=str)
+    MovieIndexScrollTop: str = attr.ib(type=str)
+    MovieInfoLanguage: str = attr.ib(type=str)
+    MovieInfoLanguageHelpText: str = attr.ib(type=str)
+    MovieInfoLanguageHelpTextWarning: str = attr.ib(type=str)
+    MovieInvalidFormat: str = attr.ib(type=str)
+    MovieIsDownloading: str = attr.ib(type=str)
+    MovieIsDownloadingInterp: str = attr.ib(type=str)
+    MovieIsMonitored: str = attr.ib(type=str)
+    MovieIsOnImportExclusionList: str = attr.ib(type=str)
+    MovieIsRecommend: str = attr.ib(type=str)
+    MovieIsUnmonitored: str = attr.ib(type=str)
+    MovieNaming: str = attr.ib(type=str)
+    Movies: str = attr.ib(type=str)
+    MoviesSelectedInterp: str = attr.ib(type=str)
+    MovieTitle: str = attr.ib(type=str)
+    MovieTitleHelpText: str = attr.ib(type=str)
+    MovieYear: str = attr.ib(type=str)
+    MovieYearHelpText: str = attr.ib(type=str)
+    MultiLanguage: str = attr.ib(type=str)
+    MusicBrainzAuthorID: str = attr.ib(type=str)
+    MusicBrainzBookID: str = attr.ib(type=str)
+    MusicbrainzId: str = attr.ib(type=str)
+    MusicBrainzRecordingID: str = attr.ib(type=str)
+    MusicBrainzReleaseID: str = attr.ib(type=str)
+    MusicBrainzTrackID: str = attr.ib(type=str)
+    MustContain: str = attr.ib(type=str)
+    MustNotContain: str = attr.ib(type=str)
+    Name: str = attr.ib(type=str)
+    NameFirstLast: str = attr.ib(type=str)
+    NameLastFirst: str = attr.ib(type=str)
+    NameStyle: str = attr.ib(type=str)
+    NamingSettings: str = attr.ib(type=str)
+    Negate: str = attr.ib(type=str)
+    Negated: str = attr.ib(type=str)
+    NegateHelpText: str = attr.ib(type=str)
+    NetCore: str = attr.ib(type=str)
+    NETCore: str = attr.ib(type=str)
+    New: str = attr.ib(type=str)
+    NewBooks: str = attr.ib(type=str)
+    NextExecution: str = attr.ib(type=str)
+    No: str = attr.ib(type=str)
+    NoAltTitle: str = attr.ib(type=str)
+    NoBackupsAreAvailable: str = attr.ib(type=str)
+    NoChange: str = attr.ib(type=str)
+    NoChanges: str = attr.ib(type=str)
+    NoEventsFound: str = attr.ib(type=str)
+    NoHistory: str = attr.ib(type=str)
+    NoHistoryBlocklist: str = attr.ib(type=str)
+    NoLeaveIt: str = attr.ib(type=str)
+    NoLimitForAnyRuntime: str = attr.ib(type=str)
+    NoLinks: str = attr.ib(type=str)
+    NoListRecommendations: str = attr.ib(type=str)
+    NoLogFiles: str = attr.ib(type=str)
+    NoMatchFound: str = attr.ib(type=str)
+    NoMinimumForAnyRuntime: str = attr.ib(type=str)
+    NoMoveFilesSelf: str = attr.ib(type=str)
+    NoMoviesExist: str = attr.ib(type=str)
+    NoName: str = attr.ib(type=str)
+    NoResultsFound: str = attr.ib(type=str)
+    NoTagsHaveBeenAddedYet: str = attr.ib(type=str)
+    NotAvailable: str = attr.ib(type=str)
+    NotificationTriggers: str = attr.ib(type=str)
+    NotificationTriggersHelpText: str = attr.ib(type=str)
+    NotMonitored: str = attr.ib(type=str)
+    NoUpdatesAreAvailable: str = attr.ib(type=str)
+    NoVideoFilesFoundSelectedFolder: str = attr.ib(type=str)
+    OAuthPopupMessage: str = attr.ib(type=str)
+    Ok: str = attr.ib(type=str)
+    OnApplicationUpdate: str = attr.ib(type=str)
+    OnApplicationUpdateHelpText: str = attr.ib(type=str)
+    OnBookRetagHelpText: str = attr.ib(type=str)
+    OnDownloadFailureHelpText: str = attr.ib(type=str)
+    OnDownloadHelpText: str = attr.ib(type=str)
+    OnGrab: str = attr.ib(type=str)
+    OnGrabHelpText: str = attr.ib(type=str)
+    OnHealthIssue: str = attr.ib(type=str)
+    OnHealthIssueHelpText: str = attr.ib(type=str)
+    OnImport: str = attr.ib(type=str)
+    OnImportFailureHelpText: str = attr.ib(type=str)
+    OnLatestVersion: str = attr.ib(type=str)
+    OnlyTorrent: str = attr.ib(type=str)
+    OnlyUsenet: str = attr.ib(type=str)
+    OnMovieDelete: str = attr.ib(type=str)
+    OnMovieDeleteHelpText: str = attr.ib(type=str)
+    OnMovieFileDelete: str = attr.ib(type=str)
+    OnMovieFileDeleteForUpgrade: str = attr.ib(type=str)
+    OnMovieFileDeleteForUpgradeHelpText: str = attr.ib(type=str)
+    OnMovieFileDeleteHelpText: str = attr.ib(type=str)
+    OnReleaseImportHelpText: str = attr.ib(type=str)
+    OnRename: str = attr.ib(type=str)
+    OnRenameHelpText: str = attr.ib(type=str)
+    OnUpgrade: str = attr.ib(type=str)
+    OnUpgradeHelpText: str = attr.ib(type=str)
+    OpenBrowserOnStart: str = attr.ib(type=str)
+    OpenThisModal: str = attr.ib(type=str)
+    Options: str = attr.ib(type=str)
+    Organize: str = attr.ib(type=str)
+    OrganizeAndRename: str = attr.ib(type=str)
+    OrganizeConfirm: str = attr.ib(type=str)
+    OrganizeModalAllPathsRelative: str = attr.ib(type=str)
+    OrganizeModalDisabled: str = attr.ib(type=str)
+    OrganizeModalNamingPattern: str = attr.ib(type=str)
+    OrganizeModalSuccess: str = attr.ib(type=str)
+    OrganizeSelectedMovies: str = attr.ib(type=str)
+    Original: str = attr.ib(type=str)
+    Other: str = attr.ib(type=str)
+    OutputFormatHelpText: str = attr.ib(type=str)
+    OutputPath: str = attr.ib(type=str)
+    Overview: str = attr.ib(type=str)
+    OverviewOptions: str = attr.ib(type=str)
+    PackageVersion: str = attr.ib(type=str)
+    PageSize: str = attr.ib(type=str)
+    PageSizeHelpText: str = attr.ib(type=str)
+    Password: str = attr.ib(type=str)
+    PasswordHelpText: str = attr.ib(type=str)
+    PastDays: str = attr.ib(type=str)
+    PastDaysHelpText: str = attr.ib(type=str)
+    Path: str = attr.ib(type=str)
+    PathHelpText: str = attr.ib(type=str)
+    PathHelpTextWarning: str = attr.ib(type=str)
+    Paused: str = attr.ib(type=str)
+    Peers: str = attr.ib(type=str)
+    Pending: str = attr.ib(type=str)
+    PendingChangesDiscardChanges: str = attr.ib(type=str)
+    PendingChangesMessage: str = attr.ib(type=str)
+    PendingChangesStayReview: str = attr.ib(type=str)
+    Permissions: str = attr.ib(type=str)
+    PhysicalRelease: str = attr.ib(type=str)
+    PhysicalReleaseDate: str = attr.ib(type=str)
+    Port: str = attr.ib(type=str)
+    PortHelpText: str = attr.ib(type=str)
+    PortHelpTextWarning: str = attr.ib(type=str)
+    PortNumber: str = attr.ib(type=str)
+    PosterOptions: str = attr.ib(type=str)
+    Posters: str = attr.ib(type=str)
+    PosterSize: str = attr.ib(type=str)
+    PreferAndUpgrade: str = attr.ib(type=str)
+    PreferIndexerFlags: str = attr.ib(type=str)
+    PreferIndexerFlagsHelpText: str = attr.ib(type=str)
+    Preferred: str = attr.ib(type=str)
+    PreferredHelpTexts1: str = attr.ib(type=str)
+    PreferredHelpTexts2: str = attr.ib(type=str)
+    PreferredHelpTexts3: str = attr.ib(type=str)
+    PreferredSize: str = attr.ib(type=str)
+    PreferTorrent: str = attr.ib(type=str)
+    PreferUsenet: str = attr.ib(type=str)
+    Presets: str = attr.ib(type=str)
+    PreviewRename: str = attr.ib(type=str)
+    PreviewRenameHelpText: str = attr.ib(type=str)
+    PreviewRetag: str = attr.ib(type=str)
+    Priority: str = attr.ib(type=str)
+    PriorityHelpText: str = attr.ib(type=str)
+    PrioritySettings: str = attr.ib(type=str)
+    ProcessingFolders: str = attr.ib(type=str)
+    Profiles: str = attr.ib(type=str)
+    ProfilesSettingsSummary: str = attr.ib(type=str)
+    Progress: str = attr.ib(type=str)
+    Proper: str = attr.ib(type=str)
+    PropersAndRepacks: str = attr.ib(type=str)
+    Protocol: str = attr.ib(type=str)
+    ProtocolHelpText: str = attr.ib(type=str)
+    Proxy: str = attr.ib(type=str)
+    ProxyBypassFilterHelpText: str = attr.ib(type=str)
+    ProxyCheckBadRequestMessage: str = attr.ib(type=str)
+    ProxyCheckFailedToTestMessage: str = attr.ib(type=str)
+    ProxyCheckResolveIpMessage: str = attr.ib(type=str)
+    ProxyPasswordHelpText: str = attr.ib(type=str)
+    ProxyType: str = attr.ib(type=str)
+    ProxyUsernameHelpText: str = attr.ib(type=str)
+    PtpOldSettingsCheckMessage: str = attr.ib(type=str)
+    PublishedDate: str = attr.ib(type=str)
+    Publisher: str = attr.ib(type=str)
+    Qualities: str = attr.ib(type=str)
+    QualitiesHelpText: str = attr.ib(type=str)
+    Quality: str = attr.ib(type=str)
+    QualityCutoffHasNotBeenMet: str = attr.ib(type=str)
+    QualityDefinitions: str = attr.ib(type=str)
+    QualityLimitsHelpText: str = attr.ib(type=str)
+    QualityOrLangCutoffHasNotBeenMet: str = attr.ib(type=str)
+    QualityProfile: str = attr.ib(type=str)
+    QualityProfileDeleteConfirm: str = attr.ib(type=str)
+    QualityProfileIdHelpText: str = attr.ib(type=str)
+    QualityProfileInUse: str = attr.ib(type=str)
+    QualityProfiles: str = attr.ib(type=str)
+    QualitySettings: str = attr.ib(type=str)
+    QualitySettingsSummary: str = attr.ib(type=str)
+    Queue: str = attr.ib(type=str)
+    Queued: str = attr.ib(type=str)
+    QueueIsEmpty: str = attr.ib(type=str)
+    QuickImport: str = attr.ib(type=str)
+    RadarrCalendarFeed: str = attr.ib(type=str)
+    RadarrSupportsAnyDownloadClient: str = attr.ib(type=str)
+    RadarrSupportsAnyIndexer: str = attr.ib(type=str)
+    RadarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow: str = attr.ib(type=str)
+    RadarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow: str = attr.ib(
+        type=str
+    )
+    RadarrTags: str = attr.ib(type=str)
+    RadarrUpdated: str = attr.ib(type=str)
+    Ratings: str = attr.ib(type=str)
     ReadarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow: str | None = (
         None
     )
@@ -1210,532 +1251,527 @@ class _LocalizationStrings(BaseModel):
     ReadarrSupportsMultipleListsForImportingBooksAndAuthorsIntoTheDatabase: str | None = (
         None
     )
-    ReadarrTags: str | None = None
-    ReadTheWikiForMoreInformation: str | None = None
-    Real: str | None = None
-    Reason: str | None = None
-    RecentChanges: str | None = None
-    RecentFolders: str | None = None
-    RecycleBinCleanupDaysHelpText: str | None = None
-    RecycleBinCleanupDaysHelpTextWarning: str | None = None
-    RecycleBinHelpText: str | None = None
-    RecyclingBin: str | None = None
-    RecyclingBinCleanup: str | None = None
-    Reddit: str | None = None
-    Redownload: str | None = None
-    Refresh: str | None = None
-    RefreshAndScan: str | None = None
-    RefreshAuthor: str | None = None
-    RefreshInformation: str | None = None
-    RefreshInformationAndScanDisk: str | None = None
-    RefreshLists: str | None = None
-    RefreshMovie: str | None = None
-    RefreshScan: str | None = None
-    RegularExpressionsCanBeTested: str | None = None
-    RejectionCount: str | None = None
-    RelativePath: str | None = None
-    ReleaseBranchCheckOfficialBranchMessage: str | None = None
-    Released: str | None = None
-    ReleaseDate: str | None = None
-    ReleaseDates: str | None = None
-    ReleasedMsg: str | None = None
-    ReleaseGroup: str | None = None
-    ReleaseProfiles: str | None = None
-    ReleaseRejected: str | None = None
-    ReleaseStatus: str | None = None
-    ReleaseTitle: str | None = None
-    ReleaseWillBeProcessedInterp: str | None = None
-    Reload: str | None = None
-    RemotePath: str | None = None
-    RemotePathHelpText: str | None = None
-    RemotePathMappingCheckBadDockerPath: str | None = None
-    RemotePathMappingCheckDockerFolderMissing: str | None = None
-    RemotePathMappingCheckDownloadPermissions: str | None = None
-    RemotePathMappingCheckFileRemoved: str | None = None
-    RemotePathMappingCheckFilesBadDockerPath: str | None = None
-    RemotePathMappingCheckFilesGenericPermissions: str | None = None
-    RemotePathMappingCheckFilesLocalWrongOSPath: str | None = None
-    RemotePathMappingCheckFilesWrongOSPath: str | None = None
-    RemotePathMappingCheckFolderPermissions: str | None = None
-    RemotePathMappingCheckGenericPermissions: str | None = None
-    RemotePathMappingCheckImportFailed: str | None = None
-    RemotePathMappingCheckLocalFolderMissing: str | None = None
-    RemotePathMappingCheckLocalWrongOSPath: str | None = None
-    RemotePathMappingCheckRemoteDownloadClient: str | None = None
-    RemotePathMappingCheckWrongOSPath: str | None = None
-    RemotePathMappings: str | None = None
-    Remove: str | None = None
-    RemoveCompleted: str | None = None
-    RemoveCompletedDownloadsHelpText: str | None = None
-    RemovedFromTaskQueue: str | None = None
-    RemovedMovieCheckMultipleMessage: str | None = None
-    RemovedMovieCheckSingleMessage: str | None = None
-    RemoveDownloadsAlert: str | None = None
-    RemoveFailed: str | None = None
-    RemoveFailedDownloadsHelpText: str | None = None
-    RemoveFilter: str | None = None
-    RemoveFromBlocklist: str | None = None
-    RemoveFromDownloadClient: str | None = None
-    RemoveFromQueue: str | None = None
-    RemoveFromQueueText: str | None = None
-    RemoveHelpTextWarning: str | None = None
-    RemoveMovieAndDeleteFiles: str | None = None
-    RemoveMovieAndKeepFiles: str | None = None
-    RemoveRootFolder: str | None = None
-    RemoveSelected: str | None = None
-    RemoveSelectedItem: str | None = None
-    RemoveSelectedItems: str | None = None
-    RemoveSelectedMessageText: str | None = None
-    RemoveTagExistingTag: str | None = None
-    RemoveTagRemovingTag: str | None = None
-    RemovingTag: str | None = None
-    RenameBooks: str | None = None
-    RenameBooksHelpText: str | None = None
-    Renamed: str | None = None
-    RenameFiles: str | None = None
-    RenameMovies: str | None = None
-    RenameMoviesHelpText: str | None = None
-    Reorder: str | None = None
-    Replace: str | None = None
-    ReplaceIllegalCharacters: str | None = None
-    ReplaceIllegalCharactersHelpText: str | None = None
-    ReplaceWithDash: str | None = None
-    ReplaceWithSpaceDash: str | None = None
-    ReplaceWithSpaceDashSpace: str | None = None
-    Required: str | None = None
-    RequiredHelpText: str | None = None
-    RequiredPlaceHolder: str | None = None
-    RequiredRestrictionHelpText: str | None = None
-    RequiredRestrictionPlaceHolder: str | None = None
-    RescanAfterRefreshHelpText: str | None = None
-    RescanAfterRefreshHelpTextWarning: str | None = None
-    RescanAuthorFolderAfterRefresh: str | None = None
-    RescanMovieFolderAfterRefresh: str | None = None
-    Reset: str | None = None
-    ResetAPIKey: str | None = None
-    ResetAPIKeyMessageText: str | None = None
-    Restart: str | None = None
-    RestartNow: str | None = None
-    RestartRadarr: str | None = None
-    RestartReadarr: str | None = None
-    RestartReloadNote: str | None = None
-    RestartRequiredHelpTextWarning: str | None = None
-    Restore: str | None = None
-    RestoreBackup: str | None = None
-    Restrictions: str | None = None
-    Result: str | None = None
-    Retention: str | None = None
-    RetentionHelpText: str | None = None
-    RetryingDownloadInterp: str | None = None
-    RootFolder: str | None = None
-    RootFolderCheckMultipleMessage: str | None = None
-    RootFolderCheckSingleMessage: str | None = None
-    RootFolderPathHelpText: str | None = None
-    RootFolders: str | None = None
-    RSS: str | None = None
-    RSSIsNotSupportedWithThisIndexer: str | None = None
-    RSSSync: str | None = None
-    RSSSyncInterval: str | None = None
-    RssSyncIntervalHelpText: str | None = None
-    RSSSyncIntervalHelpTextWarning: str | None = None
-    Runtime: str | None = None
-    Save: str | None = None
-    SaveChanges: str | None = None
-    SaveSettings: str | None = None
-    SceneInformation: str | None = None
-    SceneNumberHasntBeenVerifiedYet: str | None = None
-    Scheduled: str | None = None
-    Score: str | None = None
-    Script: str | None = None
-    ScriptPath: str | None = None
-    Search: str | None = None
-    SearchAll: str | None = None
-    SearchBook: str | None = None
-    SearchBoxPlaceHolder: str | None = None
-    SearchCutoffUnmet: str | None = None
-    SearchFailedPleaseTryAgainLater: str | None = None
-    SearchFiltered: str | None = None
-    SearchForAllCutoffUnmetBooks: str | None = None
-    SearchForAllMissingBooks: str | None = None
-    SearchForMissing: str | None = None
-    SearchForMonitoredBooks: str | None = None
-    SearchForMovie: str | None = None
-    SearchForNewItems: str | None = None
-    SearchMissing: str | None = None
-    SearchMonitored: str | None = None
-    SearchMovie: str | None = None
-    SearchOnAdd: str | None = None
-    SearchOnAddHelpText: str | None = None
-    SearchSelected: str | None = None
-    Season: str | None = None
-    Seconds: str | None = None
-    Security: str | None = None
-    Seeders: str | None = None
-    SelectAll: str | None = None
-    SelectDotDot: str | None = None
-    SelectedCountAuthorsSelectedInterp: str | None = None
-    SelectedCountBooksSelectedInterp: str | None = None
-    SelectFolder: str | None = None
-    SelectLanguage: str | None = None
-    SelectLanguages: str | None = None
-    SelectMovie: str | None = None
-    SelectQuality: str | None = None
-    SelectReleaseGroup: str | None = None
-    SendAnonymousUsageData: str | None = None
-    SendMetadataToCalibre: str | None = None
-    Series: str | None = None
-    SeriesNumber: str | None = None
-    SeriesTotal: str | None = None
-    SetPermissions: str | None = None
-    SetPermissionsLinuxHelpText: str | None = None
-    SetPermissionsLinuxHelpTextWarning: str | None = None
-    SetReleaseGroup: str | None = None
-    SetTags: str | None = None
-    Settings: str | None = None
-    SettingsEnableColorImpairedMode: str | None = None
-    SettingsEnableColorImpairedModeHelpText: str | None = None
-    SettingsFirstDayOfWeek: str | None = None
-    SettingsLongDateFormat: str | None = None
-    SettingsRemotePathMappingHostHelpText: str | None = None
-    SettingsRemotePathMappingLocalPath: str | None = None
-    SettingsRemotePathMappingLocalPathHelpText: str | None = None
-    SettingsRemotePathMappingRemotePath: str | None = None
-    SettingsRemotePathMappingRemotePathHelpText: str | None = None
-    SettingsRuntimeFormat: str | None = None
-    SettingsShortDateFormat: str | None = None
-    SettingsShowRelativeDates: str | None = None
-    SettingsShowRelativeDatesHelpText: str | None = None
-    SettingsTimeFormat: str | None = None
-    SettingsWeekColumnHeader: str | None = None
-    SettingsWeekColumnHeaderHelpText: str | None = None
-    ShortDateFormat: str | None = None
-    ShouldMonitorExisting: str | None = None
-    ShouldMonitorExistingHelpText: str | None = None
-    ShouldMonitorHelpText: str | None = None
-    ShouldSearchHelpText: str | None = None
-    ShowAdvanced: str | None = None
-    ShowAsAllDayEvents: str | None = None
-    ShowBanners: str | None = None
-    ShowBannersHelpText: str | None = None
-    ShowBookCount: str | None = None
-    ShowBookTitleHelpText: str | None = None
-    ShowCertification: str | None = None
-    ShowCinemaRelease: str | None = None
-    showCinemaReleaseHelpText: str | None = None
-    ShowCutoffUnmetIconHelpText: str | None = None
-    ShowDateAdded: str | None = None
-    ShowGenres: str | None = None
-    ShowLastBook: str | None = None
-    ShowMonitored: str | None = None
-    ShowMonitoredHelpText: str | None = None
-    ShowMovieInformation: str | None = None
-    ShowMovieInformationHelpText: str | None = None
-    ShownAboveEachColumnWhenWeekIsTheActiveView: str | None = None
-    ShowName: str | None = None
-    ShownClickToHide: str | None = None
-    ShowPath: str | None = None
-    ShowQualityProfile: str | None = None
-    ShowQualityProfileHelpText: str | None = None
-    ShowRatings: str | None = None
-    ShowRelativeDates: str | None = None
-    ShowRelativeDatesHelpText: str | None = None
-    ShowReleaseDate: str | None = None
-    ShowReleaseDateHelpText: str | None = None
-    ShowSearch: str | None = None
-    ShowSearchActionHelpText: str | None = None
-    ShowSearchHelpText: str | None = None
-    ShowSizeOnDisk: str | None = None
-    ShowStudio: str | None = None
-    ShowTitle: str | None = None
-    ShowTitleHelpText: str | None = None
-    ShowUnknownAuthorItems: str | None = None
-    ShowUnknownMovieItems: str | None = None
-    ShowYear: str | None = None
-    Shutdown: str | None = None
-    Size: str | None = None
-    SizeLimit: str | None = None
-    SizeOnDisk: str | None = None
-    SkipBooksWithMissingReleaseDate: str | None = None
-    SkipBooksWithNoISBNOrASIN: str | None = None
-    SkipFreeSpaceCheck: str | None = None
-    SkipFreeSpaceCheckWhenImportingHelpText: str | None = None
-    SkipPartBooksAndSets: str | None = None
-    SkipRedownload: str | None = None
-    SkipredownloadHelpText: str | None = None
-    SkipSecondarySeriesBooks: str | None = None
-    Small: str | None = None
-    Socks4: str | None = None
-    Socks5: str | None = None
-    SomeResultsHiddenFilter: str | None = None
-    SorryThatAuthorCannotBeFound: str | None = None
-    SorryThatBookCannotBeFound: str | None = None
-    SorryThatMovieCannotBeFound: str | None = None
-    Sort: str | None = None
-    Source: str | None = None
-    SourcePath: str | None = None
-    SourceRelativePath: str | None = None
-    SourceTitle: str | None = None
-    SpecificBook: str | None = None
-    SqliteVersionCheckUpgradeRequiredMessage: str | None = None
-    SSLCertPassword: str | None = None
-    SslCertPasswordHelpText: str | None = None
-    SSLCertPasswordHelpText: str | None = None
-    SslCertPasswordHelpTextWarning: str | None = None
-    SSLCertPath: str | None = None
-    SslCertPathHelpText: str | None = None
-    SSLCertPathHelpText: str | None = None
-    SslCertPathHelpTextWarning: str | None = None
-    SSLPort: str | None = None
-    SslPortHelpTextWarning: str | None = None
-    StandardBookFormat: str | None = None
-    StandardMovieFormat: str | None = None
-    StartImport: str | None = None
-    StartProcessing: str | None = None
-    StartSearchForMissingMovie: str | None = None
-    StartTypingOrSelectAPathBelow: str | None = None
-    StartupDirectory: str | None = None
-    Status: str | None = None
-    StatusEndedContinuing: str | None = None
-    StatusEndedDeceased: str | None = None
-    StatusEndedEnded: str | None = None
-    Studio: str | None = None
-    Style: str | None = None
-    SubfolderWillBeCreatedAutomaticallyInterp: str | None = None
-    SuccessMyWorkIsDoneNoFilesToRename: str | None = None
-    SuccessMyWorkIsDoneNoFilesToRetag: str | None = None
-    SuggestTranslationChange: str | None = None
-    Sunday: str | None = None
-    SupportsRssvalueRSSIsNotSupportedWithThisIndexer: str | None = None
-    SupportsSearchvalueSearchIsNotSupportedWithThisIndexer: str | None = None
-    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: str | None = (
-        None
+    ReadarrTags: str = attr.ib(type=str)
+    ReadTheWikiForMoreInformation: str = attr.ib(type=str)
+    Real: str = attr.ib(type=str)
+    Reason: str = attr.ib(type=str)
+    RecentChanges: str = attr.ib(type=str)
+    RecentFolders: str = attr.ib(type=str)
+    RecycleBinCleanupDaysHelpText: str = attr.ib(type=str)
+    RecycleBinCleanupDaysHelpTextWarning: str = attr.ib(type=str)
+    RecycleBinHelpText: str = attr.ib(type=str)
+    RecyclingBin: str = attr.ib(type=str)
+    RecyclingBinCleanup: str = attr.ib(type=str)
+    Reddit: str = attr.ib(type=str)
+    Redownload: str = attr.ib(type=str)
+    Refresh: str = attr.ib(type=str)
+    RefreshAndScan: str = attr.ib(type=str)
+    RefreshAuthor: str = attr.ib(type=str)
+    RefreshInformation: str = attr.ib(type=str)
+    RefreshInformationAndScanDisk: str = attr.ib(type=str)
+    RefreshLists: str = attr.ib(type=str)
+    RefreshMovie: str = attr.ib(type=str)
+    RefreshScan: str = attr.ib(type=str)
+    RegularExpressionsCanBeTested: str = attr.ib(type=str)
+    RejectionCount: str = attr.ib(type=str)
+    RelativePath: str = attr.ib(type=str)
+    ReleaseBranchCheckOfficialBranchMessage: str = attr.ib(type=str)
+    Released: str = attr.ib(type=str)
+    ReleaseDate: str = attr.ib(type=str)
+    ReleaseDates: str = attr.ib(type=str)
+    ReleasedMsg: str = attr.ib(type=str)
+    ReleaseGroup: str = attr.ib(type=str)
+    ReleaseProfiles: str = attr.ib(type=str)
+    ReleaseRejected: str = attr.ib(type=str)
+    ReleaseStatus: str = attr.ib(type=str)
+    ReleaseTitle: str = attr.ib(type=str)
+    ReleaseWillBeProcessedInterp: str = attr.ib(type=str)
+    Reload: str = attr.ib(type=str)
+    RemotePath: str = attr.ib(type=str)
+    RemotePathHelpText: str = attr.ib(type=str)
+    RemotePathMappingCheckBadDockerPath: str = attr.ib(type=str)
+    RemotePathMappingCheckDockerFolderMissing: str = attr.ib(type=str)
+    RemotePathMappingCheckDownloadPermissions: str = attr.ib(type=str)
+    RemotePathMappingCheckFileRemoved: str = attr.ib(type=str)
+    RemotePathMappingCheckFilesBadDockerPath: str = attr.ib(type=str)
+    RemotePathMappingCheckFilesGenericPermissions: str = attr.ib(type=str)
+    RemotePathMappingCheckFilesLocalWrongOSPath: str = attr.ib(type=str)
+    RemotePathMappingCheckFilesWrongOSPath: str = attr.ib(type=str)
+    RemotePathMappingCheckFolderPermissions: str = attr.ib(type=str)
+    RemotePathMappingCheckGenericPermissions: str = attr.ib(type=str)
+    RemotePathMappingCheckImportFailed: str = attr.ib(type=str)
+    RemotePathMappingCheckLocalFolderMissing: str = attr.ib(type=str)
+    RemotePathMappingCheckLocalWrongOSPath: str = attr.ib(type=str)
+    RemotePathMappingCheckRemoteDownloadClient: str = attr.ib(type=str)
+    RemotePathMappingCheckWrongOSPath: str = attr.ib(type=str)
+    RemotePathMappings: str = attr.ib(type=str)
+    Remove: str = attr.ib(type=str)
+    RemoveCompleted: str = attr.ib(type=str)
+    RemoveCompletedDownloadsHelpText: str = attr.ib(type=str)
+    RemovedFromTaskQueue: str = attr.ib(type=str)
+    RemovedMovieCheckMultipleMessage: str = attr.ib(type=str)
+    RemovedMovieCheckSingleMessage: str = attr.ib(type=str)
+    RemoveDownloadsAlert: str = attr.ib(type=str)
+    RemoveFailed: str = attr.ib(type=str)
+    RemoveFailedDownloadsHelpText: str = attr.ib(type=str)
+    RemoveFilter: str = attr.ib(type=str)
+    RemoveFromBlocklist: str = attr.ib(type=str)
+    RemoveFromDownloadClient: str = attr.ib(type=str)
+    RemoveFromQueue: str = attr.ib(type=str)
+    RemoveFromQueueText: str = attr.ib(type=str)
+    RemoveHelpTextWarning: str = attr.ib(type=str)
+    RemoveMovieAndDeleteFiles: str = attr.ib(type=str)
+    RemoveMovieAndKeepFiles: str = attr.ib(type=str)
+    RemoveRootFolder: str = attr.ib(type=str)
+    RemoveSelected: str = attr.ib(type=str)
+    RemoveSelectedItem: str = attr.ib(type=str)
+    RemoveSelectedItems: str = attr.ib(type=str)
+    RemoveSelectedMessageText: str = attr.ib(type=str)
+    RemoveTagExistingTag: str = attr.ib(type=str)
+    RemoveTagRemovingTag: str = attr.ib(type=str)
+    RemovingTag: str = attr.ib(type=str)
+    RenameBooks: str = attr.ib(type=str)
+    RenameBooksHelpText: str = attr.ib(type=str)
+    Renamed: str = attr.ib(type=str)
+    RenameFiles: str = attr.ib(type=str)
+    RenameMovies: str = attr.ib(type=str)
+    RenameMoviesHelpText: str = attr.ib(type=str)
+    Reorder: str = attr.ib(type=str)
+    Replace: str = attr.ib(type=str)
+    ReplaceIllegalCharacters: str = attr.ib(type=str)
+    ReplaceIllegalCharactersHelpText: str = attr.ib(type=str)
+    ReplaceWithDash: str = attr.ib(type=str)
+    ReplaceWithSpaceDash: str = attr.ib(type=str)
+    ReplaceWithSpaceDashSpace: str = attr.ib(type=str)
+    Required: str = attr.ib(type=str)
+    RequiredHelpText: str = attr.ib(type=str)
+    RequiredPlaceHolder: str = attr.ib(type=str)
+    RequiredRestrictionHelpText: str = attr.ib(type=str)
+    RequiredRestrictionPlaceHolder: str = attr.ib(type=str)
+    RescanAfterRefreshHelpText: str = attr.ib(type=str)
+    RescanAfterRefreshHelpTextWarning: str = attr.ib(type=str)
+    RescanAuthorFolderAfterRefresh: str = attr.ib(type=str)
+    RescanMovieFolderAfterRefresh: str = attr.ib(type=str)
+    Reset: str = attr.ib(type=str)
+    ResetAPIKey: str = attr.ib(type=str)
+    ResetAPIKeyMessageText: str = attr.ib(type=str)
+    Restart: str = attr.ib(type=str)
+    RestartNow: str = attr.ib(type=str)
+    RestartRadarr: str = attr.ib(type=str)
+    RestartReadarr: str = attr.ib(type=str)
+    RestartReloadNote: str = attr.ib(type=str)
+    RestartRequiredHelpTextWarning: str = attr.ib(type=str)
+    Restore: str = attr.ib(type=str)
+    RestoreBackup: str = attr.ib(type=str)
+    Restrictions: str = attr.ib(type=str)
+    Result: str = attr.ib(type=str)
+    Retention: str = attr.ib(type=str)
+    RetentionHelpText: str = attr.ib(type=str)
+    RetryingDownloadInterp: str = attr.ib(type=str)
+    RootFolder: str = attr.ib(type=str)
+    RootFolderCheckMultipleMessage: str = attr.ib(type=str)
+    RootFolderCheckSingleMessage: str = attr.ib(type=str)
+    RootFolderPathHelpText: str = attr.ib(type=str)
+    RootFolders: str = attr.ib(type=str)
+    RSS: str = attr.ib(type=str)
+    RSSIsNotSupportedWithThisIndexer: str = attr.ib(type=str)
+    RSSSync: str = attr.ib(type=str)
+    RSSSyncInterval: str = attr.ib(type=str)
+    RssSyncIntervalHelpText: str = attr.ib(type=str)
+    RSSSyncIntervalHelpTextWarning: str = attr.ib(type=str)
+    Runtime: str = attr.ib(type=str)
+    Save: str = attr.ib(type=str)
+    SaveChanges: str = attr.ib(type=str)
+    SaveSettings: str = attr.ib(type=str)
+    SceneInformation: str = attr.ib(type=str)
+    SceneNumberHasntBeenVerifiedYet: str = attr.ib(type=str)
+    Scheduled: str = attr.ib(type=str)
+    Score: str = attr.ib(type=str)
+    Script: str = attr.ib(type=str)
+    ScriptPath: str = attr.ib(type=str)
+    Search: str = attr.ib(type=str)
+    SearchAll: str = attr.ib(type=str)
+    SearchBook: str = attr.ib(type=str)
+    SearchBoxPlaceHolder: str = attr.ib(type=str)
+    SearchCutoffUnmet: str = attr.ib(type=str)
+    SearchFailedPleaseTryAgainLater: str = attr.ib(type=str)
+    SearchFiltered: str = attr.ib(type=str)
+    SearchForAllCutoffUnmetBooks: str = attr.ib(type=str)
+    SearchForAllMissingBooks: str = attr.ib(type=str)
+    SearchForMissing: str = attr.ib(type=str)
+    SearchForMonitoredBooks: str = attr.ib(type=str)
+    SearchForMovie: str = attr.ib(type=str)
+    SearchForNewItems: str = attr.ib(type=str)
+    SearchMissing: str = attr.ib(type=str)
+    SearchMonitored: str = attr.ib(type=str)
+    SearchMovie: str = attr.ib(type=str)
+    SearchOnAdd: str = attr.ib(type=str)
+    SearchOnAddHelpText: str = attr.ib(type=str)
+    SearchSelected: str = attr.ib(type=str)
+    Season: str = attr.ib(type=str)
+    Seconds: str = attr.ib(type=str)
+    Security: str = attr.ib(type=str)
+    Seeders: str = attr.ib(type=str)
+    SelectAll: str = attr.ib(type=str)
+    SelectDotDot: str = attr.ib(type=str)
+    SelectedCountAuthorsSelectedInterp: str = attr.ib(type=str)
+    SelectedCountBooksSelectedInterp: str = attr.ib(type=str)
+    SelectFolder: str = attr.ib(type=str)
+    SelectLanguage: str = attr.ib(type=str)
+    SelectLanguages: str = attr.ib(type=str)
+    SelectMovie: str = attr.ib(type=str)
+    SelectQuality: str = attr.ib(type=str)
+    SelectReleaseGroup: str = attr.ib(type=str)
+    SendAnonymousUsageData: str = attr.ib(type=str)
+    SendMetadataToCalibre: str = attr.ib(type=str)
+    Series: str = attr.ib(type=str)
+    SeriesNumber: str = attr.ib(type=str)
+    SeriesTotal: str = attr.ib(type=str)
+    SetPermissions: str = attr.ib(type=str)
+    SetPermissionsLinuxHelpText: str = attr.ib(type=str)
+    SetPermissionsLinuxHelpTextWarning: str = attr.ib(type=str)
+    SetReleaseGroup: str = attr.ib(type=str)
+    SetTags: str = attr.ib(type=str)
+    Settings: str = attr.ib(type=str)
+    SettingsEnableColorImpairedMode: str = attr.ib(type=str)
+    SettingsEnableColorImpairedModeHelpText: str = attr.ib(type=str)
+    SettingsFirstDayOfWeek: str = attr.ib(type=str)
+    SettingsLongDateFormat: str = attr.ib(type=str)
+    SettingsRemotePathMappingHostHelpText: str = attr.ib(type=str)
+    SettingsRemotePathMappingLocalPath: str = attr.ib(type=str)
+    SettingsRemotePathMappingLocalPathHelpText: str = attr.ib(type=str)
+    SettingsRemotePathMappingRemotePath: str = attr.ib(type=str)
+    SettingsRemotePathMappingRemotePathHelpText: str = attr.ib(type=str)
+    SettingsRuntimeFormat: str = attr.ib(type=str)
+    SettingsShortDateFormat: str = attr.ib(type=str)
+    SettingsShowRelativeDates: str = attr.ib(type=str)
+    SettingsShowRelativeDatesHelpText: str = attr.ib(type=str)
+    SettingsTimeFormat: str = attr.ib(type=str)
+    SettingsWeekColumnHeader: str = attr.ib(type=str)
+    SettingsWeekColumnHeaderHelpText: str = attr.ib(type=str)
+    ShortDateFormat: str = attr.ib(type=str)
+    ShouldMonitorExisting: str = attr.ib(type=str)
+    ShouldMonitorExistingHelpText: str = attr.ib(type=str)
+    ShouldMonitorHelpText: str = attr.ib(type=str)
+    ShouldSearchHelpText: str = attr.ib(type=str)
+    ShowAdvanced: str = attr.ib(type=str)
+    ShowAsAllDayEvents: str = attr.ib(type=str)
+    ShowBanners: str = attr.ib(type=str)
+    ShowBannersHelpText: str = attr.ib(type=str)
+    ShowBookCount: str = attr.ib(type=str)
+    ShowBookTitleHelpText: str = attr.ib(type=str)
+    ShowCertification: str = attr.ib(type=str)
+    ShowCinemaRelease: str = attr.ib(type=str)
+    showCinemaReleaseHelpText: str = attr.ib(type=str)
+    ShowCutoffUnmetIconHelpText: str = attr.ib(type=str)
+    ShowDateAdded: str = attr.ib(type=str)
+    ShowGenres: str = attr.ib(type=str)
+    ShowLastBook: str = attr.ib(type=str)
+    ShowMonitored: str = attr.ib(type=str)
+    ShowMonitoredHelpText: str = attr.ib(type=str)
+    ShowMovieInformation: str = attr.ib(type=str)
+    ShowMovieInformationHelpText: str = attr.ib(type=str)
+    ShownAboveEachColumnWhenWeekIsTheActiveView: str = attr.ib(type=str)
+    ShowName: str = attr.ib(type=str)
+    ShownClickToHide: str = attr.ib(type=str)
+    ShowPath: str = attr.ib(type=str)
+    ShowQualityProfile: str = attr.ib(type=str)
+    ShowQualityProfileHelpText: str = attr.ib(type=str)
+    ShowRatings: str = attr.ib(type=str)
+    ShowRelativeDates: str = attr.ib(type=str)
+    ShowRelativeDatesHelpText: str = attr.ib(type=str)
+    ShowReleaseDate: str = attr.ib(type=str)
+    ShowReleaseDateHelpText: str = attr.ib(type=str)
+    ShowSearch: str = attr.ib(type=str)
+    ShowSearchActionHelpText: str = attr.ib(type=str)
+    ShowSearchHelpText: str = attr.ib(type=str)
+    ShowSizeOnDisk: str = attr.ib(type=str)
+    ShowStudio: str = attr.ib(type=str)
+    ShowTitle: str = attr.ib(type=str)
+    ShowTitleHelpText: str = attr.ib(type=str)
+    ShowUnknownAuthorItems: str = attr.ib(type=str)
+    ShowUnknownMovieItems: str = attr.ib(type=str)
+    ShowYear: str = attr.ib(type=str)
+    Shutdown: str = attr.ib(type=str)
+    Size: str = attr.ib(type=str)
+    SizeLimit: str = attr.ib(type=str)
+    SizeOnDisk: str = attr.ib(type=str)
+    SkipBooksWithMissingReleaseDate: str = attr.ib(type=str)
+    SkipBooksWithNoISBNOrASIN: str = attr.ib(type=str)
+    SkipFreeSpaceCheck: str = attr.ib(type=str)
+    SkipFreeSpaceCheckWhenImportingHelpText: str = attr.ib(type=str)
+    SkipPartBooksAndSets: str = attr.ib(type=str)
+    SkipRedownload: str = attr.ib(type=str)
+    SkipredownloadHelpText: str = attr.ib(type=str)
+    SkipSecondarySeriesBooks: str = attr.ib(type=str)
+    Small: str = attr.ib(type=str)
+    Socks4: str = attr.ib(type=str)
+    Socks5: str = attr.ib(type=str)
+    SomeResultsHiddenFilter: str = attr.ib(type=str)
+    SorryThatAuthorCannotBeFound: str = attr.ib(type=str)
+    SorryThatBookCannotBeFound: str = attr.ib(type=str)
+    SorryThatMovieCannotBeFound: str = attr.ib(type=str)
+    Sort: str = attr.ib(type=str)
+    Source: str = attr.ib(type=str)
+    SourcePath: str = attr.ib(type=str)
+    SourceRelativePath: str = attr.ib(type=str)
+    SourceTitle: str = attr.ib(type=str)
+    SpecificBook: str = attr.ib(type=str)
+    SqliteVersionCheckUpgradeRequiredMessage: str = attr.ib(type=str)
+    SSLCertPassword: str = attr.ib(type=str)
+    SslCertPasswordHelpText: str = attr.ib(type=str)
+    SSLCertPasswordHelpText: str = attr.ib(type=str)
+    SslCertPasswordHelpTextWarning: str = attr.ib(type=str)
+    SSLCertPath: str = attr.ib(type=str)
+    SslCertPathHelpText: str = attr.ib(type=str)
+    SSLCertPathHelpText: str = attr.ib(type=str)
+    SslCertPathHelpTextWarning: str = attr.ib(type=str)
+    SSLPort: str = attr.ib(type=str)
+    SslPortHelpTextWarning: str = attr.ib(type=str)
+    StandardBookFormat: str = attr.ib(type=str)
+    StandardMovieFormat: str = attr.ib(type=str)
+    StartImport: str = attr.ib(type=str)
+    StartProcessing: str = attr.ib(type=str)
+    StartSearchForMissingMovie: str = attr.ib(type=str)
+    StartTypingOrSelectAPathBelow: str = attr.ib(type=str)
+    StartupDirectory: str = attr.ib(type=str)
+    Status: str = attr.ib(type=str)
+    StatusEndedContinuing: str = attr.ib(type=str)
+    StatusEndedDeceased: str = attr.ib(type=str)
+    StatusEndedEnded: str = attr.ib(type=str)
+    Studio: str = attr.ib(type=str)
+    Style: str = attr.ib(type=str)
+    SubfolderWillBeCreatedAutomaticallyInterp: str = attr.ib(type=str)
+    SuccessMyWorkIsDoneNoFilesToRename: str = attr.ib(type=str)
+    SuccessMyWorkIsDoneNoFilesToRetag: str = attr.ib(type=str)
+    SuggestTranslationChange: str = attr.ib(type=str)
+    Sunday: str = attr.ib(type=str)
+    SupportsRssvalueRSSIsNotSupportedWithThisIndexer: str = attr.ib(type=str)
+    SupportsSearchvalueSearchIsNotSupportedWithThisIndexer: str = attr.ib(type=str)
+    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: str = attr.ib(
+        type=str
     )
-    SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed: str | None = None
-    System: str | None = None
-    SystemTimeCheckMessage: str | None = None
-    Table: str | None = None
-    TableOptions: str | None = None
-    TableOptionsColumnsMessage: str | None = None
-    TagCannotBeDeletedWhileInUse: str | None = None
-    TagDetails: str | None = None
-    TagIsNotUsedAndCanBeDeleted: str | None = None
-    Tags: str | None = None
-    TagsHelpText: str | None = None
-    TagsSettingsSummary: str | None = None
-    Tasks: str | None = None
-    TaskUserAgentTooltip: str | None = None
-    TBA: str | None = None
-    Term: str | None = None
-    Test: str | None = None
-    TestAll: str | None = None
-    TestAllClients: str | None = None
-    TestAllIndexers: str | None = None
-    TestAllLists: str | None = None
-    TheAuthorFolderAndAllOfItsContentWillBeDeleted: str | None = None
-    TheBooksFilesWillBeDeleted: str | None = None
-    TheFollowingFilesWillBeDeleted: str | None = None
-    TheLogLevelDefault: str | None = None
-    ThisCannotBeCancelled: str | None = None
-    ThisConditionMatchesUsingRegularExpressions: str | None = None
-    ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem: str | None = None
-    Time: str | None = None
-    TimeFormat: str | None = None
-    Timeleft: str | None = None
-    Title: str | None = None
-    Titles: str | None = None
-    TMDb: str | None = None
-    TMDBId: str | None = None
-    TmdbIdHelpText: str | None = None
-    TmdbRating: str | None = None
-    TmdbVotes: str | None = None
-    Today: str | None = None
-    Tomorrow: str | None = None
-    TooManyBooks: str | None = None
-    TorrentDelay: str | None = None
-    TorrentDelayHelpText: str | None = None
-    TorrentDelayTime: str | None = None
-    Torrents: str | None = None
-    TorrentsDisabled: str | None = None
-    TotalBookCountBooksTotalBookFileCountBooksWithFilesInterp: str | None = None
-    TotalFileSize: str | None = None
-    TotalSpace: str | None = None
-    Trace: str | None = None
-    TrackNumber: str | None = None
-    TrackTitle: str | None = None
-    Trailer: str | None = None
-    Trakt: str | None = None
-    Trigger: str | None = None
-    Type: str | None = None
-    UI: str | None = None
-    UILanguage: str | None = None
-    UILanguageHelpText: str | None = None
-    UILanguageHelpTextWarning: str | None = None
-    UISettings: str | None = None
-    UISettingsSummary: str | None = None
-    UnableToAddANewConditionPleaseTryAgain: str | None = None
-    UnableToAddANewCustomFormatPleaseTryAgain: str | None = None
-    UnableToAddANewDownloadClientPleaseTryAgain: str | None = None
-    UnableToAddANewImportListExclusionPleaseTryAgain: str | None = None
-    UnableToAddANewIndexerPleaseTryAgain: str | None = None
-    UnableToAddANewListExclusionPleaseTryAgain: str | None = None
-    UnableToAddANewListPleaseTryAgain: str | None = None
-    UnableToAddANewMetadataProfilePleaseTryAgain: str | None = None
-    UnableToAddANewNotificationPleaseTryAgain: str | None = None
-    UnableToAddANewQualityProfilePleaseTryAgain: str | None = None
-    UnableToAddANewRemotePathMappingPleaseTryAgain: str | None = None
-    UnableToAddANewRootFolderPleaseTryAgain: str | None = None
-    UnableToAddRootFolder: str | None = None
-    UnableToImportCheckLogs: str | None = None
-    UnableToLoadAltTitle: str | None = None
-    UnableToLoadBackups: str | None = None
-    UnableToLoadBlocklist: str | None = None
-    UnableToLoadCustomFormats: str | None = None
-    UnableToLoadDelayProfiles: str | None = None
-    UnableToLoadDownloadClientOptions: str | None = None
-    UnableToLoadDownloadClients: str | None = None
-    UnableToLoadGeneralSettings: str | None = None
-    UnableToLoadHistory: str | None = None
-    UnableToLoadImportListExclusions: str | None = None
-    UnableToLoadIndexerOptions: str | None = None
-    UnableToLoadIndexers: str | None = None
-    UnableToLoadLanguages: str | None = None
-    UnableToLoadListExclusions: str | None = None
-    UnableToLoadListOptions: str | None = None
-    UnableToLoadLists: str | None = None
-    UnableToLoadManualImportItems: str | None = None
-    UnableToLoadMediaManagementSettings: str | None = None
-    UnableToLoadMetadata: str | None = None
-    UnableToLoadMetadataProfiles: str | None = None
-    UnableToLoadMetadataProviderSettings: str | None = None
-    UnableToLoadMovies: str | None = None
-    UnableToLoadNamingSettings: str | None = None
-    UnableToLoadNotifications: str | None = None
-    UnableToLoadQualities: str | None = None
-    UnableToLoadQualityDefinitions: str | None = None
-    UnableToLoadQualityProfiles: str | None = None
-    UnableToLoadReleaseProfiles: str | None = None
-    UnableToLoadRemotePathMappings: str | None = None
-    UnableToLoadRestrictions: str | None = None
-    UnableToLoadResultsIntSearch: str | None = None
-    UnableToLoadRootFolders: str | None = None
-    UnableToLoadTags: str | None = None
-    UnableToLoadTheCalendar: str | None = None
-    UnableToLoadUISettings: str | None = None
-    UnableToUpdateRadarrDirectly: str | None = None
-    Unavailable: str | None = None
-    Ungroup: str | None = None
-    Unlimited: str | None = None
-    UnmappedFiles: str | None = None
-    UnmappedFilesOnly: str | None = None
-    UnmappedFolders: str | None = None
-    Unmonitored: str | None = None
-    UnmonitoredHelpText: str | None = None
-    Unreleased: str | None = None
-    UnsavedChanges: str | None = None
-    UnselectAll: str | None = None
-    UpdateAll: str | None = None
-    UpdateAutomaticallyHelpText: str | None = None
-    UpdateAvailable: str | None = None
-    UpdateCheckStartupNotWritableMessage: str | None = None
-    UpdateCheckStartupTranslocationMessage: str | None = None
-    UpdateCheckUINotWritableMessage: str | None = None
-    UpdateCovers: str | None = None
-    UpdateCoversHelpText: str | None = None
-    UpdateMechanismHelpText: str | None = None
-    Updates: str | None = None
-    UpdateScriptPathHelpText: str | None = None
-    UpdateSelected: str | None = None
-    UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead: str | None = (
-        None
+    SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed: str = attr.ib(type=str)
+    System: str = attr.ib(type=str)
+    SystemTimeCheckMessage: str = attr.ib(type=str)
+    Table: str = attr.ib(type=str)
+    TableOptions: str = attr.ib(type=str)
+    TableOptionsColumnsMessage: str = attr.ib(type=str)
+    TagCannotBeDeletedWhileInUse: str = attr.ib(type=str)
+    TagDetails: str = attr.ib(type=str)
+    TagIsNotUsedAndCanBeDeleted: str = attr.ib(type=str)
+    Tags: str = attr.ib(type=str)
+    TagsHelpText: str = attr.ib(type=str)
+    TagsSettingsSummary: str = attr.ib(type=str)
+    Tasks: str = attr.ib(type=str)
+    TaskUserAgentTooltip: str = attr.ib(type=str)
+    TBA: str = attr.ib(type=str)
+    Term: str = attr.ib(type=str)
+    Test: str = attr.ib(type=str)
+    TestAll: str = attr.ib(type=str)
+    TestAllClients: str = attr.ib(type=str)
+    TestAllIndexers: str = attr.ib(type=str)
+    TestAllLists: str = attr.ib(type=str)
+    TheAuthorFolderAndAllOfItsContentWillBeDeleted: str = attr.ib(type=str)
+    TheBooksFilesWillBeDeleted: str = attr.ib(type=str)
+    TheFollowingFilesWillBeDeleted: str = attr.ib(type=str)
+    TheLogLevelDefault: str = attr.ib(type=str)
+    ThisCannotBeCancelled: str = attr.ib(type=str)
+    ThisConditionMatchesUsingRegularExpressions: str = attr.ib(type=str)
+    ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem: str = attr.ib(
+        type=str
     )
-    UpgradeAllowedHelpText: str | None = None
-    UpgradesAllowed: str | None = None
-    UpgradeUntilCustomFormatScore: str | None = None
-    UpgradeUntilQuality: str | None = None
-    UpgradeUntilThisQualityIsMetOrExceeded: str | None = None
-    UpperCase: str | None = None
-    Uptime: str | None = None
-    URLBase: str | None = None
-    UrlBaseHelpText: str | None = None
-    UrlBaseHelpTextWarning: str | None = None
-    UseCalibreContentServer: str | None = None
-    UseHardlinksInsteadOfCopy: str | None = None
-    Usenet: str | None = None
-    UsenetDelay: str | None = None
-    UsenetDelayHelpText: str | None = None
-    UsenetDelayTime: str | None = None
-    UsenetDisabled: str | None = None
-    UseProxy: str | None = None
-    Username: str | None = None
-    UsernameHelpText: str | None = None
-    UseSSL: str | None = None
-    UseSslHelpText: str | None = None
-    UsingExternalUpdateMechanismBranchToUseToUpdateReadarr: str | None = None
-    UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism: str | None = None
-    Version: str | None = None
-    VersionUpdateText: str | None = None
-    VideoCodec: str | None = None
-    View: str | None = None
-    VisitGithubCustomFormatsAphrodite: str | None = None
-    WaitingToImport: str | None = None
-    WaitingToProcess: str | None = None
-    Wanted: str | None = None
-    Warn: str | None = None
-    WatchLibraryForChangesHelpText: str | None = None
-    WatchRootFoldersForFileChanges: str | None = None
-    Week: str | None = None
-    WeekColumnHeader: str | None = None
-    Weeks: str | None = None
-    WhatsNew: str | None = None
-    WhitelistedHardcodedSubsHelpText: str | None = None
-    WhitelistedSubtitleTags: str | None = None
-    Wiki: str | None = None
-    WouldYouLikeToRestoreBackup: str | None = None
-    WriteAudioTags: str | None = None
-    WriteAudioTagsScrub: str | None = None
-    WriteAudioTagsScrubHelp: str | None = None
-    WriteBookTagsHelpTextWarning: str | None = None
-    WriteTagsAll: str | None = None
-    WriteTagsNew: str | None = None
-    WriteTagsNo: str | None = None
-    WriteTagsSync: str | None = None
-    Year: str | None = None
-    Yes: str | None = None
-    YesCancel: str | None = None
-    YesMoveFiles: str | None = None
-    Yesterday: str | None = None
-    YouCanAlsoSearch: str | None = None
+    Time: str = attr.ib(type=str)
+    TimeFormat: str = attr.ib(type=str)
+    Timeleft: str = attr.ib(type=str)
+    Title: str = attr.ib(type=str)
+    Titles: str = attr.ib(type=str)
+    TMDb: str = attr.ib(type=str)
+    TMDBId: str = attr.ib(type=str)
+    TmdbIdHelpText: str = attr.ib(type=str)
+    TmdbRating: str = attr.ib(type=str)
+    TmdbVotes: str = attr.ib(type=str)
+    Today: str = attr.ib(type=str)
+    Tomorrow: str = attr.ib(type=str)
+    TooManyBooks: str = attr.ib(type=str)
+    TorrentDelay: str = attr.ib(type=str)
+    TorrentDelayHelpText: str = attr.ib(type=str)
+    TorrentDelayTime: str = attr.ib(type=str)
+    Torrents: str = attr.ib(type=str)
+    TorrentsDisabled: str = attr.ib(type=str)
+    TotalBookCountBooksTotalBookFileCountBooksWithFilesInterp: str = attr.ib(type=str)
+    TotalFileSize: str = attr.ib(type=str)
+    TotalSpace: str = attr.ib(type=str)
+    Trace: str = attr.ib(type=str)
+    TrackNumber: str = attr.ib(type=str)
+    TrackTitle: str = attr.ib(type=str)
+    Trailer: str = attr.ib(type=str)
+    Trakt: str = attr.ib(type=str)
+    Trigger: str = attr.ib(type=str)
+    Type: str = attr.ib(type=str)
+    UI: str = attr.ib(type=str)
+    UILanguage: str = attr.ib(type=str)
+    UILanguageHelpText: str = attr.ib(type=str)
+    UILanguageHelpTextWarning: str = attr.ib(type=str)
+    UISettings: str = attr.ib(type=str)
+    UISettingsSummary: str = attr.ib(type=str)
+    UnableToAddANewConditionPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewCustomFormatPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewDownloadClientPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewImportListExclusionPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewIndexerPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewListExclusionPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewListPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewMetadataProfilePleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewNotificationPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewQualityProfilePleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewRemotePathMappingPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddANewRootFolderPleaseTryAgain: str = attr.ib(type=str)
+    UnableToAddRootFolder: str = attr.ib(type=str)
+    UnableToImportCheckLogs: str = attr.ib(type=str)
+    UnableToLoadAltTitle: str = attr.ib(type=str)
+    UnableToLoadBackups: str = attr.ib(type=str)
+    UnableToLoadBlocklist: str = attr.ib(type=str)
+    UnableToLoadCustomFormats: str = attr.ib(type=str)
+    UnableToLoadDelayProfiles: str = attr.ib(type=str)
+    UnableToLoadDownloadClientOptions: str = attr.ib(type=str)
+    UnableToLoadDownloadClients: str = attr.ib(type=str)
+    UnableToLoadGeneralSettings: str = attr.ib(type=str)
+    UnableToLoadHistory: str = attr.ib(type=str)
+    UnableToLoadImportListExclusions: str = attr.ib(type=str)
+    UnableToLoadIndexerOptions: str = attr.ib(type=str)
+    UnableToLoadIndexers: str = attr.ib(type=str)
+    UnableToLoadLanguages: str = attr.ib(type=str)
+    UnableToLoadListExclusions: str = attr.ib(type=str)
+    UnableToLoadListOptions: str = attr.ib(type=str)
+    UnableToLoadLists: str = attr.ib(type=str)
+    UnableToLoadManualImportItems: str = attr.ib(type=str)
+    UnableToLoadMediaManagementSettings: str = attr.ib(type=str)
+    UnableToLoadMetadata: str = attr.ib(type=str)
+    UnableToLoadMetadataProfiles: str = attr.ib(type=str)
+    UnableToLoadMetadataProviderSettings: str = attr.ib(type=str)
+    UnableToLoadMovies: str = attr.ib(type=str)
+    UnableToLoadNamingSettings: str = attr.ib(type=str)
+    UnableToLoadNotifications: str = attr.ib(type=str)
+    UnableToLoadQualities: str = attr.ib(type=str)
+    UnableToLoadQualityDefinitions: str = attr.ib(type=str)
+    UnableToLoadQualityProfiles: str = attr.ib(type=str)
+    UnableToLoadReleaseProfiles: str = attr.ib(type=str)
+    UnableToLoadRemotePathMappings: str = attr.ib(type=str)
+    UnableToLoadRestrictions: str = attr.ib(type=str)
+    UnableToLoadResultsIntSearch: str = attr.ib(type=str)
+    UnableToLoadRootFolders: str = attr.ib(type=str)
+    UnableToLoadTags: str = attr.ib(type=str)
+    UnableToLoadTheCalendar: str = attr.ib(type=str)
+    UnableToLoadUISettings: str = attr.ib(type=str)
+    UnableToUpdateRadarrDirectly: str = attr.ib(type=str)
+    Unavailable: str = attr.ib(type=str)
+    Ungroup: str = attr.ib(type=str)
+    Unlimited: str = attr.ib(type=str)
+    UnmappedFiles: str = attr.ib(type=str)
+    UnmappedFilesOnly: str = attr.ib(type=str)
+    UnmappedFolders: str = attr.ib(type=str)
+    Unmonitored: str = attr.ib(type=str)
+    UnmonitoredHelpText: str = attr.ib(type=str)
+    Unreleased: str = attr.ib(type=str)
+    UnsavedChanges: str = attr.ib(type=str)
+    UnselectAll: str = attr.ib(type=str)
+    UpdateAll: str = attr.ib(type=str)
+    UpdateAutomaticallyHelpText: str = attr.ib(type=str)
+    UpdateAvailable: str = attr.ib(type=str)
+    UpdateCheckStartupNotWritableMessage: str = attr.ib(type=str)
+    UpdateCheckStartupTranslocationMessage: str = attr.ib(type=str)
+    UpdateCheckUINotWritableMessage: str = attr.ib(type=str)
+    UpdateCovers: str = attr.ib(type=str)
+    UpdateCoversHelpText: str = attr.ib(type=str)
+    UpdateMechanismHelpText: str = attr.ib(type=str)
+    Updates: str = attr.ib(type=str)
+    UpdateScriptPathHelpText: str = attr.ib(type=str)
+    UpdateSelected: str = attr.ib(type=str)
+    UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead: str = (
+        attr.ib(type=str)
+    )
+    UpgradeAllowedHelpText: str = attr.ib(type=str)
+    UpgradesAllowed: str = attr.ib(type=str)
+    UpgradeUntilCustomFormatScore: str = attr.ib(type=str)
+    UpgradeUntilQuality: str = attr.ib(type=str)
+    UpgradeUntilThisQualityIsMetOrExceeded: str = attr.ib(type=str)
+    UpperCase: str = attr.ib(type=str)
+    Uptime: str = attr.ib(type=str)
+    URLBase: str = attr.ib(type=str)
+    UrlBaseHelpText: str = attr.ib(type=str)
+    UrlBaseHelpTextWarning: str = attr.ib(type=str)
+    UseCalibreContentServer: str = attr.ib(type=str)
+    UseHardlinksInsteadOfCopy: str = attr.ib(type=str)
+    Usenet: str = attr.ib(type=str)
+    UsenetDelay: str = attr.ib(type=str)
+    UsenetDelayHelpText: str = attr.ib(type=str)
+    UsenetDelayTime: str = attr.ib(type=str)
+    UsenetDisabled: str = attr.ib(type=str)
+    UseProxy: str = attr.ib(type=str)
+    Username: str = attr.ib(type=str)
+    UsernameHelpText: str = attr.ib(type=str)
+    UseSSL: str = attr.ib(type=str)
+    UseSslHelpText: str = attr.ib(type=str)
+    UsingExternalUpdateMechanismBranchToUseToUpdateReadarr: str = attr.ib(type=str)
+    UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism: str = attr.ib(
+        type=str
+    )
+    Version: str = attr.ib(type=str)
+    VersionUpdateText: str = attr.ib(type=str)
+    VideoCodec: str = attr.ib(type=str)
+    View: str = attr.ib(type=str)
+    VisitGithubCustomFormatsAphrodite: str = attr.ib(type=str)
+    WaitingToImport: str = attr.ib(type=str)
+    WaitingToProcess: str = attr.ib(type=str)
+    Wanted: str = attr.ib(type=str)
+    Warn: str = attr.ib(type=str)
+    WatchLibraryForChangesHelpText: str = attr.ib(type=str)
+    WatchRootFoldersForFileChanges: str = attr.ib(type=str)
+    Week: str = attr.ib(type=str)
+    WeekColumnHeader: str = attr.ib(type=str)
+    Weeks: str = attr.ib(type=str)
+    WhatsNew: str = attr.ib(type=str)
+    WhitelistedHardcodedSubsHelpText: str = attr.ib(type=str)
+    WhitelistedSubtitleTags: str = attr.ib(type=str)
+    Wiki: str = attr.ib(type=str)
+    WouldYouLikeToRestoreBackup: str = attr.ib(type=str)
+    WriteAudioTags: str = attr.ib(type=str)
+    WriteAudioTagsScrub: str = attr.ib(type=str)
+    WriteAudioTagsScrubHelp: str = attr.ib(type=str)
+    WriteBookTagsHelpTextWarning: str = attr.ib(type=str)
+    WriteTagsAll: str = attr.ib(type=str)
+    WriteTagsNew: str = attr.ib(type=str)
+    WriteTagsNo: str = attr.ib(type=str)
+    WriteTagsSync: str = attr.ib(type=str)
+    Year: str = attr.ib(type=str)
+    Yes: str = attr.ib(type=str)
+    YesCancel: str = attr.ib(type=str)
+    YesMoveFiles: str = attr.ib(type=str)
+    Yesterday: str = attr.ib(type=str)
+    YouCanAlsoSearch: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _LogRecord(BaseModel):
     """Log record attributes."""
 
-    exception: str | None = None
-    exceptionType: str | None = None
-    id: int | None = None
-    level: str | None = None
-    logger: str | None = None
-    message: str | None = None
-    time: datetime | None = None
-
-
-@dataclass(init=False)
-class _QualityInfo(_Common3):
-    """Quality info attributes."""
-
-    modifier: str | None = None
-    resolution: int | None = None
-    source: str | None = None
+    exception: str = attr.ib(type=str)
+    exceptionType: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    level: str = attr.ib(type=str)
+    logger: str = attr.ib(type=str)
+    message: str = attr.ib(type=str)
+    time: datetime = attr.ib(type=datetime)
 
 
 @dataclass(init=False)
 class _QualityProfileItems(_Common3):
     """Quality profile items attributes."""
 
-    allowed: bool | None = None
+    allowed: bool = attr.ib(type=bool)
     items: list[_QualityProfileItems] | None = None
-    quality: _QualityInfo | None = None
+    quality: _QualityInfo = attr.ib(type=_QualityInfo)
 
     def __post_init__(self):
         self.items = [_QualityProfileItems(item) for item in self.items or []]
@@ -1746,31 +1782,31 @@ class _QualityProfileItems(_Common3):
 class _ReleaseCommon(BaseModel):
     """Release common attributes."""
 
-    age: int | None = None
-    ageHours: float | None = None
-    ageMinutes: float | None = None
-    approved: bool | None = None
-    commentUrl: str | None = None
-    downloadAllowed: bool | None = None
-    downloadUrl: str | None = None
-    guid: str | None = None
-    indexer: str | None = None
-    indexerId: int | None = None
-    infoHash: str | None = None
-    infoUrl: str | None = None
-    leechers: int | None = None
-    magnetUrl: str | None = None
-    protocol: ProtocolType | None = None
-    publishDate: datetime | None = None
-    qualityWeight: int | None = None
-    rejected: bool | None = None
+    age: int = attr.ib(type=int)
+    ageHours: float = attr.ib(type=float)
+    ageMinutes: float = attr.ib(type=float)
+    approved: bool = attr.ib(type=bool)
+    commentUrl: str = attr.ib(type=str)
+    downloadAllowed: bool = attr.ib(type=bool)
+    downloadUrl: str = attr.ib(type=str)
+    guid: str = attr.ib(type=str)
+    indexer: str = attr.ib(type=str)
+    indexerId: int = attr.ib(type=int)
+    infoHash: str = attr.ib(type=str)
+    infoUrl: str = attr.ib(type=str)
+    leechers: int = attr.ib(type=int)
+    magnetUrl: str = attr.ib(type=str)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+    publishDate: datetime = attr.ib(type=datetime)
+    qualityWeight: int = attr.ib(type=int)
+    rejected: bool = attr.ib(type=bool)
     rejections: list[_Rejection] | None = None
-    releaseWeight: int | None = None
-    sceneSource: bool | None = None
-    seeders: int | None = None
-    size: int | None = None
-    temporarilyRejected: bool | None = None
-    title: str | None = None
+    releaseWeight: int = attr.ib(type=int)
+    sceneSource: bool = attr.ib(type=bool)
+    seeders: int = attr.ib(type=int)
+    size: int = attr.ib(type=int)
+    temporarilyRejected: bool = attr.ib(type=bool)
+    title: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -1778,157 +1814,135 @@ class _ReleaseCommon(BaseModel):
 
 
 @dataclass(init=False)
-class _Revision(BaseModel):
-    """Revision attributes."""
-
-    isRepack: bool | None = None
-    real: int | None = None
-    version: int | None = None
-
-
-@dataclass(init=False)
-class _Quality(BaseModel):
-    """Quality attributes."""
-
-    quality: _QualityInfo | None = None
-    revision: _Revision | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.quality = _QualityInfo(self.quality) or {}
-        self.revision = _Revision(self.revision) or {}
-
-
-@dataclass(init=False)
 class _RecordCommon(BaseModel):
     """Record common attributes."""
 
-    page: int | None = None
-    pageSize: int | None = None
-    sortDirection: str | None = None
-    sortKey: str | None = None
-    totalRecords: int | None = None
+    page: int = attr.ib(type=int)
+    pageSize: int = attr.ib(type=int)
+    sortDirection: str = attr.ib(type=str)
+    sortKey: str = attr.ib(type=str)
+    totalRecords: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _ReleaseProfilePreferred(BaseModel):
     """Release profile preferred attributes."""
 
-    key: str | None = None
-    value: int | None = None
+    key: str = attr.ib(type=str)
+    value: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _Rename(BaseModel):
     """Rename attributes."""
 
-    existingPath: str | None = None
-    newPath: str | None = None
+    existingPath: str = attr.ib(type=str)
+    newPath: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Tag(BaseModel):
     """Tag attributes."""
 
-    id: int | None = None
-    label: str | None = None
+    id: int = attr.ib(type=int)
+    label: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _TagDetails(_Tag):
     """Tag details attributes."""
 
-    delayProfileIds: list[int] | None = None
-    importListIds: list[int] | None = None
-    notificationIds: list[int] | None = None
-    restrictionIds: list[int] | None = None
+    delayProfileIds: list[int] = attr.ib(type=list[int])
+    importListIds: list[int] = attr.ib(type=list[int])
+    notificationIds: list[int] = attr.ib(type=list[int])
+    restrictionIds: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class _UpdateChanges(BaseModel):
     """Update changes attributes."""
 
-    fixed: list[str] | None = None
-    new: list[str] | None = None
+    fixed: list[str] = attr.ib(list[str])
+    new: list[str] = attr.ib(list[str])
 
 
 @dataclass(init=False)
 class _TitleInfo(BaseModel):
     """Title info attributes."""
 
-    title: str | None = None
-    titleWithoutYear: str | None = None
-    year: int | None = None
+    title: str = attr.ib(type=str)
+    titleWithoutYear: str = attr.ib(type=str)
+    year: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _Notification(BaseModel):
     """Notification attributes."""
 
-    configContract: str | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    includeHealthWarnings: bool | None = None
-    infoLink: str | None = None
-    onDownload: bool | None = None
-    onGrab: bool | None = None
-    onHealthIssue: bool | None = None
-    onRename: bool | None = None
-    onUpgrade: bool | None = None
-    supportsOnDownload: bool | None = None
-    supportsOnGrab: bool | None = None
-    supportsOnHealthIssue: bool | None = None
-    supportsOnRename: bool | None = None
-    supportsOnUpgrade: bool | None = None
-    tags: list[int | None] | None = None
+    configContract: str = attr.ib(type=str)
+    implementation: str = attr.ib(type=str)
+    implementationName: str = attr.ib(type=str)
+    includeHealthWarnings: bool = attr.ib(type=bool)
+    infoLink: str = attr.ib(type=str)
+    onDownload: bool = attr.ib(type=bool)
+    onGrab: bool = attr.ib(type=bool)
+    onHealthIssue: bool = attr.ib(type=bool)
+    onRename: bool = attr.ib(type=bool)
+    onUpgrade: bool = attr.ib(type=bool)
+    supportsOnDownload: bool = attr.ib(type=bool)
+    supportsOnGrab: bool = attr.ib(type=bool)
+    supportsOnHealthIssue: bool = attr.ib(type=bool)
+    supportsOnRename: bool = attr.ib(type=bool)
+    supportsOnUpgrade: bool = attr.ib(type=bool)
+    tags: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class _RetagChange(BaseModel):
     """Retag change attributes."""
 
-    field: str | None = None
-    oldValue: str | None = None
-    newValue: str | None = None
+    field: str = attr.ib(type=str)
+    oldValue: str = attr.ib(type=str)
+    newValue: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _HistoryCommon(BaseModel):
     """History common attributes."""
 
-    age: int | None = None
-    ageHours: float | None = None
-    ageMinutes: float | None = None
-    downloadClientName: str | None = None
-    downloadUrl: str | None = None
-    droppedPath: str | None = None
-    fileId: int | None = None
-    importedPath: str | None = None
-    indexer: str | None = None
-    nzbInfoUrl: str | None = None
-    protocol: ProtocolType | None = None
-    publishedDate: datetime | None = None
-    reason: str | None = None
-    releaseGroup: str | None = None
-    size: int | None = None
-    torrentInfoHash: str | None = None
+    age: int = attr.ib(type=int)
+    ageHours: float = attr.ib(type=float)
+    ageMinutes: float = attr.ib(type=float)
+    downloadClientName: str = attr.ib(type=str)
+    downloadUrl: str = attr.ib(type=str)
+    droppedPath: str = attr.ib(type=str)
+    fileId: int = attr.ib(type=int)
+    importedPath: str = attr.ib(type=str)
+    indexer: str = attr.ib(type=str)
+    nzbInfoUrl: str = attr.ib(type=str)
+    protocol: ProtocolType = attr.ib(type=ProtocolType)
+    publishedDate: datetime = attr.ib(type=datetime)
+    reason: str = attr.ib(type=str)
+    releaseGroup: str = attr.ib(type=str)
+    size: int = attr.ib(type=int)
+    torrentInfoHash: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _HistoryData(_HistoryCommon):
     """History data attributes."""
 
-    downloadClient: str | None = None
-    downloadForced: bool | None = None
-    guid: str | None = None
+    downloadClient: str = attr.ib(type=str)
+    downloadForced: bool = attr.ib(type=bool)
+    guid: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _QualityCommon(BaseModel):
     """Quality common attributes."""
 
-    quality: _Quality | None = None
-    qualityCutoffNotMet: bool | None = None
+    quality: _Quality = attr.ib(type=_Quality)
+    qualityCutoffNotMet: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -1940,67 +1954,67 @@ class _QualityCommon(BaseModel):
 class _Ratings(BaseModel):
     """Ratings attributes."""
 
-    value: float | None = None
-    votes: int | None = None
+    value: float = attr.ib(type=float)
+    votes: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class _Link(BaseModel):
     """Link attributes."""
 
-    name: str | None = None
-    url: str | None = None
+    name: str = attr.ib(type=str)
+    url: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _StatusMessage(BaseModel):
     """Status message attributes."""
 
-    messages: list[str] | None = None
-    title: str | None = None
+    messages: list[str] = attr.ib(list[str])
+    title: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _Editor(BaseModel):
     """Editor attributes."""
 
-    applyTags: str | None = None
-    deleteFiles: bool | None = None
-    minimumAvailability: str | None = None
-    monitored: bool | None = None
-    moveFiles: bool | None = None
-    qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
-    tags: list[int | None] | None = None
+    applyTags: str = attr.ib(type=str)
+    deleteFiles: bool = attr.ib(type=bool)
+    minimumAvailability: str = attr.ib(type=str)
+    monitored: bool = attr.ib(type=bool)
+    moveFiles: bool = attr.ib(type=bool)
+    qualityProfileId: int = attr.ib(type=int)
+    rootFolderPath: str = attr.ib(type=str)
+    tags: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class _IsLoaded(BaseModel):
     """Is loaded attribute."""
 
-    isLoaded: bool | None = None
+    isLoaded: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class _Rejection(BaseModel):
     """Rejection attributes."""
 
-    reason: str | None = None
-    type: str | None = None
+    reason: str = attr.ib(type=str)
+    type: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class _ManualImport(BaseModel):
     """Manual import attributes."""
 
-    downloadId: str | None = None
-    id: int | None = None
-    name: str | None = None
-    path: str | None = None
-    quality: _Quality | None = None
-    qualityWeight: int | None = None
+    downloadId: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    name: str = attr.ib(type=str)
+    path: str = attr.ib(type=str)
+    quality: _Quality = attr.ib(type=_Quality)
+    qualityWeight: int = attr.ib(type=int)
     rejections: list[_Rejection] | None = None
-    size: int | None = None
+    size: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -2012,8 +2026,8 @@ class _ManualImport(BaseModel):
 class _Monitor(BaseModel):
     """Sonarr series monitor attributes."""
 
-    id: int | None = None
-    monitored: bool | None = None
+    id: int = attr.ib(type=int)
+    monitored: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)

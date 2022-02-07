@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
+import attr
+
 from ..const import ARTIST_ID, DATE, PATH, TITLE
 from .base import BaseModel
 from .lidarr_common import (
@@ -120,14 +122,14 @@ class LidarrSortKeys(str, Enum):
 class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
     """Lidarr album attributes."""
 
-    added: datetime | None = None
-    addOptions: _LidarrAddOptions | None = None
-    albumReleases: _IsLoaded | None = None
-    artistMetadata: _IsLoaded | None = None
-    artistMetadataId: int | None = None
-    cleanTitle: str | None = None
-    lastInfoSync: datetime | None = None
-    oldForeignAlbumIds: list[str] | None = None
+    added: datetime = attr.ib(type=datetime)
+    addOptions: _LidarrAddOptions = attr.ib(type=_LidarrAddOptions)
+    albumReleases: _IsLoaded = attr.ib(type=_IsLoaded)
+    artistMetadata: _IsLoaded = attr.ib(type=_IsLoaded)
+    artistMetadataId: int = attr.ib(type=int)
+    cleanTitle: str = attr.ib(type=str)
+    lastInfoSync: datetime = attr.ib(type=datetime)
+    oldForeignAlbumIds: list[str] = attr.ib(list[str])
 
     def __post_init__(self):
         """Post init."""
@@ -141,8 +143,8 @@ class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
 class LidarrArtist(_LidarrArtist):
     """Lidarr artist attributes."""
 
-    lastAlbum: LidarrAlbum | None = None
-    nextAlbum: LidarrAlbum | None = None
+    lastAlbum: LidarrAlbum = attr.ib(type=LidarrAlbum)
+    nextAlbum: LidarrAlbum = attr.ib(type=LidarrAlbum)
 
     def __post_init__(self):
         """Post init."""
@@ -155,30 +157,30 @@ class LidarrArtist(_LidarrArtist):
 class LidarrAlbumEditor(BaseModel):
     """Lidarr album editor attributes."""
 
-    albumids: list[int] | None = None
-    monitored: bool | None = None
+    albumids: list[int] = attr.ib(type=list[int])
+    monitored: bool = attr.ib(type=bool)
 
 
 @dataclass(init=False)
 class LidarrAlbumLookup(_LidarrAlbumCommon):
     """Lidarr album lookup attributes."""
 
-    remoteCover: str | None = None
+    remoteCover: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class LidarrBlocklistItem(_Common7, _LidarrCommon5):
     """Lidarr blocklist item attributes."""
 
-    albumIds: list[int] | None = None
-    message: str | None = None
+    albumIds: list[int] = attr.ib(type=list[int])
+    message: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
 class LidarrBlocklist(_RecordCommon):
     """Lidarr blocklist attributes."""
 
-    records: list[LidarrBlocklistItem] | None = None
+    records: list[LidarrBlocklistItem] = attr.ib(list)
 
     def __post_init__(self):
         """Post init."""
@@ -194,7 +196,7 @@ class LidarrCalendar(LidarrAlbum):
 class LidarrWantedCutoff(_RecordCommon):
     """Lidarr wanted cutoff attributes."""
 
-    records: list[LidarrAlbum] | None = None
+    records: list[LidarrAlbum] = attr.ib(list)
 
     def __post_init__(self):
         """Post init."""
@@ -206,12 +208,12 @@ class LidarrImportList(_Common3, _LidarrImportListPreset):
     """Lidarr import list attributes."""
 
     fields: list[_LidarrFields] | None = None
-    implementationName: str | None = None
-    monitorNewItems: str | None = None
+    implementationName: str = attr.ib(type=str)
+    monitorNewItems: str = attr.ib(type=str)
     presets: list[_LidarrImportListPreset] | None = None
-    rootFolderPath: str | None = None
-    shouldMonitorExisting: bool | None = None
-    shouldSearch: bool | None = None
+    rootFolderPath: str = attr.ib(type=str)
+    shouldMonitorExisting: bool = attr.ib(type=bool)
+    shouldSearch: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -223,11 +225,11 @@ class LidarrImportList(_Common3, _LidarrImportListPreset):
 class LidarrAlbumHistory(_LidarrCommon, _LidarrCommon5):
     """Lidarr album history attributes."""
 
-    album: LidarrAlbum | None = None
-    data: _HistoryData | None = None
-    downloadId: str | None = None
-    eventType: str | None = None
-    trackId: int | None = None
+    album: LidarrAlbum = attr.ib(type=LidarrAlbum)
+    data: _HistoryData = attr.ib(type=_HistoryData)
+    downloadId: str = attr.ib(type=str)
+    eventType: str = attr.ib(type=str)
+    trackId: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -251,8 +253,8 @@ class LidarrHistory(_RecordCommon):
 class _LidarrAlbumType(BaseModel):
     """Lidarr album type attributes."""
 
-    albumType: _Common3 | None = None
-    allowed: bool | None = None
+    albumType: _Common3 = attr.ib(type=_Common3)
+    allowed: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -263,8 +265,8 @@ class _LidarrAlbumType(BaseModel):
 class _LidarrReleaseStatus(BaseModel):
     """Lidarr release status attributes."""
 
-    allowed: bool | None = None
-    releaseStatus: _Common3 | None = None
+    allowed: bool = attr.ib(type=bool)
+    releaseStatus: _Common3 = attr.ib(type=_Common3)
 
     def __post_init__(self):
         """Post init."""
@@ -293,14 +295,21 @@ class LidarrMetadataProfile(_Common3):
 
 
 @dataclass(init=False)
+class _LidarrQueueItemAlbum(_LidarrAlbumCommon):
+    """Lidarr queue detail album attributes."""
+
+    id: int = attr.ib(type=int)
+
+
+@dataclass(init=False)
 class LidarrQueueItem(_Common4, _Common7, _Common8):
     """Lidarr queue item attributes."""
 
-    album: _LidarrQueueItemAlbum | None = None
-    albumId: int | None = None
-    artist: _LidarrArtist | None = None
-    artistId: int | None = None
-    downloadForced: bool | None = None
+    album: _LidarrQueueItemAlbum = attr.ib(type=_LidarrQueueItemAlbum)
+    albumId: int = attr.ib(type=int)
+    artist: _LidarrArtist = attr.ib(type=_LidarrArtist)
+    artistId: int = attr.ib(type=int)
+    downloadForced: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -322,22 +331,15 @@ class LidarrQueue(_RecordCommon):
 
 
 @dataclass(init=False)
-class _LidarrQueueItemAlbum(_LidarrAlbumCommon):
-    """Lidarr queue detail album attributes."""
-
-    id: int | None = None
-
-
-@dataclass(init=False)
 class LidarrRelease(_ReleaseCommon):
     """Lidarr release attributes."""
 
-    albumTitle: str | None = None
-    artistName: str | None = None
-    discography: bool | None = None
-    preferredWordScore: int | None = None
-    quality: _Quality | None = None
-    releaseHash: str | None = None
+    albumTitle: str = attr.ib(type=str)
+    artistName: str = attr.ib(type=str)
+    discography: bool = attr.ib(type=bool)
+    preferredWordScore: int = attr.ib(type=int)
+    quality: _Quality = attr.ib(type=_Quality)
+    releaseHash: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -349,10 +351,10 @@ class LidarrRelease(_ReleaseCommon):
 class LidarrRename(_Rename):
     """Lidarr rename attributes."""
 
-    albumId: int | None = None
-    artistId: int | None = None
-    trackFileId: int | None = None
-    trackNumbers: list[int] | None = None
+    albumId: int = attr.ib(type=int)
+    artistId: int = attr.ib(type=int)
+    trackFileId: int = attr.ib(type=int)
+    trackNumbers: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
@@ -360,7 +362,7 @@ class LidarrRetag(LidarrRename):
     """Lidarr retag attributes."""
 
     changes: list[_RetagChange] | None = None
-    path: str | None = None
+    path: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -371,9 +373,9 @@ class LidarrRetag(LidarrRename):
 class LidarrSearch(BaseModel):
     """Lidarr search attributes."""
 
-    artist: LidarrArtist | None = None
-    foreignId: str | None = None
-    id: int | None = None
+    artist: LidarrArtist = attr.ib(type=LidarrArtist)
+    foreignId: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -384,23 +386,23 @@ class LidarrSearch(BaseModel):
 class LidarrTagDetails(_TagDetails):
     """Lidarr tag details attributes."""
 
-    artistIds: list[int] | None = None
+    artistIds: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class LidarrTrack(LidarrRename):
     """Lidarr track attributes."""
 
-    absoluteTrackNumber: int | None = None
-    artist: LidarrArtist | None = None
-    duration: int | None = None
-    explicit: bool | None = None
-    hasFile: bool | None = None
-    id: int | None = None
-    mediumNumber: int | None = None
-    ratings: _Ratings | None = None
-    title: str | None = None
-    trackNumber: int | None = None
+    absoluteTrackNumber: int = attr.ib(type=int)
+    artist: LidarrArtist = attr.ib(type=LidarrArtist)
+    duration: int = attr.ib(type=int)
+    explicit: bool = attr.ib(type=bool)
+    hasFile: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
+    mediumNumber: int = attr.ib(type=int)
+    ratings: _Ratings = attr.ib(type=_Ratings)
+    title: str = attr.ib(type=str)
+    trackNumber: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -413,12 +415,12 @@ class LidarrTrack(LidarrRename):
 class LidarrTrackFile(_LidarrMediaInfo_Quality, _LidarrCommon):
     """Lidarr track file attributes."""
 
-    artistId: int | None = None
-    audioTags: _LidarrAudioTags | None = None
-    dateAdded: datetime | None = None
-    path: str | None = None
-    qualityWeight: int | None = None
-    size: int | None = None
+    artistId: int = attr.ib(type=int)
+    audioTags: _LidarrAudioTags = attr.ib(type=_LidarrAudioTags)
+    dateAdded: datetime = attr.ib(type=datetime)
+    path: str = attr.ib(type=str)
+    qualityWeight: int = attr.ib(type=int)
+    size: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -430,8 +432,8 @@ class LidarrTrackFile(_LidarrMediaInfo_Quality, _LidarrCommon):
 class LidarrTrackFileEditor(BaseModel):
     """Lidarr track file attributes."""
 
-    quality: _Quality | None = None
-    trackFileIds: list[int] | None = None
+    quality: _Quality = attr.ib(type=_Quality)
+    trackFileIds: list[int] = attr.ib(type=list[int])
 
     def __post_init__(self):
         """Post init."""
@@ -442,17 +444,17 @@ class LidarrTrackFileEditor(BaseModel):
 class _LidarrParsedAlbumInfo(BaseModel):
     """Lidarr parsed album info attributes."""
 
-    albumTitle: str | None = None
-    artistName: str | None = None
-    artistTitleInfo: _LidarrArtistTitleInfo | None = None
-    quality: _Quality | None = None
-    releaseDate: int | datetime | None = None
-    discography: bool | None = None
-    discographyStart: int | None = None
-    discographyEnd: int | None = None
-    releaseGroup: str | None = None
-    releaseHash: str | None = None
-    releaseVersion: str | None = None
+    albumTitle: str = attr.ib(type=str)
+    artistName: str = attr.ib(type=str)
+    artistTitleInfo: _LidarrArtistTitleInfo = attr.ib(type=_LidarrArtistTitleInfo)
+    quality: _Quality = attr.ib(type=_Quality)
+    releaseDate: datetime = attr.ib(type=datetime)
+    discography: bool = attr.ib(type=bool)
+    discographyStart: int = attr.ib(type=int)
+    discographyEnd: int = attr.ib(type=int)
+    releaseGroup: str = attr.ib(type=str)
+    releaseHash: str = attr.ib(type=str)
+    releaseVersion: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -466,9 +468,9 @@ class LidarrParse(BaseModel):
     """Lidarr parse attributes."""
 
     albums: list[LidarrAlbum] | None = None
-    artist: LidarrArtist | None = None
-    parsedAlbumInfo: _LidarrParsedAlbumInfo | None = None
-    title: str | None = None
+    artist: LidarrArtist = attr.ib(type=LidarrArtist)
+    parsedAlbumInfo: _LidarrParsedAlbumInfo = attr.ib(type=_LidarrParsedAlbumInfo)
+    title: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -481,20 +483,20 @@ class LidarrParse(BaseModel):
 class LidarrArtistEditor(_Editor):
     """Lidarr artist editor attributes."""
 
-    artistIds: list[int] | None = None
+    artistIds: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class LidarrManualImport(_ManualImport):
     """Lidarr manual import attributes."""
 
-    additionalFile: bool | None = None
-    album: LidarrAlbum | None = None
-    albumReleaseId: int | None = None
-    artist: _LidarrArtist | None = None
-    audioTags: _LidarrAudioTags | None = None
-    disableReleaseSwitching: bool | None = None
-    replaceExistingFiles: bool | None = None
+    additionalFile: bool = attr.ib(type=bool)
+    album: LidarrAlbum = attr.ib(type=LidarrAlbum)
+    albumReleaseId: int = attr.ib(type=int)
+    artist: _LidarrArtist = attr.ib(type=_LidarrArtist)
+    audioTags: _LidarrAudioTags = attr.ib(type=_LidarrAudioTags)
+    disableReleaseSwitching: bool = attr.ib(type=bool)
+    replaceExistingFiles: bool = attr.ib(type=bool)
     tracks: list[LidarrTrack] | None = None
 
     def __post_init__(self):
@@ -510,10 +512,10 @@ class LidarrManualImport(_ManualImport):
 class LidarrMetadataProvider(BaseModel):
     """Lidarr metadata provider attributes."""
 
-    metadataSource: str | None = None
-    writeAudioTags: str | None = None
-    scrubAudioTags: bool | None = None
-    id: int | None = None
+    metadataSource: str = attr.ib(type=str)
+    writeAudioTags: str = attr.ib(type=str)
+    scrubAudioTags: bool = attr.ib(type=bool)
+    id: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
@@ -521,7 +523,7 @@ class LidarrAlbumStudio(BaseModel):
     """Lidarr album studio attributes."""
 
     artist: list[_Monitor] | None = None
-    monitoringOptions: _MonitorOption | None = None
+    monitoringOptions: _MonitorOption = attr.ib(type=_MonitorOption)
 
     def __post_init__(self):
         """Post init."""

@@ -1036,6 +1036,7 @@ async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient):
     assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
+    assert data.records[0].message == "string"
     assert isinstance(data.records[0].id, int)
 
 

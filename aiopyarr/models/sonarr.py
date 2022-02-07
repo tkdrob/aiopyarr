@@ -2,9 +2,11 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
+
+import attr
 
 from ..const import DATE, EPISODE_ID, PATH, SERIES_ID
 from .base import BaseModel
@@ -102,7 +104,7 @@ class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
 class SonarrEpisode(_SonarrCommon):
     """Sonarr episode attributes."""
 
-    series: _SonarrSeriesCommon | None = None
+    series: _SonarrSeriesCommon = attr.ib(type=_SonarrSeriesCommon)
 
     def __post_init__(self):
         """Post init."""
@@ -119,14 +121,14 @@ class SonarrEpisodeFile(_SonarrEpisodeFile):
 class SonarrEpisodeHistory(_Common2, _QualityCommon):
     """Sonarr history record attributes."""
 
-    data: _SonarrEpisodeHistoryData | None = None
-    date: datetime | None = None
-    episodeId: int | None = None
-    id: int | None = None
-    language: _Common3 | None = None
-    languageCutoffNotMet: bool | None = None
-    seriesId: int | None = None
-    sourceTitle: str | None = None
+    data: _SonarrEpisodeHistoryData = attr.ib(type=_SonarrEpisodeHistoryData)
+    date: datetime = attr.ib(type=datetime)
+    episodeId: int = attr.ib(type=int)
+    id: int = attr.ib(type=int)
+    language: _Common3 = attr.ib(type=_Common3)
+    languageCutoffNotMet: bool = attr.ib(type=bool)
+    seriesId: int = attr.ib(type=int)
+    sourceTitle: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -150,7 +152,9 @@ class SonarrHistory(_RecordCommon):
 class SonarrWantedMissing(_RecordCommon):
     """Sonarr wanted missing attributes."""
 
-    records: list[_SonarrWantedMissingRecord] | None = None
+    records: list[_SonarrWantedMissingRecord] = field(
+        default_factory=list[_SonarrWantedMissingRecord]
+    )
 
     def __post_init__(self):
         """Post init."""
@@ -160,10 +164,30 @@ class SonarrWantedMissing(_RecordCommon):
 
 
 @dataclass(init=False)
+class SonarrQueueDetail(_Common4, _Common8):
+    """Sonarr queue detail attributes."""
+
+    episode: _SonarrCommon = attr.ib(type=_SonarrCommon)
+    episodeId: int = attr.ib(type=int)
+    language: _Common3 = attr.ib(type=_Common3)
+    series: _SonarrSeries2 = attr.ib(type=_SonarrSeries2)
+    seriesId: int = attr.ib(type=int)
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.quality = _Quality(self.quality) or {}
+        self.episode = _SonarrCommon(self.episode) or {}
+        self.language = _Common3(self.language) or {}
+        self.series = _SonarrSeries2(self.series) or {}
+        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
+
+
+@dataclass(init=False)
 class SonarrQueue(_RecordCommon):
     """Sonarr queue attributes."""
 
-    records: list[SonarrQueueDetail] | None = None
+    records: list[SonarrQueueDetail] = field(default_factory=list[SonarrQueueDetail])
 
     def __post_init__(self):
         """Post init."""
@@ -175,10 +199,10 @@ class SonarrQueue(_RecordCommon):
 class SonarrParse(BaseModel):
     """Sonarr parse attributes."""
 
-    episodes: list[SonarrEpisode] | None = None
-    parsedEpisodeInfo: _SonarrParseEpisodeInfo | None = None
-    series: _SonarrSeries2 | None = None
-    title: str | None = None
+    episodes: list[SonarrEpisode] = field(default_factory=list[SonarrEpisode])
+    parsedEpisodeInfo: _SonarrParseEpisodeInfo = attr.ib(type=_SonarrParseEpisodeInfo)
+    series: _SonarrSeries2 = attr.ib(type=_SonarrSeries2)
+    title: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -191,38 +215,38 @@ class SonarrParse(BaseModel):
 class _SonarrSceneMapping(BaseModel):
     """Sonarr scene mapping attributes."""
 
-    title: str | None = None
-    seasonNumber: int | None = None
+    title: str = attr.ib(type=str)
+    seasonNumber: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class SonarrRelease(_ReleaseCommon):
     """Sonarr release attributes."""
 
-    absoluteEpisodeNumbers: list[int] | None = None
-    episodeNumbers: list[int] | None = None
-    episodeRequested: bool | None = None
-    fullSeason: bool | None = None
-    isAbsoluteNumbering: bool | None = None
-    isDaily: bool | None = None
-    isPossibleSpecialEpisode: bool | None = None
-    language: _Common3 | None = None
-    languageWeight: int | None = None
-    mappedAbsoluteEpisodeNumbers: list[int] | None = None
-    mappedEpisodeNumbers: list[int] | None = None
-    mappedSeasonNumber: int | None = None
-    preferredWordScore: int | None = None
-    quality: _Quality | None = None
-    rejected: bool | None = None
-    releaseGroup: str | None = None
-    releaseHash: str | None = None
-    releaseWeight: int | None = None
-    sceneMapping: _SonarrSceneMapping | None = None
-    seasonNumber: int | None = None
-    seriesTitle: str | None = None
-    special: bool | None = None
-    tvdbId: int | None = None
-    tvRageId: int | None = None
+    absoluteEpisodeNumbers: list[int] = attr.ib(type=list[int])
+    episodeNumbers: list[int] = attr.ib(type=list[int])
+    episodeRequested: bool = attr.ib(type=bool)
+    fullSeason: bool = attr.ib(type=bool)
+    isAbsoluteNumbering: bool = attr.ib(type=bool)
+    isDaily: bool = attr.ib(type=bool)
+    isPossibleSpecialEpisode: bool = attr.ib(type=bool)
+    language: _Common3 = attr.ib(type=_Common3)
+    languageWeight: int = attr.ib(type=int)
+    mappedAbsoluteEpisodeNumbers: list[int] = attr.ib(type=list[int])
+    mappedEpisodeNumbers: list[int] = attr.ib(type=list[int])
+    mappedSeasonNumber: int = attr.ib(type=int)
+    preferredWordScore: int = attr.ib(type=int)
+    quality: _Quality = attr.ib(type=_Quality)
+    rejected: bool = attr.ib(type=bool)
+    releaseGroup: str = attr.ib(type=str)
+    releaseHash: str = attr.ib(type=str)
+    releaseWeight: int = attr.ib(type=int)
+    sceneMapping: _SonarrSceneMapping = attr.ib(type=_SonarrSceneMapping)
+    seasonNumber: int = attr.ib(type=int)
+    seriesTitle: str = attr.ib(type=str)
+    special: bool = attr.ib(type=bool)
+    tvdbId: int = attr.ib(type=int)
+    tvRageId: int = attr.ib(type=int)
 
     def __post_init__(self):
         """Post init."""
@@ -237,8 +261,8 @@ class SonarrSeries(_SonarrSeriesCommon):
     """Sonarr series attributes."""
 
     alternateTitles: list[_SonarrSeriesAlternateTitle] | None = None
-    rootFolderPath: str | None = None
-    previousAiring: str | None = None
+    rootFolderPath: str = attr.ib(type=str)
+    previousAiring: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -252,7 +276,7 @@ class SonarrSeries(_SonarrSeriesCommon):
 class SonarrSeriesAdd(SonarrSeries):
     """Sonarr series add attributes."""
 
-    addOptions: _SonarrAddOptions | None = None
+    addOptions: _SonarrAddOptions = attr.ib(type=_SonarrAddOptions)
 
     def __post_init__(self):
         """Post init."""
@@ -269,13 +293,13 @@ class SonarrSeriesLookup(_SonarrSeriesCommon):
 class SonarrBlocklistSeries(_Common7):
     """Sonarr blocklist series attributes."""
 
-    date: datetime | None = None
-    episodeIds: list[int] | None = None
-    language: _Common3 | None = None
-    message: str | None = None
-    quality: _Quality | None = None
-    seriesId: int | None = None
-    sourceTitle: str | None = None
+    date: datetime = attr.ib(type=datetime)
+    episodeIds: list[int] = attr.ib(type=list[int])
+    language: _Common3 = attr.ib(type=_Common3)
+    message: str = attr.ib(type=str)
+    quality: _Quality = attr.ib(type=_Quality)
+    seriesId: int = attr.ib(type=int)
+    sourceTitle: str = attr.ib(type=str)
 
     def __post_init__(self):
         """Post init."""
@@ -288,7 +312,9 @@ class SonarrBlocklistSeries(_Common7):
 class SonarrBlocklist(_RecordCommon):
     """Sonarr blocklist attributes."""
 
-    records: list[SonarrBlocklistSeries] | None = None
+    records: list[SonarrBlocklistSeries] = field(
+        default_factory=list[SonarrBlocklistSeries]
+    )
 
     def __post_init__(self):
         """Post init."""
@@ -299,22 +325,22 @@ class SonarrBlocklist(_RecordCommon):
 class SonarrNamingConfig(BaseModel):
     """Sonarr naming config attributes."""
 
-    animeEpisodeFormat: str | None = None
-    dailyEpisodeFormat: str | None = None
-    id: int | None = None
-    includeEpisodeTitle: bool | None = None
-    includeQuality: bool | None = None
-    includeSeriesTitle: bool | None = None
-    multiEpisodeStyle: int | None = None
-    numberStyle: str | None = None
-    renameEpisodes: bool | None = None
-    replaceIllegalCharacters: bool | None = None
-    replaceSpaces: bool | None = None
-    seasonFolderFormat: str | None = None
-    separator: str | None = None
-    seriesFolderFormat: str | None = None
-    specialsFolderFormat: str | None = None
-    standardEpisodeFormat: str | None = None
+    animeEpisodeFormat: str = attr.ib(type=str)
+    dailyEpisodeFormat: str = attr.ib(type=str)
+    id: int = attr.ib(type=int)
+    includeEpisodeTitle: bool = attr.ib(type=bool)
+    includeQuality: bool = attr.ib(type=bool)
+    includeSeriesTitle: bool = attr.ib(type=bool)
+    multiEpisodeStyle: int = attr.ib(type=int)
+    numberStyle: str = attr.ib(type=str)
+    renameEpisodes: bool = attr.ib(type=bool)
+    replaceIllegalCharacters: bool = attr.ib(type=bool)
+    replaceSpaces: bool = attr.ib(type=bool)
+    seasonFolderFormat: str = attr.ib(type=str)
+    separator: str = attr.ib(type=str)
+    seriesFolderFormat: str = attr.ib(type=str)
+    specialsFolderFormat: str = attr.ib(type=str)
+    standardEpisodeFormat: str = attr.ib(type=str)
 
 
 @dataclass(init=False)
@@ -322,12 +348,12 @@ class SonarrNotification(_Common3, _Notification):
     """Sonarr notification attributes."""
 
     fields: list[_Fields] | None = None
-    onEpisodeFileDelete: bool | None = None
-    onEpisodeFileDeleteForUpgrade: bool | None = None
-    onSeriesDelete: bool | None = None
-    supportsOnEpisodeFileDelete: bool | None = None
-    supportsOnEpisodeFileDeleteForUpgrade: bool | None = None
-    supportsOnSeriesDelete: bool | None = None
+    onEpisodeFileDelete: bool = attr.ib(type=bool)
+    onEpisodeFileDeleteForUpgrade: bool = attr.ib(type=bool)
+    onSeriesDelete: bool = attr.ib(type=bool)
+    supportsOnEpisodeFileDelete: bool = attr.ib(type=bool)
+    supportsOnEpisodeFileDeleteForUpgrade: bool = attr.ib(type=bool)
+    supportsOnSeriesDelete: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""
@@ -335,59 +361,39 @@ class SonarrNotification(_Common3, _Notification):
 
 
 @dataclass(init=False)
-class SonarrQueueDetail(_Common4, _Common8):
-    """Sonarr queue detail attributes."""
-
-    episode: _SonarrCommon | None = None
-    episodeId: int | None = None
-    language: _Common3 | None = None
-    series: _SonarrSeries2 | None = None
-    seriesId: int | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.quality = _Quality(self.quality) or {}
-        self.episode = _SonarrCommon(self.episode) or {}
-        self.language = _Common3(self.language) or {}
-        self.series = _SonarrSeries2(self.series) or {}
-        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
-
-
-@dataclass(init=False)
 class SonarrRename(_Rename):
     """Sonarr rename attributes."""
 
-    episodeFileId: int | None = None
-    episodeNumbers: list[int] | None = None
-    seasonNumber: int | None = None
-    seriesId: int | None = None
+    episodeFileId: int = attr.ib(type=int)
+    episodeNumbers: list[int] = attr.ib(type=list[int])
+    seasonNumber: int = attr.ib(type=int)
+    seriesId: int = attr.ib(type=int)
 
 
 @dataclass(init=False)
 class SonarrTagDetails(_TagDetails):
     """Sonarr tag details attributes."""
 
-    indexerIds: list[int] | None = None
-    seriesIds: list[int] | None = None
+    indexerIds: list[int] = attr.ib(type=list[int])
+    seriesIds: list[int] = attr.ib(type=list[int])
 
 
 @dataclass(init=False)
 class SonarrImportList(_ImportListCommon, _Common3):
     """Sonarr importlist attributes."""
 
-    enableAutomaticAdd: bool | None = None
+    enableAutomaticAdd: bool = attr.ib(type=bool)
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    languageProfileId: int | None = None
-    listType: str | None = None
-    qualityProfileId: int | None = None
-    seasonFolder: bool | None = None
-    seriesType: str | None = None
-    shouldMonitor: str | None = None
-    tags: list[int | None] | None = None
+    implementation: str = attr.ib(type=str)
+    implementationName: str = attr.ib(type=str)
+    infoLink: str = attr.ib(type=str)
+    languageProfileId: int = attr.ib(type=int)
+    listType: str = attr.ib(type=str)
+    qualityProfileId: int = attr.ib(type=int)
+    seasonFolder: bool = attr.ib(type=bool)
+    seriesType: str = attr.ib(type=str)
+    shouldMonitor: str = attr.ib(type=str)
+    tags: list[int] = attr.ib(type=list[int])
 
     def __post_init__(self):
         """Post init."""
@@ -399,11 +405,11 @@ class SonarrManualImport(_ManualImport):
     """Sonarr manual import attributes."""
 
     episodes: list[SonarrEpisodeMonitor] | None = None
-    folderName: str | None = None
-    language: _Common3 | None = None
-    relativePath: str | None = None
-    seasonNumber: int | None = None
-    series: _SonarrSeries2 | None = None
+    folderName: str = attr.ib(type=str)
+    language: _Common3 = attr.ib(type=_Common3)
+    relativePath: str = attr.ib(type=str)
+    seasonNumber: int = attr.ib(type=int)
+    series: _SonarrSeries2 = attr.ib(type=_SonarrSeries2)
 
     def __post_init__(self):
         """Post init."""
@@ -419,7 +425,7 @@ class SonarrManualImport(_ManualImport):
 class SonarrSeasonPass(BaseModel):
     """Sonarr season pass attributes."""
 
-    monitoringOptions: _MonitorOption | None = None
+    monitoringOptions: _MonitorOption = attr.ib(type=_MonitorOption)
     series: list[_Monitor] | None = None
 
     def __post_init__(self):
@@ -433,11 +439,11 @@ class SonarrSeasonPass(BaseModel):
 class SonarrLanguage(BaseModel):
     """Sonarr launguage attributes."""
 
-    cutoff: _Common3 | None = None
-    id: int | None = None
+    cutoff: _Common3 = attr.ib(type=_Common3)
+    id: int = attr.ib(type=int)
     languages: list[_SonarrLanguageItem] | None = None
-    name: str | None = None
-    upgradeAllowed: bool | None = None
+    name: str = attr.ib(type=str)
+    upgradeAllowed: bool = attr.ib(type=bool)
 
     def __post_init__(self):
         """Post init."""

@@ -15,7 +15,7 @@ setup(
     url="https://github.com/tkdrob/aiopyarr",
     package_data={"aiopyarr": ["py.typed"]},
     packages=find_packages(include=["aiopyarr", "aiopyarr*"]),
-    install_requires=["aiohttp>=3.6.1,<4.0"],
+    install_requires=["aiohttp>=3.6.1,<4.0", "attr"],
     keywords=["aiopyarr", "radarr", "sonarr", "plex"],
     license="MIT license",
     classifiers=[
