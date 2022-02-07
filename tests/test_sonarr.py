@@ -871,7 +871,7 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/wanted/missing?sortKey=episode.airDateUtc&page=1&pageSize=10&sortDirection=default",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default",
         "GET",
         aresponses.Response(
             status=200,
@@ -907,7 +907,7 @@ async def test_async_get_wanted_extended(aresponses, sonarr_client: SonarrClient
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
-        f"/api/{SONARR_API}/wanted/missing?sortKey=episode.airDateUtc&page=1&pageSize=10&sortDirection=default&includeSeries=True",
+        f"/api/{SONARR_API}/wanted/missing?sortKey=airDateUtc&page=1&pageSize=10&sortDirection=default&includeSeries=True",
         "GET",
         aresponses.Response(
             status=200,
