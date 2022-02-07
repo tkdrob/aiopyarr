@@ -41,7 +41,7 @@ class _ReadarrCommon2(BaseModel):
     """Readarr Common attributes."""
 
     foreignAuthorId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(type=list[str])
+    genres: list[str] = attr.ib(type='list[str]')
     overview: str = attr.ib(type=str)
     sortName: str = attr.ib(type=str)
     sortNameLastFirst: str = attr.ib(type=str)
@@ -74,7 +74,7 @@ class _ReadarrImage(_Common5):
 class _ReadarrMetadataValue(_ReadarrCommon2, _Common3):
     """Readarr metadata value attributes."""
 
-    aliases: list[str] = attr.ib(type=list[str])
+    aliases: list[str] = attr.ib(type='list[str]')
     born: datetime = attr.ib(type=datetime)
     died: datetime = attr.ib(type=datetime)
     disambiguation: str = attr.ib(type=str)
@@ -109,7 +109,7 @@ class _ReadarrAuthorMetadata(_IsLoaded):
 class _ReadarrAuthorAddOptions(BaseModel):
     """Readarr author add options attributes."""
 
-    booksToMonitor: list[str] = attr.ib(type=list[str])
+    booksToMonitor: list[str] = attr.ib(type='list[str]')
     monitor: str = attr.ib(type=str)
     monitored: bool = attr.ib(type=bool)
     searchForMissingBooks: bool = attr.ib(type=bool)
@@ -234,7 +234,7 @@ class _ReadarrCommon3(BaseModel):
     monitored: bool = attr.ib(type=bool)
     path: str = attr.ib(type=str)
     qualityProfileId: int = attr.ib(type=int)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -437,7 +437,7 @@ class _ReadarrBookCommon(_ReadarrCommon):
     )
     cleanTitle: str = attr.ib(type=str)
     foreignBookId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(type=list[str])
+    genres: list[str] = attr.ib(type='list[str]')
     lastInfoSync: datetime = attr.ib(type=datetime)
     monitored: bool = attr.ib(type=bool)
     ratings: _ReadarrRating = attr.ib(type=_ReadarrRating)
@@ -524,7 +524,7 @@ class _ReadarrBlocklistRecord(_Common7):
 
     author: _ReadarrAuthorBase = attr.ib(type=_ReadarrAuthorBase)
     authorId: int = attr.ib(type=int)
-    bookIds: list[int] = attr.ib(type=list[int])
+    bookIds: list[int] = attr.ib(type='list[int]')
     date: datetime = attr.ib(type=datetime)
     message: str = attr.ib(type=str)
     quality: _Quality = attr.ib(type=_Quality)
@@ -551,7 +551,7 @@ class _ReadarrAudioTags(BaseModel):
 
     asin: str = attr.ib(type=str)
     authorMBId: str = attr.ib(type=str)
-    authors: list[str] = attr.ib(type=list[str])
+    authors: list[str] = attr.ib(type='list[str]')
     authorTitle: str = attr.ib(type=str)
     bookMBId: str = attr.ib(type=str)
     bookTitle: str = attr.ib(type=str)
@@ -580,7 +580,7 @@ class _ReadarrAudioTags(BaseModel):
     source: str = attr.ib(type=str)
     title: str = attr.ib(type=str)
     trackMBId: str = attr.ib(type=str)
-    trackNumbers: list[int] = attr.ib(type=list[int])
+    trackNumbers: list[int] = attr.ib(type='list[int]')
     year: int = attr.ib(type=int)
 
     def __post_init__(self):

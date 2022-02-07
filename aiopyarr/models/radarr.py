@@ -202,7 +202,7 @@ class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     listType: str = attr.ib(type=str)
     searchOnAdd: bool = attr.ib(type=bool)
     shouldMonitor: bool = attr.ib(type=bool)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -223,8 +223,8 @@ class RadarrNotification(_Common3, _Notification):
 class RadarrTagDetails(_TagDetails):
     """Radarr tag details attributes."""
 
-    indexerIds: list[int] = attr.ib(type=list[int])
-    movieIds: list[int] = attr.ib(type=list[int])
+    indexerIds: list[int] = attr.ib(type='list[int]')
+    movieIds: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -257,7 +257,7 @@ class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
     rootFolderPath: str = attr.ib(type=str)
     secondaryYearSourceId: int = attr.ib(type=int)
     sizeOnDisk: int = attr.ib(type=int)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
     titleSlug: int = attr.ib(type=int)
 
     def __post_init__(self):
@@ -278,7 +278,7 @@ class RadarrImportListMovie(_RadarrCommon3):
     isExcluded: bool = attr.ib(type=bool)
     isExisting: bool = attr.ib(type=bool)
     isRecommendation: bool = attr.ib(type=bool)
-    lists: list[int] = attr.ib(type=list[int])
+    lists: list[int] = attr.ib(type='list[int]')
     overview: str = attr.ib(type=str)
     remotePoster: str = attr.ib(type=str)
 
@@ -297,7 +297,7 @@ class RadarrCalendar(RadarrMovie, _RadarrCommon2):
 class RadarrMovieEditor(_Editor):
     """Radarr root folder attributes."""
 
-    movieIds: list[int] = attr.ib(type=list[int])
+    movieIds: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -322,9 +322,9 @@ class RadarrRelease(_ReleaseCommon):
     customFormatScore: int = attr.ib(type=int)
     edition: str = attr.ib(type=str)
     imdbId: int = attr.ib(type=int)
-    indexerFlags: list[str] = attr.ib(type=list[str])
+    indexerFlags: list[str] = attr.ib(type='list[str]')
     languages: list[_Common3] | None = None
-    movieTitles: list[str] = attr.ib(type=list[str])
+    movieTitles: list[str] = attr.ib(type='list[str]')
     quality: _Quality = attr.ib(type=_Quality)
     releaseGroup: str = attr.ib(type=str)
     releaseHash: str = attr.ib(type=str)
@@ -387,7 +387,7 @@ class RadarrRestriction(BaseModel):
     id: int = attr.ib(type=int)
     ignored: str = attr.ib(type=str)
     required: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)

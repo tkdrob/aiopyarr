@@ -129,7 +129,7 @@ class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
     artistMetadataId: int = attr.ib(type=int)
     cleanTitle: str = attr.ib(type=str)
     lastInfoSync: datetime = attr.ib(type=datetime)
-    oldForeignAlbumIds: list[str] = attr.ib(type=list[str])
+    oldForeignAlbumIds: list[str] = attr.ib(type='list[str]')
 
     def __post_init__(self):
         """Post init."""
@@ -157,7 +157,7 @@ class LidarrArtist(_LidarrArtist):
 class LidarrAlbumEditor(BaseModel):
     """Lidarr album editor attributes."""
 
-    albumids: list[int] = attr.ib(type=list[int])
+    albumids: list[int] = attr.ib(type='list[int]')
     monitored: bool = attr.ib(type=bool)
 
 
@@ -172,7 +172,7 @@ class LidarrAlbumLookup(_LidarrAlbumCommon):
 class LidarrBlocklistItem(_Common7, _LidarrCommon5):
     """Lidarr blocklist item attributes."""
 
-    albumIds: list[int] = attr.ib(type=list[int])
+    albumIds: list[int] = attr.ib(type='list[int]')
     message: str = attr.ib(type=str)
 
 
@@ -354,7 +354,7 @@ class LidarrRename(_Rename):
     albumId: int = attr.ib(type=int)
     artistId: int = attr.ib(type=int)
     trackFileId: int = attr.ib(type=int)
-    trackNumbers: list[int] = attr.ib(type=list[int])
+    trackNumbers: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -386,7 +386,7 @@ class LidarrSearch(BaseModel):
 class LidarrTagDetails(_TagDetails):
     """Lidarr tag details attributes."""
 
-    artistIds: list[int] = attr.ib(type=list[int])
+    artistIds: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -433,7 +433,7 @@ class LidarrTrackFileEditor(BaseModel):
     """Lidarr track file attributes."""
 
     quality: _Quality = attr.ib(type=_Quality)
-    trackFileIds: list[int] = attr.ib(type=list[int])
+    trackFileIds: list[int] = attr.ib(type='list[int]')
 
     def __post_init__(self):
         """Post init."""
@@ -483,7 +483,7 @@ class LidarrParse(BaseModel):
 class LidarrArtistEditor(_Editor):
     """Lidarr artist editor attributes."""
 
-    artistIds: list[int] = attr.ib(type=list[int])
+    artistIds: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)

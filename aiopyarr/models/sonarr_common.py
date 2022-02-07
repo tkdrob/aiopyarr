@@ -81,7 +81,7 @@ class _SonarrSeries2(_Common6, _Common9):
     seriesType: str = attr.ib(type=str)
     sortTitle: str = attr.ib(type=str)
     status: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
     titleSlug: int = attr.ib(type=int)
     tvdbId: int = attr.ib(type=int)
     tvMazeId: int = attr.ib(type=int)
@@ -151,7 +151,7 @@ class _SonarrEpisodeHistoryData(_Common4, _HistoryCommon):
     indexerId: int = attr.ib(type=int)
     preferredWordScore: int = attr.ib(type=int)
     qualityWeight: int = attr.ib(type=int)
-    rejections: list[str] = attr.ib(type=list[str])
+    rejections: list[str] = attr.ib(type='list[str]')
     sceneSource: bool = attr.ib(type=bool)
     seasonNumber: int = attr.ib(type=int)
     title: str = attr.ib(type=str)
@@ -223,8 +223,8 @@ class _SonarrWantedMissingRecord(_SonarrCommon):
 class _SonarrParseEpisodeInfo(BaseModel):
     """Sonarr parse episode info attributes."""
 
-    absoluteEpisodeNumbers: list[int] = attr.ib(type=list[int])
-    episodeNumbers: list[int] = attr.ib(type=list[int])
+    absoluteEpisodeNumbers: list[int] = attr.ib(type='list[int]')
+    episodeNumbers: list[int] = attr.ib(type='list[int]')
     fullSeason: bool = attr.ib(type=bool)
     isAbsoluteNumbering: bool = attr.ib(type=bool)
     isDaily: bool = attr.ib(type=bool)
@@ -244,7 +244,7 @@ class _SonarrParseEpisodeInfo(BaseModel):
     seriesTitle: str = attr.ib(type=str)
     seriesTitleInfo: _TitleInfo = attr.ib(type=_TitleInfo)
     special: bool = attr.ib(type=bool)
-    specialAbsoluteEpisodeNumbers: list[int] = attr.ib(type=list[int])
+    specialAbsoluteEpisodeNumbers: list[int] = attr.ib(type='list[int]')
 
     def __post_init__(self):
         self.language = _Common3(self.language) or {}

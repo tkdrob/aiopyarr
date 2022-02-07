@@ -166,7 +166,7 @@ class _Common9(BaseModel):
     """Common attributes."""
 
     certification: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(type=list[str])
+    genres: list[str] = attr.ib(type='list[str]')
     imdbId: str = attr.ib(type=str)
     runtime: int = attr.ib(type=int)
     title: str = attr.ib(type=str)
@@ -217,7 +217,7 @@ class _CustomFilterAttr(BaseModel):
 
     key: str = attr.ib(type=str)
     type: str = attr.ib(type=str)
-    value: list[str] = attr.ib(type=list[str])
+    value: list[str] = attr.ib(type='list[str]')
 
 
 @dataclass(init=False)
@@ -1852,18 +1852,18 @@ class _Tag(BaseModel):
 class _TagDetails(_Tag):
     """Tag details attributes."""
 
-    delayProfileIds: list[int] = attr.ib(type=list[int])
-    importListIds: list[int] = attr.ib(type=list[int])
-    notificationIds: list[int] = attr.ib(type=list[int])
-    restrictionIds: list[int] = attr.ib(type=list[int])
+    delayProfileIds: list[int] = attr.ib(type='list[int]')
+    importListIds: list[int] = attr.ib(type='list[int]')
+    notificationIds: list[int] = attr.ib(type='list[int]')
+    restrictionIds: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
 class _UpdateChanges(BaseModel):
     """Update changes attributes."""
 
-    fixed: list[str] = attr.ib(type=list[str])
-    new: list[str] = attr.ib(type=list[str])
+    fixed: list[str] = attr.ib(type='list[str]')
+    new: list[str] = attr.ib(type='list[str]')
 
 
 @dataclass(init=False)
@@ -1894,7 +1894,7 @@ class _Notification(BaseModel):
     supportsOnHealthIssue: bool = attr.ib(type=bool)
     supportsOnRename: bool = attr.ib(type=bool)
     supportsOnUpgrade: bool = attr.ib(type=bool)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
@@ -1970,7 +1970,7 @@ class _Link(BaseModel):
 class _StatusMessage(BaseModel):
     """Status message attributes."""
 
-    messages: list[str] = attr.ib(type=list[str])
+    messages: list[str] = attr.ib(type='list[str]')
     title: str = attr.ib(type=str)
 
 
@@ -1985,7 +1985,7 @@ class _Editor(BaseModel):
     moveFiles: bool = attr.ib(type=bool)
     qualityProfileId: int = attr.ib(type=int)
     rootFolderPath: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type=list[int])
+    tags: list[int] = attr.ib(type='list[int]')
 
 
 @dataclass(init=False)
