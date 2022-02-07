@@ -170,7 +170,7 @@ class _ReadarrMetadataProfileValue(_Common3):
 class _ReadarrMetadataProfile(_IsLoaded):
     """Readarr metadata profile attributes."""
 
-    value: _ReadarrMetadataProfileValue = attr.ib(type=_ReadarrQualityProfileValue)
+    value: _ReadarrMetadataProfileValue = attr.ib(type=_ReadarrMetadataProfileValue)
 
     def __post_init__(self):
         self.value = _ReadarrMetadataProfileValue(self.value) or {}
