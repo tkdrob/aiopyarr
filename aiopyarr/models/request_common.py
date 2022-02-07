@@ -32,14 +32,14 @@ class _Fields(_SelectOption):
     """Fields attributes."""
 
     advanced: bool = attr.ib(type=bool)
-    errors: list = attr.ib(list)
+    errors: list = attr.ib(type=list)
     helpText: str = attr.ib(type=str)
     hidden: str = attr.ib(type=str)
     label: str = attr.ib(type=str)
     pending: bool = attr.ib(type=bool)
     selectOptions: list[_SelectOptionExtended] | None = None
     type: str = attr.ib(type=str)
-    warnings: list = attr.ib(list)
+    warnings: list = attr.ib(type=list)
 
     def __post_init__(self):
         self.selectOptions = [
@@ -166,7 +166,7 @@ class _Common9(BaseModel):
     """Common attributes."""
 
     certification: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(list[str])
+    genres: list[str] = attr.ib(type=list[str])
     imdbId: str = attr.ib(type=str)
     runtime: int = attr.ib(type=int)
     title: str = attr.ib(type=str)
@@ -217,7 +217,7 @@ class _CustomFilterAttr(BaseModel):
 
     key: str = attr.ib(type=str)
     type: str = attr.ib(type=str)
-    value: list[str] = attr.ib(list[str])
+    value: list[str] = attr.ib(type=list[str])
 
 
 @dataclass(init=False)
@@ -1862,8 +1862,8 @@ class _TagDetails(_Tag):
 class _UpdateChanges(BaseModel):
     """Update changes attributes."""
 
-    fixed: list[str] = attr.ib(list[str])
-    new: list[str] = attr.ib(list[str])
+    fixed: list[str] = attr.ib(type=list[str])
+    new: list[str] = attr.ib(type=list[str])
 
 
 @dataclass(init=False)
@@ -1970,7 +1970,7 @@ class _Link(BaseModel):
 class _StatusMessage(BaseModel):
     """Status message attributes."""
 
-    messages: list[str] = attr.ib(list[str])
+    messages: list[str] = attr.ib(type=list[str])
     title: str = attr.ib(type=str)
 
 

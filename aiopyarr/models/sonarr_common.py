@@ -151,7 +151,7 @@ class _SonarrEpisodeHistoryData(_Common4, _HistoryCommon):
     indexerId: int = attr.ib(type=int)
     preferredWordScore: int = attr.ib(type=int)
     qualityWeight: int = attr.ib(type=int)
-    rejections: list[str] = attr.ib(list[str])
+    rejections: list[str] = attr.ib(type=list[str])
     sceneSource: bool = attr.ib(type=bool)
     seasonNumber: int = attr.ib(type=int)
     title: str = attr.ib(type=str)

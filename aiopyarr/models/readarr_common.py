@@ -41,7 +41,7 @@ class _ReadarrCommon2(BaseModel):
     """Readarr Common attributes."""
 
     foreignAuthorId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(list[str])
+    genres: list[str] = attr.ib(type=list[str])
     overview: str = attr.ib(type=str)
     sortName: str = attr.ib(type=str)
     sortNameLastFirst: str = attr.ib(type=str)
@@ -74,7 +74,7 @@ class _ReadarrImage(_Common5):
 class _ReadarrMetadataValue(_ReadarrCommon2, _Common3):
     """Readarr metadata value attributes."""
 
-    aliases: list[str] = attr.ib(list[str])
+    aliases: list[str] = attr.ib(type=list[str])
     born: datetime = attr.ib(type=datetime)
     died: datetime = attr.ib(type=datetime)
     disambiguation: str = attr.ib(type=str)
@@ -109,7 +109,7 @@ class _ReadarrAuthorMetadata(_IsLoaded):
 class _ReadarrAuthorAddOptions(BaseModel):
     """Readarr author add options attributes."""
 
-    booksToMonitor: list[str] = attr.ib(list[str])
+    booksToMonitor: list[str] = attr.ib(type=list[str])
     monitor: str = attr.ib(type=str)
     monitored: bool = attr.ib(type=bool)
     searchForMissingBooks: bool = attr.ib(type=bool)
@@ -120,7 +120,7 @@ class _ReadarrQualityItem(_Common3):
     """Readarr quality item attributes."""
 
     allowed: bool = attr.ib(type=bool)
-    items: list = attr.ib(list)  # Currently unknown contents
+    items: list = attr.ib(type=list)  # Currently unknown contents
     quality: _Common3 = attr.ib(type=_Common3)
 
     def __post_init__(self):
@@ -180,7 +180,7 @@ class _ReadarrMetadataProfile(_IsLoaded):
 class _ReadarrAuthorValueBooks(_IsLoaded):
     """Readarr author value books attributes."""
 
-    value: list = attr.ib(list)  # Currently unknown contents
+    value: list = attr.ib(type=list)  # Currently unknown contents
 
 
 @dataclass(init=False)
@@ -437,7 +437,7 @@ class _ReadarrBookCommon(_ReadarrCommon):
     )
     cleanTitle: str = attr.ib(type=str)
     foreignBookId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(list[str])
+    genres: list[str] = attr.ib(type=list[str])
     lastInfoSync: datetime = attr.ib(type=datetime)
     monitored: bool = attr.ib(type=bool)
     ratings: _ReadarrRating = attr.ib(type=_ReadarrRating)
@@ -551,7 +551,7 @@ class _ReadarrAudioTags(BaseModel):
 
     asin: str = attr.ib(type=str)
     authorMBId: str = attr.ib(type=str)
-    authors: list[str] = attr.ib(list[str])
+    authors: list[str] = attr.ib(type=list[str])
     authorTitle: str = attr.ib(type=str)
     bookMBId: str = attr.ib(type=str)
     bookTitle: str = attr.ib(type=str)

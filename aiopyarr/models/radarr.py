@@ -322,9 +322,9 @@ class RadarrRelease(_ReleaseCommon):
     customFormatScore: int = attr.ib(type=int)
     edition: str = attr.ib(type=str)
     imdbId: int = attr.ib(type=int)
-    indexerFlags: list[str] = attr.ib(list[str])
+    indexerFlags: list[str] = attr.ib(type=list[str])
     languages: list[_Common3] | None = None
-    movieTitles: list[str] = attr.ib(list[str])
+    movieTitles: list[str] = attr.ib(type=list[str])
     quality: _Quality = attr.ib(type=_Quality)
     releaseGroup: str = attr.ib(type=str)
     releaseHash: str = attr.ib(type=str)

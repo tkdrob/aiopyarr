@@ -225,7 +225,7 @@ class ReadarrBookLookup(_Common6):
     disambiguation: str = attr.ib(type=str)
     editions: list[_ReadarrEditionsValue] | None = None
     foreignBookId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(list[str])
+    genres: list[str] = attr.ib(type=list[str])
     grabbed: bool = attr.ib(type=bool)
     images: list[_ReadarrImage] | None = None
     links: list[_Link] | None = None

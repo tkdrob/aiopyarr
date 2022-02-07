@@ -129,7 +129,7 @@ class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
     artistMetadataId: int = attr.ib(type=int)
     cleanTitle: str = attr.ib(type=str)
     lastInfoSync: datetime = attr.ib(type=datetime)
-    oldForeignAlbumIds: list[str] = attr.ib(list[str])
+    oldForeignAlbumIds: list[str] = attr.ib(type=list[str])
 
     def __post_init__(self):
         """Post init."""
@@ -180,7 +180,7 @@ class LidarrBlocklistItem(_Common7, _LidarrCommon5):
 class LidarrBlocklist(_RecordCommon):
     """Lidarr blocklist attributes."""
 
-    records: list[LidarrBlocklistItem] = attr.ib(list)
+    records: list[LidarrBlocklistItem] = attr.ib(type=list)
 
     def __post_init__(self):
         """Post init."""
@@ -196,7 +196,7 @@ class LidarrCalendar(LidarrAlbum):
 class LidarrWantedCutoff(_RecordCommon):
     """Lidarr wanted cutoff attributes."""
 
-    records: list[LidarrAlbum] = attr.ib(list)
+    records: list[LidarrAlbum] = attr.ib(type=list)
 
     def __post_init__(self):
         """Post init."""

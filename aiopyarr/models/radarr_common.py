@@ -219,7 +219,7 @@ class _RadarrParsedMovieInfo(BaseModel):
     imdbId: str = attr.ib(type=str)
     languages: list[_Common3] | None = None
     movieTitle: str = attr.ib(type=str)
-    movieTitles: list[str] = attr.ib(list[str])
+    movieTitles: list[str] = attr.ib(type=list[str])
     originalTitle: str = attr.ib(type=str)
     primaryMovieTitle: str = attr.ib(type=str)
     quality: _Quality = attr.ib(type=_Quality)

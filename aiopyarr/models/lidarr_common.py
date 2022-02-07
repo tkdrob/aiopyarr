@@ -85,7 +85,7 @@ class _LidarrCommon4(BaseModel):
 
     disambiguation: str = attr.ib(type=str)
     foreignAlbumId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(list[str])
+    genres: list[str] = attr.ib(type=list[str])
 
 
 @dataclass(init=False)
@@ -161,7 +161,7 @@ class _LidarrRelease(BaseModel):
     """Lidarr release attributes."""
 
     albumId: int = attr.ib(type=int)
-    country: list[str] = attr.ib(list[str])
+    country: list[str] = attr.ib(type=list[str])
     disambiguation: str = attr.ib(type=str)
     duration: int = attr.ib(type=int)
     foreignReleaseId: str = attr.ib(type=str)
