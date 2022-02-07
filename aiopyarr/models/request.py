@@ -403,7 +403,7 @@ class DownloadClient(_Common):
     id: int = attr.ib(type=int)
     priority: int = attr.ib(type=int)
     protocol: ProtocolType = attr.ib(type=ProtocolType)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
 
 @dataclass(init=False)
@@ -473,7 +473,7 @@ class Indexer(_Common3):
     protocol: ProtocolType = attr.ib(type=ProtocolType)
     supportsRss: bool = attr.ib(type=bool)
     supportsSearch: bool = attr.ib(type=bool)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -556,7 +556,7 @@ class MetadataConfig(_Common3):
     implementation: str = attr.ib(type=str)
     implementationName: str = attr.ib(type=str)
     infoLink: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -622,7 +622,7 @@ class ReleaseProfile(BaseModel):
     indexerId: int = attr.ib(type=int)
     preferred: list[_ReleaseProfilePreferred] | None = None
     required: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -683,7 +683,7 @@ class DelayProfile(BaseModel):
     id: int = attr.ib(type=int)
     order: int = attr.ib(type=int)
     preferredProtocol: ProtocolType = attr.ib(type=ProtocolType)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
     torrentDelay: int = attr.ib(type=int)
     usenetDelay: int = attr.ib(type=int)
 

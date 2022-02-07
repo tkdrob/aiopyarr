@@ -223,8 +223,8 @@ class _SonarrSceneMapping(BaseModel):
 class SonarrRelease(_ReleaseCommon):
     """Sonarr release attributes."""
 
-    absoluteEpisodeNumbers: list[int] = attr.ib(type='list[int]')
-    episodeNumbers: list[int] = attr.ib(type='list[int]')
+    absoluteEpisodeNumbers: list[int] = attr.ib(type="list[int]")
+    episodeNumbers: list[int] = attr.ib(type="list[int]")
     episodeRequested: bool = attr.ib(type=bool)
     fullSeason: bool = attr.ib(type=bool)
     isAbsoluteNumbering: bool = attr.ib(type=bool)
@@ -232,8 +232,8 @@ class SonarrRelease(_ReleaseCommon):
     isPossibleSpecialEpisode: bool = attr.ib(type=bool)
     language: _Common3 = attr.ib(type=_Common3)
     languageWeight: int = attr.ib(type=int)
-    mappedAbsoluteEpisodeNumbers: list[int] = attr.ib(type='list[int]')
-    mappedEpisodeNumbers: list[int] = attr.ib(type='list[int]')
+    mappedAbsoluteEpisodeNumbers: list[int] = attr.ib(type="list[int]")
+    mappedEpisodeNumbers: list[int] = attr.ib(type="list[int]")
     mappedSeasonNumber: int = attr.ib(type=int)
     preferredWordScore: int = attr.ib(type=int)
     quality: _Quality = attr.ib(type=_Quality)
@@ -294,7 +294,7 @@ class SonarrBlocklistSeries(_Common7):
     """Sonarr blocklist series attributes."""
 
     date: datetime = attr.ib(type=datetime)
-    episodeIds: list[int] = attr.ib(type='list[int]')
+    episodeIds: list[int] = attr.ib(type="list[int]")
     language: _Common3 = attr.ib(type=_Common3)
     message: str = attr.ib(type=str)
     quality: _Quality = attr.ib(type=_Quality)
@@ -365,7 +365,7 @@ class SonarrRename(_Rename):
     """Sonarr rename attributes."""
 
     episodeFileId: int = attr.ib(type=int)
-    episodeNumbers: list[int] = attr.ib(type='list[int]')
+    episodeNumbers: list[int] = attr.ib(type="list[int]")
     seasonNumber: int = attr.ib(type=int)
     seriesId: int = attr.ib(type=int)
 
@@ -374,8 +374,8 @@ class SonarrRename(_Rename):
 class SonarrTagDetails(_TagDetails):
     """Sonarr tag details attributes."""
 
-    indexerIds: list[int] = attr.ib(type='list[int]')
-    seriesIds: list[int] = attr.ib(type='list[int]')
+    indexerIds: list[int] = attr.ib(type="list[int]")
+    seriesIds: list[int] = attr.ib(type="list[int]")
 
 
 @dataclass(init=False)
@@ -393,7 +393,7 @@ class SonarrImportList(_ImportListCommon, _Common3):
     seasonFolder: bool = attr.ib(type=bool)
     seriesType: str = attr.ib(type=str)
     shouldMonitor: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""

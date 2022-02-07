@@ -85,7 +85,7 @@ class _LidarrCommon4(BaseModel):
 
     disambiguation: str = attr.ib(type=str)
     foreignAlbumId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(type='list[str]')
+    genres: list[str] = attr.ib(type="list[str]")
 
 
 @dataclass(init=False)
@@ -110,7 +110,7 @@ class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     rootFolderPath: str = attr.ib(type=str)
     status: StatusType = attr.ib(type=StatusType)
     tadbId: int = attr.ib(type=int)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
 
 @dataclass(init=False)
@@ -161,7 +161,7 @@ class _LidarrRelease(BaseModel):
     """Lidarr release attributes."""
 
     albumId: int = attr.ib(type=int)
-    country: list[str] = attr.ib(type='list[str]')
+    country: list[str] = attr.ib(type="list[str]")
     disambiguation: str = attr.ib(type=str)
     duration: int = attr.ib(type=int)
     foreignReleaseId: str = attr.ib(type=str)
@@ -209,7 +209,7 @@ class _LidarrImportListPreset(_ImportListCommon):
     name: str = attr.ib(type=str)
     qualityProfileId: int = attr.ib(type=int)
     shouldMonitor: str = attr.ib(type=str)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -262,7 +262,7 @@ class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
     discCount: int = attr.ib(type=int)
     discNumber: int = attr.ib(type=int)
     duration: str = attr.ib(type=str)
-    trackNumbers: list[int] = attr.ib(type='list[int]')
+    trackNumbers: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""

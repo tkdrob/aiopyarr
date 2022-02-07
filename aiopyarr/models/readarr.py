@@ -176,7 +176,7 @@ class ReadarrBlocklist(_RecordCommon):
 class ReadarrAuthorEditor(_Editor):
     """Readarr author editor attributes."""
 
-    authorIds: list[int] = attr.ib(type='list[int]')
+    authorIds: list[int] = attr.ib(type="list[int]")
     metadataProfileId: int = attr.ib(type=int)
 
 
@@ -205,7 +205,7 @@ class ReadarrBookFile(_QualityCommon):
 class ReadarrBookFileEditor(BaseModel):
     """Readarr book file attributes."""
 
-    bookFileIds: list[int] = attr.ib(type='list[int]')
+    bookFileIds: list[int] = attr.ib(type="list[int]")
     quality: _Quality = attr.ib(type=_Quality)
 
     def __post_init__(self):
@@ -225,7 +225,7 @@ class ReadarrBookLookup(_Common6):
     disambiguation: str = attr.ib(type=str)
     editions: list[_ReadarrEditionsValue] | None = None
     foreignBookId: str = attr.ib(type=str)
-    genres: list[str] = attr.ib(type='list[str]')
+    genres: list[str] = attr.ib(type="list[str]")
     grabbed: bool = attr.ib(type=bool)
     images: list[_ReadarrImage] | None = None
     links: list[_Link] | None = None
@@ -378,7 +378,7 @@ class ReadarrImportList(_ImportListCommon, _Common3):
     shouldMonitor: str = attr.ib(type=str)
     shouldMonitorExisting: bool = attr.ib(type=bool)
     shouldSearch: bool = attr.ib(type=bool)
-    tags: list[int] = attr.ib(type='list[int]')
+    tags: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -509,7 +509,7 @@ class ReadarrRetag(ReadarrRename):
 
     changes: list[_RetagChange] | None = None
     path: str = attr.ib(type=str)
-    trackNumbers: list[int] = attr.ib(type='list[int]')
+    trackNumbers: list[int] = attr.ib(type="list[int]")
 
     def __post_init__(self):
         """Post init."""
@@ -548,7 +548,7 @@ class ReadarrSeries(BaseModel):
 class ReadarrTagDetails(_TagDetails):
     """Readarr tag details attributes."""
 
-    authorIds: list[int] = attr.ib(type='list[int]')
+    authorIds: list[int] = attr.ib(type="list[int]")
 
 
 @dataclass(init=False)
