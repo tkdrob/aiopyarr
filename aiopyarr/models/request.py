@@ -206,10 +206,10 @@ class StatusType(str, Enum):
 class Diskspace(BaseModel):
     """Diskspace attributes."""
 
-    freeSpace: int | None = None
-    label: str | None = None
-    path: str | None = None
-    totalSpace: int | None = None
+    freeSpace: int
+    label: str
+    path: str
+    totalSpace: int
 
 
 @dataclass(init=False)
@@ -227,11 +227,11 @@ class Logs(_RecordCommon):
 class LogFile(BaseModel):
     """Log file attributes."""
 
-    contentsUrl: str | None = None
-    downloadUrl: str | None = None
-    filename: str | None = None
-    id: int | None = None
-    lastWriteTime: datetime | None = None
+    contentsUrl: str
+    downloadUrl: str
+    filename: str
+    id: int
+    lastWriteTime: datetime
 
 
 @dataclass(init=False)
@@ -243,19 +243,19 @@ class Tag(_Tag):
 class SystemBackup(_Common3):
     """System backup attributes."""
 
-    path: str | None = None
-    time: datetime | None = None
-    type: str | None = None
+    path: str
+    time: datetime
+    type: str
 
 
 @dataclass(init=False)
 class CustomFilter(BaseModel):
     """Custom filter attributes."""
 
-    id: int | None = None
+    id: int
     filters: list[_CustomFilterAttr] | None = None
-    label: str | None = None
-    type: str | None = None
+    label: str
+    type: str
 
     def __post_init__(self):
         """Post init."""
@@ -266,9 +266,9 @@ class CustomFilter(BaseModel):
 class RootFolder(BaseModel):
     """Root folder attributes."""
 
-    freeSpace: int | None = None
-    id: int | None = None
-    path: str | None = None
+    freeSpace: int
+    id: int
+    path: str
     unmappedFolders: list[FilesystemFolder] | None = None
 
     def __post_init__(self):
@@ -282,89 +282,89 @@ class RootFolder(BaseModel):
 class HostConfig(BaseModel):
     """Host config attributes."""
 
-    analyticsEnabled: bool | None = None
-    apiKey: str | None = None
-    authenticationMethod: str | None = None
-    backupFolder: str | None = None
-    backupInterval: int | None = None
-    backupRetention: int | None = None
-    bindAddress: str | None = None
-    branch: str | None = None
-    certificateValidation: str | None = None
-    consoleLogLevel: str | None = None
-    enableSsl: bool | None = None
-    id: int | None = None
-    launchBrowser: bool | None = None
-    logLevel: str | None = None
-    password: str | None = None
-    port: int | None = None
-    proxyBypassFilter: str | None = None
-    proxyBypassLocalAddresses: bool | None = None
-    proxyEnabled: bool | None = None
-    proxyHostname: str | None = None
-    proxyPassword: str | None = None
-    proxyPort: int | None = None
-    proxyType: str | None = None
-    proxyUsername: str | None = None
-    sslCertHash: str | None = None
-    sslCertPassword: str | None = None
-    sslCertPath: str | None = None
-    sslPort: int | None = None
-    updateAutomatically: bool | None = None
-    updateMechanism: str | None = None
-    updateScriptPath: str | None = None
-    urlBase: str | None = None
-    username: str | None = None
+    analyticsEnabled: bool
+    apiKey: str
+    authenticationMethod: str
+    backupFolder: str
+    backupInterval: int
+    backupRetention: int
+    bindAddress: str
+    branch: str
+    certificateValidation: str
+    consoleLogLevel: str
+    enableSsl: bool
+    id: int
+    launchBrowser: bool
+    logLevel: str
+    password: str
+    port: int
+    proxyBypassFilter: str
+    proxyBypassLocalAddresses: bool
+    proxyEnabled: bool
+    proxyHostname: str
+    proxyPassword: str
+    proxyPort: int
+    proxyType: str
+    proxyUsername: str
+    sslCertHash: str
+    sslCertPassword: str
+    sslCertPath: str
+    sslPort: int
+    updateAutomatically: bool
+    updateMechanism: str
+    updateScriptPath: str
+    urlBase: str
+    username: str
 
 
 @dataclass(init=False)
 class UIConfig(BaseModel):
     """UI config attributes."""
 
-    calendarWeekColumnHeader: str | None = None
-    enableColorImpairedMode: bool | None = None
-    firstDayOfWeek: int | None = None
-    id: int | None = None
-    longDateFormat: str | None = None
-    movieInfoLanguage: int | None = None
-    movieRuntimeFormat: str | None = None
-    shortDateFormat: str | None = None
-    showRelativeDates: bool | None = None
-    timeFormat: str | None = None
-    uiLanguage: int | None = None
+    calendarWeekColumnHeader: str
+    enableColorImpairedMode: bool
+    firstDayOfWeek: int
+    id: int
+    longDateFormat: str
+    movieInfoLanguage: int
+    movieRuntimeFormat: str
+    shortDateFormat: str
+    showRelativeDates: bool
+    timeFormat: str
+    uiLanguage: int
 
 
 @dataclass(init=False)
 class SystemStatus(BaseModel):
     """System status attributes."""
 
-    appData: str | None = None
-    authentication: str | None = None
-    branch: str | None = None
-    buildTime: datetime | None = None
-    isAdmin: bool | None = None
-    isDebug: bool | None = None
-    isDocker: bool | None = None
-    isLinux: bool | None = None
-    isMono: bool | None = None
-    isMonoRuntime: bool | None = None
-    isNetCore: bool | None = None
-    isOsx: bool | None = None
-    isProduction: bool | None = None
-    isUserInteractive: bool | None = None
-    isWindows: bool | None = None
-    migrationVersion: int | None = None
-    mode: str | None = None
-    osName: str | None = None
-    osVersion: str | None = None
-    packageUpdateMechanism: str | None = None
-    runtimeName: str | None = None
-    runtimeVersion: str | None = None
-    sqliteVersion: str | None = None
-    startTime: datetime | None = None
-    startupPath: str | None = None
-    urlBase: str | None = None
-    version: str | None = None
+    appData: str
+    authentication: str
+    branch: str
+    buildTime: datetime
+    isAdmin: bool
+    isDebug: bool
+    isDocker: bool
+    isLinux: bool
+    isMono: bool
+    isMonoRuntime: bool
+    isNetCore: bool
+    isOsx: bool
+    isProduction: bool
+    isUserInteractive: bool
+    isWindows: bool
+    migrationVersion: int
+    mode: str
+    osName: str
+    osVersion: str
+    packageUpdateMechanism: str
+    runtimeName: str
+    runtimeVersion: str
+    sqliteVersion: str
+    startTime: datetime
+    startupPath: str
+    urlBase: str
+    version: str
 
 
 @dataclass(init=False)
@@ -372,19 +372,19 @@ class Command(_Common3):
     """Command attributes."""
 
     body: _CommandBody | None = None
-    commandName: str | None = None
-    duration: str | None = None
-    ended: datetime | None = None
-    lastExecutionTime: datetime | None = None
-    message: str | None = None
-    priority: str | None = None
-    queued: datetime | None = None
-    sendUpdatesToClient: bool | None = None
-    started: datetime | None = None
-    stateChangeTime: datetime | None = None
-    status: str | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
+    commandName: str
+    duration: str
+    ended: datetime
+    lastExecutionTime: datetime
+    message: str
+    priority: str
+    queued: datetime
+    sendUpdatesToClient: bool
+    started: datetime
+    stateChangeTime: datetime
+    status: str
+    trigger: str
+    updateScheduledTask: bool
 
     def __post_init__(self):
         """Post init."""
@@ -396,25 +396,25 @@ class Command(_Common3):
 class DownloadClient(_Common):
     """Download client attributes."""
 
-    configContract: str | None = None
-    enable: bool | None = None
-    id: int | None = None
-    priority: int | None = None
-    protocol: ProtocolType | None = None
-    tags: list[int | None] | None = None
+    configContract: str
+    enable: bool
+    id: int
+    priority: int
+    protocol: ProtocolType
+    tags: list[int]
 
 
 @dataclass(init=False)
 class DownloadClientConfig(BaseModel):
     """Download client configuration attributes."""
 
-    autoRedownloadFailed: bool | None = None
-    checkForFinishedDownloadInterval: int | None = None
-    downloadClientWorkingFolders: str | None = None
-    enableCompletedDownloadHandling: bool | None = None
-    id: int | None = None
-    removeCompletedDownloads: bool | None = None
-    removeFailedDownloads: bool | None = None
+    autoRedownloadFailed: bool
+    checkForFinishedDownloadInterval: int
+    downloadClientWorkingFolders: str
+    enableCompletedDownloadHandling: bool
+    id: int
+    removeCompletedDownloads: bool
+    removeFailedDownloads: bool
 
 
 @dataclass(init=False)
@@ -422,8 +422,8 @@ class Filesystem(BaseModel):
     """Filesystem attributes."""
 
     directories: list[_FilesystemDirectory] | None = None
-    files: list | None = None
-    parent: str | None = None
+    files: list
+    parent: str
 
     def __post_init__(self):
         """Post init."""
@@ -434,44 +434,44 @@ class Filesystem(BaseModel):
 class Health(BaseModel):
     """Health attributes."""
 
-    message: str | None = None
-    source: str | None = None
-    type: str | None = None
-    wikiUrl: str | None = None
+    message: str
+    source: str
+    type: str
+    wikiUrl: str
 
 
 @dataclass(init=False)
 class ImportListExclusion(BaseModel):
     """Import list exclusion attributes."""
 
-    artistName: str | None = None
-    authorName: str | None = None
-    foreignId: str | None = None
+    artistName: str
+    authorName: str
+    foreignId: str
     id: int | None = None
-    movieTitle: str | None = None
-    movieYear: int | None = None
-    title: str | None = None
-    tmdbId: int | None = None
-    tvdbId: int | None = None
+    movieTitle: str
+    movieYear: int
+    title: str
+    tmdbId: int
+    tvdbId: int
 
 
 @dataclass(init=False)
 class Indexer(_Common3):
     """Indexer attributes."""
 
-    configContract: str | None = None
-    enableAutomaticSearch: bool | None = None
-    enableInteractiveSearch: bool | None = None
-    enableRss: bool | None = None
+    configContract: str
+    enableAutomaticSearch: bool
+    enableInteractiveSearch: bool
+    enableRss: bool
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    priority: int | None = None
-    protocol: ProtocolType | None = None
-    supportsRss: bool | None = None
-    supportsSearch: bool | None = None
-    tags: list[int | None] | None = None
+    implementation: str
+    implementationName: str
+    infoLink: str
+    priority: int
+    protocol: ProtocolType
+    supportsRss: bool
+    supportsSearch: bool
+    tags: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -482,22 +482,22 @@ class Indexer(_Common3):
 class IndexerConfig(BaseModel):
     """Indexer configuration attributes."""
 
-    allowHardcodedSubs: bool | None = None
-    availabilityDelay: int | None = None
-    id: int | None = None
-    maximumSize: int | None = None
-    minimumAge: int | None = None
-    preferIndexerFlags: bool | None = None
-    retention: int | None = None
-    rssSyncInterval: int | None = None
-    whitelistedHardcodedSubs: str | None = None
+    allowHardcodedSubs: bool
+    availabilityDelay: int
+    id: int
+    maximumSize: int
+    minimumAge: int
+    preferIndexerFlags: bool
+    retention: int
+    rssSyncInterval: int
+    whitelistedHardcodedSubs: str
 
 
 @dataclass(init=False)
 class Language(_Common3):
     """Language attributes."""
 
-    nameLower: str | None = None
+    nameLower: str
 
 
 @dataclass(init=False)
@@ -515,46 +515,46 @@ class Localization(BaseModel):
 class MediaManagementConfig(BaseModel):
     """Media management config attributes."""
 
-    allowFingerprinting: str | None = None
-    autoRenameFolders: bool | None = None
-    autoUnmonitorPreviouslyDownloadedBooks: bool | None = None
-    autoUnmonitorPreviouslyDownloadedEpisodes: bool | None = None
-    autoUnmonitorPreviouslyDownloadedMovies: bool | None = None
-    chmodFolder: str | None = None
-    chownGroup: str | None = None
-    copyUsingHardlinks: bool | None = None
-    createEmptyAuthorFolders: bool | None = None
-    createEmptyMovieFolders: bool | None = None
-    createEmptySeriesFolders: bool | None = None
-    deleteEmptyFolders: bool | None = None
-    downloadPropersAndRepacks: str | None = None
-    enableMediaInfo: bool | None = None
-    episodeTitleRequired: str | None = None
-    extraFileExtensions: str | None = None
-    fileDate: str | None = None
-    id: int | None = None
-    importExtraFiles: bool | None = None
-    minimumFreeSpaceWhenImporting: int | None = None
-    pathsDefaultStatic: bool | None = None
-    recycleBin: str | None = None
-    recycleBinCleanupDays: int | None = None
-    rescanAfterRefresh: str | None = None
-    setPermissionsLinux: bool | None = None
-    skipFreeSpaceCheckWhenImporting: bool | None = None
-    watchLibraryForChanges: bool | None = None
+    allowFingerprinting: str
+    autoRenameFolders: bool
+    autoUnmonitorPreviouslyDownloadedBooks: bool
+    autoUnmonitorPreviouslyDownloadedEpisodes: bool
+    autoUnmonitorPreviouslyDownloadedMovies: bool
+    chmodFolder: str
+    chownGroup: str
+    copyUsingHardlinks: bool
+    createEmptyAuthorFolders: bool
+    createEmptyMovieFolders: bool
+    createEmptySeriesFolders: bool
+    deleteEmptyFolders: bool
+    downloadPropersAndRepacks: str
+    enableMediaInfo: bool
+    episodeTitleRequired: str
+    extraFileExtensions: str
+    fileDate: str
+    id: int
+    importExtraFiles: bool
+    minimumFreeSpaceWhenImporting: int
+    pathsDefaultStatic: bool
+    recycleBin: str
+    recycleBinCleanupDays: int
+    rescanAfterRefresh: str
+    setPermissionsLinux: bool
+    skipFreeSpaceCheckWhenImporting: bool
+    watchLibraryForChanges: bool
 
 
 @dataclass(init=False)
 class MetadataConfig(_Common3):
     """Metadata config attributes."""
 
-    configContract: str | None = None
-    enable: bool | None = None
+    configContract: str
+    enable: bool
     fields: list[_MetadataFields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    tags: list[int | None] | None = None
+    implementation: str
+    implementationName: str
+    infoLink: str
+    tags: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -565,13 +565,13 @@ class MetadataConfig(_Common3):
 class QualityDefinition(BaseModel):
     """Quality definition attributes."""
 
-    id: int | None = None
-    maxSize: float | None = None
-    minSize: float | None = None
-    preferredSize: int | None = None
+    id: int
+    maxSize: float
+    minSize: float
+    preferredSize: int
     quality: _QualityInfo | None = None
-    title: str | None = None
-    weight: int | None = None
+    title: str
+    weight: int
 
     def __post_init__(self):
         """Post init."""
@@ -582,13 +582,13 @@ class QualityDefinition(BaseModel):
 class QualityProfile(_Common3):
     """Quality profile attributes."""
 
-    cutoff: int | None = None
-    cutoffFormatScore: int | None = None
-    formatItems: list | None = None
+    cutoff: int
+    cutoffFormatScore: int
+    formatItems: list
     items: list[_QualityProfileItems] | None = None
     language: _Common3 | None = None
-    minFormatScore: int | None = None
-    upgradeAllowed: bool | None = None
+    minFormatScore: int
+    upgradeAllowed: bool
 
     def __post_init__(self):
         """Post init."""
@@ -600,27 +600,27 @@ class QualityProfile(_Common3):
 class QueueStatus(BaseModel):
     """Queue status attributes."""
 
-    count: int | None = None
-    errors: bool | None = None
-    totalCount: int | None = None
-    unknownCount: int | None = None
-    unknownErrors: bool | None = None
-    unknownWarnings: bool | None = None
-    warnings: bool | None = None
+    count: int
+    errors: bool
+    totalCount: int
+    unknownCount: int
+    unknownErrors: bool
+    unknownWarnings: bool
+    warnings: bool
 
 
 @dataclass(init=False)
 class ReleaseProfile(BaseModel):
     """Release profile attributes."""
 
-    enabled: bool | None = None
-    id: int | None = None
-    ignored: str | None = None
-    includePreferredWhenRenaming: bool | None = None
-    indexerId: int | None = None
+    enabled: bool
+    id: int
+    ignored: str
+    includePreferredWhenRenaming: bool
+    indexerId: int
     preferred: list[_ReleaseProfilePreferred] | None = None
-    required: str | None = None
-    tags: list[int | None] | None = None
+    required: str
+    tags: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -631,39 +631,39 @@ class ReleaseProfile(BaseModel):
 class RemotePathMapping(BaseModel):
     """Remote path mapping attributes."""
 
-    host: str | None = None
-    id: int | None = None
-    localPath: str | None = None
-    remotePath: str | None = None
+    host: str
+    id: int
+    localPath: str
+    remotePath: str
 
 
 @dataclass(init=False)
 class SystemTask(_Common3):
     """System task attributes."""
 
-    interval: int | None = None
-    lastDuration: str | None = None
-    lastExecution: datetime | None = None
-    lastStartTime: datetime | None = None
-    nextExecution: datetime | None = None
-    taskName: str | None = None
+    interval: int
+    lastDuration: str
+    lastExecution: datetime
+    lastStartTime: datetime
+    nextExecution: datetime
+    taskName: str
 
 
 @dataclass(init=False)
 class Update(BaseModel):
     """Update attributes."""
 
-    branch: str | None = None
+    branch: str
     changes: _UpdateChanges | None = None
-    fileName: str | None = None
-    hash: str | None = None
-    installable: bool | None = None
-    installed: bool | None = None
-    installedOn: datetime | None = None
-    latest: bool | None = None
-    releaseDate: datetime | None = None
-    url: str | None = None
-    version: str | None = None
+    fileName: str
+    hash: str
+    installable: bool
+    installed: bool
+    installedOn: datetime
+    latest: bool
+    releaseDate: datetime
+    url: str
+    version: str
 
     def __post_init__(self):
         """Post init."""
@@ -675,19 +675,19 @@ class Update(BaseModel):
 class DelayProfile(BaseModel):
     """Delay profile attributes."""
 
-    bypassIfHighestQuality: bool | None = None
-    enableTorrent: bool | None = None
-    enableUsenet: bool | None = None
-    id: int | None = None
-    order: int | None = None
-    preferredProtocol: ProtocolType | None = None
-    tags: list[int | None] | None = None
-    torrentDelay: int | None = None
-    usenetDelay: int | None = None
+    bypassIfHighestQuality: bool
+    enableTorrent: bool
+    enableUsenet: bool
+    id: int
+    order: int
+    preferredProtocol: ProtocolType
+    tags: list[int]
+    torrentDelay: int
+    usenetDelay: int
 
 
 @dataclass(init=False)
 class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
 
-    relativePath: str | None = None
+    relativePath: str

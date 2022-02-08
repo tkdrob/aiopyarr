@@ -22,18 +22,18 @@ from .request_common import (
 class _LidarrMedia(BaseModel):
     """Lidarr release mediaattributes."""
 
-    mediumFormat: str | None = None
-    mediumName: str | None = None
-    mediumNumber: int | None = None
+    mediumFormat: str
+    mediumName: str
+    mediumNumber: int
 
 
 @dataclass(init=False)
 class _LidarrCommon(BaseModel):
     """Lidarr common attributes."""
 
-    albumId: int | None = None
-    id: int | None = None
-    qualityCutoffNotMet: bool | None = None
+    albumId: int
+    id: int
+    qualityCutoffNotMet: bool
 
 
 @dataclass(init=False)
@@ -56,7 +56,7 @@ class _LidarrCommon2(BaseModel):
 class _LidarrCommon3(BaseModel):
     """Lidarr common attributes."""
 
-    id: int | None = None
+    id: int
     statistics: _LidarrStatistics | None = None
 
     def __post_init__(self):
@@ -69,9 +69,9 @@ class _LidarrCommon3(BaseModel):
 class _LidarrCommon4(BaseModel):
     """Lidarr common attributes."""
 
-    disambiguation: str | None = None
-    foreignAlbumId: str | None = None
-    genres: list[str] | None = None
+    disambiguation: str
+    foreignAlbumId: str
+    genres: list[str]
 
 
 @dataclass(init=False)
@@ -79,10 +79,10 @@ class _LidarrCommon5(BaseModel):
     """Lidarr common attributes."""
 
     artist: _LidarrArtist | None = None
-    artistId: int | None = None
-    date: datetime | None = None
+    artistId: int
+    date: datetime
     quality: _Quality | None = None
-    sourceTitle: str | None = None
+    sourceTitle: str
 
     def __post_init__(self):
         """Post init."""
@@ -95,43 +95,43 @@ class _LidarrCommon5(BaseModel):
 class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     """Lidarr artist attributes."""
 
-    added: datetime | None = None
-    allMusicId: str | None = None
-    artistMetadataId: int | None = None
-    artistName: str | None = None
-    artistType: str | None = None
-    cleanName: str | None = None
-    discogsId: int | None = None
-    ended: bool | None = None
-    foreignArtistId: str | None = None
-    mbId: str | None = None
-    metadataProfileId: int | None = None
-    path: str | None = None
-    qualityProfileId: int | None = None
-    remotePoster: str | None = None
-    sortName: str | None = None
-    rootFolderPath: str | None = None
-    status: StatusType | None = None
-    tadbId: int | None = None
-    tags: list[int] | None = None
+    added: datetime
+    allMusicId: str
+    artistMetadataId: int
+    artistName: str
+    artistType: str
+    cleanName: str
+    discogsId: int
+    ended: bool
+    foreignArtistId: str
+    mbId: str
+    metadataProfileId: int
+    path: str
+    qualityProfileId: int
+    remotePoster: str
+    sortName: str
+    rootFolderPath: str
+    status: StatusType
+    tadbId: int
+    tags: list[int]
 
 
 @dataclass(init=False)
 class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
     """Lidarr album common media attributes."""
 
-    albumType: str | None = None
-    anyReleaseOk: bool | None = None
+    albumType: str
+    anyReleaseOk: bool
     artist: _LidarrArtist | None = None
-    artistId: int | None = None
-    duration: int | None = None
+    artistId: int
+    duration: int
     media: list[_LidarrMedia] | None = None
-    mediumCount: int | None = None
-    profileId: int | None = None
-    releaseDate: datetime | None = None
+    mediumCount: int
+    profileId: int
+    releaseDate: datetime
     releases: list[_LidarrRelease] | None = None
     secondaryTypes: list[_Common3] | None = None
-    title: str | None = None
+    title: str
 
     def __post_init__(self):
         """Post init."""
@@ -146,20 +146,20 @@ class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
 class _LidarrRelease(BaseModel):
     """Lidarr release attributes."""
 
-    albumId: int | None = None
-    country: list[str] | None = None
-    disambiguation: str | None = None
-    duration: int | None = None
-    foreignReleaseId: str | None = None
-    format: str | None = None
-    id: int | None = None
-    label: str | None = None
+    albumId: int
+    country: list[str]
+    disambiguation: str
+    duration: int
+    foreignReleaseId: str
+    format: str
+    id: int
+    label: str
     media: list[_LidarrMedia] | None = None
-    mediumCount: int | None = None
-    monitored: bool | None = None
-    status: str | None = None
-    title: str | None = None
-    trackCount: int | None = None
+    mediumCount: int
+    monitored: bool
+    status: str
+    title: str
+    trackCount: int
 
     def __post_init__(self):
         """Post init."""
@@ -170,44 +170,44 @@ class _LidarrRelease(BaseModel):
 class _LidarrImage(BaseModel):
     """Lidarr image attributes."""
 
-    coverType: str | None = None
-    extension: str | None = None
-    url: str | None = None
+    coverType: str
+    extension: str
+    url: str
 
 
 @dataclass(init=False)
 class _LidarrStatistics(BaseModel):
     """Lidarr statistics attributes."""
 
-    albumCount: int | None = None
-    percentOfTracks: float | None = None
-    sizeOnDisk: int | None = None
-    totalTrackCount: int | None = None
-    trackCount: int | None = None
-    trackFileCount: int | None = None
+    albumCount: int
+    percentOfTracks: float
+    sizeOnDisk: int
+    totalTrackCount: int
+    trackCount: int
+    trackFileCount: int
 
 
 @dataclass(init=False)
 class _LidarrFields(_Fields):
     """Lidarr fields attributes."""
 
-    selectOptionsProviderAction: str | None = None
+    selectOptionsProviderAction: str
 
 
 @dataclass(init=False)
 class _LidarrImportListPreset(_ImportListCommon):
     """Lidarr import list preset attributes."""
 
-    enableAutomaticAdd: bool | None = None
+    enableAutomaticAdd: bool
     fields: list[_LidarrFields] | None = None
-    implementation: str | None = None
-    infoLink: str | None = None
-    listType: str | None = None
-    metadataProfileId: int | None = None
-    name: str | None = None
-    qualityProfileId: int | None = None
-    shouldMonitor: str | None = None
-    tags: list[int] | None = None
+    implementation: str
+    infoLink: str
+    listType: str
+    metadataProfileId: int
+    name: str
+    qualityProfileId: int
+    shouldMonitor: str
+    tags: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -218,8 +218,8 @@ class _LidarrImportListPreset(_ImportListCommon):
 class _LidarrArtistTitleInfo(BaseModel):
     """Lidarr artist title info attributes."""
 
-    title: str | None = None
-    year: int | None = None
+    title: str
+    year: int
 
 
 @dataclass(init=False)
@@ -240,14 +240,14 @@ class _LidarrMediaInfo_Quality(BaseModel):
 class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
     """Lidarr audio tags attributes."""
 
-    albumTitle: str | None = None
-    artistTitle: str | None = None
+    albumTitle: str
+    artistTitle: str
     artistTitleInfo: _LidarrArtistTitleInfo | None = None
-    cleanTitle: str | None = None
-    discCount: int | None = None
-    discNumber: int | None = None
-    duration: str | None = None
-    trackNumbers: list[int] | None = None
+    cleanTitle: str
+    discCount: int
+    discNumber: int
+    duration: str
+    trackNumbers: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -259,18 +259,18 @@ class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
 class _LidarrMediaInfo(BaseModel):
     """Lidarr media info attributes."""
 
-    audioBitrate: str | None = None
-    audioBitRate: str | None = None
-    audioBits: str | None = None
-    audioChannels: int | float | None = None
-    audioCodec: str | None = None
-    audioFormat: str | None = None
-    audioSampleRate: str | None = None
+    audioBitrate: str
+    audioBitRate: str
+    audioBits: str
+    audioChannels: int | float
+    audioCodec: str
+    audioFormat: str
+    audioSampleRate: str
 
 
 @dataclass(init=False)
 class _LidarrAddOptions(BaseModel):
     """Lidarr add options attributes."""
 
-    addType: str | None = None
-    searchForNewAlbum: bool | None = None
+    addType: str
+    searchForNewAlbum: bool

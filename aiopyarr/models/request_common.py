@@ -13,31 +13,31 @@ from .const import ProtocolType
 class _SelectOption(BaseModel):
     """Select option attributes."""
 
-    name: str | None = None
-    order: int | None = None
-    value: str | list[str] | int | None = None
+    name: str
+    order: int
+    value: str | list[str] | int
 
 
 @dataclass(init=False)
 class _SelectOptionExtended(_SelectOption):
     """Select options extended attributes."""
 
-    dividerAfter: bool | None = None
+    dividerAfter: bool
 
 
 @dataclass(init=False)
 class _Fields(_SelectOption):
     """Fields attributes."""
 
-    advanced: bool | None = None
-    errors: list | None = None
-    helpText: str | None = None
-    hidden: str | None = None
-    label: str | None = None
-    pending: bool | None = None
+    advanced: bool
+    errors: list
+    helpText: str
+    hidden: str
+    label: str
+    pending: bool
     selectOptions: list[_SelectOptionExtended] | None = None
-    type: str | None = None
-    warnings: list | None = None
+    type: str
+    warnings: list
 
     def __post_init__(self):
         self.selectOptions = [
@@ -50,10 +50,10 @@ class _Common(BaseModel):
     """Common attributes."""
 
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    name: str | None = None
+    implementation: str
+    implementationName: str
+    infoLink: str
+    name: str
 
     def __post_init__(self):
         self.fields = [_Fields(field) for field in self.fields or []]
@@ -63,1677 +63,1659 @@ class _Common(BaseModel):
 class _Common2(BaseModel):
     """Common attributes."""
 
-    downloadId: str | None = None
-    eventType: str | None = None
+    downloadId: str
+    eventType: str
 
 
 @dataclass(init=False)
 class _Common3(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    name: str | None = None
+    id: int
+    name: str
 
 
 @dataclass(init=False)
 class _Common4(BaseModel):
     """Common attributes."""
 
-    downloadClient: str | None = None
-    downloadId: str | None = None
-    estimatedCompletionTime: datetime | None = None
-    indexer: str | None = None
-    outputPath: str | None = None
+    downloadClient: str
+    downloadId: str
+    estimatedCompletionTime: datetime
+    indexer: str
+    outputPath: str
 
 
 @dataclass(init=False)
 class _Common5(BaseModel):
     """Common attributes."""
 
-    coverType: str | None = None
-    url: str | None = None
+    coverType: str
+    url: str
 
 
 @dataclass(init=False)
 class _Common6(BaseModel):
     """Common attributes."""
 
-    monitored: bool | None = None
-    overview: str | None = None
+    monitored: bool
+    overview: str
 
 
 @dataclass(init=False)
 class _Common7(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    indexer: str | None = None
-    protocol: ProtocolType | None = None
+    id: int
+    indexer: str
+    protocol: ProtocolType
 
 
 @dataclass(init=False)
 class _Common8(BaseModel):
     """Common attributes."""
 
-    id: int | None = None
-    protocol: ProtocolType | None = None
+    id: int
+    protocol: ProtocolType
     quality: _Quality | None = None
-    size: int | None = None
-    sizeleft: int | None = None
-    status: str | None = None
+    size: int
+    sizeleft: int
+    status: str
     statusMessages: list[_StatusMessage] | None = None
-    timeleft: str | None = None
-    title: str | None = None
-    trackedDownloadState: str | None = None
-    trackedDownloadStatus: str | None = None
+    timeleft: str
+    title: str
+    trackedDownloadState: str
+    trackedDownloadStatus: str
 
 
 @dataclass(init=False)
 class _Common9(BaseModel):
     """Common attributes."""
 
-    certification: str | None = None
-    genres: list[str] | None = None
-    imdbId: str | None = None
-    runtime: int | None = None
-    title: str | None = None
-    year: int | None = None
+    certification: str
+    genres: list[str]
+    imdbId: str
+    runtime: int
+    title: str
+    year: int
 
 
 @dataclass(init=False)
 class _CommonAttrs(BaseModel):
     """Common attributes."""
 
-    audioBitrate: str | None = None
-    audioChannels: float | None = None
-    audioCodec: str | None = None
-    audioLanguages: str | None = None
-    audioStreamCount: int | None = None
-    resolution: str | None = None
-    runTime: str | None = None
-    scanType: str | None = None
-    subtitles: str | None = None
-    videoBitDepth: int | None = None
-    videoBitrate: int | None = None
-    videoCodec: str | None = None
-    videoDynamicRangeType: str | None = None
-    videoFps: float | None = None
+    audioBitrate: str
+    audioChannels: float
+    audioCodec: str
+    audioLanguages: str
+    audioStreamCount: int
+    resolution: str
+    runTime: str
+    scanType: str
+    subtitles: str
+    videoBitDepth: int
+    videoBitrate: int
+    videoCodec: str
+    videoDynamicRangeType: str
+    videoFps: float
 
 
 @dataclass(init=False)
 class _CommandBody(BaseModel):
     """Command body attributes."""
 
-    completionMessage: str | None = None
-    isExclusive: bool | None = None
-    isNewMovie: bool | None = None
-    isTypeExclusive: bool | None = None
-    lastExecutionTime: datetime | None = None
-    lastStartTime: datetime | None = None
-    name: str | None = None
-    requiresDiskAccess: bool | None = None
-    sendUpdatesToClient: bool | None = None
-    suppressMessages: bool | None = None
-    trigger: str | None = None
-    updateScheduledTask: bool | None = None
+    completionMessage: str
+    isExclusive: bool
+    isNewMovie: bool
+    isTypeExclusive: bool
+    lastExecutionTime: datetime
+    lastStartTime: datetime
+    name: str
+    requiresDiskAccess: bool
+    sendUpdatesToClient: bool
+    suppressMessages: bool
+    trigger: str
+    updateScheduledTask: bool
 
 
 @dataclass(init=False)
 class _CustomFilterAttr(BaseModel):
     """Custom filter attributes."""
 
-    key: str | None = None
-    type: str | None = None
-    value: list[str] | None = None
+    key: str
+    type: str
+    value: list[str]
 
 
 @dataclass(init=False)
 class _MetadataFields(_Fields):
     """Metadata fields attributes."""
 
-    section: str | None = None
+    section: str
 
 
 @dataclass(init=False)
 class _FilesystemFolder(BaseModel):
     """Filesystem folder attributes."""
 
-    name: str | None = None
-    path: str | None = None
+    name: str
+    path: str
 
 
 @dataclass(init=False)
 class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
-    lastModified: datetime | None = None
-    size: int | None = None
-    type: str | None = None
+    lastModified: datetime
+    size: int
+    type: str
 
 
 @dataclass(init=False)
 class _ImportListCommon(_FilesystemFolder):
     """Import list common attributes."""
 
-    configContract: str | None = None
-    listOrder: int | None = None
-    rootFolderPath: str | None = None
+    configContract: str
+    listOrder: int
+    rootFolderPath: str
 
 
 @dataclass(init=False)
 class _LocalizationStrings(BaseModel):
     """Localization strings attributes."""
 
-    About: str | None = None
-    Absolute: str | None = None
-    AcceptConfirmationModal: str | None = None
-    Actions: str | None = None
-    Activity: str | None = None
-    Add: str | None = None
-    AddCustomFormat: str | None = None
-    AddDelayProfile: str | None = None
-    AddDownloadClient: str | None = None
-    Added: str | None = None
-    AddedAuthorSettings: str | None = None
-    AddedToDownloadQueue: str | None = None
-    AddExclusion: str | None = None
-    AddImportListExclusionHelpText: str | None = None
-    AddIndexer: str | None = None
-    AddingTag: str | None = None
-    AddList: str | None = None
-    AddListExclusion: str | None = None
-    AddMissing: str | None = None
-    AddMovie: str | None = None
-    AddMovies: str | None = None
-    AddMoviesMonitored: str | None = None
-    AddNew: str | None = None
-    AddNewItem: str | None = None
-    AddNewMessage: str | None = None
-    AddNewMovie: str | None = None
-    AddNewTmdbIdMessage: str | None = None
-    AddNotification: str | None = None
-    AddQualityProfile: str | None = None
-    AddRemotePathMapping: str | None = None
-    AddRestriction: str | None = None
-    AddRootFolder: str | None = None
-    AddToDownloadQueue: str | None = None
-    AdvancedSettingsHiddenClickToShow: str | None = None
-    AdvancedSettingsShownClickToHide: str | None = None
-    AfterManualRefresh: str | None = None
-    Age: str | None = None
-    Agenda: str | None = None
-    AgeWhenGrabbed: str | None = None
-    All: str | None = None
-    AllAuthorBooks: str | None = None
-    AllBooks: str | None = None
-    AllExpandedCollapseAll: str | None = None
-    AllExpandedExpandAll: str | None = None
-    AllFiles: str | None = None
-    AllMoviesHiddenDueToFilter: str | None = None
-    AllMoviesInPathHaveBeenImported: str | None = None
-    AllowAuthorChangeClickToChangeAuthor: str | None = None
-    AllowedLanguages: str | None = None
-    AllowFingerprinting: str | None = None
-    AllowFingerprintingHelpText: str | None = None
-    AllowFingerprintingHelpTextWarning: str | None = None
-    AllowHardcodedSubs: str | None = None
-    AllowHardcodedSubsHelpText: str | None = None
-    AllResultsHiddenFilter: str | None = None
-    AlreadyInYourLibrary: str | None = None
-    AlternateTitles: str | None = None
-    AlternateTitleslength1Title: str | None = None
-    AlternateTitleslength1Titles: str | None = None
-    AlternativeTitle: str | None = None
-    Always: str | None = None
-    AnalyseVideoFiles: str | None = None
-    Analytics: str | None = None
-    AnalyticsEnabledHelpText: str | None = None
-    AnalyticsEnabledHelpTextWarning: str | None = None
-    Announced: str | None = None
-    AnnouncedMsg: str | None = None
-    AnyEditionOkHelpText: str | None = None
-    ApiKey: str | None = None
-    APIKey: str | None = None
-    ApiKeyHelpTextWarning: str | None = None
-    AppDataDirectory: str | None = None
-    AppDataLocationHealthCheckMessage: str | None = None
-    Apply: str | None = None
-    ApplyTags: str | None = None
-    ApplyTagsHelpTexts1: str | None = None
-    ApplyTagsHelpTexts2: str | None = None
-    ApplyTagsHelpTexts3: str | None = None
-    ApplyTagsHelpTexts4: str | None = None
-    AptUpdater: str | None = None
-    AreYouSureYouWantToDeleteFormat: str | None = None
-    AreYouSureYouWantToDeleteThisDelayProfile: str | None = None
-    AreYouSureYouWantToDeleteThisImportListExclusion: str | None = None
-    AreYouSureYouWantToDeleteThisRemotePathMapping: str | None = None
-    AreYouSureYouWantToRemoveSelectedItemFromQueue: str | None = None
-    AreYouSureYouWantToRemoveSelectedItemsFromQueue: str | None = None
-    AreYouSureYouWantToRemoveTheSelectedItemsFromBlocklist: str | None = None
-    AreYouSureYouWantToResetYourAPIKey: str | None = None
-    AsAllDayHelpText: str | None = None
-    ASIN: str | None = None
-    AudioFileMetadata: str | None = None
-    AudioInfo: str | None = None
-    AuthBasic: str | None = None
-    Authentication: str | None = None
-    AuthenticationMethodHelpText: str | None = None
-    AuthForm: str | None = None
-    Author: str | None = None
-    AuthorClickToChangeBook: str | None = None
-    AuthorEditor: str | None = None
-    AuthorFolderFormat: str | None = None
-    AuthorIndex: str | None = None
-    AuthorNameHelpText: str | None = None
-    Authors: str | None = None
-    Automatic: str | None = None
-    AutomaticallySwitchEdition: str | None = None
-    AutomaticSearch: str | None = None
-    AutoRedownloadFailedHelpText: str | None = None
-    AutoUnmonitorPreviouslyDownloadedBooksHelpText: str | None = None
-    AutoUnmonitorPreviouslyDownloadedMoviesHelpText: str | None = None
-    AvailabilityDelay: str | None = None
-    AvailabilityDelayHelpText: str | None = None
-    Backup: str | None = None
-    BackupFolderHelpText: str | None = None
-    BackupIntervalHelpText: str | None = None
-    BackupNow: str | None = None
-    BackupRetentionHelpText: str | None = None
-    Backups: str | None = None
-    BeforeUpdate: str | None = None
-    BindAddress: str | None = None
-    BindAddressHelpText: str | None = None
-    BindAddressHelpTextWarning: str | None = None
-    Blocklist: str | None = None
-    Blocklisted: str | None = None
-    BlocklistHelpText: str | None = None
-    BlocklistRelease: str | None = None
-    BlocklistReleases: str | None = None
-    Book: str | None = None
-    BookAvailableButMissing: str | None = None
-    BookDownloaded: str | None = None
-    BookEditor: str | None = None
-    BookFileCountBookCountTotalTotalBookCountInterp: str | None = None
-    BookFileCounttotalBookCountBooksDownloadedInterp: str | None = None
-    BookFilesCountMessage: str | None = None
-    BookHasNotAired: str | None = None
-    BookIndex: str | None = None
-    BookIsDownloading: str | None = None
-    BookIsDownloadingInterp: str | None = None
-    BookIsNotMonitored: str | None = None
-    BookList: str | None = None
-    BookMissingFromDisk: str | None = None
-    BookMonitoring: str | None = None
-    BookNaming: str | None = None
-    Books: str | None = None
-    BooksTotal: str | None = None
-    BookStudio: str | None = None
-    BookTitle: str | None = None
-    Branch: str | None = None
-    BranchUpdate: str | None = None
-    BranchUpdateMechanism: str | None = None
-    BuiltIn: str | None = None
-    BypassDelayIfHighestQuality: str | None = None
-    BypassDelayIfHighestQualityHelpText: str | None = None
-    BypassProxyForLocalAddresses: str | None = None
-    Calendar: str | None = None
-    CalendarOptions: str | None = None
-    CalendarWeekColumnHeaderHelpText: str | None = None
-    CalibreContentServer: str | None = None
-    CalibreContentServerText: str | None = None
-    CalibreHost: str | None = None
-    CalibreLibrary: str | None = None
-    CalibreMetadata: str | None = None
-    CalibreNotCalibreWeb: str | None = None
-    CalibreOutputFormat: str | None = None
-    CalibreOutputProfile: str | None = None
-    CalibrePassword: str | None = None
-    CalibrePort: str | None = None
-    CalibreSettings: str | None = None
-    CalibreUrlBase: str | None = None
-    CalibreUsername: str | None = None
-    Cancel: str | None = None
-    CancelMessageText: str | None = None
-    CancelPendingTask: str | None = None
-    CancelProcessing: str | None = None
-    CantFindMovie: str | None = None
-    Cast: str | None = None
-    CatalogNumber: str | None = None
-    CertificateValidation: str | None = None
-    CertificateValidationHelpText: str | None = None
-    Certification: str | None = None
-    CertificationCountry: str | None = None
-    CertificationCountryHelpText: str | None = None
-    CertValidationNoLocal: str | None = None
-    ChangeFileDate: str | None = None
-    ChangeHasNotBeenSavedYet: str | None = None
-    CheckDownloadClientForDetails: str | None = None
-    CheckForFinishedDownloadsInterval: str | None = None
-    ChmodFolder: str | None = None
-    ChmodFolderHelpText: str | None = None
-    ChmodFolderHelpTextWarning: str | None = None
-    ChmodGroup: str | None = None
-    ChmodGroupHelpText: str | None = None
-    ChmodGroupHelpTextWarning: str | None = None
-    ChooseAnotherFolder: str | None = None
-    ChownGroup: str | None = None
-    ChownGroupHelpText: str | None = None
-    ChownGroupHelpTextWarning: str | None = None
-    CleanLibraryLevel: str | None = None
-    Clear: str | None = None
-    ClickToChangeLanguage: str | None = None
-    ClickToChangeMovie: str | None = None
-    ClickToChangeQuality: str | None = None
-    ClickToChangeReleaseGroup: str | None = None
-    ClientPriority: str | None = None
-    CloneCustomFormat: str | None = None
-    CloneFormatTag: str | None = None
-    CloneIndexer: str | None = None
-    CloneProfile: str | None = None
-    Close: str | None = None
-    CloseCurrentModal: str | None = None
-    CollapseMultipleBooks: str | None = None
-    CollapseMultipleBooksHelpText: str | None = None
-    Collection: str | None = None
-    ColonReplacement: str | None = None
-    ColonReplacementFormatHelpText: str | None = None
-    Columns: str | None = None
-    CompletedDownloadHandling: str | None = None
-    Component: str | None = None
-    Conditions: str | None = None
-    Connect: str | None = None
-    Connection: str | None = None
-    ConnectionLost: str | None = None
-    ConnectionLostAutomaticMessage: str | None = None
-    ConnectionLostMessage: str | None = None
-    Connections: str | None = None
-    ConnectSettings: str | None = None
-    ConnectSettingsSummary: str | None = None
-    ConsideredAvailable: str | None = None
-    ConsoleLogLevel: str | None = None
-    Continuing: str | None = None
-    ContinuingAllBooksDownloaded: str | None = None
-    ContinuingMoreBooksAreExpected: str | None = None
-    ContinuingNoAdditionalBooksAreExpected: str | None = None
-    CopyToClipboard: str | None = None
-    CopyUsingHardlinksHelpText: str | None = None
-    CopyUsingHardlinksHelpTextWarning: str | None = None
-    CouldNotConnectSignalR: str | None = None
-    CouldNotFindResults: str | None = None
-    Country: str | None = None
-    CreateEmptyAuthorFolders: str | None = None
-    CreateEmptyAuthorFoldersHelpText: str | None = None
-    CreateEmptyMovieFolders: str | None = None
-    CreateEmptyMovieFoldersHelpText: str | None = None
-    CreateGroup: str | None = None
-    Crew: str | None = None
-    CurrentlyInstalled: str | None = None
-    Custom: str | None = None
-    CustomFilters: str | None = None
-    CustomFormat: str | None = None
-    CustomFormatHelpText: str | None = None
-    CustomFormatJSON: str | None = None
-    CustomFormats: str | None = None
-    CustomFormatScore: str | None = None
-    CustomFormatsSettings: str | None = None
-    CustomFormatsSettingsSummary: str | None = None
-    CustomFormatUnknownCondition: str | None = None
-    CustomFormatUnknownConditionOption: str | None = None
-    Cutoff: str | None = None
-    CutoffFormatScoreHelpText: str | None = None
-    CutoffHelpText: str | None = None
-    CutoffUnmet: str | None = None
-    Date: str | None = None
-    Dates: str | None = None
-    Day: str | None = None
-    Days: str | None = None
-    DBMigration: str | None = None
-    Debug: str | None = None
-    DefaultCase: str | None = None
-    DefaultDelayProfile: str | None = None
-    DefaultMetadataProfileIdHelpText: str | None = None
-    DefaultMonitorOptionHelpText: str | None = None
-    DefaultQualityProfileIdHelpText: str | None = None
-    DefaultReadarrTags: str | None = None
-    DefaultTagsHelpText: str | None = None
-    DelayingDownloadUntilInterp: str | None = None
-    DelayProfile: str | None = None
-    DelayProfiles: str | None = None
-    Delete: str | None = None
-    DeleteBackup: str | None = None
-    DeleteBackupMessageText: str | None = None
-    DeleteBookFile: str | None = None
-    DeleteBookFileMessageText: str | None = None
-    DeleteCustomFormat: str | None = None
-    Deleted: str | None = None
-    DeleteDelayProfile: str | None = None
-    DeleteDelayProfileMessageText: str | None = None
-    DeletedMsg: str | None = None
-    DeleteDownloadClient: str | None = None
-    DeleteDownloadClientMessageText: str | None = None
-    DeleteEmptyFolders: str | None = None
-    DeleteEmptyFoldersHelpText: str | None = None
-    DeleteFile: str | None = None
-    DeleteFileLabel: str | None = None
-    DeleteFilesHelpText: str | None = None
-    DeleteFilesLabel: str | None = None
-    DeleteHeader: str | None = None
-    DeleteImportList: str | None = None
-    DeleteImportListExclusion: str | None = None
-    DeleteImportListExclusionMessageText: str | None = None
-    DeleteImportListMessageText: str | None = None
-    DeleteIndexer: str | None = None
-    DeleteIndexerMessageText: str | None = None
-    DeleteList: str | None = None
-    DeleteListMessageText: str | None = None
-    DeleteMetadataProfile: str | None = None
-    DeleteMetadataProfileMessageText: str | None = None
-    DeleteMovieFolderHelpText: str | None = None
-    DeleteMovieFolderLabel: str | None = None
-    DeleteNotification: str | None = None
-    DeleteNotificationMessageText: str | None = None
-    DeleteQualityProfile: str | None = None
-    DeleteQualityProfileMessageText: str | None = None
-    DeleteReleaseProfile: str | None = None
-    DeleteReleaseProfileMessageText: str | None = None
-    DeleteRestriction: str | None = None
-    DeleteRestrictionHelpText: str | None = None
-    DeleteRootFolder: str | None = None
-    DeleteRootFolderMessageText: str | None = None
-    DeleteSelectedBookFiles: str | None = None
-    DeleteSelectedBookFilesMessageText: str | None = None
-    DeleteSelectedMovie: str | None = None
-    DeleteSelectedMovieFiles: str | None = None
-    DeleteSelectedMovieFilesMessage: str | None = None
-    DeleteTag: str | None = None
-    DeleteTagMessageText: str | None = None
-    DeleteTheMovieFolder: str | None = None
-    DestinationPath: str | None = None
-    DestinationRelativePath: str | None = None
-    DetailedProgressBar: str | None = None
-    DetailedProgressBarHelpText: str | None = None
-    Details: str | None = None
-    Development: str | None = None
-    DigitalRelease: str | None = None
-    Disabled: str | None = None
-    DiscCount: str | None = None
-    DiscNumber: str | None = None
-    Discord: str | None = None
-    DiscordUrlInSlackNotification: str | None = None
-    Discover: str | None = None
-    DiskSpace: str | None = None
-    Docker: str | None = None
-    DockerUpdater: str | None = None
-    Donations: str | None = None
-    DoneEditingGroups: str | None = None
-    DoNotPrefer: str | None = None
-    DoNotUpgradeAutomatically: str | None = None
-    Download: str | None = None
-    DownloadClient: str | None = None
-    DownloadClientCheckDownloadingToRoot: str | None = None
-    DownloadClientCheckNoneAvailableMessage: str | None = None
-    DownloadClientCheckUnableToCommunicateMessage: str | None = None
-    DownloadClients: str | None = None
-    DownloadClientSettings: str | None = None
-    DownloadClientsSettingsSummary: str | None = None
-    DownloadClientStatusCheckAllClientMessage: str | None = None
-    DownloadClientStatusCheckSingleClientMessage: str | None = None
-    DownloadClientUnavailable: str | None = None
-    Downloaded: str | None = None
-    DownloadedAndMonitored: str | None = None
-    DownloadedButNotMonitored: str | None = None
-    DownloadFailed: str | None = None
-    DownloadFailedCheckDownloadClientForMoreDetails: str | None = None
-    DownloadFailedInterp: str | None = None
-    Downloading: str | None = None
-    DownloadPropersAndRepacks: str | None = None
-    DownloadPropersAndRepacksHelpText1: str | None = None
-    DownloadPropersAndRepacksHelpText2: str | None = None
-    DownloadPropersAndRepacksHelpTexts1: str | None = None
-    DownloadPropersAndRepacksHelpTexts2: str | None = None
-    DownloadPropersAndRepacksHelpTextWarning: str | None = None
-    DownloadWarning: str | None = None
-    DownloadWarningCheckDownloadClientForMoreDetails: str | None = None
-    Edit: str | None = None
-    EditAuthor: str | None = None
-    EditCustomFormat: str | None = None
-    EditDelayProfile: str | None = None
-    EditGroups: str | None = None
-    EditIndexer: str | None = None
-    Edition: str | None = None
-    EditionsHelpText: str | None = None
-    EditListExclusion: str | None = None
-    EditMovie: str | None = None
-    EditMovieFile: str | None = None
-    EditPerson: str | None = None
-    EditQualityProfile: str | None = None
-    EditRemotePathMapping: str | None = None
-    EditRestriction: str | None = None
-    EmbedMetadataHelpText: str | None = None
-    EmbedMetadataInBookFiles: str | None = None
-    Enable: str | None = None
-    EnableAutoHelpText: str | None = None
-    EnableAutomaticAdd: str | None = None
-    EnableAutomaticAddHelpText: str | None = None
-    EnableAutomaticSearch: str | None = None
-    EnableAutomaticSearchHelpText: str | None = None
-    EnableAutomaticSearchHelpTextWarning: str | None = None
-    EnableColorImpairedMode: str | None = None
-    EnableColorImpairedModeHelpText: str | None = None
-    EnableCompletedDownloadHandlingHelpText: str | None = None
-    Enabled: str | None = None
-    EnabledHelpText: str | None = None
-    EnableHelpText: str | None = None
-    EnableInteractiveSearch: str | None = None
-    EnableInteractiveSearchHelpText: str | None = None
-    EnableInteractiveSearchHelpTextWarning: str | None = None
-    EnableMediaInfoHelpText: str | None = None
-    EnableProfile: str | None = None
-    EnableRSS: str | None = None
-    EnableSSL: str | None = None
-    EnableSslHelpText: str | None = None
-    Ended: str | None = None
-    EndedAllBooksDownloaded: str | None = None
-    EntityName: str | None = None
-    Episode: str | None = None
-    EpisodeDoesNotHaveAnAbsoluteEpisodeNumber: str | None = None
-    Error: str | None = None
-    ErrorLoadingContents: str | None = None
-    ErrorLoadingPreviews: str | None = None
-    ErrorRestoringBackup: str | None = None
-    Events: str | None = None
-    EventType: str | None = None
-    Exception: str | None = None
-    Excluded: str | None = None
-    ExcludeMovie: str | None = None
-    ExcludeTitle: str | None = None
-    Existing: str | None = None
-    ExistingBooks: str | None = None
-    ExistingItems: str | None = None
-    ExistingMovies: str | None = None
-    ExistingTag: str | None = None
-    ExistingTagsScrubbed: str | None = None
-    ExportCustomFormat: str | None = None
-    Extension: str | None = None
-    ExternalUpdater: str | None = None
-    ExtraFileExtensionsHelpTexts1: str | None = None
-    ExtraFileExtensionsHelpTexts2: str | None = None
-    Failed: str | None = None
-    FailedDownloadHandling: str | None = None
-    FailedLoadingSearchResults: str | None = None
-    FailedToLoadMovieFromAPI: str | None = None
-    FailedToLoadQueue: str | None = None
-    FeatureRequests: str | None = None
-    FileDateHelpText: str | None = None
-    FileDetails: str | None = None
-    FileManagement: str | None = None
-    Filename: str | None = None
-    FileNames: str | None = None
-    FileNameTokens: str | None = None
-    Files: str | None = None
-    FilesTotal: str | None = None
-    FileWasDeletedByUpgrade: str | None = None
-    FileWasDeletedByViaUI: str | None = None
-    Filter: str | None = None
-    FilterAnalyticsEvents: str | None = None
-    FilterAuthor: str | None = None
-    FilterPlaceHolder: str | None = None
-    Filters: str | None = None
-    FilterSentryEventsHelpText: str | None = None
-    FirstBook: str | None = None
-    FirstDayOfWeek: str | None = None
-    Fixed: str | None = None
-    FocusSearchBox: str | None = None
-    Folder: str | None = None
-    FolderMoveRenameWarning: str | None = None
-    Folders: str | None = None
-    FollowPerson: str | None = None
-    Forecast: str | None = None
-    ForeignIdHelpText: str | None = None
-    Formats: str | None = None
-    ForMoreInformationOnTheIndividualDownloadClients: str | None = None
-    ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons: str | None = (
-        None
-    )
-    ForMoreInformationOnTheIndividualImportListsClinkOnTheInfoButtons: str | None = None
-    ForMoreInformationOnTheIndividualIndexers: str | None = None
-    ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons: str | None = None
-    ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons: str | None = None
-    FreeSpace: str | None = None
-    From: str | None = None
-    FutureBooks: str | None = None
-    FutureDays: str | None = None
-    FutureDaysHelpText: str | None = None
-    General: str | None = None
-    GeneralSettings: str | None = None
-    GeneralSettingsSummary: str | None = None
-    Genres: str | None = None
-    Global: str | None = None
-    GoToAuthorListing: str | None = None
-    GoToInterp: str | None = None
-    Grab: str | None = None
-    Grabbed: str | None = None
-    GrabID: str | None = None
-    GrabRelease: str | None = None
-    GrabReleaseMessageText: str | None = None
-    GrabSelected: str | None = None
-    Group: str | None = None
-    HardlinkCopyFiles: str | None = None
-    HasMonitoredBooksNoMonitoredBooksForThisAuthor: str | None = None
-    HasPendingChangesNoChanges: str | None = None
-    HasPendingChangesSaveChanges: str | None = None
-    HaveNotAddedMovies: str | None = None
-    Health: str | None = None
-    HealthNoIssues: str | None = None
-    HelpText: str | None = None
-    HiddenClickToShow: str | None = None
-    HideAdvanced: str | None = None
-    HideBooks: str | None = None
-    History: str | None = None
-    HomePage: str | None = None
-    Host: str | None = None
-    HostHelpText: str | None = None
-    Hostname: str | None = None
-    Hours: str | None = None
-    HttpHttps: str | None = None
-    ICalFeed: str | None = None
-    ICalHttpUrlHelpText: str | None = None
-    iCalLink: str | None = None
-    ICalLink: str | None = None
-    IconForCutoffUnmet: str | None = None
-    IconTooltip: str | None = None
-    IfYouDontAddAnImportListExclusionAndTheAuthorHasAMetadataProfileOtherThanNoneThenThisBookMayBeReaddedDuringTheNextAuthorRefresh: str | None = (
-        None
-    )
-    Ignored: str | None = None
-    IgnoredAddresses: str | None = None
-    IgnoreDeletedBooks: str | None = None
-    IgnoreDeletedMovies: str | None = None
-    IgnoredHelpText: str | None = None
-    IgnoredMetaHelpText: str | None = None
-    IgnoredPlaceHolder: str | None = None
-    IllRestartLater: str | None = None
-    Images: str | None = None
-    IMDb: str | None = None
-    ImdbRating: str | None = None
-    ImdbVotes: str | None = None
-    Import: str | None = None
-    ImportCustomFormat: str | None = None
-    Imported: str | None = None
-    ImportedTo: str | None = None
-    ImportErrors: str | None = None
-    ImportExistingMovies: str | None = None
-    ImportExtraFiles: str | None = None
-    ImportExtraFilesHelpText: str | None = None
-    ImportFailed: str | None = None
-    ImportFailedInterp: str | None = None
-    ImportFailures: str | None = None
-    ImportHeader: str | None = None
-    ImportIncludeQuality: str | None = None
-    Importing: str | None = None
-    ImportLibrary: str | None = None
-    ImportListExclusions: str | None = None
-    ImportListMissingRoot: str | None = None
-    ImportListMultipleMissingRoots: str | None = None
-    ImportLists: str | None = None
-    ImportListSettings: str | None = None
-    ImportListSpecificSettings: str | None = None
-    ImportListStatusCheckAllClientMessage: str | None = None
-    ImportListStatusCheckSingleClientMessage: str | None = None
-    ImportListSyncIntervalHelpText: str | None = None
-    ImportMechanismHealthCheckMessage: str | None = None
-    ImportMovies: str | None = None
-    ImportNotForDownloads: str | None = None
-    ImportRootPath: str | None = None
-    ImportTipsMessage: str | None = None
-    InCinemas: str | None = None
-    InCinemasDate: str | None = None
-    InCinemasMsg: str | None = None
-    IncludeCustomFormatWhenRenaming: str | None = None
-    IncludeCustomFormatWhenRenamingHelpText: str | None = None
-    IncludeHealthWarningsHelpText: str | None = None
-    IncludePreferredWhenRenaming: str | None = None
-    IncludeRadarrRecommendations: str | None = None
-    IncludeRecommendationsHelpText: str | None = None
-    IncludeUnknownAuthorItemsHelpText: str | None = None
-    IncludeUnknownMovieItemsHelpText: str | None = None
-    IncludeUnmonitored: str | None = None
-    Indexer: str | None = None
-    IndexerDownloadClientHelpText: str | None = None
-    IndexerFlags: str | None = None
-    IndexerIdHelpText: str | None = None
-    IndexerIdHelpTextWarning: str | None = None
-    IndexerIdvalue0IncludeInPreferredWordsRenamingFormat: str | None = None
-    IndexerIdvalue0OnlySupportedWhenIndexerIsSetToAll: str | None = None
-    IndexerJackettAll: str | None = None
-    IndexerLongTermStatusCheckAllClientMessage: str | None = None
-    IndexerLongTermStatusCheckSingleClientMessage: str | None = None
-    IndexerPriority: str | None = None
-    IndexerPriorityHelpText: str | None = None
-    IndexerRssHealthCheckNoAvailableIndexers: str | None = None
-    IndexerRssHealthCheckNoIndexers: str | None = None
-    Indexers: str | None = None
-    IndexerSearchCheckNoAutomaticMessage: str | None = None
-    IndexerSearchCheckNoAvailableIndexersMessage: str | None = None
-    IndexerSearchCheckNoInteractiveMessage: str | None = None
-    IndexerSettings: str | None = None
-    IndexersSettingsSummary: str | None = None
-    IndexerStatusCheckAllClientMessage: str | None = None
-    IndexerStatusCheckSingleClientMessage: str | None = None
-    IndexerTagHelpText: str | None = None
-    Info: str | None = None
-    InstallLatest: str | None = None
-    InteractiveImport: str | None = None
-    InteractiveImportErrLanguage: str | None = None
-    InteractiveImportErrMovie: str | None = None
-    InteractiveImportErrQuality: str | None = None
-    InteractiveSearch: str | None = None
-    Interval: str | None = None
-    InvalidFormat: str | None = None
-    ISBN: str | None = None
-    IsCalibreLibraryHelpText: str | None = None
-    IsCutoffCutoff: str | None = None
-    IsCutoffUpgradeUntilThisQualityIsMetOrExceeded: str | None = None
-    IsExpandedHideBooks: str | None = None
-    IsExpandedHideFileInfo: str | None = None
-    IsExpandedShowBooks: str | None = None
-    IsExpandedShowFileInfo: str | None = None
-    IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnAuthorOrImportList: str | None = (
-        None
-    )
-    IsInUseCantDeleteAQualityProfileThatIsAttachedToAnAuthorOrImportList: str | None = (
-        None
-    )
-    IsShowingMonitoredMonitorSelected: str | None = None
-    IsShowingMonitoredUnmonitorSelected: str | None = None
-    IsTagUsedCannotBeDeletedWhileInUse: str | None = None
-    KeepAndUnmonitorMovie: str | None = None
-    KeyboardShortcuts: str | None = None
-    Label: str | None = None
-    Language: str | None = None
-    LanguageHelpText: str | None = None
-    Languages: str | None = None
-    Large: str | None = None
-    LastDuration: str | None = None
-    LastExecution: str | None = None
-    LastUsed: str | None = None
-    LastWriteTime: str | None = None
-    LatestBook: str | None = None
-    LaunchBrowserHelpText: str | None = None
-    Letterboxd: str | None = None
-    Level: str | None = None
-    LibraryHelpText: str | None = None
-    LinkHere: str | None = None
-    Links: str | None = None
-    ListExclusions: str | None = None
-    Lists: str | None = None
-    ListSettings: str | None = None
-    ListsSettingsSummary: str | None = None
-    ListSyncLevelHelpText: str | None = None
-    ListSyncLevelHelpTextWarning: str | None = None
-    ListTagsHelpText: str | None = None
-    ListUpdateInterval: str | None = None
-    LoadingBookFilesFailed: str | None = None
-    LoadingBooksFailed: str | None = None
-    LoadingMovieCreditsFailed: str | None = None
-    LoadingMovieExtraFilesFailed: str | None = None
-    LoadingMovieFilesFailed: str | None = None
-    Local: str | None = None
-    LocalPath: str | None = None
-    LocalPathHelpText: str | None = None
-    Location: str | None = None
-    LogFiles: str | None = None
-    Logging: str | None = None
-    LogLevel: str | None = None
-    LogLevelTraceHelpTextWarning: str | None = None
-    LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily: str | None = None
-    LogOnly: str | None = None
-    LogRotateHelpText: str | None = None
-    LogRotation: str | None = None
-    Logs: str | None = None
-    LogSQL: str | None = None
-    LogSqlHelpText: str | None = None
-    LongDateFormat: str | None = None
-    LookingForReleaseProfiles1: str | None = None
-    LookingForReleaseProfiles2: str | None = None
-    LowerCase: str | None = None
-    MaintenanceRelease: str | None = None
-    Manual: str | None = None
-    ManualDownload: str | None = None
-    ManualImport: str | None = None
-    ManualImportSelectLanguage: str | None = None
-    ManualImportSelectMovie: str | None = None
-    ManualImportSelectQuality: str | None = None
-    ManualImportSetReleaseGroup: str | None = None
-    MappedDrivesRunningAsService: str | None = None
-    MarkAsFailed: str | None = None
-    MarkAsFailedMessageText: str | None = None
-    MassBookSearch: str | None = None
-    MassBookSearchWarning: str | None = None
-    MassMovieSearch: str | None = None
-    Max: str | None = None
-    MaximumLimits: str | None = None
-    MaximumSize: str | None = None
-    MaximumSizeHelpText: str | None = None
-    Mechanism: str | None = None
-    MediaInfo: str | None = None
-    MediaManagement: str | None = None
-    MediaManagementSettings: str | None = None
-    MediaManagementSettingsSummary: str | None = None
-    Medium: str | None = None
-    MediumFormat: str | None = None
-    MegabytesPerMinute: str | None = None
-    Message: str | None = None
-    Metadata: str | None = None
-    MetadataConsumers: str | None = None
-    MetadataProfile: str | None = None
-    MetadataProfileIdHelpText: str | None = None
-    MetadataProfiles: str | None = None
-    MetadataProviderSource: str | None = None
-    MetadataSettings: str | None = None
-    MetadataSettingsSummary: str | None = None
-    MetadataSource: str | None = None
-    MetadataSourceHelpText: str | None = None
-    MIA: str | None = None
-    Min: str | None = None
-    MinAvailability: str | None = None
-    MinFormatScoreHelpText: str | None = None
-    MinimumAge: str | None = None
-    MinimumAgeHelpText: str | None = None
-    MinimumAvailability: str | None = None
-    MinimumCustomFormatScore: str | None = None
-    MinimumFreeSpace: str | None = None
-    MinimumFreeSpaceWhenImportingHelpText: str | None = None
-    MinimumLimits: str | None = None
-    MinimumPages: str | None = None
-    MinimumPopularity: str | None = None
-    MinPagesHelpText: str | None = None
-    MinPopularityHelpText: str | None = None
-    Minutes: str | None = None
-    MinutesHundredTwenty: str | None = None
-    MinutesNinety: str | None = None
-    MinutesSixty: str | None = None
-    Missing: str | None = None
-    MissingBooks: str | None = None
-    MissingBooksAuthorMonitored: str | None = None
-    MissingBooksAuthorNotMonitored: str | None = None
-    MissingFromDisk: str | None = None
-    MissingMonitoredAndConsideredAvailable: str | None = None
-    MissingNotMonitored: str | None = None
-    Mode: str | None = None
-    Monday: str | None = None
-    Monitor: str | None = None
-    MonitorAuthor: str | None = None
-    MonitorBook: str | None = None
-    MonitorBookExistingOnlyWarning: str | None = None
-    Monitored: str | None = None
-    MonitoredAuthorIsMonitored: str | None = None
-    MonitoredAuthorIsUnmonitored: str | None = None
-    MonitoredHelpText: str | None = None
-    MonitoredOnly: str | None = None
-    MonitoredStatus: str | None = None
-    Monitoring: str | None = None
-    MonitoringOptions: str | None = None
-    MonitoringOptionsHelpText: str | None = None
-    MonitorMovie: str | None = None
-    MonitorNewItems: str | None = None
-    MonitorNewItemsHelpText: str | None = None
-    MonoVersion: str | None = None
-    Month: str | None = None
-    Months: str | None = None
-    More: str | None = None
-    MoreControlCFText: str | None = None
-    MoreDetails: str | None = None
-    MoreInfo: str | None = None
-    MountCheckMessage: str | None = None
-    MoveFiles: str | None = None
-    MoveFolders1: str | None = None
-    MoveFolders2: str | None = None
-    Movie: str | None = None
-    MovieAlreadyExcluded: str | None = None
-    MovieChat: str | None = None
-    MovieDetailsNextMovie: str | None = None
-    MovieDetailsPreviousMovie: str | None = None
-    MovieEditor: str | None = None
-    MovieExcludedFromAutomaticAdd: str | None = None
-    MovieFiles: str | None = None
-    MovieFilesTotaling: str | None = None
-    MovieFolderFormat: str | None = None
-    MovieID: str | None = None
-    MovieIndex: str | None = None
-    MovieIndexScrollBottom: str | None = None
-    MovieIndexScrollTop: str | None = None
-    MovieInfoLanguage: str | None = None
-    MovieInfoLanguageHelpText: str | None = None
-    MovieInfoLanguageHelpTextWarning: str | None = None
-    MovieInvalidFormat: str | None = None
-    MovieIsDownloading: str | None = None
-    MovieIsDownloadingInterp: str | None = None
-    MovieIsMonitored: str | None = None
-    MovieIsOnImportExclusionList: str | None = None
-    MovieIsRecommend: str | None = None
-    MovieIsUnmonitored: str | None = None
-    MovieNaming: str | None = None
-    Movies: str | None = None
-    MoviesSelectedInterp: str | None = None
-    MovieTitle: str | None = None
-    MovieTitleHelpText: str | None = None
-    MovieYear: str | None = None
-    MovieYearHelpText: str | None = None
-    MultiLanguage: str | None = None
-    MusicBrainzAuthorID: str | None = None
-    MusicBrainzBookID: str | None = None
-    MusicbrainzId: str | None = None
-    MusicBrainzRecordingID: str | None = None
-    MusicBrainzReleaseID: str | None = None
-    MusicBrainzTrackID: str | None = None
-    MustContain: str | None = None
-    MustNotContain: str | None = None
-    Name: str | None = None
-    NameFirstLast: str | None = None
-    NameLastFirst: str | None = None
-    NameStyle: str | None = None
-    NamingSettings: str | None = None
-    Negate: str | None = None
-    Negated: str | None = None
-    NegateHelpText: str | None = None
-    NetCore: str | None = None
-    NETCore: str | None = None
-    New: str | None = None
-    NewBooks: str | None = None
-    NextExecution: str | None = None
-    No: str | None = None
-    NoAltTitle: str | None = None
-    NoBackupsAreAvailable: str | None = None
-    NoChange: str | None = None
-    NoChanges: str | None = None
-    NoEventsFound: str | None = None
-    NoHistory: str | None = None
-    NoHistoryBlocklist: str | None = None
-    NoLeaveIt: str | None = None
-    NoLimitForAnyRuntime: str | None = None
-    NoLinks: str | None = None
-    NoListRecommendations: str | None = None
-    NoLogFiles: str | None = None
-    NoMatchFound: str | None = None
-    NoMinimumForAnyRuntime: str | None = None
-    NoMoveFilesSelf: str | None = None
-    NoMoviesExist: str | None = None
-    NoName: str | None = None
-    NoResultsFound: str | None = None
-    NoTagsHaveBeenAddedYet: str | None = None
-    NotAvailable: str | None = None
-    NotificationTriggers: str | None = None
-    NotificationTriggersHelpText: str | None = None
-    NotMonitored: str | None = None
-    NoUpdatesAreAvailable: str | None = None
-    NoVideoFilesFoundSelectedFolder: str | None = None
-    OAuthPopupMessage: str | None = None
-    Ok: str | None = None
-    OnApplicationUpdate: str | None = None
-    OnApplicationUpdateHelpText: str | None = None
-    OnBookRetagHelpText: str | None = None
-    OnDownloadFailureHelpText: str | None = None
-    OnDownloadHelpText: str | None = None
-    OnGrab: str | None = None
-    OnGrabHelpText: str | None = None
-    OnHealthIssue: str | None = None
-    OnHealthIssueHelpText: str | None = None
-    OnImport: str | None = None
-    OnImportFailureHelpText: str | None = None
-    OnLatestVersion: str | None = None
-    OnlyTorrent: str | None = None
-    OnlyUsenet: str | None = None
-    OnMovieDelete: str | None = None
-    OnMovieDeleteHelpText: str | None = None
-    OnMovieFileDelete: str | None = None
-    OnMovieFileDeleteForUpgrade: str | None = None
-    OnMovieFileDeleteForUpgradeHelpText: str | None = None
-    OnMovieFileDeleteHelpText: str | None = None
-    OnReleaseImportHelpText: str | None = None
-    OnRename: str | None = None
-    OnRenameHelpText: str | None = None
-    OnUpgrade: str | None = None
-    OnUpgradeHelpText: str | None = None
-    OpenBrowserOnStart: str | None = None
-    OpenThisModal: str | None = None
-    Options: str | None = None
-    Organize: str | None = None
-    OrganizeAndRename: str | None = None
-    OrganizeConfirm: str | None = None
-    OrganizeModalAllPathsRelative: str | None = None
-    OrganizeModalDisabled: str | None = None
-    OrganizeModalNamingPattern: str | None = None
-    OrganizeModalSuccess: str | None = None
-    OrganizeSelectedMovies: str | None = None
-    Original: str | None = None
-    Other: str | None = None
-    OutputFormatHelpText: str | None = None
-    OutputPath: str | None = None
-    Overview: str | None = None
-    OverviewOptions: str | None = None
-    PackageVersion: str | None = None
-    PageSize: str | None = None
-    PageSizeHelpText: str | None = None
-    Password: str | None = None
-    PasswordHelpText: str | None = None
-    PastDays: str | None = None
-    PastDaysHelpText: str | None = None
-    Path: str | None = None
-    PathHelpText: str | None = None
-    PathHelpTextWarning: str | None = None
-    Paused: str | None = None
-    Peers: str | None = None
-    Pending: str | None = None
-    PendingChangesDiscardChanges: str | None = None
-    PendingChangesMessage: str | None = None
-    PendingChangesStayReview: str | None = None
-    Permissions: str | None = None
-    PhysicalRelease: str | None = None
-    PhysicalReleaseDate: str | None = None
-    Port: str | None = None
-    PortHelpText: str | None = None
-    PortHelpTextWarning: str | None = None
-    PortNumber: str | None = None
-    PosterOptions: str | None = None
-    Posters: str | None = None
-    PosterSize: str | None = None
-    PreferAndUpgrade: str | None = None
-    PreferIndexerFlags: str | None = None
-    PreferIndexerFlagsHelpText: str | None = None
-    Preferred: str | None = None
-    PreferredHelpTexts1: str | None = None
-    PreferredHelpTexts2: str | None = None
-    PreferredHelpTexts3: str | None = None
-    PreferredSize: str | None = None
-    PreferTorrent: str | None = None
-    PreferUsenet: str | None = None
-    Presets: str | None = None
-    PreviewRename: str | None = None
-    PreviewRenameHelpText: str | None = None
-    PreviewRetag: str | None = None
-    Priority: str | None = None
-    PriorityHelpText: str | None = None
-    PrioritySettings: str | None = None
-    ProcessingFolders: str | None = None
-    Profiles: str | None = None
-    ProfilesSettingsSummary: str | None = None
-    Progress: str | None = None
-    Proper: str | None = None
-    PropersAndRepacks: str | None = None
-    Protocol: str | None = None
-    ProtocolHelpText: str | None = None
-    Proxy: str | None = None
-    ProxyBypassFilterHelpText: str | None = None
-    ProxyCheckBadRequestMessage: str | None = None
-    ProxyCheckFailedToTestMessage: str | None = None
-    ProxyCheckResolveIpMessage: str | None = None
-    ProxyPasswordHelpText: str | None = None
-    ProxyType: str | None = None
-    ProxyUsernameHelpText: str | None = None
-    PtpOldSettingsCheckMessage: str | None = None
-    PublishedDate: str | None = None
-    Publisher: str | None = None
-    Qualities: str | None = None
-    QualitiesHelpText: str | None = None
-    Quality: str | None = None
-    QualityCutoffHasNotBeenMet: str | None = None
-    QualityDefinitions: str | None = None
-    QualityLimitsHelpText: str | None = None
-    QualityOrLangCutoffHasNotBeenMet: str | None = None
-    QualityProfile: str | None = None
-    QualityProfileDeleteConfirm: str | None = None
-    QualityProfileIdHelpText: str | None = None
-    QualityProfileInUse: str | None = None
-    QualityProfiles: str | None = None
-    QualitySettings: str | None = None
-    QualitySettingsSummary: str | None = None
-    Queue: str | None = None
-    Queued: str | None = None
-    QueueIsEmpty: str | None = None
-    QuickImport: str | None = None
-    RadarrCalendarFeed: str | None = None
-    RadarrSupportsAnyDownloadClient: str | None = None
-    RadarrSupportsAnyIndexer: str | None = None
-    RadarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow: str | None = None
-    RadarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow: str | None = None
-    RadarrTags: str | None = None
-    RadarrUpdated: str | None = None
-    Ratings: str | None = None
-    ReadarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow: str | None = (
-        None
-    )
-    ReadarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow: str | None = (
-        None
-    )
-    ReadarrSupportsMultipleListsForImportingBooksAndAuthorsIntoTheDatabase: str | None = (
-        None
-    )
-    ReadarrTags: str | None = None
-    ReadTheWikiForMoreInformation: str | None = None
-    Real: str | None = None
-    Reason: str | None = None
-    RecentChanges: str | None = None
-    RecentFolders: str | None = None
-    RecycleBinCleanupDaysHelpText: str | None = None
-    RecycleBinCleanupDaysHelpTextWarning: str | None = None
-    RecycleBinHelpText: str | None = None
-    RecyclingBin: str | None = None
-    RecyclingBinCleanup: str | None = None
-    Reddit: str | None = None
-    Redownload: str | None = None
-    Refresh: str | None = None
-    RefreshAndScan: str | None = None
-    RefreshAuthor: str | None = None
-    RefreshInformation: str | None = None
-    RefreshInformationAndScanDisk: str | None = None
-    RefreshLists: str | None = None
-    RefreshMovie: str | None = None
-    RefreshScan: str | None = None
-    RegularExpressionsCanBeTested: str | None = None
-    RejectionCount: str | None = None
-    RelativePath: str | None = None
-    ReleaseBranchCheckOfficialBranchMessage: str | None = None
-    Released: str | None = None
-    ReleaseDate: str | None = None
-    ReleaseDates: str | None = None
-    ReleasedMsg: str | None = None
-    ReleaseGroup: str | None = None
-    ReleaseProfiles: str | None = None
-    ReleaseRejected: str | None = None
-    ReleaseStatus: str | None = None
-    ReleaseTitle: str | None = None
-    ReleaseWillBeProcessedInterp: str | None = None
-    Reload: str | None = None
-    RemotePath: str | None = None
-    RemotePathHelpText: str | None = None
-    RemotePathMappingCheckBadDockerPath: str | None = None
-    RemotePathMappingCheckDockerFolderMissing: str | None = None
-    RemotePathMappingCheckDownloadPermissions: str | None = None
-    RemotePathMappingCheckFileRemoved: str | None = None
-    RemotePathMappingCheckFilesBadDockerPath: str | None = None
-    RemotePathMappingCheckFilesGenericPermissions: str | None = None
-    RemotePathMappingCheckFilesLocalWrongOSPath: str | None = None
-    RemotePathMappingCheckFilesWrongOSPath: str | None = None
-    RemotePathMappingCheckFolderPermissions: str | None = None
-    RemotePathMappingCheckGenericPermissions: str | None = None
-    RemotePathMappingCheckImportFailed: str | None = None
-    RemotePathMappingCheckLocalFolderMissing: str | None = None
-    RemotePathMappingCheckLocalWrongOSPath: str | None = None
-    RemotePathMappingCheckRemoteDownloadClient: str | None = None
-    RemotePathMappingCheckWrongOSPath: str | None = None
-    RemotePathMappings: str | None = None
-    Remove: str | None = None
-    RemoveCompleted: str | None = None
-    RemoveCompletedDownloadsHelpText: str | None = None
-    RemovedFromTaskQueue: str | None = None
-    RemovedMovieCheckMultipleMessage: str | None = None
-    RemovedMovieCheckSingleMessage: str | None = None
-    RemoveDownloadsAlert: str | None = None
-    RemoveFailed: str | None = None
-    RemoveFailedDownloadsHelpText: str | None = None
-    RemoveFilter: str | None = None
-    RemoveFromBlocklist: str | None = None
-    RemoveFromDownloadClient: str | None = None
-    RemoveFromQueue: str | None = None
-    RemoveFromQueueText: str | None = None
-    RemoveHelpTextWarning: str | None = None
-    RemoveMovieAndDeleteFiles: str | None = None
-    RemoveMovieAndKeepFiles: str | None = None
-    RemoveRootFolder: str | None = None
-    RemoveSelected: str | None = None
-    RemoveSelectedItem: str | None = None
-    RemoveSelectedItems: str | None = None
-    RemoveSelectedMessageText: str | None = None
-    RemoveTagExistingTag: str | None = None
-    RemoveTagRemovingTag: str | None = None
-    RemovingTag: str | None = None
-    RenameBooks: str | None = None
-    RenameBooksHelpText: str | None = None
-    Renamed: str | None = None
-    RenameFiles: str | None = None
-    RenameMovies: str | None = None
-    RenameMoviesHelpText: str | None = None
-    Reorder: str | None = None
-    Replace: str | None = None
-    ReplaceIllegalCharacters: str | None = None
-    ReplaceIllegalCharactersHelpText: str | None = None
-    ReplaceWithDash: str | None = None
-    ReplaceWithSpaceDash: str | None = None
-    ReplaceWithSpaceDashSpace: str | None = None
-    Required: str | None = None
-    RequiredHelpText: str | None = None
-    RequiredPlaceHolder: str | None = None
-    RequiredRestrictionHelpText: str | None = None
-    RequiredRestrictionPlaceHolder: str | None = None
-    RescanAfterRefreshHelpText: str | None = None
-    RescanAfterRefreshHelpTextWarning: str | None = None
-    RescanAuthorFolderAfterRefresh: str | None = None
-    RescanMovieFolderAfterRefresh: str | None = None
-    Reset: str | None = None
-    ResetAPIKey: str | None = None
-    ResetAPIKeyMessageText: str | None = None
-    Restart: str | None = None
-    RestartNow: str | None = None
-    RestartRadarr: str | None = None
-    RestartReadarr: str | None = None
-    RestartReloadNote: str | None = None
-    RestartRequiredHelpTextWarning: str | None = None
-    Restore: str | None = None
-    RestoreBackup: str | None = None
-    Restrictions: str | None = None
-    Result: str | None = None
-    Retention: str | None = None
-    RetentionHelpText: str | None = None
-    RetryingDownloadInterp: str | None = None
-    RootFolder: str | None = None
-    RootFolderCheckMultipleMessage: str | None = None
-    RootFolderCheckSingleMessage: str | None = None
-    RootFolderPathHelpText: str | None = None
-    RootFolders: str | None = None
-    RSS: str | None = None
-    RSSIsNotSupportedWithThisIndexer: str | None = None
-    RSSSync: str | None = None
-    RSSSyncInterval: str | None = None
-    RssSyncIntervalHelpText: str | None = None
-    RSSSyncIntervalHelpTextWarning: str | None = None
-    Runtime: str | None = None
-    Save: str | None = None
-    SaveChanges: str | None = None
-    SaveSettings: str | None = None
-    SceneInformation: str | None = None
-    SceneNumberHasntBeenVerifiedYet: str | None = None
-    Scheduled: str | None = None
-    Score: str | None = None
-    Script: str | None = None
-    ScriptPath: str | None = None
-    Search: str | None = None
-    SearchAll: str | None = None
-    SearchBook: str | None = None
-    SearchBoxPlaceHolder: str | None = None
-    SearchCutoffUnmet: str | None = None
-    SearchFailedPleaseTryAgainLater: str | None = None
-    SearchFiltered: str | None = None
-    SearchForAllCutoffUnmetBooks: str | None = None
-    SearchForAllMissingBooks: str | None = None
-    SearchForMissing: str | None = None
-    SearchForMonitoredBooks: str | None = None
-    SearchForMovie: str | None = None
-    SearchForNewItems: str | None = None
-    SearchMissing: str | None = None
-    SearchMonitored: str | None = None
-    SearchMovie: str | None = None
-    SearchOnAdd: str | None = None
-    SearchOnAddHelpText: str | None = None
-    SearchSelected: str | None = None
-    Season: str | None = None
-    Seconds: str | None = None
-    Security: str | None = None
-    Seeders: str | None = None
-    SelectAll: str | None = None
-    SelectDotDot: str | None = None
-    SelectedCountAuthorsSelectedInterp: str | None = None
-    SelectedCountBooksSelectedInterp: str | None = None
-    SelectFolder: str | None = None
-    SelectLanguage: str | None = None
-    SelectLanguages: str | None = None
-    SelectMovie: str | None = None
-    SelectQuality: str | None = None
-    SelectReleaseGroup: str | None = None
-    SendAnonymousUsageData: str | None = None
-    SendMetadataToCalibre: str | None = None
-    Series: str | None = None
-    SeriesNumber: str | None = None
-    SeriesTotal: str | None = None
-    SetPermissions: str | None = None
-    SetPermissionsLinuxHelpText: str | None = None
-    SetPermissionsLinuxHelpTextWarning: str | None = None
-    SetReleaseGroup: str | None = None
-    SetTags: str | None = None
-    Settings: str | None = None
-    SettingsEnableColorImpairedMode: str | None = None
-    SettingsEnableColorImpairedModeHelpText: str | None = None
-    SettingsFirstDayOfWeek: str | None = None
-    SettingsLongDateFormat: str | None = None
-    SettingsRemotePathMappingHostHelpText: str | None = None
-    SettingsRemotePathMappingLocalPath: str | None = None
-    SettingsRemotePathMappingLocalPathHelpText: str | None = None
-    SettingsRemotePathMappingRemotePath: str | None = None
-    SettingsRemotePathMappingRemotePathHelpText: str | None = None
-    SettingsRuntimeFormat: str | None = None
-    SettingsShortDateFormat: str | None = None
-    SettingsShowRelativeDates: str | None = None
-    SettingsShowRelativeDatesHelpText: str | None = None
-    SettingsTimeFormat: str | None = None
-    SettingsWeekColumnHeader: str | None = None
-    SettingsWeekColumnHeaderHelpText: str | None = None
-    ShortDateFormat: str | None = None
-    ShouldMonitorExisting: str | None = None
-    ShouldMonitorExistingHelpText: str | None = None
-    ShouldMonitorHelpText: str | None = None
-    ShouldSearchHelpText: str | None = None
-    ShowAdvanced: str | None = None
-    ShowAsAllDayEvents: str | None = None
-    ShowBanners: str | None = None
-    ShowBannersHelpText: str | None = None
-    ShowBookCount: str | None = None
-    ShowBookTitleHelpText: str | None = None
-    ShowCertification: str | None = None
-    ShowCinemaRelease: str | None = None
-    showCinemaReleaseHelpText: str | None = None
-    ShowCutoffUnmetIconHelpText: str | None = None
-    ShowDateAdded: str | None = None
-    ShowGenres: str | None = None
-    ShowLastBook: str | None = None
-    ShowMonitored: str | None = None
-    ShowMonitoredHelpText: str | None = None
-    ShowMovieInformation: str | None = None
-    ShowMovieInformationHelpText: str | None = None
-    ShownAboveEachColumnWhenWeekIsTheActiveView: str | None = None
-    ShowName: str | None = None
-    ShownClickToHide: str | None = None
-    ShowPath: str | None = None
-    ShowQualityProfile: str | None = None
-    ShowQualityProfileHelpText: str | None = None
-    ShowRatings: str | None = None
-    ShowRelativeDates: str | None = None
-    ShowRelativeDatesHelpText: str | None = None
-    ShowReleaseDate: str | None = None
-    ShowReleaseDateHelpText: str | None = None
-    ShowSearch: str | None = None
-    ShowSearchActionHelpText: str | None = None
-    ShowSearchHelpText: str | None = None
-    ShowSizeOnDisk: str | None = None
-    ShowStudio: str | None = None
-    ShowTitle: str | None = None
-    ShowTitleHelpText: str | None = None
-    ShowUnknownAuthorItems: str | None = None
-    ShowUnknownMovieItems: str | None = None
-    ShowYear: str | None = None
-    Shutdown: str | None = None
-    Size: str | None = None
-    SizeLimit: str | None = None
-    SizeOnDisk: str | None = None
-    SkipBooksWithMissingReleaseDate: str | None = None
-    SkipBooksWithNoISBNOrASIN: str | None = None
-    SkipFreeSpaceCheck: str | None = None
-    SkipFreeSpaceCheckWhenImportingHelpText: str | None = None
-    SkipPartBooksAndSets: str | None = None
-    SkipRedownload: str | None = None
-    SkipredownloadHelpText: str | None = None
-    SkipSecondarySeriesBooks: str | None = None
-    Small: str | None = None
-    Socks4: str | None = None
-    Socks5: str | None = None
-    SomeResultsHiddenFilter: str | None = None
-    SorryThatAuthorCannotBeFound: str | None = None
-    SorryThatBookCannotBeFound: str | None = None
-    SorryThatMovieCannotBeFound: str | None = None
-    Sort: str | None = None
-    Source: str | None = None
-    SourcePath: str | None = None
-    SourceRelativePath: str | None = None
-    SourceTitle: str | None = None
-    SpecificBook: str | None = None
-    SqliteVersionCheckUpgradeRequiredMessage: str | None = None
-    SSLCertPassword: str | None = None
-    SslCertPasswordHelpText: str | None = None
-    SSLCertPasswordHelpText: str | None = None
-    SslCertPasswordHelpTextWarning: str | None = None
-    SSLCertPath: str | None = None
-    SslCertPathHelpText: str | None = None
-    SSLCertPathHelpText: str | None = None
-    SslCertPathHelpTextWarning: str | None = None
-    SSLPort: str | None = None
-    SslPortHelpTextWarning: str | None = None
-    StandardBookFormat: str | None = None
-    StandardMovieFormat: str | None = None
-    StartImport: str | None = None
-    StartProcessing: str | None = None
-    StartSearchForMissingMovie: str | None = None
-    StartTypingOrSelectAPathBelow: str | None = None
-    StartupDirectory: str | None = None
-    Status: str | None = None
-    StatusEndedContinuing: str | None = None
-    StatusEndedDeceased: str | None = None
-    StatusEndedEnded: str | None = None
-    Studio: str | None = None
-    Style: str | None = None
-    SubfolderWillBeCreatedAutomaticallyInterp: str | None = None
-    SuccessMyWorkIsDoneNoFilesToRename: str | None = None
-    SuccessMyWorkIsDoneNoFilesToRetag: str | None = None
-    SuggestTranslationChange: str | None = None
-    Sunday: str | None = None
-    SupportsRssvalueRSSIsNotSupportedWithThisIndexer: str | None = None
-    SupportsSearchvalueSearchIsNotSupportedWithThisIndexer: str | None = None
-    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: str | None = (
-        None
-    )
-    SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed: str | None = None
-    System: str | None = None
-    SystemTimeCheckMessage: str | None = None
-    Table: str | None = None
-    TableOptions: str | None = None
-    TableOptionsColumnsMessage: str | None = None
-    TagCannotBeDeletedWhileInUse: str | None = None
-    TagDetails: str | None = None
-    TagIsNotUsedAndCanBeDeleted: str | None = None
-    Tags: str | None = None
-    TagsHelpText: str | None = None
-    TagsSettingsSummary: str | None = None
-    Tasks: str | None = None
-    TaskUserAgentTooltip: str | None = None
-    TBA: str | None = None
-    Term: str | None = None
-    Test: str | None = None
-    TestAll: str | None = None
-    TestAllClients: str | None = None
-    TestAllIndexers: str | None = None
-    TestAllLists: str | None = None
-    TheAuthorFolderAndAllOfItsContentWillBeDeleted: str | None = None
-    TheBooksFilesWillBeDeleted: str | None = None
-    TheFollowingFilesWillBeDeleted: str | None = None
-    TheLogLevelDefault: str | None = None
-    ThisCannotBeCancelled: str | None = None
-    ThisConditionMatchesUsingRegularExpressions: str | None = None
-    ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem: str | None = None
-    Time: str | None = None
-    TimeFormat: str | None = None
-    Timeleft: str | None = None
-    Title: str | None = None
-    Titles: str | None = None
-    TMDb: str | None = None
-    TMDBId: str | None = None
-    TmdbIdHelpText: str | None = None
-    TmdbRating: str | None = None
-    TmdbVotes: str | None = None
-    Today: str | None = None
-    Tomorrow: str | None = None
-    TooManyBooks: str | None = None
-    TorrentDelay: str | None = None
-    TorrentDelayHelpText: str | None = None
-    TorrentDelayTime: str | None = None
-    Torrents: str | None = None
-    TorrentsDisabled: str | None = None
-    TotalBookCountBooksTotalBookFileCountBooksWithFilesInterp: str | None = None
-    TotalFileSize: str | None = None
-    TotalSpace: str | None = None
-    Trace: str | None = None
-    TrackNumber: str | None = None
-    TrackTitle: str | None = None
-    Trailer: str | None = None
-    Trakt: str | None = None
-    Trigger: str | None = None
-    Type: str | None = None
-    UI: str | None = None
-    UILanguage: str | None = None
-    UILanguageHelpText: str | None = None
-    UILanguageHelpTextWarning: str | None = None
-    UISettings: str | None = None
-    UISettingsSummary: str | None = None
-    UnableToAddANewConditionPleaseTryAgain: str | None = None
-    UnableToAddANewCustomFormatPleaseTryAgain: str | None = None
-    UnableToAddANewDownloadClientPleaseTryAgain: str | None = None
-    UnableToAddANewImportListExclusionPleaseTryAgain: str | None = None
-    UnableToAddANewIndexerPleaseTryAgain: str | None = None
-    UnableToAddANewListExclusionPleaseTryAgain: str | None = None
-    UnableToAddANewListPleaseTryAgain: str | None = None
-    UnableToAddANewMetadataProfilePleaseTryAgain: str | None = None
-    UnableToAddANewNotificationPleaseTryAgain: str | None = None
-    UnableToAddANewQualityProfilePleaseTryAgain: str | None = None
-    UnableToAddANewRemotePathMappingPleaseTryAgain: str | None = None
-    UnableToAddANewRootFolderPleaseTryAgain: str | None = None
-    UnableToAddRootFolder: str | None = None
-    UnableToImportCheckLogs: str | None = None
-    UnableToLoadAltTitle: str | None = None
-    UnableToLoadBackups: str | None = None
-    UnableToLoadBlocklist: str | None = None
-    UnableToLoadCustomFormats: str | None = None
-    UnableToLoadDelayProfiles: str | None = None
-    UnableToLoadDownloadClientOptions: str | None = None
-    UnableToLoadDownloadClients: str | None = None
-    UnableToLoadGeneralSettings: str | None = None
-    UnableToLoadHistory: str | None = None
-    UnableToLoadImportListExclusions: str | None = None
-    UnableToLoadIndexerOptions: str | None = None
-    UnableToLoadIndexers: str | None = None
-    UnableToLoadLanguages: str | None = None
-    UnableToLoadListExclusions: str | None = None
-    UnableToLoadListOptions: str | None = None
-    UnableToLoadLists: str | None = None
-    UnableToLoadManualImportItems: str | None = None
-    UnableToLoadMediaManagementSettings: str | None = None
-    UnableToLoadMetadata: str | None = None
-    UnableToLoadMetadataProfiles: str | None = None
-    UnableToLoadMetadataProviderSettings: str | None = None
-    UnableToLoadMovies: str | None = None
-    UnableToLoadNamingSettings: str | None = None
-    UnableToLoadNotifications: str | None = None
-    UnableToLoadQualities: str | None = None
-    UnableToLoadQualityDefinitions: str | None = None
-    UnableToLoadQualityProfiles: str | None = None
-    UnableToLoadReleaseProfiles: str | None = None
-    UnableToLoadRemotePathMappings: str | None = None
-    UnableToLoadRestrictions: str | None = None
-    UnableToLoadResultsIntSearch: str | None = None
-    UnableToLoadRootFolders: str | None = None
-    UnableToLoadTags: str | None = None
-    UnableToLoadTheCalendar: str | None = None
-    UnableToLoadUISettings: str | None = None
-    UnableToUpdateRadarrDirectly: str | None = None
-    Unavailable: str | None = None
-    Ungroup: str | None = None
-    Unlimited: str | None = None
-    UnmappedFiles: str | None = None
-    UnmappedFilesOnly: str | None = None
-    UnmappedFolders: str | None = None
-    Unmonitored: str | None = None
-    UnmonitoredHelpText: str | None = None
-    Unreleased: str | None = None
-    UnsavedChanges: str | None = None
-    UnselectAll: str | None = None
-    UpdateAll: str | None = None
-    UpdateAutomaticallyHelpText: str | None = None
-    UpdateAvailable: str | None = None
-    UpdateCheckStartupNotWritableMessage: str | None = None
-    UpdateCheckStartupTranslocationMessage: str | None = None
-    UpdateCheckUINotWritableMessage: str | None = None
-    UpdateCovers: str | None = None
-    UpdateCoversHelpText: str | None = None
-    UpdateMechanismHelpText: str | None = None
-    Updates: str | None = None
-    UpdateScriptPathHelpText: str | None = None
-    UpdateSelected: str | None = None
-    UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead: str | None = (
-        None
-    )
-    UpgradeAllowedHelpText: str | None = None
-    UpgradesAllowed: str | None = None
-    UpgradeUntilCustomFormatScore: str | None = None
-    UpgradeUntilQuality: str | None = None
-    UpgradeUntilThisQualityIsMetOrExceeded: str | None = None
-    UpperCase: str | None = None
-    Uptime: str | None = None
-    URLBase: str | None = None
-    UrlBaseHelpText: str | None = None
-    UrlBaseHelpTextWarning: str | None = None
-    UseCalibreContentServer: str | None = None
-    UseHardlinksInsteadOfCopy: str | None = None
-    Usenet: str | None = None
-    UsenetDelay: str | None = None
-    UsenetDelayHelpText: str | None = None
-    UsenetDelayTime: str | None = None
-    UsenetDisabled: str | None = None
-    UseProxy: str | None = None
-    Username: str | None = None
-    UsernameHelpText: str | None = None
-    UseSSL: str | None = None
-    UseSslHelpText: str | None = None
-    UsingExternalUpdateMechanismBranchToUseToUpdateReadarr: str | None = None
-    UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism: str | None = None
-    Version: str | None = None
-    VersionUpdateText: str | None = None
-    VideoCodec: str | None = None
-    View: str | None = None
-    VisitGithubCustomFormatsAphrodite: str | None = None
-    WaitingToImport: str | None = None
-    WaitingToProcess: str | None = None
-    Wanted: str | None = None
-    Warn: str | None = None
-    WatchLibraryForChangesHelpText: str | None = None
-    WatchRootFoldersForFileChanges: str | None = None
-    Week: str | None = None
-    WeekColumnHeader: str | None = None
-    Weeks: str | None = None
-    WhatsNew: str | None = None
-    WhitelistedHardcodedSubsHelpText: str | None = None
-    WhitelistedSubtitleTags: str | None = None
-    Wiki: str | None = None
-    WouldYouLikeToRestoreBackup: str | None = None
-    WriteAudioTags: str | None = None
-    WriteAudioTagsScrub: str | None = None
-    WriteAudioTagsScrubHelp: str | None = None
-    WriteBookTagsHelpTextWarning: str | None = None
-    WriteTagsAll: str | None = None
-    WriteTagsNew: str | None = None
-    WriteTagsNo: str | None = None
-    WriteTagsSync: str | None = None
-    Year: str | None = None
-    Yes: str | None = None
-    YesCancel: str | None = None
-    YesMoveFiles: str | None = None
-    Yesterday: str | None = None
-    YouCanAlsoSearch: str | None = None
+    About: str
+    Absolute: str
+    AcceptConfirmationModal: str
+    Actions: str
+    Activity: str
+    Add: str
+    AddCustomFormat: str
+    AddDelayProfile: str
+    AddDownloadClient: str
+    Added: str
+    AddedAuthorSettings: str
+    AddedToDownloadQueue: str
+    AddExclusion: str
+    AddImportListExclusionHelpText: str
+    AddIndexer: str
+    AddingTag: str
+    AddList: str
+    AddListExclusion: str
+    AddMissing: str
+    AddMovie: str
+    AddMovies: str
+    AddMoviesMonitored: str
+    AddNew: str
+    AddNewItem: str
+    AddNewMessage: str
+    AddNewMovie: str
+    AddNewTmdbIdMessage: str
+    AddNotification: str
+    AddQualityProfile: str
+    AddRemotePathMapping: str
+    AddRestriction: str
+    AddRootFolder: str
+    AddToDownloadQueue: str
+    AdvancedSettingsHiddenClickToShow: str
+    AdvancedSettingsShownClickToHide: str
+    AfterManualRefresh: str
+    Age: str
+    Agenda: str
+    AgeWhenGrabbed: str
+    All: str
+    AllAuthorBooks: str
+    AllBooks: str
+    AllExpandedCollapseAll: str
+    AllExpandedExpandAll: str
+    AllFiles: str
+    AllMoviesHiddenDueToFilter: str
+    AllMoviesInPathHaveBeenImported: str
+    AllowAuthorChangeClickToChangeAuthor: str
+    AllowedLanguages: str
+    AllowFingerprinting: str
+    AllowFingerprintingHelpText: str
+    AllowFingerprintingHelpTextWarning: str
+    AllowHardcodedSubs: str
+    AllowHardcodedSubsHelpText: str
+    AllResultsHiddenFilter: str
+    AlreadyInYourLibrary: str
+    AlternateTitles: str
+    AlternateTitleslength1Title: str
+    AlternateTitleslength1Titles: str
+    AlternativeTitle: str
+    Always: str
+    AnalyseVideoFiles: str
+    Analytics: str
+    AnalyticsEnabledHelpText: str
+    AnalyticsEnabledHelpTextWarning: str
+    Announced: str
+    AnnouncedMsg: str
+    AnyEditionOkHelpText: str
+    ApiKey: str
+    APIKey: str
+    ApiKeyHelpTextWarning: str
+    AppDataDirectory: str
+    AppDataLocationHealthCheckMessage: str
+    Apply: str
+    ApplyTags: str
+    ApplyTagsHelpTexts1: str
+    ApplyTagsHelpTexts2: str
+    ApplyTagsHelpTexts3: str
+    ApplyTagsHelpTexts4: str
+    AptUpdater: str
+    AreYouSureYouWantToDeleteFormat: str
+    AreYouSureYouWantToDeleteThisDelayProfile: str
+    AreYouSureYouWantToDeleteThisImportListExclusion: str
+    AreYouSureYouWantToDeleteThisRemotePathMapping: str
+    AreYouSureYouWantToRemoveSelectedItemFromQueue: str
+    AreYouSureYouWantToRemoveSelectedItemsFromQueue: str
+    AreYouSureYouWantToRemoveTheSelectedItemsFromBlocklist: str
+    AreYouSureYouWantToResetYourAPIKey: str
+    AsAllDayHelpText: str
+    ASIN: str
+    AudioFileMetadata: str
+    AudioInfo: str
+    AuthBasic: str
+    Authentication: str
+    AuthenticationMethodHelpText: str
+    AuthForm: str
+    Author: str
+    AuthorClickToChangeBook: str
+    AuthorEditor: str
+    AuthorFolderFormat: str
+    AuthorIndex: str
+    AuthorNameHelpText: str
+    Authors: str
+    Automatic: str
+    AutomaticallySwitchEdition: str
+    AutomaticSearch: str
+    AutoRedownloadFailedHelpText: str
+    AutoUnmonitorPreviouslyDownloadedBooksHelpText: str
+    AutoUnmonitorPreviouslyDownloadedMoviesHelpText: str
+    AvailabilityDelay: str
+    AvailabilityDelayHelpText: str
+    Backup: str
+    BackupFolderHelpText: str
+    BackupIntervalHelpText: str
+    BackupNow: str
+    BackupRetentionHelpText: str
+    Backups: str
+    BeforeUpdate: str
+    BindAddress: str
+    BindAddressHelpText: str
+    BindAddressHelpTextWarning: str
+    Blocklist: str
+    Blocklisted: str
+    BlocklistHelpText: str
+    BlocklistRelease: str
+    BlocklistReleases: str
+    Book: str
+    BookAvailableButMissing: str
+    BookDownloaded: str
+    BookEditor: str
+    BookFileCountBookCountTotalTotalBookCountInterp: str
+    BookFileCounttotalBookCountBooksDownloadedInterp: str
+    BookFilesCountMessage: str
+    BookHasNotAired: str
+    BookIndex: str
+    BookIsDownloading: str
+    BookIsDownloadingInterp: str
+    BookIsNotMonitored: str
+    BookList: str
+    BookMissingFromDisk: str
+    BookMonitoring: str
+    BookNaming: str
+    Books: str
+    BooksTotal: str
+    BookStudio: str
+    BookTitle: str
+    Branch: str
+    BranchUpdate: str
+    BranchUpdateMechanism: str
+    BuiltIn: str
+    BypassDelayIfHighestQuality: str
+    BypassDelayIfHighestQualityHelpText: str
+    BypassProxyForLocalAddresses: str
+    Calendar: str
+    CalendarOptions: str
+    CalendarWeekColumnHeaderHelpText: str
+    CalibreContentServer: str
+    CalibreContentServerText: str
+    CalibreHost: str
+    CalibreLibrary: str
+    CalibreMetadata: str
+    CalibreNotCalibreWeb: str
+    CalibreOutputFormat: str
+    CalibreOutputProfile: str
+    CalibrePassword: str
+    CalibrePort: str
+    CalibreSettings: str
+    CalibreUrlBase: str
+    CalibreUsername: str
+    Cancel: str
+    CancelMessageText: str
+    CancelPendingTask: str
+    CancelProcessing: str
+    CantFindMovie: str
+    Cast: str
+    CatalogNumber: str
+    CertificateValidation: str
+    CertificateValidationHelpText: str
+    Certification: str
+    CertificationCountry: str
+    CertificationCountryHelpText: str
+    CertValidationNoLocal: str
+    ChangeFileDate: str
+    ChangeHasNotBeenSavedYet: str
+    CheckDownloadClientForDetails: str
+    CheckForFinishedDownloadsInterval: str
+    ChmodFolder: str
+    ChmodFolderHelpText: str
+    ChmodFolderHelpTextWarning: str
+    ChmodGroup: str
+    ChmodGroupHelpText: str
+    ChmodGroupHelpTextWarning: str
+    ChooseAnotherFolder: str
+    ChownGroup: str
+    ChownGroupHelpText: str
+    ChownGroupHelpTextWarning: str
+    CleanLibraryLevel: str
+    Clear: str
+    ClickToChangeLanguage: str
+    ClickToChangeMovie: str
+    ClickToChangeQuality: str
+    ClickToChangeReleaseGroup: str
+    ClientPriority: str
+    CloneCustomFormat: str
+    CloneFormatTag: str
+    CloneIndexer: str
+    CloneProfile: str
+    Close: str
+    CloseCurrentModal: str
+    CollapseMultipleBooks: str
+    CollapseMultipleBooksHelpText: str
+    Collection: str
+    ColonReplacement: str
+    ColonReplacementFormatHelpText: str
+    Columns: str
+    CompletedDownloadHandling: str
+    Component: str
+    Conditions: str
+    Connect: str
+    Connection: str
+    ConnectionLost: str
+    ConnectionLostAutomaticMessage: str
+    ConnectionLostMessage: str
+    Connections: str
+    ConnectSettings: str
+    ConnectSettingsSummary: str
+    ConsideredAvailable: str
+    ConsoleLogLevel: str
+    Continuing: str
+    ContinuingAllBooksDownloaded: str
+    ContinuingMoreBooksAreExpected: str
+    ContinuingNoAdditionalBooksAreExpected: str
+    CopyToClipboard: str
+    CopyUsingHardlinksHelpText: str
+    CopyUsingHardlinksHelpTextWarning: str
+    CouldNotConnectSignalR: str
+    CouldNotFindResults: str
+    Country: str
+    CreateEmptyAuthorFolders: str
+    CreateEmptyAuthorFoldersHelpText: str
+    CreateEmptyMovieFolders: str
+    CreateEmptyMovieFoldersHelpText: str
+    CreateGroup: str
+    Crew: str
+    CurrentlyInstalled: str
+    Custom: str
+    CustomFilters: str
+    CustomFormat: str
+    CustomFormatHelpText: str
+    CustomFormatJSON: str
+    CustomFormats: str
+    CustomFormatScore: str
+    CustomFormatsSettings: str
+    CustomFormatsSettingsSummary: str
+    CustomFormatUnknownCondition: str
+    CustomFormatUnknownConditionOption: str
+    Cutoff: str
+    CutoffFormatScoreHelpText: str
+    CutoffHelpText: str
+    CutoffUnmet: str
+    Date: str
+    Dates: str
+    Day: str
+    Days: str
+    DBMigration: str
+    Debug: str
+    DefaultCase: str
+    DefaultDelayProfile: str
+    DefaultMetadataProfileIdHelpText: str
+    DefaultMonitorOptionHelpText: str
+    DefaultQualityProfileIdHelpText: str
+    DefaultReadarrTags: str
+    DefaultTagsHelpText: str
+    DelayingDownloadUntilInterp: str
+    DelayProfile: str
+    DelayProfiles: str
+    Delete: str
+    DeleteBackup: str
+    DeleteBackupMessageText: str
+    DeleteBookFile: str
+    DeleteBookFileMessageText: str
+    DeleteCustomFormat: str
+    Deleted: str
+    DeleteDelayProfile: str
+    DeleteDelayProfileMessageText: str
+    DeletedMsg: str
+    DeleteDownloadClient: str
+    DeleteDownloadClientMessageText: str
+    DeleteEmptyFolders: str
+    DeleteEmptyFoldersHelpText: str
+    DeleteFile: str
+    DeleteFileLabel: str
+    DeleteFilesHelpText: str
+    DeleteFilesLabel: str
+    DeleteHeader: str
+    DeleteImportList: str
+    DeleteImportListExclusion: str
+    DeleteImportListExclusionMessageText: str
+    DeleteImportListMessageText: str
+    DeleteIndexer: str
+    DeleteIndexerMessageText: str
+    DeleteList: str
+    DeleteListMessageText: str
+    DeleteMetadataProfile: str
+    DeleteMetadataProfileMessageText: str
+    DeleteMovieFolderHelpText: str
+    DeleteMovieFolderLabel: str
+    DeleteNotification: str
+    DeleteNotificationMessageText: str
+    DeleteQualityProfile: str
+    DeleteQualityProfileMessageText: str
+    DeleteReleaseProfile: str
+    DeleteReleaseProfileMessageText: str
+    DeleteRestriction: str
+    DeleteRestrictionHelpText: str
+    DeleteRootFolder: str
+    DeleteRootFolderMessageText: str
+    DeleteSelectedBookFiles: str
+    DeleteSelectedBookFilesMessageText: str
+    DeleteSelectedMovie: str
+    DeleteSelectedMovieFiles: str
+    DeleteSelectedMovieFilesMessage: str
+    DeleteTag: str
+    DeleteTagMessageText: str
+    DeleteTheMovieFolder: str
+    DestinationPath: str
+    DestinationRelativePath: str
+    DetailedProgressBar: str
+    DetailedProgressBarHelpText: str
+    Details: str
+    Development: str
+    DigitalRelease: str
+    Disabled: str
+    DiscCount: str
+    DiscNumber: str
+    Discord: str
+    DiscordUrlInSlackNotification: str
+    Discover: str
+    DiskSpace: str
+    Docker: str
+    DockerUpdater: str
+    Donations: str
+    DoneEditingGroups: str
+    DoNotPrefer: str
+    DoNotUpgradeAutomatically: str
+    Download: str
+    DownloadClient: str
+    DownloadClientCheckDownloadingToRoot: str
+    DownloadClientCheckNoneAvailableMessage: str
+    DownloadClientCheckUnableToCommunicateMessage: str
+    DownloadClients: str
+    DownloadClientSettings: str
+    DownloadClientsSettingsSummary: str
+    DownloadClientStatusCheckAllClientMessage: str
+    DownloadClientStatusCheckSingleClientMessage: str
+    DownloadClientUnavailable: str
+    Downloaded: str
+    DownloadedAndMonitored: str
+    DownloadedButNotMonitored: str
+    DownloadFailed: str
+    DownloadFailedCheckDownloadClientForMoreDetails: str
+    DownloadFailedInterp: str
+    Downloading: str
+    DownloadPropersAndRepacks: str
+    DownloadPropersAndRepacksHelpText1: str
+    DownloadPropersAndRepacksHelpText2: str
+    DownloadPropersAndRepacksHelpTexts1: str
+    DownloadPropersAndRepacksHelpTexts2: str
+    DownloadPropersAndRepacksHelpTextWarning: str
+    DownloadWarning: str
+    DownloadWarningCheckDownloadClientForMoreDetails: str
+    Edit: str
+    EditAuthor: str
+    EditCustomFormat: str
+    EditDelayProfile: str
+    EditGroups: str
+    EditIndexer: str
+    Edition: str
+    EditionsHelpText: str
+    EditListExclusion: str
+    EditMovie: str
+    EditMovieFile: str
+    EditPerson: str
+    EditQualityProfile: str
+    EditRemotePathMapping: str
+    EditRestriction: str
+    EmbedMetadataHelpText: str
+    EmbedMetadataInBookFiles: str
+    Enable: str
+    EnableAutoHelpText: str
+    EnableAutomaticAdd: str
+    EnableAutomaticAddHelpText: str
+    EnableAutomaticSearch: str
+    EnableAutomaticSearchHelpText: str
+    EnableAutomaticSearchHelpTextWarning: str
+    EnableColorImpairedMode: str
+    EnableColorImpairedModeHelpText: str
+    EnableCompletedDownloadHandlingHelpText: str
+    Enabled: str
+    EnabledHelpText: str
+    EnableHelpText: str
+    EnableInteractiveSearch: str
+    EnableInteractiveSearchHelpText: str
+    EnableInteractiveSearchHelpTextWarning: str
+    EnableMediaInfoHelpText: str
+    EnableProfile: str
+    EnableRSS: str
+    EnableSSL: str
+    EnableSslHelpText: str
+    Ended: str
+    EndedAllBooksDownloaded: str
+    EntityName: str
+    Episode: str
+    EpisodeDoesNotHaveAnAbsoluteEpisodeNumber: str
+    Error: str
+    ErrorLoadingContents: str
+    ErrorLoadingPreviews: str
+    ErrorRestoringBackup: str
+    Events: str
+    EventType: str
+    Exception: str
+    Excluded: str
+    ExcludeMovie: str
+    ExcludeTitle: str
+    Existing: str
+    ExistingBooks: str
+    ExistingItems: str
+    ExistingMovies: str
+    ExistingTag: str
+    ExistingTagsScrubbed: str
+    ExportCustomFormat: str
+    Extension: str
+    ExternalUpdater: str
+    ExtraFileExtensionsHelpTexts1: str
+    ExtraFileExtensionsHelpTexts2: str
+    Failed: str
+    FailedDownloadHandling: str
+    FailedLoadingSearchResults: str
+    FailedToLoadMovieFromAPI: str
+    FailedToLoadQueue: str
+    FeatureRequests: str
+    FileDateHelpText: str
+    FileDetails: str
+    FileManagement: str
+    Filename: str
+    FileNames: str
+    FileNameTokens: str
+    Files: str
+    FilesTotal: str
+    FileWasDeletedByUpgrade: str
+    FileWasDeletedByViaUI: str
+    Filter: str
+    FilterAnalyticsEvents: str
+    FilterAuthor: str
+    FilterPlaceHolder: str
+    Filters: str
+    FilterSentryEventsHelpText: str
+    FirstBook: str
+    FirstDayOfWeek: str
+    Fixed: str
+    FocusSearchBox: str
+    Folder: str
+    FolderMoveRenameWarning: str
+    Folders: str
+    FollowPerson: str
+    Forecast: str
+    ForeignIdHelpText: str
+    Formats: str
+    ForMoreInformationOnTheIndividualDownloadClients: str
+    ForMoreInformationOnTheIndividualDownloadClientsClickOnTheInfoButtons: str
+    ForMoreInformationOnTheIndividualImportListsClinkOnTheInfoButtons: str
+    ForMoreInformationOnTheIndividualIndexers: str
+    ForMoreInformationOnTheIndividualIndexersClickOnTheInfoButtons: str
+    ForMoreInformationOnTheIndividualListsClickOnTheInfoButtons: str
+    FreeSpace: str
+    From: str
+    FutureBooks: str
+    FutureDays: str
+    FutureDaysHelpText: str
+    General: str
+    GeneralSettings: str
+    GeneralSettingsSummary: str
+    Genres: str
+    Global: str
+    GoToAuthorListing: str
+    GoToInterp: str
+    Grab: str
+    Grabbed: str
+    GrabID: str
+    GrabRelease: str
+    GrabReleaseMessageText: str
+    GrabSelected: str
+    Group: str
+    HardlinkCopyFiles: str
+    HasMonitoredBooksNoMonitoredBooksForThisAuthor: str
+    HasPendingChangesNoChanges: str
+    HasPendingChangesSaveChanges: str
+    HaveNotAddedMovies: str
+    Health: str
+    HealthNoIssues: str
+    HelpText: str
+    HiddenClickToShow: str
+    HideAdvanced: str
+    HideBooks: str
+    History: str
+    HomePage: str
+    Host: str
+    HostHelpText: str
+    Hostname: str
+    Hours: str
+    HttpHttps: str
+    ICalFeed: str
+    ICalHttpUrlHelpText: str
+    iCalLink: str
+    ICalLink: str
+    IconForCutoffUnmet: str
+    IconTooltip: str
+    IfYouDontAddAnImportListExclusionAndTheAuthorHasAMetadataProfileOtherThanNoneThenThisBookMayBeReaddedDuringTheNextAuthorRefresh: str
+    Ignored: str
+    IgnoredAddresses: str
+    IgnoreDeletedBooks: str
+    IgnoreDeletedMovies: str
+    IgnoredHelpText: str
+    IgnoredMetaHelpText: str
+    IgnoredPlaceHolder: str
+    IllRestartLater: str
+    Images: str
+    IMDb: str
+    ImdbRating: str
+    ImdbVotes: str
+    Import: str
+    ImportCustomFormat: str
+    Imported: str
+    ImportedTo: str
+    ImportErrors: str
+    ImportExistingMovies: str
+    ImportExtraFiles: str
+    ImportExtraFilesHelpText: str
+    ImportFailed: str
+    ImportFailedInterp: str
+    ImportFailures: str
+    ImportHeader: str
+    ImportIncludeQuality: str
+    Importing: str
+    ImportLibrary: str
+    ImportListExclusions: str
+    ImportListMissingRoot: str
+    ImportListMultipleMissingRoots: str
+    ImportLists: str
+    ImportListSettings: str
+    ImportListSpecificSettings: str
+    ImportListStatusCheckAllClientMessage: str
+    ImportListStatusCheckSingleClientMessage: str
+    ImportListSyncIntervalHelpText: str
+    ImportMechanismHealthCheckMessage: str
+    ImportMovies: str
+    ImportNotForDownloads: str
+    ImportRootPath: str
+    ImportTipsMessage: str
+    InCinemas: str
+    InCinemasDate: str
+    InCinemasMsg: str
+    IncludeCustomFormatWhenRenaming: str
+    IncludeCustomFormatWhenRenamingHelpText: str
+    IncludeHealthWarningsHelpText: str
+    IncludePreferredWhenRenaming: str
+    IncludeRadarrRecommendations: str
+    IncludeRecommendationsHelpText: str
+    IncludeUnknownAuthorItemsHelpText: str
+    IncludeUnknownMovieItemsHelpText: str
+    IncludeUnmonitored: str
+    Indexer: str
+    IndexerDownloadClientHelpText: str
+    IndexerFlags: str
+    IndexerIdHelpText: str
+    IndexerIdHelpTextWarning: str
+    IndexerIdvalue0IncludeInPreferredWordsRenamingFormat: str
+    IndexerIdvalue0OnlySupportedWhenIndexerIsSetToAll: str
+    IndexerJackettAll: str
+    IndexerLongTermStatusCheckAllClientMessage: str
+    IndexerLongTermStatusCheckSingleClientMessage: str
+    IndexerPriority: str
+    IndexerPriorityHelpText: str
+    IndexerRssHealthCheckNoAvailableIndexers: str
+    IndexerRssHealthCheckNoIndexers: str
+    Indexers: str
+    IndexerSearchCheckNoAutomaticMessage: str
+    IndexerSearchCheckNoAvailableIndexersMessage: str
+    IndexerSearchCheckNoInteractiveMessage: str
+    IndexerSettings: str
+    IndexersSettingsSummary: str
+    IndexerStatusCheckAllClientMessage: str
+    IndexerStatusCheckSingleClientMessage: str
+    IndexerTagHelpText: str
+    Info: str
+    InstallLatest: str
+    InteractiveImport: str
+    InteractiveImportErrLanguage: str
+    InteractiveImportErrMovie: str
+    InteractiveImportErrQuality: str
+    InteractiveSearch: str
+    Interval: str
+    InvalidFormat: str
+    ISBN: str
+    IsCalibreLibraryHelpText: str
+    IsCutoffCutoff: str
+    IsCutoffUpgradeUntilThisQualityIsMetOrExceeded: str
+    IsExpandedHideBooks: str
+    IsExpandedHideFileInfo: str
+    IsExpandedShowBooks: str
+    IsExpandedShowFileInfo: str
+    IsInUseCantDeleteAMetadataProfileThatIsAttachedToAnAuthorOrImportList: str
+    IsInUseCantDeleteAQualityProfileThatIsAttachedToAnAuthorOrImportList: str
+    IsShowingMonitoredMonitorSelected: str
+    IsShowingMonitoredUnmonitorSelected: str
+    IsTagUsedCannotBeDeletedWhileInUse: str
+    KeepAndUnmonitorMovie: str
+    KeyboardShortcuts: str
+    Label: str
+    Language: str
+    LanguageHelpText: str
+    Languages: str
+    Large: str
+    LastDuration: str
+    LastExecution: str
+    LastUsed: str
+    LastWriteTime: str
+    LatestBook: str
+    LaunchBrowserHelpText: str
+    Letterboxd: str
+    Level: str
+    LibraryHelpText: str
+    LinkHere: str
+    Links: str
+    ListExclusions: str
+    Lists: str
+    ListSettings: str
+    ListsSettingsSummary: str
+    ListSyncLevelHelpText: str
+    ListSyncLevelHelpTextWarning: str
+    ListTagsHelpText: str
+    ListUpdateInterval: str
+    LoadingBookFilesFailed: str
+    LoadingBooksFailed: str
+    LoadingMovieCreditsFailed: str
+    LoadingMovieExtraFilesFailed: str
+    LoadingMovieFilesFailed: str
+    Local: str
+    LocalPath: str
+    LocalPathHelpText: str
+    Location: str
+    LogFiles: str
+    Logging: str
+    LogLevel: str
+    LogLevelTraceHelpTextWarning: str
+    LogLevelvalueTraceTraceLoggingShouldOnlyBeEnabledTemporarily: str
+    LogOnly: str
+    LogRotateHelpText: str
+    LogRotation: str
+    Logs: str
+    LogSQL: str
+    LogSqlHelpText: str
+    LongDateFormat: str
+    LookingForReleaseProfiles1: str
+    LookingForReleaseProfiles2: str
+    LowerCase: str
+    MaintenanceRelease: str
+    Manual: str
+    ManualDownload: str
+    ManualImport: str
+    ManualImportSelectLanguage: str
+    ManualImportSelectMovie: str
+    ManualImportSelectQuality: str
+    ManualImportSetReleaseGroup: str
+    MappedDrivesRunningAsService: str
+    MarkAsFailed: str
+    MarkAsFailedMessageText: str
+    MassBookSearch: str
+    MassBookSearchWarning: str
+    MassMovieSearch: str
+    Max: str
+    MaximumLimits: str
+    MaximumSize: str
+    MaximumSizeHelpText: str
+    Mechanism: str
+    MediaInfo: str
+    MediaManagement: str
+    MediaManagementSettings: str
+    MediaManagementSettingsSummary: str
+    Medium: str
+    MediumFormat: str
+    MegabytesPerMinute: str
+    Message: str
+    Metadata: str
+    MetadataConsumers: str
+    MetadataProfile: str
+    MetadataProfileIdHelpText: str
+    MetadataProfiles: str
+    MetadataProviderSource: str
+    MetadataSettings: str
+    MetadataSettingsSummary: str
+    MetadataSource: str
+    MetadataSourceHelpText: str
+    MIA: str
+    Min: str
+    MinAvailability: str
+    MinFormatScoreHelpText: str
+    MinimumAge: str
+    MinimumAgeHelpText: str
+    MinimumAvailability: str
+    MinimumCustomFormatScore: str
+    MinimumFreeSpace: str
+    MinimumFreeSpaceWhenImportingHelpText: str
+    MinimumLimits: str
+    MinimumPages: str
+    MinimumPopularity: str
+    MinPagesHelpText: str
+    MinPopularityHelpText: str
+    Minutes: str
+    MinutesHundredTwenty: str
+    MinutesNinety: str
+    MinutesSixty: str
+    Missing: str
+    MissingBooks: str
+    MissingBooksAuthorMonitored: str
+    MissingBooksAuthorNotMonitored: str
+    MissingFromDisk: str
+    MissingMonitoredAndConsideredAvailable: str
+    MissingNotMonitored: str
+    Mode: str
+    Monday: str
+    Monitor: str
+    MonitorAuthor: str
+    MonitorBook: str
+    MonitorBookExistingOnlyWarning: str
+    Monitored: str
+    MonitoredAuthorIsMonitored: str
+    MonitoredAuthorIsUnmonitored: str
+    MonitoredHelpText: str
+    MonitoredOnly: str
+    MonitoredStatus: str
+    Monitoring: str
+    MonitoringOptions: str
+    MonitoringOptionsHelpText: str
+    MonitorMovie: str
+    MonitorNewItems: str
+    MonitorNewItemsHelpText: str
+    MonoVersion: str
+    Month: str
+    Months: str
+    More: str
+    MoreControlCFText: str
+    MoreDetails: str
+    MoreInfo: str
+    MountCheckMessage: str
+    MoveFiles: str
+    MoveFolders1: str
+    MoveFolders2: str
+    Movie: str
+    MovieAlreadyExcluded: str
+    MovieChat: str
+    MovieDetailsNextMovie: str
+    MovieDetailsPreviousMovie: str
+    MovieEditor: str
+    MovieExcludedFromAutomaticAdd: str
+    MovieFiles: str
+    MovieFilesTotaling: str
+    MovieFolderFormat: str
+    MovieID: str
+    MovieIndex: str
+    MovieIndexScrollBottom: str
+    MovieIndexScrollTop: str
+    MovieInfoLanguage: str
+    MovieInfoLanguageHelpText: str
+    MovieInfoLanguageHelpTextWarning: str
+    MovieInvalidFormat: str
+    MovieIsDownloading: str
+    MovieIsDownloadingInterp: str
+    MovieIsMonitored: str
+    MovieIsOnImportExclusionList: str
+    MovieIsRecommend: str
+    MovieIsUnmonitored: str
+    MovieNaming: str
+    Movies: str
+    MoviesSelectedInterp: str
+    MovieTitle: str
+    MovieTitleHelpText: str
+    MovieYear: str
+    MovieYearHelpText: str
+    MultiLanguage: str
+    MusicBrainzAuthorID: str
+    MusicBrainzBookID: str
+    MusicbrainzId: str
+    MusicBrainzRecordingID: str
+    MusicBrainzReleaseID: str
+    MusicBrainzTrackID: str
+    MustContain: str
+    MustNotContain: str
+    Name: str
+    NameFirstLast: str
+    NameLastFirst: str
+    NameStyle: str
+    NamingSettings: str
+    Negate: str
+    Negated: str
+    NegateHelpText: str
+    NetCore: str
+    NETCore: str
+    New: str
+    NewBooks: str
+    NextExecution: str
+    No: str
+    NoAltTitle: str
+    NoBackupsAreAvailable: str
+    NoChange: str
+    NoChanges: str
+    NoEventsFound: str
+    NoHistory: str
+    NoHistoryBlocklist: str
+    NoLeaveIt: str
+    NoLimitForAnyRuntime: str
+    NoLinks: str
+    NoListRecommendations: str
+    NoLogFiles: str
+    NoMatchFound: str
+    NoMinimumForAnyRuntime: str
+    NoMoveFilesSelf: str
+    NoMoviesExist: str
+    NoName: str
+    NoResultsFound: str
+    NoTagsHaveBeenAddedYet: str
+    NotAvailable: str
+    NotificationTriggers: str
+    NotificationTriggersHelpText: str
+    NotMonitored: str
+    NoUpdatesAreAvailable: str
+    NoVideoFilesFoundSelectedFolder: str
+    OAuthPopupMessage: str
+    Ok: str
+    OnApplicationUpdate: str
+    OnApplicationUpdateHelpText: str
+    OnBookRetagHelpText: str
+    OnDownloadFailureHelpText: str
+    OnDownloadHelpText: str
+    OnGrab: str
+    OnGrabHelpText: str
+    OnHealthIssue: str
+    OnHealthIssueHelpText: str
+    OnImport: str
+    OnImportFailureHelpText: str
+    OnLatestVersion: str
+    OnlyTorrent: str
+    OnlyUsenet: str
+    OnMovieDelete: str
+    OnMovieDeleteHelpText: str
+    OnMovieFileDelete: str
+    OnMovieFileDeleteForUpgrade: str
+    OnMovieFileDeleteForUpgradeHelpText: str
+    OnMovieFileDeleteHelpText: str
+    OnReleaseImportHelpText: str
+    OnRename: str
+    OnRenameHelpText: str
+    OnUpgrade: str
+    OnUpgradeHelpText: str
+    OpenBrowserOnStart: str
+    OpenThisModal: str
+    Options: str
+    Organize: str
+    OrganizeAndRename: str
+    OrganizeConfirm: str
+    OrganizeModalAllPathsRelative: str
+    OrganizeModalDisabled: str
+    OrganizeModalNamingPattern: str
+    OrganizeModalSuccess: str
+    OrganizeSelectedMovies: str
+    Original: str
+    Other: str
+    OutputFormatHelpText: str
+    OutputPath: str
+    Overview: str
+    OverviewOptions: str
+    PackageVersion: str
+    PageSize: str
+    PageSizeHelpText: str
+    Password: str
+    PasswordHelpText: str
+    PastDays: str
+    PastDaysHelpText: str
+    Path: str
+    PathHelpText: str
+    PathHelpTextWarning: str
+    Paused: str
+    Peers: str
+    Pending: str
+    PendingChangesDiscardChanges: str
+    PendingChangesMessage: str
+    PendingChangesStayReview: str
+    Permissions: str
+    PhysicalRelease: str
+    PhysicalReleaseDate: str
+    Port: str
+    PortHelpText: str
+    PortHelpTextWarning: str
+    PortNumber: str
+    PosterOptions: str
+    Posters: str
+    PosterSize: str
+    PreferAndUpgrade: str
+    PreferIndexerFlags: str
+    PreferIndexerFlagsHelpText: str
+    Preferred: str
+    PreferredHelpTexts1: str
+    PreferredHelpTexts2: str
+    PreferredHelpTexts3: str
+    PreferredSize: str
+    PreferTorrent: str
+    PreferUsenet: str
+    Presets: str
+    PreviewRename: str
+    PreviewRenameHelpText: str
+    PreviewRetag: str
+    Priority: str
+    PriorityHelpText: str
+    PrioritySettings: str
+    ProcessingFolders: str
+    Profiles: str
+    ProfilesSettingsSummary: str
+    Progress: str
+    Proper: str
+    PropersAndRepacks: str
+    Protocol: str
+    ProtocolHelpText: str
+    Proxy: str
+    ProxyBypassFilterHelpText: str
+    ProxyCheckBadRequestMessage: str
+    ProxyCheckFailedToTestMessage: str
+    ProxyCheckResolveIpMessage: str
+    ProxyPasswordHelpText: str
+    ProxyType: str
+    ProxyUsernameHelpText: str
+    PtpOldSettingsCheckMessage: str
+    PublishedDate: str
+    Publisher: str
+    Qualities: str
+    QualitiesHelpText: str
+    Quality: str
+    QualityCutoffHasNotBeenMet: str
+    QualityDefinitions: str
+    QualityLimitsHelpText: str
+    QualityOrLangCutoffHasNotBeenMet: str
+    QualityProfile: str
+    QualityProfileDeleteConfirm: str
+    QualityProfileIdHelpText: str
+    QualityProfileInUse: str
+    QualityProfiles: str
+    QualitySettings: str
+    QualitySettingsSummary: str
+    Queue: str
+    Queued: str
+    QueueIsEmpty: str
+    QuickImport: str
+    RadarrCalendarFeed: str
+    RadarrSupportsAnyDownloadClient: str
+    RadarrSupportsAnyIndexer: str
+    RadarrSupportsAnyRSSMovieListsAsWellAsTheOneStatedBelow: str
+    RadarrSupportsCustomConditionsAgainstTheReleasePropertiesBelow: str
+    RadarrTags: str
+    RadarrUpdated: str
+    Ratings: str
+    ReadarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow: str
+    ReadarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow: str
+    ReadarrSupportsMultipleListsForImportingBooksAndAuthorsIntoTheDatabase: str
+    ReadarrTags: str
+    ReadTheWikiForMoreInformation: str
+    Real: str
+    Reason: str
+    RecentChanges: str
+    RecentFolders: str
+    RecycleBinCleanupDaysHelpText: str
+    RecycleBinCleanupDaysHelpTextWarning: str
+    RecycleBinHelpText: str
+    RecyclingBin: str
+    RecyclingBinCleanup: str
+    Reddit: str
+    Redownload: str
+    Refresh: str
+    RefreshAndScan: str
+    RefreshAuthor: str
+    RefreshInformation: str
+    RefreshInformationAndScanDisk: str
+    RefreshLists: str
+    RefreshMovie: str
+    RefreshScan: str
+    RegularExpressionsCanBeTested: str
+    RejectionCount: str
+    RelativePath: str
+    ReleaseBranchCheckOfficialBranchMessage: str
+    Released: str
+    ReleaseDate: str
+    ReleaseDates: str
+    ReleasedMsg: str
+    ReleaseGroup: str
+    ReleaseProfiles: str
+    ReleaseRejected: str
+    ReleaseStatus: str
+    ReleaseTitle: str
+    ReleaseWillBeProcessedInterp: str
+    Reload: str
+    RemotePath: str
+    RemotePathHelpText: str
+    RemotePathMappingCheckBadDockerPath: str
+    RemotePathMappingCheckDockerFolderMissing: str
+    RemotePathMappingCheckDownloadPermissions: str
+    RemotePathMappingCheckFileRemoved: str
+    RemotePathMappingCheckFilesBadDockerPath: str
+    RemotePathMappingCheckFilesGenericPermissions: str
+    RemotePathMappingCheckFilesLocalWrongOSPath: str
+    RemotePathMappingCheckFilesWrongOSPath: str
+    RemotePathMappingCheckFolderPermissions: str
+    RemotePathMappingCheckGenericPermissions: str
+    RemotePathMappingCheckImportFailed: str
+    RemotePathMappingCheckLocalFolderMissing: str
+    RemotePathMappingCheckLocalWrongOSPath: str
+    RemotePathMappingCheckRemoteDownloadClient: str
+    RemotePathMappingCheckWrongOSPath: str
+    RemotePathMappings: str
+    Remove: str
+    RemoveCompleted: str
+    RemoveCompletedDownloadsHelpText: str
+    RemovedFromTaskQueue: str
+    RemovedMovieCheckMultipleMessage: str
+    RemovedMovieCheckSingleMessage: str
+    RemoveDownloadsAlert: str
+    RemoveFailed: str
+    RemoveFailedDownloadsHelpText: str
+    RemoveFilter: str
+    RemoveFromBlocklist: str
+    RemoveFromDownloadClient: str
+    RemoveFromQueue: str
+    RemoveFromQueueText: str
+    RemoveHelpTextWarning: str
+    RemoveMovieAndDeleteFiles: str
+    RemoveMovieAndKeepFiles: str
+    RemoveRootFolder: str
+    RemoveSelected: str
+    RemoveSelectedItem: str
+    RemoveSelectedItems: str
+    RemoveSelectedMessageText: str
+    RemoveTagExistingTag: str
+    RemoveTagRemovingTag: str
+    RemovingTag: str
+    RenameBooks: str
+    RenameBooksHelpText: str
+    Renamed: str
+    RenameFiles: str
+    RenameMovies: str
+    RenameMoviesHelpText: str
+    Reorder: str
+    Replace: str
+    ReplaceIllegalCharacters: str
+    ReplaceIllegalCharactersHelpText: str
+    ReplaceWithDash: str
+    ReplaceWithSpaceDash: str
+    ReplaceWithSpaceDashSpace: str
+    Required: str
+    RequiredHelpText: str
+    RequiredPlaceHolder: str
+    RequiredRestrictionHelpText: str
+    RequiredRestrictionPlaceHolder: str
+    RescanAfterRefreshHelpText: str
+    RescanAfterRefreshHelpTextWarning: str
+    RescanAuthorFolderAfterRefresh: str
+    RescanMovieFolderAfterRefresh: str
+    Reset: str
+    ResetAPIKey: str
+    ResetAPIKeyMessageText: str
+    Restart: str
+    RestartNow: str
+    RestartRadarr: str
+    RestartReadarr: str
+    RestartReloadNote: str
+    RestartRequiredHelpTextWarning: str
+    Restore: str
+    RestoreBackup: str
+    Restrictions: str
+    Result: str
+    Retention: str
+    RetentionHelpText: str
+    RetryingDownloadInterp: str
+    RootFolder: str
+    RootFolderCheckMultipleMessage: str
+    RootFolderCheckSingleMessage: str
+    RootFolderPathHelpText: str
+    RootFolders: str
+    RSS: str
+    RSSIsNotSupportedWithThisIndexer: str
+    RSSSync: str
+    RSSSyncInterval: str
+    RssSyncIntervalHelpText: str
+    RSSSyncIntervalHelpTextWarning: str
+    Runtime: str
+    Save: str
+    SaveChanges: str
+    SaveSettings: str
+    SceneInformation: str
+    SceneNumberHasntBeenVerifiedYet: str
+    Scheduled: str
+    Score: str
+    Script: str
+    ScriptPath: str
+    Search: str
+    SearchAll: str
+    SearchBook: str
+    SearchBoxPlaceHolder: str
+    SearchCutoffUnmet: str
+    SearchFailedPleaseTryAgainLater: str
+    SearchFiltered: str
+    SearchForAllCutoffUnmetBooks: str
+    SearchForAllMissingBooks: str
+    SearchForMissing: str
+    SearchForMonitoredBooks: str
+    SearchForMovie: str
+    SearchForNewItems: str
+    SearchMissing: str
+    SearchMonitored: str
+    SearchMovie: str
+    SearchOnAdd: str
+    SearchOnAddHelpText: str
+    SearchSelected: str
+    Season: str
+    Seconds: str
+    Security: str
+    Seeders: str
+    SelectAll: str
+    SelectDotDot: str
+    SelectedCountAuthorsSelectedInterp: str
+    SelectedCountBooksSelectedInterp: str
+    SelectFolder: str
+    SelectLanguage: str
+    SelectLanguages: str
+    SelectMovie: str
+    SelectQuality: str
+    SelectReleaseGroup: str
+    SendAnonymousUsageData: str
+    SendMetadataToCalibre: str
+    Series: str
+    SeriesNumber: str
+    SeriesTotal: str
+    SetPermissions: str
+    SetPermissionsLinuxHelpText: str
+    SetPermissionsLinuxHelpTextWarning: str
+    SetReleaseGroup: str
+    SetTags: str
+    Settings: str
+    SettingsEnableColorImpairedMode: str
+    SettingsEnableColorImpairedModeHelpText: str
+    SettingsFirstDayOfWeek: str
+    SettingsLongDateFormat: str
+    SettingsRemotePathMappingHostHelpText: str
+    SettingsRemotePathMappingLocalPath: str
+    SettingsRemotePathMappingLocalPathHelpText: str
+    SettingsRemotePathMappingRemotePath: str
+    SettingsRemotePathMappingRemotePathHelpText: str
+    SettingsRuntimeFormat: str
+    SettingsShortDateFormat: str
+    SettingsShowRelativeDates: str
+    SettingsShowRelativeDatesHelpText: str
+    SettingsTimeFormat: str
+    SettingsWeekColumnHeader: str
+    SettingsWeekColumnHeaderHelpText: str
+    ShortDateFormat: str
+    ShouldMonitorExisting: str
+    ShouldMonitorExistingHelpText: str
+    ShouldMonitorHelpText: str
+    ShouldSearchHelpText: str
+    ShowAdvanced: str
+    ShowAsAllDayEvents: str
+    ShowBanners: str
+    ShowBannersHelpText: str
+    ShowBookCount: str
+    ShowBookTitleHelpText: str
+    ShowCertification: str
+    ShowCinemaRelease: str
+    showCinemaReleaseHelpText: str
+    ShowCutoffUnmetIconHelpText: str
+    ShowDateAdded: str
+    ShowGenres: str
+    ShowLastBook: str
+    ShowMonitored: str
+    ShowMonitoredHelpText: str
+    ShowMovieInformation: str
+    ShowMovieInformationHelpText: str
+    ShownAboveEachColumnWhenWeekIsTheActiveView: str
+    ShowName: str
+    ShownClickToHide: str
+    ShowPath: str
+    ShowQualityProfile: str
+    ShowQualityProfileHelpText: str
+    ShowRatings: str
+    ShowRelativeDates: str
+    ShowRelativeDatesHelpText: str
+    ShowReleaseDate: str
+    ShowReleaseDateHelpText: str
+    ShowSearch: str
+    ShowSearchActionHelpText: str
+    ShowSearchHelpText: str
+    ShowSizeOnDisk: str
+    ShowStudio: str
+    ShowTitle: str
+    ShowTitleHelpText: str
+    ShowUnknownAuthorItems: str
+    ShowUnknownMovieItems: str
+    ShowYear: str
+    Shutdown: str
+    Size: str
+    SizeLimit: str
+    SizeOnDisk: str
+    SkipBooksWithMissingReleaseDate: str
+    SkipBooksWithNoISBNOrASIN: str
+    SkipFreeSpaceCheck: str
+    SkipFreeSpaceCheckWhenImportingHelpText: str
+    SkipPartBooksAndSets: str
+    SkipRedownload: str
+    SkipredownloadHelpText: str
+    SkipSecondarySeriesBooks: str
+    Small: str
+    Socks4: str
+    Socks5: str
+    SomeResultsHiddenFilter: str
+    SorryThatAuthorCannotBeFound: str
+    SorryThatBookCannotBeFound: str
+    SorryThatMovieCannotBeFound: str
+    Sort: str
+    Source: str
+    SourcePath: str
+    SourceRelativePath: str
+    SourceTitle: str
+    SpecificBook: str
+    SqliteVersionCheckUpgradeRequiredMessage: str
+    SSLCertPassword: str
+    SslCertPasswordHelpText: str
+    SSLCertPasswordHelpText: str
+    SslCertPasswordHelpTextWarning: str
+    SSLCertPath: str
+    SslCertPathHelpText: str
+    SSLCertPathHelpText: str
+    SslCertPathHelpTextWarning: str
+    SSLPort: str
+    SslPortHelpTextWarning: str
+    StandardBookFormat: str
+    StandardMovieFormat: str
+    StartImport: str
+    StartProcessing: str
+    StartSearchForMissingMovie: str
+    StartTypingOrSelectAPathBelow: str
+    StartupDirectory: str
+    Status: str
+    StatusEndedContinuing: str
+    StatusEndedDeceased: str
+    StatusEndedEnded: str
+    Studio: str
+    Style: str
+    SubfolderWillBeCreatedAutomaticallyInterp: str
+    SuccessMyWorkIsDoneNoFilesToRename: str
+    SuccessMyWorkIsDoneNoFilesToRetag: str
+    SuggestTranslationChange: str
+    Sunday: str
+    SupportsRssvalueRSSIsNotSupportedWithThisIndexer: str
+    SupportsSearchvalueSearchIsNotSupportedWithThisIndexer: str
+    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: str
+    SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed: str
+    System: str
+    SystemTimeCheckMessage: str
+    Table: str
+    TableOptions: str
+    TableOptionsColumnsMessage: str
+    TagCannotBeDeletedWhileInUse: str
+    TagDetails: str
+    TagIsNotUsedAndCanBeDeleted: str
+    Tags: str
+    TagsHelpText: str
+    TagsSettingsSummary: str
+    Tasks: str
+    TaskUserAgentTooltip: str
+    TBA: str
+    Term: str
+    Test: str
+    TestAll: str
+    TestAllClients: str
+    TestAllIndexers: str
+    TestAllLists: str
+    TheAuthorFolderAndAllOfItsContentWillBeDeleted: str
+    TheBooksFilesWillBeDeleted: str
+    TheFollowingFilesWillBeDeleted: str
+    TheLogLevelDefault: str
+    ThisCannotBeCancelled: str
+    ThisConditionMatchesUsingRegularExpressions: str
+    ThisWillApplyToAllIndexersPleaseFollowTheRulesSetForthByThem: str
+    Time: str
+    TimeFormat: str
+    Timeleft: str
+    Title: str
+    Titles: str
+    TMDb: str
+    TMDBId: str
+    TmdbIdHelpText: str
+    TmdbRating: str
+    TmdbVotes: str
+    Today: str
+    Tomorrow: str
+    TooManyBooks: str
+    TorrentDelay: str
+    TorrentDelayHelpText: str
+    TorrentDelayTime: str
+    Torrents: str
+    TorrentsDisabled: str
+    TotalBookCountBooksTotalBookFileCountBooksWithFilesInterp: str
+    TotalFileSize: str
+    TotalSpace: str
+    Trace: str
+    TrackNumber: str
+    TrackTitle: str
+    Trailer: str
+    Trakt: str
+    Trigger: str
+    Type: str
+    UI: str
+    UILanguage: str
+    UILanguageHelpText: str
+    UILanguageHelpTextWarning: str
+    UISettings: str
+    UISettingsSummary: str
+    UnableToAddANewConditionPleaseTryAgain: str
+    UnableToAddANewCustomFormatPleaseTryAgain: str
+    UnableToAddANewDownloadClientPleaseTryAgain: str
+    UnableToAddANewImportListExclusionPleaseTryAgain: str
+    UnableToAddANewIndexerPleaseTryAgain: str
+    UnableToAddANewListExclusionPleaseTryAgain: str
+    UnableToAddANewListPleaseTryAgain: str
+    UnableToAddANewMetadataProfilePleaseTryAgain: str
+    UnableToAddANewNotificationPleaseTryAgain: str
+    UnableToAddANewQualityProfilePleaseTryAgain: str
+    UnableToAddANewRemotePathMappingPleaseTryAgain: str
+    UnableToAddANewRootFolderPleaseTryAgain: str
+    UnableToAddRootFolder: str
+    UnableToImportCheckLogs: str
+    UnableToLoadAltTitle: str
+    UnableToLoadBackups: str
+    UnableToLoadBlocklist: str
+    UnableToLoadCustomFormats: str
+    UnableToLoadDelayProfiles: str
+    UnableToLoadDownloadClientOptions: str
+    UnableToLoadDownloadClients: str
+    UnableToLoadGeneralSettings: str
+    UnableToLoadHistory: str
+    UnableToLoadImportListExclusions: str
+    UnableToLoadIndexerOptions: str
+    UnableToLoadIndexers: str
+    UnableToLoadLanguages: str
+    UnableToLoadListExclusions: str
+    UnableToLoadListOptions: str
+    UnableToLoadLists: str
+    UnableToLoadManualImportItems: str
+    UnableToLoadMediaManagementSettings: str
+    UnableToLoadMetadata: str
+    UnableToLoadMetadataProfiles: str
+    UnableToLoadMetadataProviderSettings: str
+    UnableToLoadMovies: str
+    UnableToLoadNamingSettings: str
+    UnableToLoadNotifications: str
+    UnableToLoadQualities: str
+    UnableToLoadQualityDefinitions: str
+    UnableToLoadQualityProfiles: str
+    UnableToLoadReleaseProfiles: str
+    UnableToLoadRemotePathMappings: str
+    UnableToLoadRestrictions: str
+    UnableToLoadResultsIntSearch: str
+    UnableToLoadRootFolders: str
+    UnableToLoadTags: str
+    UnableToLoadTheCalendar: str
+    UnableToLoadUISettings: str
+    UnableToUpdateRadarrDirectly: str
+    Unavailable: str
+    Ungroup: str
+    Unlimited: str
+    UnmappedFiles: str
+    UnmappedFilesOnly: str
+    UnmappedFolders: str
+    Unmonitored: str
+    UnmonitoredHelpText: str
+    Unreleased: str
+    UnsavedChanges: str
+    UnselectAll: str
+    UpdateAll: str
+    UpdateAutomaticallyHelpText: str
+    UpdateAvailable: str
+    UpdateCheckStartupNotWritableMessage: str
+    UpdateCheckStartupTranslocationMessage: str
+    UpdateCheckUINotWritableMessage: str
+    UpdateCovers: str
+    UpdateCoversHelpText: str
+    UpdateMechanismHelpText: str
+    Updates: str
+    UpdateScriptPathHelpText: str
+    UpdateSelected: str
+    UpdatingIsDisabledInsideADockerContainerUpdateTheContainerImageInstead: str
+    UpgradeAllowedHelpText: str
+    UpgradesAllowed: str
+    UpgradeUntilCustomFormatScore: str
+    UpgradeUntilQuality: str
+    UpgradeUntilThisQualityIsMetOrExceeded: str
+    UpperCase: str
+    Uptime: str
+    URLBase: str
+    UrlBaseHelpText: str
+    UrlBaseHelpTextWarning: str
+    UseCalibreContentServer: str
+    UseHardlinksInsteadOfCopy: str
+    Usenet: str
+    UsenetDelay: str
+    UsenetDelayHelpText: str
+    UsenetDelayTime: str
+    UsenetDisabled: str
+    UseProxy: str
+    Username: str
+    UsernameHelpText: str
+    UseSSL: str
+    UseSslHelpText: str
+    UsingExternalUpdateMechanismBranchToUseToUpdateReadarr: str
+    UsingExternalUpdateMechanismBranchUsedByExternalUpdateMechanism: str
+    Version: str
+    VersionUpdateText: str
+    VideoCodec: str
+    View: str
+    VisitGithubCustomFormatsAphrodite: str
+    WaitingToImport: str
+    WaitingToProcess: str
+    Wanted: str
+    Warn: str
+    WatchLibraryForChangesHelpText: str
+    WatchRootFoldersForFileChanges: str
+    Week: str
+    WeekColumnHeader: str
+    Weeks: str
+    WhatsNew: str
+    WhitelistedHardcodedSubsHelpText: str
+    WhitelistedSubtitleTags: str
+    Wiki: str
+    WouldYouLikeToRestoreBackup: str
+    WriteAudioTags: str
+    WriteAudioTagsScrub: str
+    WriteAudioTagsScrubHelp: str
+    WriteBookTagsHelpTextWarning: str
+    WriteTagsAll: str
+    WriteTagsNew: str
+    WriteTagsNo: str
+    WriteTagsSync: str
+    Year: str
+    Yes: str
+    YesCancel: str
+    YesMoveFiles: str
+    Yesterday: str
+    YouCanAlsoSearch: str
 
 
 @dataclass(init=False)
 class _LogRecord(BaseModel):
     """Log record attributes."""
 
-    exception: str | None = None
-    exceptionType: str | None = None
-    id: int | None = None
-    level: str | None = None
-    logger: str | None = None
-    message: str | None = None
-    time: datetime | None = None
+    exception: str
+    exceptionType: str
+    id: int
+    level: str
+    logger: str
+    message: str
+    time: datetime
 
 
 @dataclass(init=False)
 class _QualityInfo(_Common3):
     """Quality info attributes."""
 
-    modifier: str | None = None
-    resolution: int | None = None
-    source: str | None = None
+    modifier: str
+    resolution: int
+    source: str
 
 
 @dataclass(init=False)
 class _QualityProfileItems(_Common3):
     """Quality profile items attributes."""
 
-    allowed: bool | None = None
+    allowed: bool
     items: list[_QualityProfileItems] | None = None
     quality: _QualityInfo | None = None
 
@@ -1746,31 +1728,31 @@ class _QualityProfileItems(_Common3):
 class _ReleaseCommon(BaseModel):
     """Release common attributes."""
 
-    age: int | None = None
-    ageHours: float | None = None
-    ageMinutes: float | None = None
-    approved: bool | None = None
-    commentUrl: str | None = None
-    downloadAllowed: bool | None = None
-    downloadUrl: str | None = None
-    guid: str | None = None
-    indexer: str | None = None
-    indexerId: int | None = None
-    infoHash: str | None = None
-    infoUrl: str | None = None
-    leechers: int | None = None
-    magnetUrl: str | None = None
-    protocol: ProtocolType | None = None
-    publishDate: datetime | None = None
-    qualityWeight: int | None = None
-    rejected: bool | None = None
+    age: int
+    ageHours: float
+    ageMinutes: float
+    approved: bool
+    commentUrl: str
+    downloadAllowed: bool
+    downloadUrl: str
+    guid: str
+    indexer: str
+    indexerId: int
+    infoHash: str
+    infoUrl: str
+    leechers: int
+    magnetUrl: str
+    protocol: ProtocolType
+    publishDate: datetime
+    qualityWeight: int
+    rejected: bool
     rejections: list[_Rejection] | None = None
-    releaseWeight: int | None = None
-    sceneSource: bool | None = None
-    seeders: int | None = None
-    size: int | None = None
-    temporarilyRejected: bool | None = None
-    title: str | None = None
+    releaseWeight: int
+    sceneSource: bool
+    seeders: int
+    size: int
+    temporarilyRejected: bool
+    title: str
 
     def __post_init__(self):
         """Post init."""
@@ -1781,9 +1763,9 @@ class _ReleaseCommon(BaseModel):
 class _Revision(BaseModel):
     """Revision attributes."""
 
-    isRepack: bool | None = None
-    real: int | None = None
-    version: int | None = None
+    isRepack: bool
+    real: int
+    version: int
 
 
 @dataclass(init=False)
@@ -1803,124 +1785,124 @@ class _Quality(BaseModel):
 class _RecordCommon(BaseModel):
     """Record common attributes."""
 
-    page: int | None = None
-    pageSize: int | None = None
-    sortDirection: str | None = None
-    sortKey: str | None = None
-    totalRecords: int | None = None
+    page: int
+    pageSize: int
+    sortDirection: str
+    sortKey: str
+    totalRecords: int
 
 
 @dataclass(init=False)
 class _ReleaseProfilePreferred(BaseModel):
     """Release profile preferred attributes."""
 
-    key: str | None = None
-    value: int | None = None
+    key: str
+    value: int
 
 
 @dataclass(init=False)
 class _Rename(BaseModel):
     """Rename attributes."""
 
-    existingPath: str | None = None
-    newPath: str | None = None
+    existingPath: str
+    newPath: str
 
 
 @dataclass(init=False)
 class _Tag(BaseModel):
     """Tag attributes."""
 
-    id: int | None = None
-    label: str | None = None
+    id: int
+    label: str
 
 
 @dataclass(init=False)
 class _TagDetails(_Tag):
     """Tag details attributes."""
 
-    delayProfileIds: list[int] | None = None
-    importListIds: list[int] | None = None
-    notificationIds: list[int] | None = None
-    restrictionIds: list[int] | None = None
+    delayProfileIds: list[int]
+    importListIds: list[int]
+    notificationIds: list[int]
+    restrictionIds: list[int]
 
 
 @dataclass(init=False)
 class _UpdateChanges(BaseModel):
     """Update changes attributes."""
 
-    fixed: list[str] | None = None
-    new: list[str] | None = None
+    fixed: list[str]
+    new: list[str]
 
 
 @dataclass(init=False)
 class _TitleInfo(BaseModel):
     """Title info attributes."""
 
-    title: str | None = None
-    titleWithoutYear: str | None = None
-    year: int | None = None
+    title: str
+    titleWithoutYear: str
+    year: int
 
 
 @dataclass(init=False)
 class _Notification(BaseModel):
     """Notification attributes."""
 
-    configContract: str | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    includeHealthWarnings: bool | None = None
-    infoLink: str | None = None
-    onDownload: bool | None = None
-    onGrab: bool | None = None
-    onHealthIssue: bool | None = None
-    onRename: bool | None = None
-    onUpgrade: bool | None = None
-    supportsOnDownload: bool | None = None
-    supportsOnGrab: bool | None = None
-    supportsOnHealthIssue: bool | None = None
-    supportsOnRename: bool | None = None
-    supportsOnUpgrade: bool | None = None
-    tags: list[int | None] | None = None
+    configContract: str
+    implementation: str
+    implementationName: str
+    includeHealthWarnings: bool
+    infoLink: str
+    onDownload: bool
+    onGrab: bool
+    onHealthIssue: bool
+    onRename: bool
+    onUpgrade: bool
+    supportsOnDownload: bool
+    supportsOnGrab: bool
+    supportsOnHealthIssue: bool
+    supportsOnRename: bool
+    supportsOnUpgrade: bool
+    tags: list[int]
 
 
 @dataclass(init=False)
 class _RetagChange(BaseModel):
     """Retag change attributes."""
 
-    field: str | None = None
-    oldValue: str | None = None
-    newValue: str | None = None
+    field: str
+    oldValue: str
+    newValue: str
 
 
 @dataclass(init=False)
 class _HistoryCommon(BaseModel):
     """History common attributes."""
 
-    age: int | None = None
-    ageHours: float | None = None
-    ageMinutes: float | None = None
-    downloadClientName: str | None = None
-    downloadUrl: str | None = None
-    droppedPath: str | None = None
-    fileId: int | None = None
-    importedPath: str | None = None
-    indexer: str | None = None
-    nzbInfoUrl: str | None = None
-    protocol: ProtocolType | None = None
-    publishedDate: datetime | None = None
-    reason: str | None = None
-    releaseGroup: str | None = None
-    size: int | None = None
-    torrentInfoHash: str | None = None
+    age: int
+    ageHours: float
+    ageMinutes: float
+    downloadClientName: str
+    downloadUrl: str
+    droppedPath: str
+    fileId: int
+    importedPath: str
+    indexer: str
+    nzbInfoUrl: str
+    protocol: ProtocolType
+    publishedDate: datetime
+    reason: str
+    releaseGroup: str
+    size: int
+    torrentInfoHash: str
 
 
 @dataclass(init=False)
 class _HistoryData(_HistoryCommon):
     """History data attributes."""
 
-    downloadClient: str | None = None
-    downloadForced: bool | None = None
-    guid: str | None = None
+    downloadClient: str
+    downloadForced: bool
+    guid: str
 
 
 @dataclass(init=False)
@@ -1928,7 +1910,7 @@ class _QualityCommon(BaseModel):
     """Quality common attributes."""
 
     quality: _Quality | None = None
-    qualityCutoffNotMet: bool | None = None
+    qualityCutoffNotMet: bool
 
     def __post_init__(self):
         """Post init."""
@@ -1940,67 +1922,67 @@ class _QualityCommon(BaseModel):
 class _Ratings(BaseModel):
     """Ratings attributes."""
 
-    value: float | None = None
-    votes: int | None = None
+    value: float
+    votes: int
 
 
 @dataclass(init=False)
 class _Link(BaseModel):
     """Link attributes."""
 
-    name: str | None = None
-    url: str | None = None
+    name: str
+    url: str
 
 
 @dataclass(init=False)
 class _StatusMessage(BaseModel):
     """Status message attributes."""
 
-    messages: list[str] | None = None
-    title: str | None = None
+    messages: list[str]
+    title: str
 
 
 @dataclass(init=False)
 class _Editor(BaseModel):
     """Editor attributes."""
 
-    applyTags: str | None = None
-    deleteFiles: bool | None = None
-    minimumAvailability: str | None = None
-    monitored: bool | None = None
-    moveFiles: bool | None = None
-    qualityProfileId: int | None = None
-    rootFolderPath: str | None = None
-    tags: list[int | None] | None = None
+    applyTags: str
+    deleteFiles: bool
+    minimumAvailability: str
+    monitored: bool
+    moveFiles: bool
+    qualityProfileId: int
+    rootFolderPath: str
+    tags: list[int]
 
 
 @dataclass(init=False)
 class _IsLoaded(BaseModel):
     """Is loaded attribute."""
 
-    isLoaded: bool | None = None
+    isLoaded: bool
 
 
 @dataclass(init=False)
 class _Rejection(BaseModel):
     """Rejection attributes."""
 
-    reason: str | None = None
-    type: str | None = None
+    reason: str
+    type: str
 
 
 @dataclass(init=False)
 class _ManualImport(BaseModel):
     """Manual import attributes."""
 
-    downloadId: str | None = None
-    id: int | None = None
-    name: str | None = None
-    path: str | None = None
+    downloadId: str
+    id: int
+    name: str
+    path: str
     quality: _Quality | None = None
-    qualityWeight: int | None = None
+    qualityWeight: int
     rejections: list[_Rejection] | None = None
-    size: int | None = None
+    size: int
 
     def __post_init__(self):
         """Post init."""
@@ -2012,8 +1994,8 @@ class _ManualImport(BaseModel):
 class _Monitor(BaseModel):
     """Sonarr series monitor attributes."""
 
-    id: int | None = None
-    monitored: bool | None = None
+    id: int
+    monitored: bool
 
 
 @dataclass(init=False)
