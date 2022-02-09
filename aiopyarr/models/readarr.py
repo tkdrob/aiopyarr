@@ -120,16 +120,16 @@ class ReadarrBook(_ReadarrBookCommon):
     """Readarr book attributes."""
 
     author: ReadarrAuthor | None = None
-    authorId: int | None = None
-    authorTitle: str | None = None
-    disambiguation: str | None = None
+    authorId: int
+    authorTitle: str
+    disambiguation: str
     editions: list[_ReadarrEditionsValue] | None = None
-    grabbed: bool | None = None
+    grabbed: bool
     images: list[_ReadarrImage] | None = None
-    overview: str | None = None
-    pageCount: int | None = None
-    remoteCover: str | None = None
-    seriesTitle: str | None = None
+    overview: str
+    pageCount: int
+    remoteCover: str
+    seriesTitle: str
     statistics: _ReadarrAuthorStatistics | None = None
 
     def __post_init__(self):
@@ -150,7 +150,7 @@ class ReadarrAuthor(_ReadarrAuthorBase):
 class ReadarrAuthorLookup(ReadarrAuthor):
     """Readarr author attributes."""
 
-    monitorNewItems: str | None = None
+    monitorNewItems: str
 
 
 @dataclass(init=False)
@@ -174,8 +174,8 @@ class ReadarrBlocklist(_RecordCommon):
 class ReadarrAuthorEditor(_Editor):
     """Readarr author editor attributes."""
 
-    authorIds: list[int] | None = None
-    metadataProfileId: int | None = None
+    authorIds: list[int]
+    metadataProfileId: int
 
 
 @dataclass(init=False)
@@ -183,14 +183,14 @@ class ReadarrBookFile(_QualityCommon):
     """Readarr book file attributes."""
 
     audioTags: _ReadarrAudioTags | None = None
-    authorId: int | None = None
-    bookId: int | None = None
-    dateAdded: datetime | None = None
-    id: int | None = None
+    authorId: int
+    bookId: int
+    dateAdded: datetime
+    id: int
     mediaInfo: _ReadarrBookFileMediaInfo | None = None
-    path: str | None = None
-    qualityWeight: int | None = None
-    size: int | None = None
+    path: str
+    qualityWeight: int
+    size: int
 
     def __post_init__(self):
         """Post init."""
@@ -203,7 +203,7 @@ class ReadarrBookFile(_QualityCommon):
 class ReadarrBookFileEditor(BaseModel):
     """Readarr book file attributes."""
 
-    bookFileIds: list[int] | None = None
+    bookFileIds: list[int]
     quality: _Quality | None = None
 
     def __post_init__(self):
@@ -215,25 +215,25 @@ class ReadarrBookFileEditor(BaseModel):
 class ReadarrBookLookup(_Common6):
     """Readarr book lookup attributes."""
 
-    added: datetime | None = None
-    anyEditionOk: bool | None = None
+    added: datetime
+    anyEditionOk: bool
     author: ReadarrAuthor | None = None
-    authorId: int | None = None
-    authorTitle: str | None = None
-    disambiguation: str | None = None
+    authorId: int
+    authorTitle: str
+    disambiguation: str
     editions: list[_ReadarrEditionsValue] | None = None
-    foreignBookId: str | None = None
-    genres: list[str] | None = None
-    grabbed: bool | None = None
+    foreignBookId: str
+    genres: list[str]
+    grabbed: bool
     images: list[_ReadarrImage] | None = None
     links: list[_Link] | None = None
-    pageCount: int | None = None
+    pageCount: int
     ratings: _ReadarrRating | None = None
-    releaseDate: datetime | None = None
-    remoteCover: str | None = None
-    seriesTitle: str | None = None
-    title: str | None = None
-    titleSlug: int | None = None
+    releaseDate: datetime
+    remoteCover: str
+    seriesTitle: str
+    title: str
+    titleSlug: int
 
     def __post_init__(self):
         """Post init."""
@@ -250,7 +250,7 @@ class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
     """Readarr bookshelf author Book attributes."""
 
     addOptions: _ReadarrAddOptions | None = None
-    id: int | None = None
+    id: int
     statistics: _ReadarrAuthorStatistics | None = None
 
     def __post_init__(self):
@@ -270,8 +270,8 @@ class ReadarrBookshelfAuthor(BaseModel):
     """Readarr bookshelf author attributes."""
 
     books: list[ReadarrBookshelfAuthorBook] | None = None
-    id: int | None = None
-    monitored: bool | None = None
+    id: int
+    monitored: bool
 
     def __post_init__(self):
         """Post init."""
@@ -324,24 +324,24 @@ class ReadarrMetadataProfile(_ReadarrMetadataProfileValue):
 class ReadarrDevelopmentConfig(BaseModel):
     """Readarr development config attributes."""
 
-    consoleLogLevel: str | None = None
-    filterSentryEvents: bool | None = None
-    id: int | None = None
-    logRotate: int | None = None
-    logSql: bool | None = None
-    metadataSource: str | None = None
+    consoleLogLevel: str
+    filterSentryEvents: bool
+    id: int
+    logRotate: int
+    logSql: bool
+    metadataSource: str
 
 
 @dataclass(init=False)
 class ReadarrBookHistory(_Common2, _QualityCommon):
     """Readarr history record attributes."""
 
-    authorId: int | None = None
-    bookId: int | None = None
+    authorId: int
+    bookId: int
     data: _HistoryData | None = None
-    date: datetime | None = None
-    id: int | None = None
-    sourceTitle: str | None = None
+    date: datetime
+    id: int
+    sourceTitle: str
 
     def __post_init__(self):
         """Post init."""
@@ -364,19 +364,19 @@ class ReadarrHistory(_RecordCommon):
 class ReadarrImportList(_ImportListCommon, _Common3):
     """Readarr importlist attributes."""
 
-    enableAutomaticAdd: bool | None = None
+    enableAutomaticAdd: bool
     fields: list[_Fields] | None = None
-    implementation: str | None = None
-    implementationName: str | None = None
-    infoLink: str | None = None
-    listType: str | None = None
-    metadataProfileId: int | None = None
-    monitorNewItems: str | None = None
-    qualityProfileId: int | None = None
-    shouldMonitor: str | None = None
-    shouldMonitorExisting: bool | None = None
-    shouldSearch: bool | None = None
-    tags: list[int | None] | None = None
+    implementation: str
+    implementationName: str
+    infoLink: str
+    listType: str
+    metadataProfileId: int
+    monitorNewItems: str
+    qualityProfileId: int
+    shouldMonitor: str
+    shouldMonitorExisting: bool
+    shouldSearch: bool
+    tags: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -387,27 +387,27 @@ class ReadarrImportList(_ImportListCommon, _Common3):
 class ReadarrMetadataProvider(BaseModel):
     """Readarr metadata provider attributes."""
 
-    embedMetadata: bool | None = None
-    id: int | None = None
-    scrubAudioTags: bool | None = None
-    updateCovers: bool | None = None
-    writeAudioTags: str | None = None
-    writeBookTags: str | None = None
+    embedMetadata: bool
+    id: int
+    scrubAudioTags: bool
+    updateCovers: bool
+    writeAudioTags: str
+    writeBookTags: str
 
 
 @dataclass(init=False)
 class ReadarrNamingConfig(BaseModel):
     """Readarr naming config attributes."""
 
-    authorFolderFormat: str | None = None
-    id: int | None = None
-    includeAuthorName: bool | None = None
-    includeBookTitle: bool | None = None
-    includeQuality: bool | None = None
-    renameBooks: bool | None = None
-    replaceIllegalCharacters: bool | None = None
-    replaceSpaces: bool | None = None
-    standardBookFormat: str | None = None
+    authorFolderFormat: str
+    id: int
+    includeAuthorName: bool
+    includeBookTitle: bool
+    includeQuality: bool
+    renameBooks: bool
+    replaceIllegalCharacters: bool
+    replaceSpaces: bool
+    standardBookFormat: str
 
 
 @dataclass(init=False)
@@ -415,14 +415,14 @@ class ReadarrNotification(_Common3, _Notification):
     """Readarr notification attributes."""
 
     fields: list[_Fields] | None = None
-    onBookRetag: bool | None = None
-    onDownloadFailure: bool | None = None
-    onImportFailure: bool | None = None
-    onReleaseImport: bool | None = None
-    supportsOnBookRetag: bool | None = None
-    supportsOnDownloadFailure: bool | None = None
-    supportsOnImportFailure: bool | None = None
-    supportsOnReleaseImport: bool | None = None
+    onBookRetag: bool
+    onDownloadFailure: bool
+    onImportFailure: bool
+    onReleaseImport: bool
+    supportsOnBookRetag: bool
+    supportsOnDownloadFailure: bool
+    supportsOnImportFailure: bool
+    supportsOnReleaseImport: bool
 
     def __post_init__(self):
         """Post init."""
@@ -435,9 +435,9 @@ class ReadarrParse(BaseModel):
 
     author: ReadarrAuthor | None = None
     books: list[ReadarrBook] | None = None
-    id: int | None = None
+    id: int
     parsedBookInfo: _ReadarrParsedBookInfo | None = None
-    title: str | None = None
+    title: str
 
     def __post_init__(self):
         """Post init."""
@@ -451,10 +451,10 @@ class ReadarrQueueDetail(_Common4, _Common8):
     """Readarr queue detail attributes."""
 
     author: ReadarrAuthor | None = None
-    authorId: int | None = None
+    authorId: int
     book: ReadarrBook | None = None
-    bookId: int | None = None
-    downloadForced: bool | None = None
+    bookId: int
+    downloadForced: bool
 
     def __post_init__(self):
         """Post init."""
@@ -480,10 +480,10 @@ class ReadarrQueue(_RecordCommon):
 class ReadarrRelease(_ReleaseCommon):
     """Readarr release attributes."""
 
-    authorName: str | None = None
-    bookTitle: str | None = None
-    discography: bool | None = None
-    preferredWordScore: int | None = None
+    authorName: str
+    bookTitle: str
+    discography: bool
+    preferredWordScore: int
     quality: _Quality | None = None
 
     def __post_init__(self):
@@ -496,9 +496,9 @@ class ReadarrRelease(_ReleaseCommon):
 class ReadarrRename(_Rename):
     """Readarr rename attributes."""
 
-    authorId: int | None = None
-    bookFileId: int | None = None
-    bookId: int | None = None
+    authorId: int
+    bookFileId: int
+    bookId: int
 
 
 @dataclass(init=False)
@@ -506,8 +506,8 @@ class ReadarrRetag(ReadarrRename):
     """Readarr retag attributes."""
 
     changes: list[_RetagChange] | None = None
-    path: str | None = None
-    trackNumbers: list[int] | None = None
+    path: str
+    trackNumbers: list[int]
 
     def __post_init__(self):
         """Post init."""
@@ -519,8 +519,8 @@ class ReadarrSearch(BaseModel):
     """Readarr search attributes."""
 
     author: _ReadarrSearchAuthor | None = None
-    foreignId: str | None = None
-    id: int | None = None
+    foreignId: str
+    id: int
 
     def __post_init__(self):
         """Post init."""
@@ -532,10 +532,10 @@ class ReadarrSearch(BaseModel):
 class ReadarrSeries(BaseModel):
     """Readarr series attributes."""
 
-    description: str | None = None
-    id: int | None = None
+    description: str
+    id: int
     links: list[_ReadarrSeriesLinks2] | None = None
-    title: str | None = None
+    title: str
 
     def __post_init__(self):
         """Post init."""
@@ -546,20 +546,20 @@ class ReadarrSeries(BaseModel):
 class ReadarrTagDetails(_TagDetails):
     """Readarr tag details attributes."""
 
-    authorIds: list[int] | None = None
+    authorIds: list[int]
 
 
 @dataclass(init=False)
 class ReadarrManualImport(_ManualImport):
     """Readarr manual import attributes."""
 
-    additionalFile: bool | None = None
+    additionalFile: bool
     audioTags: _ReadarrAudioTags | None = None
     author: ReadarrAuthor | None = None
     book: ReadarrBook | None = None
-    disableReleaseSwitching: bool | None = None
-    foreignEditionId: int | None = None
-    replaceExistingFiles: bool | None = None
+    disableReleaseSwitching: bool
+    foreignEditionId: int
+    replaceExistingFiles: bool
 
     def __post_init__(self):
         """Post init."""
