@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from .base import BaseModel
@@ -18,44 +18,44 @@ from .request_common import (
 )
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieFileMediaInfo(_CommonAttrs):
     """Radarr movie file media attributes."""
 
     audioAdditionalFeatures: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieImages(_Common5):
     """Radarr movie images attributes."""
 
     remoteUrl: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrDatabaseRating(_Ratings):
     """Radarr databade rating attributes."""
 
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieRatings(BaseModel):
     """Radarr movie ratings attributes."""
 
-    imdb: _RadarrDatabaseRating | None = None
-    metacritic: _RadarrDatabaseRating | None = None
-    rottenTomatoes: _RadarrDatabaseRating | None = None
-    tmdb: _RadarrDatabaseRating | None = None
+    imdb: type[_RadarrDatabaseRating] = field(default=_RadarrDatabaseRating)
+    metacritic: type[_RadarrDatabaseRating] = field(default=_RadarrDatabaseRating)
+    rottenTomatoes: type[_RadarrDatabaseRating] = field(default=_RadarrDatabaseRating)
+    tmdb: type[_RadarrDatabaseRating] = field(default=_RadarrDatabaseRating)
 
     def __post_init__(self):
-        self.imdb = _RadarrDatabaseRating(self.imdb) or {}
-        self.metacritic = _RadarrDatabaseRating(self.metacritic) or {}
-        self.rottenTomatoes = _RadarrDatabaseRating(self.rottenTomatoes) or {}
-        self.tmdb = _RadarrDatabaseRating(self.tmdb) or {}
+        self.imdb = _RadarrDatabaseRating(self.imdb)
+        self.metacritic = _RadarrDatabaseRating(self.metacritic)
+        self.rottenTomatoes = _RadarrDatabaseRating(self.rottenTomatoes)
+        self.tmdb = _RadarrDatabaseRating(self.tmdb)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieCollection(BaseModel):
     """Radarr movie collection attributes."""
 
@@ -67,12 +67,12 @@ class _RadarrMovieCollection(BaseModel):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieFields(_MetadataFields, _SelectOption):
     """Radarr movie fields attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCommon(BaseModel):
     """Radarr indexers attributes."""
 
@@ -86,7 +86,7 @@ class _RadarrCommon(BaseModel):
         self.fields = [_RadarrMovieFields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieSpecifications(_RadarrCommon):
     """Radarr movie specifications attributes."""
 
@@ -94,7 +94,7 @@ class _RadarrMovieSpecifications(_RadarrCommon):
     required: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieCustomFormats(_Common3):
     """Radarr movie custom formats attributes."""
 
@@ -107,7 +107,7 @@ class _RadarrMovieCustomFormats(_Common3):
         ]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCommon2(BaseModel):
     """Radarr common attributes."""
 
@@ -116,16 +116,16 @@ class _RadarrCommon2(BaseModel):
     qualityProfileId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCommon3(_Common9):
     """Radarr common attributes."""
 
-    collection: _RadarrMovieCollection | None = None
+    collection: type[_RadarrMovieCollection] = field(default=_RadarrMovieCollection)
     digitalRelease: datetime
     images: list[_RadarrMovieImages] | None = None
     inCinemas: datetime
     physicalRelease: datetime
-    ratings: _RadarrMovieRatings | None = None
+    ratings: type[_RadarrMovieRatings] = field(default=_RadarrMovieRatings)
     sortTitle: str
     status: str
     studio: str
@@ -135,26 +135,26 @@ class _RadarrCommon3(_Common9):
 
     def __post_init__(self):
         """Post init."""
-        self.collection = _RadarrMovieCollection(self.collection) or {}
+        self.collection = _RadarrMovieCollection(self.collection)
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
-        self.ratings = _RadarrMovieRatings(self.ratings) or {}
+        self.ratings = _RadarrMovieRatings(self.ratings)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieCommon(BaseModel):
     """Radarr movie common attributes."""
 
     edition: str
     id: int
     languages: list[_Common3] | None = None
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
 
     def __post_init__(self):
         self.languages = [_Common3(language) for language in self.languages or []]
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Radarr movie history/blocklist attributes."""
 
@@ -170,7 +170,7 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
         ]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrNotificationMessage(BaseModel):
     """Radarr notification message attributes."""
 
@@ -178,7 +178,7 @@ class _RadarrNotificationMessage(BaseModel):
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieHistoryData(BaseModel):
     """Radarr movie history data attributes."""
 
@@ -190,12 +190,12 @@ class _RadarrMovieHistoryData(BaseModel):
     reason: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrMovieAlternateTitle(BaseModel):
     """Radarr movie history alternate title attributes."""
 
     id: int
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     movieId: int
     sourceId: int
     sourceType: str
@@ -205,10 +205,10 @@ class _RadarrMovieAlternateTitle(BaseModel):
 
     def __post_init__(self):
         """Post init."""
-        self.language = _Common3(self.language) or {}
+        self.language = _Common3(self.language)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrParsedMovieInfo(BaseModel):
     """Radarr parsed movie info attributes."""
 
@@ -220,7 +220,7 @@ class _RadarrParsedMovieInfo(BaseModel):
     movieTitles: list[str]
     originalTitle: str
     primaryMovieTitle: str
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     releaseHash: str
     releaseTitle: str
     simpleReleaseTitle: str
@@ -233,28 +233,30 @@ class _RadarrParsedMovieInfo(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCustomFormatsSpecsFields(BaseModel):
     """Radarr custom formats specifications fields attributes."""
 
     value: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCustomFormatsSpecs(BaseModel):
     """Radarr custom formats specifications attributes."""
 
-    fields: _RadarrCustomFormatsSpecsFields | None = None
+    fields: type[_RadarrCustomFormatsSpecsFields] = field(
+        default=_RadarrCustomFormatsSpecsFields
+    )
     implementation: str
     negate: bool
     required: bool
 
     def __post_init__(self):
         """Post init."""
-        self.fields = _RadarrCustomFormatsSpecsFields(self.fields) or {}
+        self.fields = _RadarrCustomFormatsSpecsFields(self.fields)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RadarrCustomFormats(BaseModel):
     """Radarr custom formats attributes."""
 

@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
@@ -96,14 +96,16 @@ class RadarrSortKeys(str, Enum):
     TIMELEFT = "timeleft"
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrMovieFile(_RadarrMovieCommon):
     """Radarr movie file attributes."""
 
     dateAdded: datetime
     edition: str
     indexerFlags: int
-    mediaInfo: _RadarrMovieFileMediaInfo | None = None
+    mediaInfo: type[_RadarrMovieFileMediaInfo] = field(
+        default=_RadarrMovieFileMediaInfo
+    )
     movieId: int
     originalFilePath: str
     path: str
@@ -115,51 +117,53 @@ class RadarrMovieFile(_RadarrMovieCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo) or {}
+        self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
     """Radarr movie history attributes."""
 
-    data: _RadarrMovieHistoryData | None = None
+    data: type[_RadarrMovieHistoryData] = field(default=_RadarrMovieHistoryData)
     qualityCutoffNotMet: bool
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.data = _RadarrMovieHistoryData(self.data) or {}
+        self.data = _RadarrMovieHistoryData(self.data)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrHistory(_RecordCommon):
     """Radarr history attributes."""
 
-    records: list[RadarrMovieHistory] | None = None
+    records: list[RadarrMovieHistory] = field(default_factory=list[RadarrMovieHistory])
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.records = [RadarrMovieHistory(record) for record in self.records or []]
+        self.records = [RadarrMovieHistory(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrBlocklistMovie(_Common7, _RadarrMovieHistoryBlocklistBase):
     """Radarr blocklist movie attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrBlocklist(_RecordCommon):
     """Radarr blocklist attributes."""
 
-    records: list[RadarrBlocklistMovie] | None = None
+    records: list[RadarrBlocklistMovie] = field(
+        default_factory=list[RadarrBlocklistMovie]
+    )
 
     def __post_init__(self):
         """Post init."""
-        self.records = [RadarrBlocklistMovie(record) for record in self.records or []]
+        self.records = [RadarrBlocklistMovie(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrQueueDetail(_Common4, _Common8):
     """Radarr queue details attributes."""
 
@@ -177,21 +181,21 @@ class RadarrQueueDetail(_Common4, _Common8):
         self.statusMessages = [
             _StatusMessage(statMsg) for statMsg in self.statusMessages or []
         ]
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrQueue(_RecordCommon):
     """Radarr queue attributes."""
 
-    records: list[RadarrQueueDetail] | None = None
+    records: list[RadarrQueueDetail] = field(default_factory=list[RadarrQueueDetail])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [RadarrQueueDetail(record) for record in self.records or []]
+        self.records = [RadarrQueueDetail(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     """Radarr import attributes."""
 
@@ -203,21 +207,23 @@ class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     tags: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrNotification(_Common3, _Notification):
     """Radarr notification attributes."""
 
     fields: list[_MetadataFields] | None = None
-    message: _RadarrNotificationMessage | None = None
+    message: type[_RadarrNotificationMessage] = field(
+        default=_RadarrNotificationMessage
+    )
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
         self.fields = [_MetadataFields(field) for field in self.fields or []]
-        self.message = _RadarrNotificationMessage(self.message) or {}
+        self.message = _RadarrNotificationMessage(self.message)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrTagDetails(_TagDetails):
     """Radarr tag details attributes."""
 
@@ -225,7 +231,7 @@ class RadarrTagDetails(_TagDetails):
     movieIds: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrNamingConfig(BaseModel):
     """Radarr host naming config attributes."""
 
@@ -239,7 +245,7 @@ class RadarrNamingConfig(BaseModel):
     standardMovieFormat: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
     """Radarr movie attributes."""
 
@@ -249,7 +255,7 @@ class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
     folderName: str
     hasFile: bool
     isAvailable: bool
-    movieFile: RadarrMovieFile | None = None
+    movieFile: type[RadarrMovieFile] = field(default=RadarrMovieFile)
     originalTitle: str
     path: str
     rootFolderPath: str
@@ -265,10 +271,10 @@ class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
             _RadarrMovieAlternateTitle(alternateTitle)
             for alternateTitle in self.alternateTitles or []
         ]
-        self.movieFile = RadarrMovieFile(self.movieFile) or {}
+        self.movieFile = RadarrMovieFile(self.movieFile)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrImportListMovie(_RadarrCommon3):
     """Radarr import list movie attributes."""
 
@@ -281,7 +287,7 @@ class RadarrImportListMovie(_RadarrCommon3):
     remotePoster: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
@@ -291,28 +297,30 @@ class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     secondaryYearSourceId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrMovieEditor(_Editor):
     """Radarr root folder attributes."""
 
     movieIds: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrParse(BaseModel):
     """Radarr parse attributes."""
 
-    movie: RadarrMovie | None = None
-    parsedMovieInfo: _RadarrParsedMovieInfo | None = None
+    movie: type[RadarrMovie] = field(default=RadarrMovie)
+    parsedMovieInfo: type[_RadarrParsedMovieInfo] = field(
+        default=_RadarrParsedMovieInfo
+    )
     title: str
 
     def __post_init__(self):
         """Post init."""
-        self.movie = RadarrMovie(self.movie) or {}
-        self.parsedMovieInfo = _RadarrParsedMovieInfo(self.parsedMovieInfo) or {}
+        self.movie = RadarrMovie(self.movie)
+        self.parsedMovieInfo = _RadarrParsedMovieInfo(self.parsedMovieInfo)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrRelease(_ReleaseCommon):
     """Radarr release attributes."""
 
@@ -323,7 +331,7 @@ class RadarrRelease(_ReleaseCommon):
     indexerFlags: list[str]
     languages: list[_Common3] | None = None
     movieTitles: list[str]
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     releaseGroup: str
     releaseHash: str
     tmdbId: int
@@ -333,10 +341,10 @@ class RadarrRelease(_ReleaseCommon):
         super().__post_init__()
         self.customFormats = [_RadarrCustomFormats(x) for x in self.customFormats or []]
         self.languages = [_Common3(x) for x in self.languages or []]
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrRename(_Rename):
     """Radarr rename attributes."""
 
@@ -344,13 +352,13 @@ class RadarrRename(_Rename):
     movieId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrManualImport(_ManualImport):
     """Radarr manual import attributes."""
 
     folderName: str
     languages: list[_Common3] | None = None
-    movie: RadarrMovie | None = None
+    movie: type[RadarrMovie] = field(default=RadarrMovie)
     relativePath: str
     releaseGroup: str
 
@@ -358,10 +366,10 @@ class RadarrManualImport(_ManualImport):
         """Post init."""
         super().__post_init__()
         self.languages = [_Common3(x) for x in self.languages or []]
-        self.movie = RadarrMovie(self.movie) or {}
+        self.movie = RadarrMovie(self.movie)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrExtraFile(BaseModel):
     """Radarr extra file attributes."""
 
@@ -373,12 +381,12 @@ class RadarrExtraFile(BaseModel):
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrIndexerFlag(Language):
     """Radarr indexer flag attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrRestriction(BaseModel):
     """Radarr restriction attributes."""
 
@@ -388,7 +396,7 @@ class RadarrRestriction(BaseModel):
     tags: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrCredit(BaseModel):
     """Radarr credit attributes."""
 
@@ -408,7 +416,7 @@ class RadarrCredit(BaseModel):
         self.images = [_Common5(image) for image in self.images or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RadarrAltTitle(BaseModel):
     """Radarr alternate title attributes."""
 
@@ -418,10 +426,10 @@ class RadarrAltTitle(BaseModel):
     sourceId: int
     votes: int
     voteCount: int
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     id: int
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.language = _Common3(self.language) or {}
+        self.language = _Common3(self.language)

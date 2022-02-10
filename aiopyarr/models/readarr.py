@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
@@ -115,11 +115,16 @@ class ReadarrSortKeys(str, Enum):
     TITLE = TITLE
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
+class ReadarrAuthor(_ReadarrAuthorBase):
+    """Readarr author attributes."""
+
+
+@dataclass(init=False, repr=False)
 class ReadarrBook(_ReadarrBookCommon):
     """Readarr book attributes."""
 
-    author: ReadarrAuthor | None = None
+    author: type[ReadarrAuthor] = field(default=ReadarrAuthor)
     authorId: int
     authorTitle: str
     disambiguation: str
@@ -130,47 +135,42 @@ class ReadarrBook(_ReadarrBookCommon):
     pageCount: int
     remoteCover: str
     seriesTitle: str
-    statistics: _ReadarrAuthorStatistics | None = None
+    statistics: type[_ReadarrAuthorStatistics] = field(default=_ReadarrAuthorStatistics)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.author = ReadarrAuthor(self.author) or {}
+        self.author = ReadarrAuthor(self.author)
         self.editions = [_ReadarrEditionsValue(x) for x in self.editions or []]
         self.images = [_ReadarrImage(image) for image in self.images or []]
-        self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
+        self.statistics = _ReadarrAuthorStatistics(self.statistics)
 
 
-@dataclass(init=False)
-class ReadarrAuthor(_ReadarrAuthorBase):
-    """Readarr author attributes."""
-
-
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrAuthorLookup(ReadarrAuthor):
     """Readarr author attributes."""
 
     monitorNewItems: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBlocklist(_RecordCommon):
     """Readarr blocklist attributes."""
 
     filters: list[_ReadarrBlocklistFilter] | None = None
-    records: list[_ReadarrBlocklistRecord] | None = None
+    records: list[_ReadarrBlocklistRecord] = field(
+        default_factory=list[_ReadarrBlocklistRecord]
+    )
 
     def __post_init__(self):
         """Post init."""
         self.filters = [
             _ReadarrBlocklistFilter(filter) for filter in self.filters or []
         ]
-        self.records = [
-            _ReadarrBlocklistRecord(record) for record in self.records or []
-        ]
+        self.records = [_ReadarrBlocklistRecord(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrAuthorEditor(_Editor):
     """Readarr author editor attributes."""
 
@@ -178,16 +178,18 @@ class ReadarrAuthorEditor(_Editor):
     metadataProfileId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookFile(_QualityCommon):
     """Readarr book file attributes."""
 
-    audioTags: _ReadarrAudioTags | None = None
+    audioTags: type[_ReadarrAudioTags] = field(default=_ReadarrAudioTags)
     authorId: int
     bookId: int
     dateAdded: datetime
     id: int
-    mediaInfo: _ReadarrBookFileMediaInfo | None = None
+    mediaInfo: type[_ReadarrBookFileMediaInfo] = field(
+        default=_ReadarrBookFileMediaInfo
+    )
     path: str
     qualityWeight: int
     size: int
@@ -195,29 +197,29 @@ class ReadarrBookFile(_QualityCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
-        self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo) or {}
+        self.audioTags = _ReadarrAudioTags(self.audioTags)
+        self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookFileEditor(BaseModel):
     """Readarr book file attributes."""
 
     bookFileIds: list[int]
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
 
     def __post_init__(self):
         """Post init."""
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookLookup(_Common6):
     """Readarr book lookup attributes."""
 
     added: datetime
     anyEditionOk: bool
-    author: ReadarrAuthor | None = None
+    author: type[ReadarrAuthor] = field(default=ReadarrAuthor)
     authorId: int
     authorTitle: str
     disambiguation: str
@@ -228,7 +230,7 @@ class ReadarrBookLookup(_Common6):
     images: list[_ReadarrImage] | None = None
     links: list[_Link] | None = None
     pageCount: int
-    ratings: _ReadarrRating | None = None
+    ratings: type[_ReadarrRating] = field(default=_ReadarrRating)
     releaseDate: datetime
     remoteCover: str
     seriesTitle: str
@@ -238,34 +240,34 @@ class ReadarrBookLookup(_Common6):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.author = ReadarrAuthor(self.author) or {}
+        self.author = ReadarrAuthor(self.author)
         self.editions = [_ReadarrEditionsValue(editn) for editn in self.editions or []]
         self.images = [_ReadarrImage(image) for image in self.images or []]
         self.links = [_Link(link) for link in self.links or []]
-        self.ratings = _ReadarrRating(self.ratings) or {}
+        self.ratings = _ReadarrRating(self.ratings)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
     """Readarr bookshelf author Book attributes."""
 
-    addOptions: _ReadarrAddOptions | None = None
+    addOptions: type[_ReadarrAddOptions] = field(default=_ReadarrAddOptions)
     id: int
-    statistics: _ReadarrAuthorStatistics | None = None
+    statistics: type[_ReadarrAuthorStatistics] = field(default=_ReadarrAuthorStatistics)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.addOptions = _ReadarrAddOptions(self.addOptions) or {}
-        self.statistics = _ReadarrAuthorStatistics(self.statistics) or {}
+        self.addOptions = _ReadarrAddOptions(self.addOptions)
+        self.statistics = _ReadarrAuthorStatistics(self.statistics)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrCalendar(ReadarrBookshelfAuthorBook):
     """Readarr calendar attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookshelfAuthor(BaseModel):
     """Readarr bookshelf author attributes."""
 
@@ -278,31 +280,33 @@ class ReadarrBookshelfAuthor(BaseModel):
         self.books = [ReadarrBookshelfAuthorBook(book) for book in self.books or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookshelf(BaseModel):
     """Readarr bookshelf attributes."""
 
     authors: list[ReadarrBookshelfAuthor] | None = None
-    monitoringOptions: _ReadarrAuthorAddOptions | None = None
+    monitoringOptions: type[_ReadarrAuthorAddOptions] = field(
+        default=_ReadarrAuthorAddOptions
+    )
 
     def __post_init__(self):
         """Post init."""
         self.authors = [ReadarrBookshelfAuthor(author) for author in self.authors or []]
-        self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions) or {}
+        self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrWantedMissing(_RecordCommon):
     """Readarr wanted missing attributes."""
 
-    records: list[ReadarrBook] | None = None
+    records: list[ReadarrBook] = field(default_factory=list[ReadarrBook])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [ReadarrBook(record) for record in self.records or []]
+        self.records = [ReadarrBook(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrWantedCutoff(ReadarrWantedMissing):
     """Readarr wanted cutoff attributes."""
 
@@ -315,12 +319,12 @@ class ReadarrWantedCutoff(ReadarrWantedMissing):
         ]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrMetadataProfile(_ReadarrMetadataProfileValue):
     """Readarr metadata profile attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrDevelopmentConfig(BaseModel):
     """Readarr development config attributes."""
 
@@ -332,13 +336,13 @@ class ReadarrDevelopmentConfig(BaseModel):
     metadataSource: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrBookHistory(_Common2, _QualityCommon):
     """Readarr history record attributes."""
 
     authorId: int
     bookId: int
-    data: _HistoryData | None = None
+    data: type[_HistoryData] = field(default=_HistoryData)
     date: datetime
     id: int
     sourceTitle: str
@@ -346,21 +350,21 @@ class ReadarrBookHistory(_Common2, _QualityCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.data = _HistoryData(self.data) or {}
+        self.data = _HistoryData(self.data)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrHistory(_RecordCommon):
     """Readarr history attributes."""
 
-    records: list[ReadarrBookHistory] | None = None
+    records: list[ReadarrBookHistory] = field(default_factory=list[ReadarrBookHistory])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [ReadarrBookHistory(record) for record in self.records or []]
+        self.records = [ReadarrBookHistory(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrImportList(_ImportListCommon, _Common3):
     """Readarr importlist attributes."""
 
@@ -383,7 +387,7 @@ class ReadarrImportList(_ImportListCommon, _Common3):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrMetadataProvider(BaseModel):
     """Readarr metadata provider attributes."""
 
@@ -395,7 +399,7 @@ class ReadarrMetadataProvider(BaseModel):
     writeBookTags: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrNamingConfig(BaseModel):
     """Readarr naming config attributes."""
 
@@ -410,7 +414,7 @@ class ReadarrNamingConfig(BaseModel):
     standardBookFormat: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrNotification(_Common3, _Notification):
     """Readarr notification attributes."""
 
@@ -429,54 +433,54 @@ class ReadarrNotification(_Common3, _Notification):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrParse(BaseModel):
     """Readarr parse attributes."""
 
-    author: ReadarrAuthor | None = None
+    author: type[ReadarrAuthor] = field(default=ReadarrAuthor)
     books: list[ReadarrBook] | None = None
     id: int
-    parsedBookInfo: _ReadarrParsedBookInfo | None = None
+    parsedBookInfo: type[_ReadarrParsedBookInfo] = field(default=_ReadarrParsedBookInfo)
     title: str
 
     def __post_init__(self):
         """Post init."""
-        self.author = ReadarrAuthor(self.author) or {}
+        self.author = ReadarrAuthor(self.author)
         self.books = [ReadarrBook(book) for book in self.books or []]
-        self.parsedBookInfo = _ReadarrParsedBookInfo(self.parsedBookInfo) or {}
+        self.parsedBookInfo = _ReadarrParsedBookInfo(self.parsedBookInfo)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrQueueDetail(_Common4, _Common8):
     """Readarr queue detail attributes."""
 
-    author: ReadarrAuthor | None = None
+    author: type[ReadarrAuthor] = field(default=ReadarrAuthor)
     authorId: int
-    book: ReadarrBook | None = None
+    book: type[ReadarrBook] = field(default=ReadarrBook)
     bookId: int
     downloadForced: bool
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.author = ReadarrAuthor(self.authorId) or {}
-        self.book = ReadarrBook(self.book) or {}
-        self.quality = _Quality(self.quality) or {}
+        self.author = ReadarrAuthor(self.authorId)
+        self.book = ReadarrBook(self.book)
+        self.quality = _Quality(self.quality)
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrQueue(_RecordCommon):
     """Readarr queue attributes."""
 
-    records: list[ReadarrQueueDetail] | None = None
+    records: list[ReadarrQueueDetail] = field(default_factory=list[ReadarrQueueDetail])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [ReadarrQueueDetail(record) for record in self.records or []]
+        self.records = [ReadarrQueueDetail(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrRelease(_ReleaseCommon):
     """Readarr release attributes."""
 
@@ -484,15 +488,15 @@ class ReadarrRelease(_ReleaseCommon):
     bookTitle: str
     discography: bool
     preferredWordScore: int
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrRename(_Rename):
     """Readarr rename attributes."""
 
@@ -501,7 +505,7 @@ class ReadarrRename(_Rename):
     bookId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrRetag(ReadarrRename):
     """Readarr retag attributes."""
 
@@ -514,21 +518,21 @@ class ReadarrRetag(ReadarrRename):
         self.changes = [_RetagChange(change) for change in self.changes or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrSearch(BaseModel):
     """Readarr search attributes."""
 
-    author: _ReadarrSearchAuthor | None = None
+    author: type[_ReadarrSearchAuthor] = field(default=_ReadarrSearchAuthor)
     foreignId: str
     id: int
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.author = _ReadarrSearchAuthor(self.author) or {}
+        self.author = _ReadarrSearchAuthor(self.author)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrSeries(BaseModel):
     """Readarr series attributes."""
 
@@ -542,21 +546,21 @@ class ReadarrSeries(BaseModel):
         self.links = [_ReadarrSeriesLinks2(link) for link in self.links or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrTagDetails(_TagDetails):
     """Readarr tag details attributes."""
 
     authorIds: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrManualImport(_ManualImport):
     """Readarr manual import attributes."""
 
     additionalFile: bool
-    audioTags: _ReadarrAudioTags | None = None
-    author: ReadarrAuthor | None = None
-    book: ReadarrBook | None = None
+    audioTags: type[_ReadarrAudioTags] = field(default=_ReadarrAudioTags)
+    author: type[ReadarrAuthor] = field(default=ReadarrAuthor)
+    book: type[ReadarrBook] = field(default=ReadarrBook)
     disableReleaseSwitching: bool
     foreignEditionId: int
     replaceExistingFiles: bool
@@ -564,12 +568,12 @@ class ReadarrManualImport(_ManualImport):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.audioTags = _ReadarrAudioTags(self.audioTags) or {}
-        self.author = ReadarrAuthor(self.author) or {}
-        self.book = ReadarrBook(self.book) or {}
+        self.audioTags = _ReadarrAudioTags(self.audioTags)
+        self.author = ReadarrAuthor(self.author)
+        self.book = ReadarrBook(self.book)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReadarrImportListOptions(BaseModel):
     """Readarr import list options attributes."""
 

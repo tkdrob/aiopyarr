@@ -2,14 +2,14 @@
 # pylint: disable=invalid-name, too-many-instance-attributes, line-too-long, too-many-lines
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from .base import BaseModel
 from .const import ProtocolType
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _SelectOption(BaseModel):
     """Select option attributes."""
 
@@ -18,14 +18,14 @@ class _SelectOption(BaseModel):
     value: str | list[str] | int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _SelectOptionExtended(_SelectOption):
     """Select options extended attributes."""
 
     dividerAfter: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Fields(_SelectOption):
     """Fields attributes."""
 
@@ -45,7 +45,7 @@ class _Fields(_SelectOption):
         ]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common(BaseModel):
     """Common attributes."""
 
@@ -59,7 +59,7 @@ class _Common(BaseModel):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common2(BaseModel):
     """Common attributes."""
 
@@ -67,7 +67,7 @@ class _Common2(BaseModel):
     eventType: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common3(BaseModel):
     """Common attributes."""
 
@@ -75,7 +75,7 @@ class _Common3(BaseModel):
     name: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common4(BaseModel):
     """Common attributes."""
 
@@ -86,7 +86,7 @@ class _Common4(BaseModel):
     outputPath: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common5(BaseModel):
     """Common attributes."""
 
@@ -94,7 +94,7 @@ class _Common5(BaseModel):
     url: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common6(BaseModel):
     """Common attributes."""
 
@@ -102,7 +102,7 @@ class _Common6(BaseModel):
     overview: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common7(BaseModel):
     """Common attributes."""
 
@@ -111,13 +111,44 @@ class _Common7(BaseModel):
     protocol: ProtocolType
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
+class _QualityInfo(_Common3):
+    """Quality info attributes."""
+
+    modifier: str
+    resolution: int
+    source: str
+
+
+@dataclass(init=False, repr=False)
+class _Revision(BaseModel):
+    """Revision attributes."""
+
+    isRepack: bool
+    real: int
+    version: int
+
+
+@dataclass(init=False, repr=False)
+class _Quality(BaseModel):
+    """Quality attributes."""
+
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
+    revision: type[_Revision] = field(default=_Revision)
+
+    def __post_init__(self):
+        """Post init."""
+        self.quality = _QualityInfo(self.quality)
+        self.revision = _Revision(self.revision)
+
+
+@dataclass(init=False, repr=False)
 class _Common8(BaseModel):
     """Common attributes."""
 
     id: int
     protocol: ProtocolType
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     size: int
     sizeleft: int
     status: str
@@ -128,7 +159,7 @@ class _Common8(BaseModel):
     trackedDownloadStatus: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Common9(BaseModel):
     """Common attributes."""
 
@@ -140,7 +171,7 @@ class _Common9(BaseModel):
     year: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _CommonAttrs(BaseModel):
     """Common attributes."""
 
@@ -160,7 +191,7 @@ class _CommonAttrs(BaseModel):
     videoFps: float
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _CommandBody(BaseModel):
     """Command body attributes."""
 
@@ -178,7 +209,7 @@ class _CommandBody(BaseModel):
     updateScheduledTask: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _CustomFilterAttr(BaseModel):
     """Custom filter attributes."""
 
@@ -187,14 +218,14 @@ class _CustomFilterAttr(BaseModel):
     value: list[str]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _MetadataFields(_Fields):
     """Metadata fields attributes."""
 
     section: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _FilesystemFolder(BaseModel):
     """Filesystem folder attributes."""
 
@@ -202,7 +233,7 @@ class _FilesystemFolder(BaseModel):
     path: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _FilesystemDirectory(_FilesystemFolder):
     """Filesystem directory attributes."""
 
@@ -211,7 +242,7 @@ class _FilesystemDirectory(_FilesystemFolder):
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _ImportListCommon(_FilesystemFolder):
     """Import list common attributes."""
 
@@ -220,7 +251,7 @@ class _ImportListCommon(_FilesystemFolder):
     rootFolderPath: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _LocalizationStrings(BaseModel):
     """Localization strings attributes."""
 
@@ -1689,7 +1720,7 @@ class _LocalizationStrings(BaseModel):
     YouCanAlsoSearch: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _LogRecord(BaseModel):
     """Log record attributes."""
 
@@ -1702,29 +1733,20 @@ class _LogRecord(BaseModel):
     time: datetime
 
 
-@dataclass(init=False)
-class _QualityInfo(_Common3):
-    """Quality info attributes."""
-
-    modifier: str
-    resolution: int
-    source: str
-
-
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _QualityProfileItems(_Common3):
     """Quality profile items attributes."""
 
     allowed: bool
     items: list[_QualityProfileItems] | None = None
-    quality: _QualityInfo | None = None
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
 
     def __post_init__(self):
         self.items = [_QualityProfileItems(item) for item in self.items or []]
-        self.quality = _QualityInfo(self.quality) or {}
+        self.quality = _QualityInfo(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _ReleaseCommon(BaseModel):
     """Release common attributes."""
 
@@ -1759,29 +1781,7 @@ class _ReleaseCommon(BaseModel):
         self.rejections = [_Rejection(x) for x in self.rejections or []]
 
 
-@dataclass(init=False)
-class _Revision(BaseModel):
-    """Revision attributes."""
-
-    isRepack: bool
-    real: int
-    version: int
-
-
-@dataclass(init=False)
-class _Quality(BaseModel):
-    """Quality attributes."""
-
-    quality: _QualityInfo | None = None
-    revision: _Revision | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.quality = _QualityInfo(self.quality) or {}
-        self.revision = _Revision(self.revision) or {}
-
-
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RecordCommon(BaseModel):
     """Record common attributes."""
 
@@ -1792,7 +1792,7 @@ class _RecordCommon(BaseModel):
     totalRecords: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _ReleaseProfilePreferred(BaseModel):
     """Release profile preferred attributes."""
 
@@ -1800,7 +1800,7 @@ class _ReleaseProfilePreferred(BaseModel):
     value: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Rename(BaseModel):
     """Rename attributes."""
 
@@ -1808,7 +1808,7 @@ class _Rename(BaseModel):
     newPath: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Tag(BaseModel):
     """Tag attributes."""
 
@@ -1816,7 +1816,7 @@ class _Tag(BaseModel):
     label: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _TagDetails(_Tag):
     """Tag details attributes."""
 
@@ -1826,7 +1826,7 @@ class _TagDetails(_Tag):
     restrictionIds: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _UpdateChanges(BaseModel):
     """Update changes attributes."""
 
@@ -1834,7 +1834,7 @@ class _UpdateChanges(BaseModel):
     new: list[str]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _TitleInfo(BaseModel):
     """Title info attributes."""
 
@@ -1843,7 +1843,7 @@ class _TitleInfo(BaseModel):
     year: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Notification(BaseModel):
     """Notification attributes."""
 
@@ -1865,7 +1865,7 @@ class _Notification(BaseModel):
     tags: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _RetagChange(BaseModel):
     """Retag change attributes."""
 
@@ -1874,7 +1874,7 @@ class _RetagChange(BaseModel):
     newValue: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _HistoryCommon(BaseModel):
     """History common attributes."""
 
@@ -1896,7 +1896,7 @@ class _HistoryCommon(BaseModel):
     torrentInfoHash: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _HistoryData(_HistoryCommon):
     """History data attributes."""
 
@@ -1905,20 +1905,20 @@ class _HistoryData(_HistoryCommon):
     guid: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _QualityCommon(BaseModel):
     """Quality common attributes."""
 
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     qualityCutoffNotMet: bool
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Ratings(BaseModel):
     """Ratings attributes."""
 
@@ -1926,7 +1926,7 @@ class _Ratings(BaseModel):
     votes: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Link(BaseModel):
     """Link attributes."""
 
@@ -1934,7 +1934,7 @@ class _Link(BaseModel):
     url: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _StatusMessage(BaseModel):
     """Status message attributes."""
 
@@ -1942,7 +1942,7 @@ class _StatusMessage(BaseModel):
     title: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Editor(BaseModel):
     """Editor attributes."""
 
@@ -1956,14 +1956,14 @@ class _Editor(BaseModel):
     tags: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _IsLoaded(BaseModel):
     """Is loaded attribute."""
 
     isLoaded: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Rejection(BaseModel):
     """Rejection attributes."""
 
@@ -1971,7 +1971,7 @@ class _Rejection(BaseModel):
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _ManualImport(BaseModel):
     """Manual import attributes."""
 
@@ -1979,18 +1979,18 @@ class _ManualImport(BaseModel):
     id: int
     name: str
     path: str
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     qualityWeight: int
     rejections: list[_Rejection] | None = None
     size: int
 
     def __post_init__(self):
         """Post init."""
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
         self.rejections = [_Rejection(x) for x in self.rejections or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _Monitor(BaseModel):
     """Sonarr series monitor attributes."""
 
@@ -1998,7 +1998,7 @@ class _Monitor(BaseModel):
     monitored: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class _MonitorOption(BaseModel):
     """Sonarr series monitor option attributes."""
 

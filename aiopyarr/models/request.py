@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
@@ -202,7 +202,7 @@ class StatusType(str, Enum):
     ENDED = "ended"
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Diskspace(BaseModel):
     """Diskspace attributes."""
 
@@ -212,18 +212,18 @@ class Diskspace(BaseModel):
     totalSpace: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Logs(_RecordCommon):
     """Log attributes."""
 
-    records: list[_LogRecord] | None = None
+    records: list[_LogRecord] = field(default_factory=list[_LogRecord])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [_LogRecord(record) for record in self.records or []]
+        self.records = [_LogRecord(record) for record in self.records]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class LogFile(BaseModel):
     """Log file attributes."""
 
@@ -234,12 +234,12 @@ class LogFile(BaseModel):
     lastWriteTime: datetime
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Tag(_Tag):
     """Tag attributes."""
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SystemBackup(_Common3):
     """System backup attributes."""
 
@@ -248,7 +248,7 @@ class SystemBackup(_Common3):
     type: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class CustomFilter(BaseModel):
     """Custom filter attributes."""
 
@@ -262,7 +262,7 @@ class CustomFilter(BaseModel):
         self.filters = [_CustomFilterAttr(filter) for filter in self.filters or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RootFolder(BaseModel):
     """Root folder attributes."""
 
@@ -278,7 +278,7 @@ class RootFolder(BaseModel):
         ]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class HostConfig(BaseModel):
     """Host config attributes."""
 
@@ -317,7 +317,7 @@ class HostConfig(BaseModel):
     username: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class UIConfig(BaseModel):
     """UI config attributes."""
 
@@ -334,7 +334,7 @@ class UIConfig(BaseModel):
     uiLanguage: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SystemStatus(BaseModel):
     """System status attributes."""
 
@@ -367,11 +367,11 @@ class SystemStatus(BaseModel):
     version: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Command(_Common3):
     """Command attributes."""
 
-    body: _CommandBody | None = None
+    body: type[_CommandBody] = field(default=_CommandBody)
     commandName: str
     duration: str
     ended: datetime
@@ -389,10 +389,10 @@ class Command(_Common3):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.body = _CommandBody(self.body) or {}
+        self.body = _CommandBody(self.body)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DownloadClient(_Common):
     """Download client attributes."""
 
@@ -404,7 +404,7 @@ class DownloadClient(_Common):
     tags: list[int]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DownloadClientConfig(BaseModel):
     """Download client configuration attributes."""
 
@@ -417,7 +417,7 @@ class DownloadClientConfig(BaseModel):
     removeFailedDownloads: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Filesystem(BaseModel):
     """Filesystem attributes."""
 
@@ -430,7 +430,7 @@ class Filesystem(BaseModel):
         self.directories = [_FilesystemDirectory(x) for x in self.directories or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Health(BaseModel):
     """Health attributes."""
 
@@ -440,7 +440,7 @@ class Health(BaseModel):
     wikiUrl: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ImportListExclusion(BaseModel):
     """Import list exclusion attributes."""
 
@@ -455,7 +455,7 @@ class ImportListExclusion(BaseModel):
     tvdbId: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Indexer(_Common3):
     """Indexer attributes."""
 
@@ -478,7 +478,7 @@ class Indexer(_Common3):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class IndexerConfig(BaseModel):
     """Indexer configuration attributes."""
 
@@ -493,25 +493,25 @@ class IndexerConfig(BaseModel):
     whitelistedHardcodedSubs: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Language(_Common3):
     """Language attributes."""
 
     nameLower: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Localization(BaseModel):
     """Localization attributes."""
 
-    Strings: _LocalizationStrings | None = None
+    Strings: type[_LocalizationStrings] = field(default=_LocalizationStrings)
 
     def __post_init__(self):
         """Post init."""
-        self.Strings = _LocalizationStrings(self.Strings) or {}
+        self.Strings = _LocalizationStrings(self.Strings)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class MediaManagementConfig(BaseModel):
     """Media management config attributes."""
 
@@ -544,7 +544,7 @@ class MediaManagementConfig(BaseModel):
     watchLibraryForChanges: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class MetadataConfig(_Common3):
     """Metadata config attributes."""
 
@@ -561,7 +561,7 @@ class MetadataConfig(_Common3):
         self.fields = [_MetadataFields(field) for field in self.fields or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class QualityDefinition(BaseModel):
     """Quality definition attributes."""
 
@@ -569,16 +569,16 @@ class QualityDefinition(BaseModel):
     maxSize: float
     minSize: float
     preferredSize: int
-    quality: _QualityInfo | None = None
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
     title: str
     weight: int
 
     def __post_init__(self):
         """Post init."""
-        self.quality = _QualityInfo(self.quality) or {}
+        self.quality = _QualityInfo(self.quality)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class QualityProfile(_Common3):
     """Quality profile attributes."""
 
@@ -586,17 +586,17 @@ class QualityProfile(_Common3):
     cutoffFormatScore: int
     formatItems: list
     items: list[_QualityProfileItems] | None = None
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     minFormatScore: int
     upgradeAllowed: bool
 
     def __post_init__(self):
         """Post init."""
         self.items = [_QualityProfileItems(item) for item in self.items or []]
-        self.language = _Common3(self.language) or {}
+        self.language = _Common3(self.language)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class QueueStatus(BaseModel):
     """Queue status attributes."""
 
@@ -609,7 +609,7 @@ class QueueStatus(BaseModel):
     warnings: bool
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class ReleaseProfile(BaseModel):
     """Release profile attributes."""
 
@@ -627,7 +627,7 @@ class ReleaseProfile(BaseModel):
         self.preferred = [_ReleaseProfilePreferred(x) for x in self.preferred or []]
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class RemotePathMapping(BaseModel):
     """Remote path mapping attributes."""
 
@@ -637,7 +637,7 @@ class RemotePathMapping(BaseModel):
     remotePath: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class SystemTask(_Common3):
     """System task attributes."""
 
@@ -649,12 +649,12 @@ class SystemTask(_Common3):
     taskName: str
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class Update(BaseModel):
     """Update attributes."""
 
     branch: str
-    changes: _UpdateChanges | None = None
+    changes: type[_UpdateChanges] = field(default=_UpdateChanges)
     fileName: str
     hash: str
     installable: bool
@@ -668,10 +668,10 @@ class Update(BaseModel):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.changes = _UpdateChanges(self.changes) or {}
+        self.changes = _UpdateChanges(self.changes)
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class DelayProfile(BaseModel):
     """Delay profile attributes."""
 
@@ -686,7 +686,7 @@ class DelayProfile(BaseModel):
     usenetDelay: int
 
 
-@dataclass(init=False)
+@dataclass(init=False, repr=False)
 class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
 
