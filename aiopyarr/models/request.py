@@ -202,7 +202,7 @@ class StatusType(str, Enum):
     ENDED = "ended"
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Diskspace(BaseModel):
     """Diskspace attributes."""
 
@@ -212,7 +212,7 @@ class Diskspace(BaseModel):
     totalSpace: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Logs(_RecordCommon):
     """Log attributes."""
 
@@ -223,7 +223,7 @@ class Logs(_RecordCommon):
         self.records = [_LogRecord(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LogFile(BaseModel):
     """Log file attributes."""
 
@@ -234,12 +234,12 @@ class LogFile(BaseModel):
     lastWriteTime: datetime
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Tag(_Tag):
     """Tag attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SystemBackup(_Common3):
     """System backup attributes."""
 
@@ -248,7 +248,7 @@ class SystemBackup(_Common3):
     type: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class CustomFilter(BaseModel):
     """Custom filter attributes."""
 
@@ -262,7 +262,7 @@ class CustomFilter(BaseModel):
         self.filters = [_CustomFilterAttr(filter) for filter in self.filters or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RootFolder(BaseModel):
     """Root folder attributes."""
 
@@ -278,7 +278,7 @@ class RootFolder(BaseModel):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class HostConfig(BaseModel):
     """Host config attributes."""
 
@@ -317,7 +317,7 @@ class HostConfig(BaseModel):
     username: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class UIConfig(BaseModel):
     """UI config attributes."""
 
@@ -334,7 +334,7 @@ class UIConfig(BaseModel):
     uiLanguage: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SystemStatus(BaseModel):
     """System status attributes."""
 
@@ -367,7 +367,7 @@ class SystemStatus(BaseModel):
     version: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Command(_Common3):
     """Command attributes."""
 
@@ -392,7 +392,7 @@ class Command(_Common3):
         self.body = _CommandBody(self.body)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class DownloadClient(_Common):
     """Download client attributes."""
 
@@ -404,7 +404,7 @@ class DownloadClient(_Common):
     tags: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class DownloadClientConfig(BaseModel):
     """Download client configuration attributes."""
 
@@ -417,7 +417,7 @@ class DownloadClientConfig(BaseModel):
     removeFailedDownloads: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Filesystem(BaseModel):
     """Filesystem attributes."""
 
@@ -430,7 +430,7 @@ class Filesystem(BaseModel):
         self.directories = [_FilesystemDirectory(x) for x in self.directories or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Health(BaseModel):
     """Health attributes."""
 
@@ -440,7 +440,7 @@ class Health(BaseModel):
     wikiUrl: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ImportListExclusion(BaseModel):
     """Import list exclusion attributes."""
 
@@ -455,7 +455,7 @@ class ImportListExclusion(BaseModel):
     tvdbId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Indexer(_Common3):
     """Indexer attributes."""
 
@@ -478,7 +478,7 @@ class Indexer(_Common3):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class IndexerConfig(BaseModel):
     """Indexer configuration attributes."""
 
@@ -493,14 +493,14 @@ class IndexerConfig(BaseModel):
     whitelistedHardcodedSubs: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Language(_Common3):
     """Language attributes."""
 
     nameLower: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Localization(BaseModel):
     """Localization attributes."""
 
@@ -511,7 +511,7 @@ class Localization(BaseModel):
         self.Strings = _LocalizationStrings(self.Strings)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class MediaManagementConfig(BaseModel):
     """Media management config attributes."""
 
@@ -544,7 +544,7 @@ class MediaManagementConfig(BaseModel):
     watchLibraryForChanges: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class MetadataConfig(_Common3):
     """Metadata config attributes."""
 
@@ -561,7 +561,7 @@ class MetadataConfig(_Common3):
         self.fields = [_MetadataFields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class QualityDefinition(BaseModel):
     """Quality definition attributes."""
 
@@ -578,7 +578,7 @@ class QualityDefinition(BaseModel):
         self.quality = _QualityInfo(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class QualityProfile(_Common3):
     """Quality profile attributes."""
 
@@ -596,7 +596,7 @@ class QualityProfile(_Common3):
         self.language = _Common3(self.language)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class QueueStatus(BaseModel):
     """Queue status attributes."""
 
@@ -609,7 +609,7 @@ class QueueStatus(BaseModel):
     warnings: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReleaseProfile(BaseModel):
     """Release profile attributes."""
 
@@ -627,7 +627,7 @@ class ReleaseProfile(BaseModel):
         self.preferred = [_ReleaseProfilePreferred(x) for x in self.preferred or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RemotePathMapping(BaseModel):
     """Remote path mapping attributes."""
 
@@ -637,7 +637,7 @@ class RemotePathMapping(BaseModel):
     remotePath: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SystemTask(_Common3):
     """System task attributes."""
 
@@ -649,7 +649,7 @@ class SystemTask(_Common3):
     taskName: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class Update(BaseModel):
     """Update attributes."""
 
@@ -671,7 +671,7 @@ class Update(BaseModel):
         self.changes = _UpdateChanges(self.changes)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class DelayProfile(BaseModel):
     """Delay profile attributes."""
 
@@ -686,7 +686,7 @@ class DelayProfile(BaseModel):
     usenetDelay: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
 

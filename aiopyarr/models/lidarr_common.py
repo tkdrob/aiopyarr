@@ -18,7 +18,7 @@ from .request_common import (
 )
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrMedia(BaseModel):
     """Lidarr release mediaattributes."""
 
@@ -27,7 +27,7 @@ class _LidarrMedia(BaseModel):
     mediumNumber: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrCommon(BaseModel):
     """Lidarr common attributes."""
 
@@ -36,7 +36,7 @@ class _LidarrCommon(BaseModel):
     qualityCutoffNotMet: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrCommon2(BaseModel):
     """Lidarr album common mediaattributes."""
 
@@ -52,7 +52,7 @@ class _LidarrCommon2(BaseModel):
         self.ratings = _Ratings(self.ratings)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrStatistics(BaseModel):
     """Lidarr statistics attributes."""
 
@@ -64,7 +64,7 @@ class _LidarrStatistics(BaseModel):
     trackFileCount: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrCommon3(BaseModel):
     """Lidarr common attributes."""
 
@@ -77,7 +77,7 @@ class _LidarrCommon3(BaseModel):
         self.statistics = _LidarrStatistics(self.statistics)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrCommon4(BaseModel):
     """Lidarr common attributes."""
 
@@ -86,7 +86,7 @@ class _LidarrCommon4(BaseModel):
     genres: list[str]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     """Lidarr artist attributes."""
 
@@ -111,7 +111,7 @@ class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
     tags: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrCommon5(BaseModel):
     """Lidarr common attributes."""
 
@@ -128,7 +128,7 @@ class _LidarrCommon5(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
     """Lidarr album common media attributes."""
 
@@ -154,7 +154,7 @@ class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
         self.secondaryTypes = [_Common3(x) for x in self.secondaryTypes or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrRelease(BaseModel):
     """Lidarr release attributes."""
 
@@ -178,7 +178,7 @@ class _LidarrRelease(BaseModel):
         self.media = [_LidarrMedia(x) for x in self.media or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrImage(BaseModel):
     """Lidarr image attributes."""
 
@@ -187,14 +187,14 @@ class _LidarrImage(BaseModel):
     url: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrFields(_Fields):
     """Lidarr fields attributes."""
 
     selectOptionsProviderAction: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrImportListPreset(_ImportListCommon):
     """Lidarr import list preset attributes."""
 
@@ -214,7 +214,7 @@ class _LidarrImportListPreset(_ImportListCommon):
         self.fields = [_LidarrFields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrArtistTitleInfo(BaseModel):
     """Lidarr artist title info attributes."""
 
@@ -222,7 +222,7 @@ class _LidarrArtistTitleInfo(BaseModel):
     year: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrMediaInfo(BaseModel):
     """Lidarr media info attributes."""
 
@@ -235,7 +235,7 @@ class _LidarrMediaInfo(BaseModel):
     audioSampleRate: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrMediaInfo_Quality(BaseModel):
     """Lidarr media info/quality attributes."""
 
@@ -249,7 +249,7 @@ class _LidarrMediaInfo_Quality(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
     """Lidarr audio tags attributes."""
 
@@ -270,7 +270,7 @@ class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
         self.artistTitleInfo = _LidarrArtistTitleInfo(self.artistTitleInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrAddOptions(BaseModel):
     """Lidarr add options attributes."""
 

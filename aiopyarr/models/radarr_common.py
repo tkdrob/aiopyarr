@@ -18,28 +18,28 @@ from .request_common import (
 )
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieFileMediaInfo(_CommonAttrs):
     """Radarr movie file media attributes."""
 
     audioAdditionalFeatures: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieImages(_Common5):
     """Radarr movie images attributes."""
 
     remoteUrl: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrDatabaseRating(_Ratings):
     """Radarr databade rating attributes."""
 
     type: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieRatings(BaseModel):
     """Radarr movie ratings attributes."""
 
@@ -55,7 +55,7 @@ class _RadarrMovieRatings(BaseModel):
         self.tmdb = _RadarrDatabaseRating(self.tmdb)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieCollection(BaseModel):
     """Radarr movie collection attributes."""
 
@@ -67,12 +67,12 @@ class _RadarrMovieCollection(BaseModel):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieFields(_MetadataFields, _SelectOption):
     """Radarr movie fields attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCommon(BaseModel):
     """Radarr indexers attributes."""
 
@@ -86,7 +86,7 @@ class _RadarrCommon(BaseModel):
         self.fields = [_RadarrMovieFields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieSpecifications(_RadarrCommon):
     """Radarr movie specifications attributes."""
 
@@ -94,7 +94,7 @@ class _RadarrMovieSpecifications(_RadarrCommon):
     required: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieCustomFormats(_Common3):
     """Radarr movie custom formats attributes."""
 
@@ -107,7 +107,7 @@ class _RadarrMovieCustomFormats(_Common3):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCommon2(BaseModel):
     """Radarr common attributes."""
 
@@ -116,7 +116,7 @@ class _RadarrCommon2(BaseModel):
     qualityProfileId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCommon3(_Common9):
     """Radarr common attributes."""
 
@@ -140,7 +140,7 @@ class _RadarrCommon3(_Common9):
         self.ratings = _RadarrMovieRatings(self.ratings)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieCommon(BaseModel):
     """Radarr movie common attributes."""
 
@@ -154,7 +154,7 @@ class _RadarrMovieCommon(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Radarr movie history/blocklist attributes."""
 
@@ -170,7 +170,7 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrNotificationMessage(BaseModel):
     """Radarr notification message attributes."""
 
@@ -178,7 +178,7 @@ class _RadarrNotificationMessage(BaseModel):
     type: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieHistoryData(BaseModel):
     """Radarr movie history data attributes."""
 
@@ -190,7 +190,7 @@ class _RadarrMovieHistoryData(BaseModel):
     reason: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrMovieAlternateTitle(BaseModel):
     """Radarr movie history alternate title attributes."""
 
@@ -208,7 +208,7 @@ class _RadarrMovieAlternateTitle(BaseModel):
         self.language = _Common3(self.language)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrParsedMovieInfo(BaseModel):
     """Radarr parsed movie info attributes."""
 
@@ -233,14 +233,14 @@ class _RadarrParsedMovieInfo(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCustomFormatsSpecsFields(BaseModel):
     """Radarr custom formats specifications fields attributes."""
 
     value: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCustomFormatsSpecs(BaseModel):
     """Radarr custom formats specifications attributes."""
 
@@ -256,7 +256,7 @@ class _RadarrCustomFormatsSpecs(BaseModel):
         self.fields = _RadarrCustomFormatsSpecsFields(self.fields)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _RadarrCustomFormats(BaseModel):
     """Radarr custom formats attributes."""
 

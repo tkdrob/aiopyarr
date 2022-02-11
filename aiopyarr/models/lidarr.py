@@ -116,7 +116,7 @@ class LidarrSortKeys(str, Enum):
     TITLE = TITLE
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
     """Lidarr album attributes."""
 
@@ -137,7 +137,7 @@ class LidarrAlbum(_LidarrCommon3, _LidarrAlbumCommon):
         self.albumReleases = _IsLoaded(self.albumReleases)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrArtist(_LidarrArtist):
     """Lidarr artist attributes."""
 
@@ -151,7 +151,7 @@ class LidarrArtist(_LidarrArtist):
         self.nextAlbum = LidarrAlbum(self.nextAlbum)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrAlbumEditor(BaseModel):
     """Lidarr album editor attributes."""
 
@@ -159,14 +159,14 @@ class LidarrAlbumEditor(BaseModel):
     monitored: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrAlbumLookup(_LidarrAlbumCommon):
     """Lidarr album lookup attributes."""
 
     remoteCover: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrBlocklistItem(_Common7, _LidarrCommon5):
     """Lidarr blocklist item attributes."""
 
@@ -174,7 +174,7 @@ class LidarrBlocklistItem(_Common7, _LidarrCommon5):
     message: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrBlocklist(_RecordCommon):
     """Lidarr blocklist attributes."""
 
@@ -187,12 +187,12 @@ class LidarrBlocklist(_RecordCommon):
         self.records = [LidarrBlocklistItem(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrCalendar(LidarrAlbum):
     """Lidarr calendar attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrWantedCutoff(_RecordCommon):
     """Lidarr wanted cutoff attributes."""
 
@@ -203,7 +203,7 @@ class LidarrWantedCutoff(_RecordCommon):
         self.records = [LidarrAlbum(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrImportList(_Common3, _LidarrImportListPreset):
     """Lidarr import list attributes."""
 
@@ -221,7 +221,7 @@ class LidarrImportList(_Common3, _LidarrImportListPreset):
         self.presets = [_LidarrImportListPreset(x) for x in self.presets or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrAlbumHistory(_LidarrCommon, _LidarrCommon5):
     """Lidarr album history attributes."""
 
@@ -238,7 +238,7 @@ class LidarrAlbumHistory(_LidarrCommon, _LidarrCommon5):
         self.data = _HistoryData(self.data)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrHistory(_RecordCommon):
     """Lidarr history attributes."""
 
@@ -249,7 +249,7 @@ class LidarrHistory(_RecordCommon):
         self.records = [LidarrAlbumHistory(field) for field in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrAlbumType(BaseModel):
     """Lidarr album type attributes."""
 
@@ -261,7 +261,7 @@ class _LidarrAlbumType(BaseModel):
         self.albumType = _Common3(self.albumType)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrReleaseStatus(BaseModel):
     """Lidarr release status attributes."""
 
@@ -273,7 +273,7 @@ class _LidarrReleaseStatus(BaseModel):
         self.releaseStatus = _Common3(self.releaseStatus)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrMetadataProfile(_Common3):
     """Lidarr metadata profile attributes."""
 
@@ -294,14 +294,14 @@ class LidarrMetadataProfile(_Common3):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrQueueItemAlbum(_LidarrAlbumCommon):
     """Lidarr queue detail album attributes."""
 
     id: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrQueueItem(_Common4, _Common7, _Common8):
     """Lidarr queue item attributes."""
 
@@ -319,7 +319,7 @@ class LidarrQueueItem(_Common4, _Common7, _Common8):
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrQueue(_RecordCommon):
     """Lidarr queue attributes."""
 
@@ -330,7 +330,7 @@ class LidarrQueue(_RecordCommon):
         self.records = [LidarrQueueItem(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrRelease(_ReleaseCommon):
     """Lidarr release attributes."""
 
@@ -347,7 +347,7 @@ class LidarrRelease(_ReleaseCommon):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrRename(_Rename):
     """Lidarr rename attributes."""
 
@@ -357,7 +357,7 @@ class LidarrRename(_Rename):
     trackNumbers: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrRetag(LidarrRename):
     """Lidarr retag attributes."""
 
@@ -369,7 +369,7 @@ class LidarrRetag(LidarrRename):
         self.changes = [_RetagChange(change) for change in self.changes or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrSearch(BaseModel):
     """Lidarr search attributes."""
 
@@ -382,14 +382,14 @@ class LidarrSearch(BaseModel):
         self.artist = LidarrArtist(self.artist)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrTagDetails(_TagDetails):
     """Lidarr tag details attributes."""
 
     artistIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrTrack(LidarrRename):
     """Lidarr track attributes."""
 
@@ -411,7 +411,7 @@ class LidarrTrack(LidarrRename):
         self.ratings = _Ratings(self.ratings)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrTrackFile(_LidarrMediaInfo_Quality, _LidarrCommon):
     """Lidarr track file attributes."""
 
@@ -428,7 +428,7 @@ class LidarrTrackFile(_LidarrMediaInfo_Quality, _LidarrCommon):
         self.audioTags = _LidarrAudioTags(self.audioTags)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrTrackFileEditor(BaseModel):
     """Lidarr track file attributes."""
 
@@ -440,7 +440,7 @@ class LidarrTrackFileEditor(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _LidarrParsedAlbumInfo(BaseModel):
     """Lidarr parsed album info attributes."""
 
@@ -465,7 +465,7 @@ class _LidarrParsedAlbumInfo(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrParse(BaseModel):
     """Lidarr parse attributes."""
 
@@ -483,14 +483,14 @@ class LidarrParse(BaseModel):
         self.parsedAlbumInfo = _LidarrParsedAlbumInfo(self.parsedAlbumInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrArtistEditor(_Editor):
     """Lidarr artist editor attributes."""
 
     artistIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrManualImport(_ManualImport):
     """Lidarr manual import attributes."""
 
@@ -512,7 +512,7 @@ class LidarrManualImport(_ManualImport):
         self.tracks = [LidarrTrack(track) for track in self.tracks or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrMetadataProvider(BaseModel):
     """Lidarr metadata provider attributes."""
 
@@ -522,7 +522,7 @@ class LidarrMetadataProvider(BaseModel):
     id: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class LidarrAlbumStudio(BaseModel):
     """Lidarr album studio attributes."""
 

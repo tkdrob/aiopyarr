@@ -21,7 +21,7 @@ from .request_common import (
 )
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSeriesAlternateTitle(BaseModel):
     """Sonarr series alternate titles attributes."""
 
@@ -29,7 +29,7 @@ class _SonarrSeriesAlternateTitle(BaseModel):
     title: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrCommon2(_SonarrSeriesAlternateTitle, _Common6):
     """Sonarr common attributes."""
 
@@ -42,21 +42,21 @@ class _SonarrCommon2(_SonarrSeriesAlternateTitle, _Common6):
     seriesId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrQualityProfileValueAttr(_Common3):
     """Sonarr quality profile value attributes."""
 
     weight: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrImages(_Common5):
     """Sonarr images attributes."""
 
     remoteUrl: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSeries2(_Common6, _Common9):
     """Sonarr parse attributes."""
 
@@ -92,7 +92,7 @@ class _SonarrSeries2(_Common6, _Common9):
         self.seasons = [_SonarrSeriesSeason(season) for season in self.seasons or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrEpisodeFile(_QualityCommon):
     """Sonarr episode file attributes."""
 
@@ -116,7 +116,7 @@ class _SonarrEpisodeFile(_QualityCommon):
         self.mediaInfo = _CommonAttrs(self.mediaInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrEpisodeMonitor(_SonarrCommon2):
     """Sonarr common attributes."""
 
@@ -124,7 +124,7 @@ class _SonarrEpisodeMonitor(_SonarrCommon2):
     unverifiedSceneNumbering: bool
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrCommon(_SonarrEpisodeMonitor):
     """Sonarr common attributes."""
 
@@ -135,7 +135,7 @@ class _SonarrCommon(_SonarrEpisodeMonitor):
         self.episodeFile = _SonarrEpisodeFile(self.episodeFile)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrEpisodeHistoryData(_Common4, _HistoryCommon):
     """Sonarr history record data attributes."""
 
@@ -157,7 +157,7 @@ class _SonarrEpisodeHistoryData(_Common4, _HistoryCommon):
     tvRageId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSeasonStatistics(BaseModel):
     """Sonarr season statistics attributes."""
 
@@ -173,7 +173,7 @@ class _SonarrSeasonStatistics(BaseModel):
         self.previousAiring = get_datetime(self.previousAiring)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSeriesSeason(BaseModel):
     """Sonarr wanted missing series season attributes."""
 
@@ -185,7 +185,7 @@ class _SonarrSeriesSeason(BaseModel):
         self.statistics = _SonarrSeasonStatistics(self.statistics)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSeriesCommon(_SonarrSeries2):
     """Sonarr series common attributes."""
 
@@ -201,7 +201,7 @@ class _SonarrSeriesCommon(_SonarrSeries2):
         self.statistics = _SonarrSeasonStatistics(self.statistics)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrWantedMissingRecord(_SonarrCommon):
     """Sonarr wanted missing record attributes."""
 
@@ -217,7 +217,7 @@ class _SonarrWantedMissingRecord(_SonarrCommon):
         self.series = _SonarrSeries2(self.series)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrParseEpisodeInfo(BaseModel):
     """Sonarr parse episode info attributes."""
 
@@ -250,7 +250,7 @@ class _SonarrParseEpisodeInfo(BaseModel):
         self.seriesTitleInfo = _TitleInfo(self.seriesTitleInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrAddOptions(BaseModel):
     """Sonarr add options attributes."""
 
@@ -259,7 +259,7 @@ class _SonarrAddOptions(BaseModel):
     searchForMissingEpisodes: bool | None = None
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrLanguageItem(BaseModel):
     """Sonarr language item attributes."""
 

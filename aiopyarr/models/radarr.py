@@ -96,7 +96,7 @@ class RadarrSortKeys(str, Enum):
     TIMELEFT = "timeleft"
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrMovieFile(_RadarrMovieCommon):
     """Radarr movie file attributes."""
 
@@ -120,7 +120,7 @@ class RadarrMovieFile(_RadarrMovieCommon):
         self.mediaInfo = _RadarrMovieFileMediaInfo(self.mediaInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
     """Radarr movie history attributes."""
 
@@ -133,7 +133,7 @@ class RadarrMovieHistory(_RadarrMovieHistoryBlocklistBase, _Common2):
         self.data = _RadarrMovieHistoryData(self.data)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrHistory(_RecordCommon):
     """Radarr history attributes."""
 
@@ -145,12 +145,12 @@ class RadarrHistory(_RecordCommon):
         self.records = [RadarrMovieHistory(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrBlocklistMovie(_Common7, _RadarrMovieHistoryBlocklistBase):
     """Radarr blocklist movie attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrBlocklist(_RecordCommon):
     """Radarr blocklist attributes."""
 
@@ -163,7 +163,7 @@ class RadarrBlocklist(_RecordCommon):
         self.records = [RadarrBlocklistMovie(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrQueueDetail(_Common4, _Common8):
     """Radarr queue details attributes."""
 
@@ -184,7 +184,7 @@ class RadarrQueueDetail(_Common4, _Common8):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrQueue(_RecordCommon):
     """Radarr queue attributes."""
 
@@ -195,7 +195,7 @@ class RadarrQueue(_RecordCommon):
         self.records = [RadarrQueueDetail(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     """Radarr import attributes."""
 
@@ -207,7 +207,7 @@ class RadarrImportList(_ImportListCommon, _RadarrCommon, _RadarrCommon2):
     tags: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrNotification(_Common3, _Notification):
     """Radarr notification attributes."""
 
@@ -223,7 +223,7 @@ class RadarrNotification(_Common3, _Notification):
         self.message = _RadarrNotificationMessage(self.message)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrTagDetails(_TagDetails):
     """Radarr tag details attributes."""
 
@@ -231,7 +231,7 @@ class RadarrTagDetails(_TagDetails):
     movieIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrNamingConfig(BaseModel):
     """Radarr host naming config attributes."""
 
@@ -245,7 +245,7 @@ class RadarrNamingConfig(BaseModel):
     standardMovieFormat: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
     """Radarr movie attributes."""
 
@@ -274,7 +274,7 @@ class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
         self.movieFile = RadarrMovieFile(self.movieFile)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrImportListMovie(_RadarrCommon3):
     """Radarr import list movie attributes."""
 
@@ -287,7 +287,7 @@ class RadarrImportListMovie(_RadarrCommon3):
     remotePoster: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
@@ -297,14 +297,14 @@ class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     secondaryYearSourceId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrMovieEditor(_Editor):
     """Radarr root folder attributes."""
 
     movieIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrParse(BaseModel):
     """Radarr parse attributes."""
 
@@ -320,7 +320,7 @@ class RadarrParse(BaseModel):
         self.parsedMovieInfo = _RadarrParsedMovieInfo(self.parsedMovieInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrRelease(_ReleaseCommon):
     """Radarr release attributes."""
 
@@ -344,7 +344,7 @@ class RadarrRelease(_ReleaseCommon):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrRename(_Rename):
     """Radarr rename attributes."""
 
@@ -352,7 +352,7 @@ class RadarrRename(_Rename):
     movieId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrManualImport(_ManualImport):
     """Radarr manual import attributes."""
 
@@ -369,7 +369,7 @@ class RadarrManualImport(_ManualImport):
         self.movie = RadarrMovie(self.movie)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrExtraFile(BaseModel):
     """Radarr extra file attributes."""
 
@@ -381,12 +381,12 @@ class RadarrExtraFile(BaseModel):
     type: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrIndexerFlag(Language):
     """Radarr indexer flag attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrRestriction(BaseModel):
     """Radarr restriction attributes."""
 
@@ -396,7 +396,7 @@ class RadarrRestriction(BaseModel):
     tags: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrCredit(BaseModel):
     """Radarr credit attributes."""
 
@@ -416,7 +416,7 @@ class RadarrCredit(BaseModel):
         self.images = [_Common5(image) for image in self.images or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class RadarrAltTitle(BaseModel):
     """Radarr alternate title attributes."""
 

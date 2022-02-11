@@ -115,12 +115,12 @@ class ReadarrSortKeys(str, Enum):
     TITLE = TITLE
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrAuthor(_ReadarrAuthorBase):
     """Readarr author attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBook(_ReadarrBookCommon):
     """Readarr book attributes."""
 
@@ -146,14 +146,14 @@ class ReadarrBook(_ReadarrBookCommon):
         self.statistics = _ReadarrAuthorStatistics(self.statistics)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrAuthorLookup(ReadarrAuthor):
     """Readarr author attributes."""
 
     monitorNewItems: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBlocklist(_RecordCommon):
     """Readarr blocklist attributes."""
 
@@ -170,7 +170,7 @@ class ReadarrBlocklist(_RecordCommon):
         self.records = [_ReadarrBlocklistRecord(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrAuthorEditor(_Editor):
     """Readarr author editor attributes."""
 
@@ -178,7 +178,7 @@ class ReadarrAuthorEditor(_Editor):
     metadataProfileId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookFile(_QualityCommon):
     """Readarr book file attributes."""
 
@@ -201,7 +201,7 @@ class ReadarrBookFile(_QualityCommon):
         self.mediaInfo = _ReadarrBookFileMediaInfo(self.mediaInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookFileEditor(BaseModel):
     """Readarr book file attributes."""
 
@@ -213,7 +213,7 @@ class ReadarrBookFileEditor(BaseModel):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookLookup(_Common6):
     """Readarr book lookup attributes."""
 
@@ -247,7 +247,7 @@ class ReadarrBookLookup(_Common6):
         self.ratings = _ReadarrRating(self.ratings)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
     """Readarr bookshelf author Book attributes."""
 
@@ -262,12 +262,12 @@ class ReadarrBookshelfAuthorBook(ReadarrBookLookup):
         self.statistics = _ReadarrAuthorStatistics(self.statistics)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrCalendar(ReadarrBookshelfAuthorBook):
     """Readarr calendar attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookshelfAuthor(BaseModel):
     """Readarr bookshelf author attributes."""
 
@@ -280,7 +280,7 @@ class ReadarrBookshelfAuthor(BaseModel):
         self.books = [ReadarrBookshelfAuthorBook(book) for book in self.books or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookshelf(BaseModel):
     """Readarr bookshelf attributes."""
 
@@ -295,7 +295,7 @@ class ReadarrBookshelf(BaseModel):
         self.monitoringOptions = _ReadarrAuthorAddOptions(self.monitoringOptions)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrWantedMissing(_RecordCommon):
     """Readarr wanted missing attributes."""
 
@@ -306,7 +306,7 @@ class ReadarrWantedMissing(_RecordCommon):
         self.records = [ReadarrBook(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrWantedCutoff(ReadarrWantedMissing):
     """Readarr wanted cutoff attributes."""
 
@@ -319,12 +319,12 @@ class ReadarrWantedCutoff(ReadarrWantedMissing):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrMetadataProfile(_ReadarrMetadataProfileValue):
     """Readarr metadata profile attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrDevelopmentConfig(BaseModel):
     """Readarr development config attributes."""
 
@@ -336,7 +336,7 @@ class ReadarrDevelopmentConfig(BaseModel):
     metadataSource: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrBookHistory(_Common2, _QualityCommon):
     """Readarr history record attributes."""
 
@@ -353,7 +353,7 @@ class ReadarrBookHistory(_Common2, _QualityCommon):
         self.data = _HistoryData(self.data)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrHistory(_RecordCommon):
     """Readarr history attributes."""
 
@@ -364,7 +364,7 @@ class ReadarrHistory(_RecordCommon):
         self.records = [ReadarrBookHistory(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrImportList(_ImportListCommon, _Common3):
     """Readarr importlist attributes."""
 
@@ -387,7 +387,7 @@ class ReadarrImportList(_ImportListCommon, _Common3):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrMetadataProvider(BaseModel):
     """Readarr metadata provider attributes."""
 
@@ -399,7 +399,7 @@ class ReadarrMetadataProvider(BaseModel):
     writeBookTags: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrNamingConfig(BaseModel):
     """Readarr naming config attributes."""
 
@@ -414,7 +414,7 @@ class ReadarrNamingConfig(BaseModel):
     standardBookFormat: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrNotification(_Common3, _Notification):
     """Readarr notification attributes."""
 
@@ -433,7 +433,7 @@ class ReadarrNotification(_Common3, _Notification):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrParse(BaseModel):
     """Readarr parse attributes."""
 
@@ -450,7 +450,7 @@ class ReadarrParse(BaseModel):
         self.parsedBookInfo = _ReadarrParsedBookInfo(self.parsedBookInfo)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrQueueDetail(_Common4, _Common8):
     """Readarr queue detail attributes."""
 
@@ -469,7 +469,7 @@ class ReadarrQueueDetail(_Common4, _Common8):
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrQueue(_RecordCommon):
     """Readarr queue attributes."""
 
@@ -480,7 +480,7 @@ class ReadarrQueue(_RecordCommon):
         self.records = [ReadarrQueueDetail(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrRelease(_ReleaseCommon):
     """Readarr release attributes."""
 
@@ -496,7 +496,7 @@ class ReadarrRelease(_ReleaseCommon):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrRename(_Rename):
     """Readarr rename attributes."""
 
@@ -505,7 +505,7 @@ class ReadarrRename(_Rename):
     bookId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrRetag(ReadarrRename):
     """Readarr retag attributes."""
 
@@ -518,7 +518,7 @@ class ReadarrRetag(ReadarrRename):
         self.changes = [_RetagChange(change) for change in self.changes or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrSearch(BaseModel):
     """Readarr search attributes."""
 
@@ -532,7 +532,7 @@ class ReadarrSearch(BaseModel):
         self.author = _ReadarrSearchAuthor(self.author)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrSeries(BaseModel):
     """Readarr series attributes."""
 
@@ -546,14 +546,14 @@ class ReadarrSeries(BaseModel):
         self.links = [_ReadarrSeriesLinks2(link) for link in self.links or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrTagDetails(_TagDetails):
     """Readarr tag details attributes."""
 
     authorIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrManualImport(_ManualImport):
     """Readarr manual import attributes."""
 
@@ -573,7 +573,7 @@ class ReadarrManualImport(_ManualImport):
         self.book = ReadarrBook(self.book)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class ReadarrImportListOptions(BaseModel):
     """Readarr import list options attributes."""
 

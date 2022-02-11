@@ -93,12 +93,12 @@ class SonarrSortKeys(str, Enum):
     TIMELEFT = "timeleft"
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
     """Sonarr calendar attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrEpisode(_SonarrCommon):
     """Sonarr episode attributes."""
 
@@ -110,12 +110,12 @@ class SonarrEpisode(_SonarrCommon):
         self.series = _SonarrSeriesCommon(self.series)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrEpisodeFile(_SonarrEpisodeFile):
     """Sonarr episode file attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrEpisodeHistory(_Common2, _QualityCommon):
     """Sonarr history record attributes."""
 
@@ -135,7 +135,7 @@ class SonarrEpisodeHistory(_Common2, _QualityCommon):
         self.language = _Common3(self.language)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrHistory(_RecordCommon):
     """Sonarr history attributes."""
 
@@ -148,7 +148,7 @@ class SonarrHistory(_RecordCommon):
         self.records = [SonarrEpisodeHistory(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrWantedMissing(_RecordCommon):
     """Sonarr wanted missing attributes."""
 
@@ -161,7 +161,7 @@ class SonarrWantedMissing(_RecordCommon):
         self.records = [_SonarrWantedMissingRecord(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrQueueDetail(_Common4, _Common8):
     """Sonarr queue detail attributes."""
 
@@ -181,7 +181,7 @@ class SonarrQueueDetail(_Common4, _Common8):
         self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrQueue(_RecordCommon):
     """Sonarr queue attributes."""
 
@@ -193,7 +193,7 @@ class SonarrQueue(_RecordCommon):
         self.records = [SonarrQueueDetail(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrParse(BaseModel):
     """Sonarr parse attributes."""
 
@@ -211,7 +211,7 @@ class SonarrParse(BaseModel):
         self.series = _SonarrSeries2(self.series)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class _SonarrSceneMapping(BaseModel):
     """Sonarr scene mapping attributes."""
 
@@ -219,7 +219,7 @@ class _SonarrSceneMapping(BaseModel):
     seasonNumber: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrRelease(_ReleaseCommon):
     """Sonarr release attributes."""
 
@@ -256,7 +256,7 @@ class SonarrRelease(_ReleaseCommon):
         self.sceneMapping = _SonarrSceneMapping(self.sceneMapping)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrSeries(_SonarrSeriesCommon):
     """Sonarr series attributes."""
 
@@ -272,7 +272,7 @@ class SonarrSeries(_SonarrSeriesCommon):
         ]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrSeriesAdd(SonarrSeries):
     """Sonarr series add attributes."""
 
@@ -284,12 +284,12 @@ class SonarrSeriesAdd(SonarrSeries):
         self.addOptions = _SonarrAddOptions(self.addOptions)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrSeriesLookup(_SonarrSeriesCommon):
     """Sonarr series lookup attributes."""
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrBlocklistSeries(_Common7):
     """Sonarr blocklist series attributes."""
 
@@ -308,7 +308,7 @@ class SonarrBlocklistSeries(_Common7):
         self.quality = _Quality(self.quality)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrBlocklist(_RecordCommon):
     """Sonarr blocklist attributes."""
 
@@ -321,7 +321,7 @@ class SonarrBlocklist(_RecordCommon):
         self.records = [SonarrBlocklistSeries(record) for record in self.records]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrNamingConfig(BaseModel):
     """Sonarr naming config attributes."""
 
@@ -343,7 +343,7 @@ class SonarrNamingConfig(BaseModel):
     standardEpisodeFormat: str
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrNotification(_Common3, _Notification):
     """Sonarr notification attributes."""
 
@@ -360,7 +360,7 @@ class SonarrNotification(_Common3, _Notification):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrRename(_Rename):
     """Sonarr rename attributes."""
 
@@ -370,7 +370,7 @@ class SonarrRename(_Rename):
     seriesId: int
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrTagDetails(_TagDetails):
     """Sonarr tag details attributes."""
 
@@ -378,7 +378,7 @@ class SonarrTagDetails(_TagDetails):
     seriesIds: list[int]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrImportList(_ImportListCommon, _Common3):
     """Sonarr importlist attributes."""
 
@@ -400,7 +400,7 @@ class SonarrImportList(_ImportListCommon, _Common3):
         self.fields = [_Fields(field) for field in self.fields or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrManualImport(_ManualImport):
     """Sonarr manual import attributes."""
 
@@ -421,7 +421,7 @@ class SonarrManualImport(_ManualImport):
         self.series = _SonarrSeries2(self.series)
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrSeasonPass(BaseModel):
     """Sonarr season pass attributes."""
 
@@ -435,7 +435,7 @@ class SonarrSeasonPass(BaseModel):
         self.series = [_Monitor(x) for x in self.series or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrLanguage(BaseModel):
     """Sonarr launguage attributes."""
 
@@ -452,6 +452,6 @@ class SonarrLanguage(BaseModel):
         self.languages = [_SonarrLanguageItem(x) for x in self.languages or []]
 
 
-@dataclass(init=False, repr=False)
+@dataclass(init=False)
 class SonarrEpisodeMonitor(_SonarrEpisodeMonitor):
     """Sonarr episode monitor attributes."""
