@@ -74,6 +74,7 @@ from .models.request import (
 class RequestClient:  # pylint: disable=too-many-public-methods
     """Base class for API Client."""
 
+    __name__ = ""
     _close_session = False
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -198,25 +199,40 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
         return response.basedata
 
-    async def async_try_zeroconf(self) -> tuple[str, str, str]:
+    async def async_try_zeroconf(
+        self, throw: bool = False
+    ) -> tuple[str, str, str] | str:
         """Get api information if login not required."""
+        data = ""
         try:
-            data = await (
-                await self._session.request(
-                    method=HTTPMethod.GET.value,
-                    url=self._host.api_url("initialize", True),
-                    headers=HEADERS_JS,
-                    timeout=ClientTimeout(2),
-                    ssl=self._host.verify_ssl,
-                )
-            ).text()
+            data = str(
+                await (
+                    await self._session.request(
+                        method=HTTPMethod.GET.value,
+                        url=self._host.api_url("initialize", True),
+                        headers=HEADERS_JS,
+                        timeout=ClientTimeout(2),
+                        ssl=self._host.verify_ssl,
+                    )
+                ).text()
+            )
 
             # Type ingored as we are already catching errors
-            api_ver = str(search(r"apiRoot: '/api/(.*)'", data).group(1))  # type: ignore
-            api_token = str(search(r"apiKey: '(.*)'", data).group(1))  # type: ignore
-            base_api_path = str(search(r"urlBase: '(.*)'", data).group(1))  # type: ignore
+            api_ver = search(r"apiRoot: '/api/(.*)'", data).group(1)  # type: ignore
+            api_token = search(r"apiKey: '(.*)'", data).group(1)  # type: ignore
+            base_api_path = search(r"urlBase: '(.*)'", data).group(1)  # type: ignore
         except (AttributeError, asyncio.exceptions.TimeoutError) as ex:
-            raise ArrException(message="Failed to get api info automatically") from ex
+            if "login-failed" in data:
+                if throw:
+                    raise ArrException(message="Failed to get api info automatically")
+                return "zeroconf_failed"
+            if throw:
+                raise ArrException(message="Failed to connect") from ex
+            return "cannot_connect"
+        if self.__name__ not in data:
+            if throw:
+                raise ArrException(message="Incorrect application")
+            return "wrong_app"
         return api_ver, api_token, base_api_path
 
     async def async_get_diskspace(self) -> list[Diskspace]:

@@ -63,6 +63,8 @@ from .request_client import RequestClient
 class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     """API client for Lidarr endpoints."""
 
+    __name__ = "Lidarr"
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         host_configuration: PyArrHostConfiguration | None = None,
