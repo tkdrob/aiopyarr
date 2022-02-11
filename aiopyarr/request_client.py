@@ -224,7 +224,9 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         except (AttributeError, asyncio.exceptions.TimeoutError) as ex:
             if "login-failed" in data:
                 if throw:
-                    raise ArrException(message="Failed to get api info automatically")
+                    raise ArrException(
+                        message="Failed to get api info automatically"
+                    ) from ex
                 return "zeroconf_failed"
             if throw:
                 raise ArrException(message="Failed to connect") from ex
