@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
@@ -102,12 +102,12 @@ class SonarrCalendar(_SonarrWantedMissingRecord, _SonarrCommon2):
 class SonarrEpisode(_SonarrCommon):
     """Sonarr episode attributes."""
 
-    series: _SonarrSeriesCommon | None = None
+    series: type[_SonarrSeriesCommon] = field(default=_SonarrSeriesCommon)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.series = _SonarrSeriesCommon(self.series) or {}
+        self.series = _SonarrSeriesCommon(self.series)
 
 
 @dataclass(init=False)
@@ -119,11 +119,11 @@ class SonarrEpisodeFile(_SonarrEpisodeFile):
 class SonarrEpisodeHistory(_Common2, _QualityCommon):
     """Sonarr history record attributes."""
 
-    data: _SonarrEpisodeHistoryData | None = None
+    data: type[_SonarrEpisodeHistoryData] = field(default=_SonarrEpisodeHistoryData)
     date: datetime
     episodeId: int
     id: int
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     languageCutoffNotMet: bool
     seriesId: int
     sourceTitle: str
@@ -131,44 +131,66 @@ class SonarrEpisodeHistory(_Common2, _QualityCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.data = _SonarrEpisodeHistoryData(self.data) or {}
-        self.language = _Common3(self.language) or {}
+        self.data = _SonarrEpisodeHistoryData(self.data)
+        self.language = _Common3(self.language)
 
 
 @dataclass(init=False)
 class SonarrHistory(_RecordCommon):
     """Sonarr history attributes."""
 
-    records: list[SonarrEpisodeHistory] | None = None
+    records: list[SonarrEpisodeHistory] = field(
+        default_factory=list[SonarrEpisodeHistory]
+    )
 
     def __post_init__(self):
         """Post init."""
-        self.records = [SonarrEpisodeHistory(record) for record in self.records or []]
+        self.records = [SonarrEpisodeHistory(record) for record in self.records]
 
 
 @dataclass(init=False)
 class SonarrWantedMissing(_RecordCommon):
     """Sonarr wanted missing attributes."""
 
-    records: list[_SonarrWantedMissingRecord] | None = None
+    records: list[_SonarrWantedMissingRecord] = field(
+        default_factory=list[_SonarrWantedMissingRecord]
+    )
 
     def __post_init__(self):
         """Post init."""
-        self.records = [
-            _SonarrWantedMissingRecord(record) for record in self.records or []
-        ]
+        self.records = [_SonarrWantedMissingRecord(record) for record in self.records]
+
+
+@dataclass(init=False)
+class SonarrQueueDetail(_Common4, _Common8):
+    """Sonarr queue detail attributes."""
+
+    episode: type[_SonarrCommon] = field(default=_SonarrCommon)
+    episodeId: int
+    language: type[_Common3] = field(default=_Common3)
+    series: type[_SonarrSeries2] = field(default=_SonarrSeries2)
+    seriesId: int
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.quality = _Quality(self.quality)
+        self.episode = _SonarrCommon(self.episode)
+        self.language = _Common3(self.language)
+        self.series = _SonarrSeries2(self.series)
+        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
 @dataclass(init=False)
 class SonarrQueue(_RecordCommon):
     """Sonarr queue attributes."""
 
-    records: list[SonarrQueueDetail] | None = None
+    records: list[SonarrQueueDetail] = field(default_factory=list[SonarrQueueDetail])
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.records = [SonarrQueueDetail(record) for record in self.records or []]
+        self.records = [SonarrQueueDetail(record) for record in self.records]
 
 
 @dataclass(init=False)
@@ -176,15 +198,17 @@ class SonarrParse(BaseModel):
     """Sonarr parse attributes."""
 
     episodes: list[SonarrEpisode] | None = None
-    parsedEpisodeInfo: _SonarrParseEpisodeInfo | None = None
-    series: _SonarrSeries2 | None = None
+    parsedEpisodeInfo: type[_SonarrParseEpisodeInfo] = field(
+        default=_SonarrParseEpisodeInfo
+    )
+    series: type[_SonarrSeries2] = field(default=_SonarrSeries2)
     title: str
 
     def __post_init__(self):
         """Post init."""
         self.episodes = [SonarrEpisode(episode) for episode in self.episodes or []]
-        self.parsedEpisodeInfo = _SonarrParseEpisodeInfo(self.parsedEpisodeInfo) or {}
-        self.series = _SonarrSeries2(self.series) or {}
+        self.parsedEpisodeInfo = _SonarrParseEpisodeInfo(self.parsedEpisodeInfo)
+        self.series = _SonarrSeries2(self.series)
 
 
 @dataclass(init=False)
@@ -206,18 +230,18 @@ class SonarrRelease(_ReleaseCommon):
     isAbsoluteNumbering: bool
     isDaily: bool
     isPossibleSpecialEpisode: bool
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     languageWeight: int
     mappedAbsoluteEpisodeNumbers: list[int]
     mappedEpisodeNumbers: list[int]
     mappedSeasonNumber: int
     preferredWordScore: int
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     rejected: bool
     releaseGroup: str
     releaseHash: str
     releaseWeight: int
-    sceneMapping: _SonarrSceneMapping | None = None
+    sceneMapping: type[_SonarrSceneMapping] = field(default=_SonarrSceneMapping)
     seasonNumber: int
     seriesTitle: str
     special: bool
@@ -227,9 +251,9 @@ class SonarrRelease(_ReleaseCommon):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.language = _Common3(self.language) or {}
-        self.quality = _Quality(self.quality) or {}
-        self.sceneMapping = _SonarrSceneMapping(self.sceneMapping) or {}
+        self.language = _Common3(self.language)
+        self.quality = _Quality(self.quality)
+        self.sceneMapping = _SonarrSceneMapping(self.sceneMapping)
 
 
 @dataclass(init=False)
@@ -252,12 +276,12 @@ class SonarrSeries(_SonarrSeriesCommon):
 class SonarrSeriesAdd(SonarrSeries):
     """Sonarr series add attributes."""
 
-    addOptions: _SonarrAddOptions | None = None
+    addOptions: type[_SonarrAddOptions] = field(default=_SonarrAddOptions)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.addOptions = _SonarrAddOptions(self.addOptions) or {}
+        self.addOptions = _SonarrAddOptions(self.addOptions)
 
 
 @dataclass(init=False)
@@ -271,28 +295,30 @@ class SonarrBlocklistSeries(_Common7):
 
     date: datetime
     episodeIds: list[int]
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     message: str
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     seriesId: int
     sourceTitle: str
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.language = _Common3(self.language) or {}
-        self.quality = _Quality(self.quality) or {}
+        self.language = _Common3(self.language)
+        self.quality = _Quality(self.quality)
 
 
 @dataclass(init=False)
 class SonarrBlocklist(_RecordCommon):
     """Sonarr blocklist attributes."""
 
-    records: list[SonarrBlocklistSeries] | None = None
+    records: list[SonarrBlocklistSeries] = field(
+        default_factory=list[SonarrBlocklistSeries]
+    )
 
     def __post_init__(self):
         """Post init."""
-        self.records = [SonarrBlocklistSeries(record) for record in self.records or []]
+        self.records = [SonarrBlocklistSeries(record) for record in self.records]
 
 
 @dataclass(init=False)
@@ -332,26 +358,6 @@ class SonarrNotification(_Common3, _Notification):
     def __post_init__(self):
         """Post init."""
         self.fields = [_Fields(field) for field in self.fields or []]
-
-
-@dataclass(init=False)
-class SonarrQueueDetail(_Common4, _Common8):
-    """Sonarr queue detail attributes."""
-
-    episode: _SonarrCommon | None = None
-    episodeId: int
-    language: _Common3 | None = None
-    series: _SonarrSeries2 | None = None
-    seriesId: int
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.quality = _Quality(self.quality) or {}
-        self.episode = _SonarrCommon(self.episode) or {}
-        self.language = _Common3(self.language) or {}
-        self.series = _SonarrSeries2(self.series) or {}
-        self.statusMessages = [_StatusMessage(x) for x in self.statusMessages or []]
 
 
 @dataclass(init=False)
@@ -400,10 +406,10 @@ class SonarrManualImport(_ManualImport):
 
     episodes: list[SonarrEpisodeMonitor] | None = None
     folderName: str
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     relativePath: str
     seasonNumber: int
-    series: _SonarrSeries2 | None = None
+    series: type[_SonarrSeries2] = field(default=_SonarrSeries2)
 
     def __post_init__(self):
         """Post init."""
@@ -411,21 +417,21 @@ class SonarrManualImport(_ManualImport):
         self.episodes = [
             SonarrEpisodeMonitor(episode) for episode in self.episodes or []
         ]
-        self.language = _Common3(self.language) or {}
-        self.series = _SonarrSeries2(self.series) or {}
+        self.language = _Common3(self.language)
+        self.series = _SonarrSeries2(self.series)
 
 
 @dataclass(init=False)
 class SonarrSeasonPass(BaseModel):
     """Sonarr season pass attributes."""
 
-    monitoringOptions: _MonitorOption | None = None
+    monitoringOptions: type[_MonitorOption] = field(default=_MonitorOption)
     series: list[_Monitor] | None = None
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.monitoringOptions = _MonitorOption(self.monitoringOptions) or {}
+        self.monitoringOptions = _MonitorOption(self.monitoringOptions)
         self.series = [_Monitor(x) for x in self.series or []]
 
 
@@ -433,7 +439,7 @@ class SonarrSeasonPass(BaseModel):
 class SonarrLanguage(BaseModel):
     """Sonarr launguage attributes."""
 
-    cutoff: _Common3 | None = None
+    cutoff: type[_Common3] = field(default=_Common3)
     id: int
     languages: list[_SonarrLanguageItem] | None = None
     name: str
@@ -442,7 +448,7 @@ class SonarrLanguage(BaseModel):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.cutoff = _Common3(self.cutoff) or {}
+        self.cutoff = _Common3(self.cutoff)
         self.languages = [_SonarrLanguageItem(x) for x in self.languages or []]
 
 

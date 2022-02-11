@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes, line-too-long, too-many-lines
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from .base import BaseModel
@@ -112,12 +112,43 @@ class _Common7(BaseModel):
 
 
 @dataclass(init=False)
+class _QualityInfo(_Common3):
+    """Quality info attributes."""
+
+    modifier: str
+    resolution: int
+    source: str
+
+
+@dataclass(init=False)
+class _Revision(BaseModel):
+    """Revision attributes."""
+
+    isRepack: bool
+    real: int
+    version: int
+
+
+@dataclass(init=False)
+class _Quality(BaseModel):
+    """Quality attributes."""
+
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
+    revision: type[_Revision] = field(default=_Revision)
+
+    def __post_init__(self):
+        """Post init."""
+        self.quality = _QualityInfo(self.quality)
+        self.revision = _Revision(self.revision)
+
+
+@dataclass(init=False)
 class _Common8(BaseModel):
     """Common attributes."""
 
     id: int
     protocol: ProtocolType
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     size: int
     sizeleft: int
     status: str
@@ -1703,25 +1734,16 @@ class _LogRecord(BaseModel):
 
 
 @dataclass(init=False)
-class _QualityInfo(_Common3):
-    """Quality info attributes."""
-
-    modifier: str
-    resolution: int
-    source: str
-
-
-@dataclass(init=False)
 class _QualityProfileItems(_Common3):
     """Quality profile items attributes."""
 
     allowed: bool
     items: list[_QualityProfileItems] | None = None
-    quality: _QualityInfo | None = None
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
 
     def __post_init__(self):
         self.items = [_QualityProfileItems(item) for item in self.items or []]
-        self.quality = _QualityInfo(self.quality) or {}
+        self.quality = _QualityInfo(self.quality)
 
 
 @dataclass(init=False)
@@ -1757,28 +1779,6 @@ class _ReleaseCommon(BaseModel):
     def __post_init__(self):
         """Post init."""
         self.rejections = [_Rejection(x) for x in self.rejections or []]
-
-
-@dataclass(init=False)
-class _Revision(BaseModel):
-    """Revision attributes."""
-
-    isRepack: bool
-    real: int
-    version: int
-
-
-@dataclass(init=False)
-class _Quality(BaseModel):
-    """Quality attributes."""
-
-    quality: _QualityInfo | None = None
-    revision: _Revision | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.quality = _QualityInfo(self.quality) or {}
-        self.revision = _Revision(self.revision) or {}
 
 
 @dataclass(init=False)
@@ -1909,13 +1909,13 @@ class _HistoryData(_HistoryCommon):
 class _QualityCommon(BaseModel):
     """Quality common attributes."""
 
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     qualityCutoffNotMet: bool
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
 
 
 @dataclass(init=False)
@@ -1979,14 +1979,14 @@ class _ManualImport(BaseModel):
     id: int
     name: str
     path: str
-    quality: _Quality | None = None
+    quality: type[_Quality] = field(default=_Quality)
     qualityWeight: int
     rejections: list[_Rejection] | None = None
     size: int
 
     def __post_init__(self):
         """Post init."""
-        self.quality = _Quality(self.quality) or {}
+        self.quality = _Quality(self.quality)
         self.rejections = [_Rejection(x) for x in self.rejections or []]
 
 

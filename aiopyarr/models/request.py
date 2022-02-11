@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 
@@ -216,11 +216,11 @@ class Diskspace(BaseModel):
 class Logs(_RecordCommon):
     """Log attributes."""
 
-    records: list[_LogRecord] | None = None
+    records: list[_LogRecord] = field(default_factory=list[_LogRecord])
 
     def __post_init__(self):
         """Post init."""
-        self.records = [_LogRecord(record) for record in self.records or []]
+        self.records = [_LogRecord(record) for record in self.records]
 
 
 @dataclass(init=False)
@@ -371,7 +371,7 @@ class SystemStatus(BaseModel):
 class Command(_Common3):
     """Command attributes."""
 
-    body: _CommandBody | None = None
+    body: type[_CommandBody] = field(default=_CommandBody)
     commandName: str
     duration: str
     ended: datetime
@@ -389,7 +389,7 @@ class Command(_Common3):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.body = _CommandBody(self.body) or {}
+        self.body = _CommandBody(self.body)
 
 
 @dataclass(init=False)
@@ -504,11 +504,11 @@ class Language(_Common3):
 class Localization(BaseModel):
     """Localization attributes."""
 
-    Strings: _LocalizationStrings | None = None
+    Strings: type[_LocalizationStrings] = field(default=_LocalizationStrings)
 
     def __post_init__(self):
         """Post init."""
-        self.Strings = _LocalizationStrings(self.Strings) or {}
+        self.Strings = _LocalizationStrings(self.Strings)
 
 
 @dataclass(init=False)
@@ -569,13 +569,13 @@ class QualityDefinition(BaseModel):
     maxSize: float
     minSize: float
     preferredSize: int
-    quality: _QualityInfo | None = None
+    quality: type[_QualityInfo] = field(default=_QualityInfo)
     title: str
     weight: int
 
     def __post_init__(self):
         """Post init."""
-        self.quality = _QualityInfo(self.quality) or {}
+        self.quality = _QualityInfo(self.quality)
 
 
 @dataclass(init=False)
@@ -586,14 +586,14 @@ class QualityProfile(_Common3):
     cutoffFormatScore: int
     formatItems: list
     items: list[_QualityProfileItems] | None = None
-    language: _Common3 | None = None
+    language: type[_Common3] = field(default=_Common3)
     minFormatScore: int
     upgradeAllowed: bool
 
     def __post_init__(self):
         """Post init."""
         self.items = [_QualityProfileItems(item) for item in self.items or []]
-        self.language = _Common3(self.language) or {}
+        self.language = _Common3(self.language)
 
 
 @dataclass(init=False)
@@ -654,7 +654,7 @@ class Update(BaseModel):
     """Update attributes."""
 
     branch: str
-    changes: _UpdateChanges | None = None
+    changes: type[_UpdateChanges] = field(default=_UpdateChanges)
     fileName: str
     hash: str
     installable: bool
@@ -668,7 +668,7 @@ class Update(BaseModel):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.changes = _UpdateChanges(self.changes) or {}
+        self.changes = _UpdateChanges(self.changes)
 
 
 @dataclass(init=False)

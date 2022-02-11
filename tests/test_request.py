@@ -462,6 +462,20 @@ async def test_async_get_logs(aresponses, sonarr_client: SonarrClient) -> None:
     assert data.records[0].exception == "string"
     assert data.records[0].exceptionType == "string"
 
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/log?page=1&pageSize=10&sortKey=time&sortDirection=default",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=json.dumps({"records": []}),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_get_logs()
+    assert data.records == []
+
 
 @pytest.mark.asyncio
 async def test_get_log_file(aresponses, readarr_client: ReadarrClient) -> None:

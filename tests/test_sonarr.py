@@ -24,6 +24,7 @@ from aiopyarr.models.sonarr import (
     SonarrSeriesAdd,
     SonarrSortKeys,
 )
+from aiopyarr.models.sonarr_common import _SonarrSeries2
 from aiopyarr.sonarr_client import SonarrClient
 
 from . import SONARR_API, load_fixture
@@ -185,6 +186,24 @@ async def test_async_get_calendar_extended(aresponses, sonarr_client: SonarrClie
     assert isinstance(data[0].series.ratings.votes, int)
     assert isinstance(data[0].series.ratings.value, float)
     assert isinstance(data[0].series.id, int)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/calendar?start=2020-11-30&end=2020-12-01&includeSeries=True",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/calendar.json"),
+        ),
+        match_querystring=True,
+    )
+    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    data = await sonarr_client.async_get_calendar(
+        start_date=start, end_date=end, include_series=True
+    )
+    assert isinstance(data[0].series, _SonarrSeries2)
 
 
 @pytest.mark.asyncio

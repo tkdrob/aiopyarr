@@ -2,7 +2,7 @@
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 
 from .base import BaseModel
@@ -42,14 +42,26 @@ class _LidarrCommon2(BaseModel):
 
     images: list[_LidarrImage] | None = None
     links: list[_Link] | None = None
-    ratings: _Ratings | None = None
+    ratings: type[_Ratings] = field(default=_Ratings)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
         self.images = [_LidarrImage(image) for image in self.images or []]
         self.links = [_Link(link) for link in self.links or []]
-        self.ratings = _Ratings(self.ratings) or {}
+        self.ratings = _Ratings(self.ratings)
+
+
+@dataclass(init=False)
+class _LidarrStatistics(BaseModel):
+    """Lidarr statistics attributes."""
+
+    albumCount: int
+    percentOfTracks: float
+    sizeOnDisk: int
+    totalTrackCount: int
+    trackCount: int
+    trackFileCount: int
 
 
 @dataclass(init=False)
@@ -57,12 +69,12 @@ class _LidarrCommon3(BaseModel):
     """Lidarr common attributes."""
 
     id: int
-    statistics: _LidarrStatistics | None = None
+    statistics: type[_LidarrStatistics] = field(default=_LidarrStatistics)
 
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.statistics = _LidarrStatistics(self.statistics) or {}
+        self.statistics = _LidarrStatistics(self.statistics)
 
 
 @dataclass(init=False)
@@ -72,23 +84,6 @@ class _LidarrCommon4(BaseModel):
     disambiguation: str
     foreignAlbumId: str
     genres: list[str]
-
-
-@dataclass(init=False)
-class _LidarrCommon5(BaseModel):
-    """Lidarr common attributes."""
-
-    artist: _LidarrArtist | None = None
-    artistId: int
-    date: datetime
-    quality: _Quality | None = None
-    sourceTitle: str
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.artist = _LidarrArtist(self.artist) or {}
-        self.quality = _Quality(self.quality) or {}
 
 
 @dataclass(init=False)
@@ -117,12 +112,29 @@ class _LidarrArtist(_LidarrCommon2, _LidarrCommon3, _LidarrCommon4, _Common6):
 
 
 @dataclass(init=False)
+class _LidarrCommon5(BaseModel):
+    """Lidarr common attributes."""
+
+    artist: type[_LidarrArtist] = field(default=_LidarrArtist)
+    artistId: int
+    date: datetime
+    quality: type[_Quality] = field(default=_Quality)
+    sourceTitle: str
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.artist = _LidarrArtist(self.artist)
+        self.quality = _Quality(self.quality)
+
+
+@dataclass(init=False)
 class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
     """Lidarr album common media attributes."""
 
     albumType: str
     anyReleaseOk: bool
-    artist: _LidarrArtist | None = None
+    artist: type[_LidarrArtist] = field(default=_LidarrArtist)
     artistId: int
     duration: int
     media: list[_LidarrMedia] | None = None
@@ -136,7 +148,7 @@ class _LidarrAlbumCommon(_LidarrCommon2, _LidarrCommon4, _Common6):
     def __post_init__(self):
         """Post init."""
         super().__post_init__()
-        self.artist = _LidarrArtist(self.artist) or {}
+        self.artist = _LidarrArtist(self.artist)
         self.media = [_LidarrMedia(x) for x in self.media or []]
         self.releases = [_LidarrRelease(release) for release in self.releases or []]
         self.secondaryTypes = [_Common3(x) for x in self.secondaryTypes or []]
@@ -176,18 +188,6 @@ class _LidarrImage(BaseModel):
 
 
 @dataclass(init=False)
-class _LidarrStatistics(BaseModel):
-    """Lidarr statistics attributes."""
-
-    albumCount: int
-    percentOfTracks: float
-    sizeOnDisk: int
-    totalTrackCount: int
-    trackCount: int
-    trackFileCount: int
-
-
-@dataclass(init=False)
 class _LidarrFields(_Fields):
     """Lidarr fields attributes."""
 
@@ -223,39 +223,6 @@ class _LidarrArtistTitleInfo(BaseModel):
 
 
 @dataclass(init=False)
-class _LidarrMediaInfo_Quality(BaseModel):
-    """Lidarr media info/quality attributes."""
-
-    mediaInfo: _LidarrMediaInfo | None = None
-    quality: _Quality | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.mediaInfo = _LidarrMediaInfo(self.mediaInfo) or {}
-        self.quality = _Quality(self.quality) or {}
-
-
-@dataclass(init=False)
-class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
-    """Lidarr audio tags attributes."""
-
-    albumTitle: str
-    artistTitle: str
-    artistTitleInfo: _LidarrArtistTitleInfo | None = None
-    cleanTitle: str
-    discCount: int
-    discNumber: int
-    duration: str
-    trackNumbers: list[int]
-
-    def __post_init__(self):
-        """Post init."""
-        super().__post_init__()
-        self.artistTitleInfo = _LidarrArtistTitleInfo(self.artistTitleInfo) or {}
-
-
-@dataclass(init=False)
 class _LidarrMediaInfo(BaseModel):
     """Lidarr media info attributes."""
 
@@ -266,6 +233,41 @@ class _LidarrMediaInfo(BaseModel):
     audioCodec: str
     audioFormat: str
     audioSampleRate: str
+
+
+@dataclass(init=False)
+class _LidarrMediaInfo_Quality(BaseModel):
+    """Lidarr media info/quality attributes."""
+
+    mediaInfo: type[_LidarrMediaInfo] = field(default=_LidarrMediaInfo)
+    quality: type[_Quality] = field(default=_Quality)
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.mediaInfo = _LidarrMediaInfo(self.mediaInfo)
+        self.quality = _Quality(self.quality)
+
+
+@dataclass(init=False)
+class _LidarrAudioTags(_LidarrMediaInfo_Quality, _LidarrArtistTitleInfo):
+    """Lidarr audio tags attributes."""
+
+    albumTitle: str
+    artistTitle: str
+    artistTitleInfo: type[_LidarrArtistTitleInfo] = field(
+        default=_LidarrArtistTitleInfo
+    )
+    cleanTitle: str
+    discCount: int
+    discNumber: int
+    duration: str
+    trackNumbers: list[int]
+
+    def __post_init__(self):
+        """Post init."""
+        super().__post_init__()
+        self.artistTitleInfo = _LidarrArtistTitleInfo(self.artistTitleInfo)
 
 
 @dataclass(init=False)
