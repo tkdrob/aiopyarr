@@ -60,6 +60,8 @@ from .request_client import RequestClient
 class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     """API client for Sonarr endpoints."""
 
+    __name__ = "Sonarr"
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         host_configuration: PyArrHostConfiguration | None = None,

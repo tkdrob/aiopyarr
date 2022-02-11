@@ -158,7 +158,73 @@ async def test_async_try_zeroconf_failed(
         match_querystring=True,
     )
     with pytest.raises(ArrException):
-        await radarr_client.async_try_zeroconf()
+        await radarr_client.async_try_zeroconf(throw=True)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+        ),
+        match_querystring=True,
+    )
+    assert await radarr_client.async_try_zeroconf() == "cannot_connect"
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text="login-failed",
+        ),
+        match_querystring=True,
+    )
+    assert await radarr_client.async_try_zeroconf() == "zeroconf_failed"
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text="Radarr login-failed",
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrException):
+        await radarr_client.async_try_zeroconf(throw=True)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text="Lidarr apiRoot: '/api/v3' apiKey: '123' urlBase: ''",
+        ),
+        match_querystring=True,
+    )
+    assert await radarr_client.async_try_zeroconf() == "wrong_app"
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text="Lidarr apiRoot: '/api/v3' apiKey: '123' urlBase: ''",
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrException):
+        await radarr_client.async_try_zeroconf(throw=True)
 
 
 @pytest.mark.asyncio

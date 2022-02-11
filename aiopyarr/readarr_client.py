@@ -68,6 +68,8 @@ from .request_client import RequestClient
 class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
     """API client for Readarr endpoints."""
 
+    __name__ = "Readarr"
+
     def __init__(  # pylint: disable=too-many-arguments
         self,
         host_configuration: PyArrHostConfiguration | None = None,
