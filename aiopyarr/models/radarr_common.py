@@ -139,6 +139,18 @@ class _RadarrCommon3(_Common9):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings)
 
+    @property
+    def releaseDate(self) -> datetime:
+        """Return latest known release date for all formats."""
+        result = datetime(1, 1, 1)
+        for date in ("digitalRelease", "physicalRelease", "inCinemas"):
+            try:
+                if result < self.__getattribute__(date):
+                    result = self.__getattribute__(date)
+            except AttributeError:
+                continue
+        return result
+
 
 @dataclass(init=False)
 class _RadarrMovieCommon(BaseModel):

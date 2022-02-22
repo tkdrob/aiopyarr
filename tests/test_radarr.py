@@ -165,6 +165,7 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     assert data[0].overview == "string"
     assert data[0].physicalRelease == datetime(2021, 12, 3, 0, 0)
     assert data[0].digitalRelease == datetime(2020, 8, 11, 0, 0)
+    assert data[0].releaseDate == datetime(2021, 12, 3, 0, 0)
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -430,6 +431,7 @@ async def test_async_get_import_list_movies(
     assert data[0].inCinemas == datetime(2018, 3, 9, 0, 0)
     assert data[0].physicalRelease == datetime(2018, 6, 10, 0, 0)
     assert data[0].digitalRelease == datetime(2018, 5, 25, 0, 0)
+    assert data[0].releaseDate == datetime(2018, 6, 10, 0, 0)
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -652,6 +654,7 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert data.overview == "string"
     assert data.inCinemas == datetime(2020, 11, 6, 0, 0)
     assert data.physicalRelease == datetime(2019, 3, 19, 0, 0)
+    assert data.releaseDate == datetime(2020, 11, 6, 0, 0)
     assert data.images[0].coverType == ImageType.POSTER.value
     assert data.images[0].url == "string"
     assert data.images[0].remoteUrl == "string"
@@ -1099,6 +1102,7 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert data.movie.inCinemas == datetime(2000, 4, 25, 0, 0)
     assert data.movie.physicalRelease == datetime(2000, 7, 8, 0, 0)
     assert data.movie.digitalRelease == datetime(2000, 2, 1, 0, 0)
+    assert data.movie.releaseDate == datetime(2000, 7, 8, 0, 0)
     assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
