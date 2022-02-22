@@ -1,6 +1,6 @@
 """Tests for Sonarr object models."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 
@@ -54,7 +54,7 @@ async def test_async_get_calendar(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
-    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30)
+    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=timezone.utc)
     assert data[0].overview == "string"
     assert data[0].hasFile is False
     assert data[0].monitored is True
@@ -108,7 +108,7 @@ async def test_async_get_calendar_extended(aresponses, sonarr_client: SonarrClie
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
-    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30)
+    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=timezone.utc)
     assert data[0].overview == "string"
     assert data[0].hasFile is True
     assert data[0].monitored is True
@@ -228,7 +228,7 @@ async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data.episodeNumber, int)
     assert data.title == "string"
     assert data.airDate == datetime(2009, 9, 17, 0, 0)
-    assert data.airDateUtc == datetime(2009, 9, 18, 2, 0)
+    assert data.airDateUtc == datetime(2009, 9, 18, 2, 0, tzinfo=timezone.utc)
     assert data.overview == "string"
     assert isinstance(data.episodeFile.seriesId, int)
     assert isinstance(data.episodeFile.seasonNumber, int)
@@ -567,7 +567,9 @@ async def test_async_parse_title_or_path(aresponses, sonarr_client: SonarrClient
     assert isinstance(data.episodes[0].episodeNumber, int)
     assert data.episodes[0].title == "string"
     assert data.episodes[0].airDate == datetime(2010, 8, 26, 0, 0)
-    assert data.episodes[0].airDateUtc == datetime(2006, 9, 27, 0, 0)
+    assert data.episodes[0].airDateUtc == datetime(
+        2006, 9, 27, 0, 0, tzinfo=timezone.utc
+    )
     assert data.episodes[0].overview == "string"
     assert data.episodes[0].hasFile is True
     assert data.episodes[0].monitored is False
@@ -912,7 +914,7 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data.records[0].episodeNumber, int)
     assert data.records[0].title == "string"
     assert data.records[0].airDate == datetime(2010, 3, 7, 0, 0)
-    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0)
+    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=timezone.utc)
     assert data.records[0].overview == "string"
     assert data.records[0].hasFile is False
     assert data.records[0].monitored is True
@@ -948,7 +950,7 @@ async def test_async_get_wanted_extended(aresponses, sonarr_client: SonarrClient
     assert isinstance(data.records[0].episodeNumber, int)
     assert data.records[0].title == "string"
     assert data.records[0].airDate == datetime(2010, 3, 7, 0, 0)
-    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0)
+    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=timezone.utc)
     assert data.records[0].overview == "string"
     assert data.records[0].hasFile is False
     assert data.records[0].monitored is True
@@ -1167,7 +1169,9 @@ async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data[0].episode.episodeNumber, int)
     assert data[0].episode.title == "string"
     assert data[0].episode.airDate == datetime(2020, 7, 9, 0, 0)
-    assert data[0].episode.airDateUtc == datetime(2020, 7, 10, 2, 0)
+    assert data[0].episode.airDateUtc == datetime(
+        2020, 7, 10, 2, 0, tzinfo=timezone.utc
+    )
     assert data[0].episode.overview == "string"
     assert data[0].episode.hasFile is False
     assert data[0].episode.monitored is True
@@ -1284,7 +1288,9 @@ async def test_async_get_manual_import(aresponses, sonarr_client: SonarrClient) 
     assert isinstance(data[0].episodes[0].episodeNumber, int)
     assert data[0].episodes[0].title == "string"
     assert data[0].episodes[0].airDate == datetime(2020, 10, 5, 0, 0)
-    assert data[0].episodes[0].airDateUtc == datetime(2020, 10, 5, 7, 0)
+    assert data[0].episodes[0].airDateUtc == datetime(
+        2020, 10, 5, 7, 0, tzinfo=timezone.utc
+    )
     assert data[0].episodes[0].overview == "string"
     assert data[0].episodes[0].hasFile is True
     assert data[0].episodes[0].monitored is True
@@ -1393,7 +1399,7 @@ async def test_async_episode_monitor(aresponses, sonarr_client: SonarrClient):
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2020, 10, 24, 0, 0)
-    assert data[0].airDateUtc == datetime(2020, 10, 24, 5, 0)
+    assert data[0].airDateUtc == datetime(2020, 10, 24, 5, 0, tzinfo=timezone.utc)
     assert data[0].overview == "string"
     assert data[0].hasFile is True
     assert data[0].monitored is False
