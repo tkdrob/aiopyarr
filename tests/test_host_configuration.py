@@ -205,7 +205,7 @@ async def test_host_configuration_url_no_port(aresponses) -> None:
     assert client._host.ssl is False
     assert client._host.verify_ssl is True
     assert client._host.base_api_path is None
-    assert client._host.url == "http://127.0.0.1/radarr"
+    assert client._host.url == "http://127.0.0.1:7878/radarr"
     assert client._host.base_url == "http://127.0.0.1:7878/radarr"
     assert client._host.api_ver == RADARR_API
     assert HEADERS["X-Api-Key"] == API_TOKEN
@@ -228,5 +228,5 @@ async def test_host_configuration_url_no_port(aresponses) -> None:
             verify_ssl=True,
         )
         await client.async_get_system_status()
-    assert client._host.url == "http://localhost/radarr"
+    assert client._host.url == "http://localhost:7878/radarr"
     assert client._host.base_url == "http://localhost:7878/radarr"

@@ -45,7 +45,7 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
         if self.url is not None:
             if res := search(r"(https?:\/\/[a-z|\d|\.]*[^:])([\/^:\d]*)(.*)", self.url):
                 if not res.group(2):
-                    return f"{res.group(1)[:-1]}:{self.port}/{res.group(3)}"
+                    self.url = f"{res.group(1)[:-1]}:{self.port}/{res.group(3)}"
             return self.url
         protocol = f"http{'s' if self.ssl else ''}"
         host = f"{self.hostname or self.ipaddress}:{self.port}"
