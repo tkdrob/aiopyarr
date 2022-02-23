@@ -18,7 +18,9 @@ from .const import (
 )
 
 
-def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
+def get_datetime(
+    _input: datetime | str | None, utc: bool = False
+) -> datetime | str | int | None:
     """Convert input to datetime object."""
     if isinstance(_input, str):
         if _input.isnumeric():
@@ -26,6 +28,8 @@ def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
         if res := search(r"(\d+-\d{2}-\d{2})T?(\d{2}:\d{2}:\d{2})?\.*((.*)Z)?", _input):
             if res.group(2):
                 _input = f"{res.group(1)}{res.group(2)}{f'{res.group(4)}000000'[:6]}"
+                if utc:
+                    return datetime.strptime(f"{_input}+00:00", "%Y-%m-%d%H:%M:%S%f%z")
                 return datetime.strptime(_input, "%Y-%m-%d%H:%M:%S%f")
             return datetime.strptime(_input, "%Y-%m-%d")
     return _input
@@ -85,7 +89,10 @@ class BaseModel:
                 if key == ATTR_DATA:
                     value = generate_data(value, datatype)
                 elif key in CONVERT_TO_DATETIME:
-                    value = get_datetime(value)
+                    if key == "airDateUtc":
+                        value = get_datetime(value, utc=True)
+                    else:
+                        value = get_datetime(value)
                 elif key in CONVERT_TO_ENUM:
                     value = get_enum_value(value)
                 elif key in CONVERT_TO_FLOAT and value is not None:
