@@ -209,3 +209,24 @@ async def test_host_configuration_url_no_port(aresponses) -> None:
     assert client._host.base_url == "http://127.0.0.1:7878/radarr"
     assert client._host.api_ver == RADARR_API
     assert HEADERS["X-Api-Key"] == API_TOKEN
+
+    aresponses.add(
+        "localhost:7878",
+        f"/radarr/api/{RADARR_API}/system/status",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/diskspace.json"),
+        ),
+        match_querystring=True,
+    )
+    async with ClientSession():
+        client = RadarrClient(
+            api_token=API_TOKEN,
+            url="http://localhost/radarr",
+            verify_ssl=True,
+        )
+        await client.async_get_system_status()
+    assert client._host.url == "http://localhost/radarr"
+    assert client._host.base_url == "http://localhost:7878/radarr"
