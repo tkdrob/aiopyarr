@@ -43,6 +43,7 @@ class PyArrHostConfiguration:  # pylint: disable=too-many-instance-attributes
     def base_url(self) -> str:
         """Return the base URL for the configured service."""
         if self.url is not None:
+            self.url = self.url[:-1] if self.url[-1] == "/" else self.url
             if res := search(r"(https?:\/\/[a-z|\d|\.]*[^:])([\/^:\d]*)(.*)", self.url):
                 if not res.group(2):
                     self.url = f"{res.group(1)[:-1]}:{self.port}/{res.group(3)}"
