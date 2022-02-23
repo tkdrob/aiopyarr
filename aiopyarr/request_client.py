@@ -119,6 +119,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             self._close_session = True
 
         self._host = host_configuration
+        self._headers = HEADERS | {"X-Api-Key": self._host.api_token or api_token}
         self._session = session
         self._request_timeout = request_timeout
         self._raw_response = raw_response
@@ -148,7 +149,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 url=url,
                 params=params,
                 json=toraw(data),
-                headers=HEADERS,
+                headers=self._headers,
                 timeout=ClientTimeout(self._request_timeout),
                 ssl=self._host.verify_ssl,
             )
