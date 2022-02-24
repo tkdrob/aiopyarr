@@ -4,8 +4,11 @@ from aiohttp.client import ClientSession
 import pytest
 
 from aiopyarr.exceptions import ArrException
+from aiopyarr.lidarr_client import LidarrClient
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
 from aiopyarr.radarr_client import RadarrClient
+from aiopyarr.readarr_client import ReadarrClient
+from aiopyarr.sonarr_client import SonarrClient
 
 from . import API_TOKEN, RADARR_API, load_fixture
 
@@ -174,26 +177,13 @@ async def test_host_configuration_exceptions() -> None:
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_url_no_port(aresponses) -> None:
+async def test_host_configuration_url_no_port() -> None:
     """Test host configuration url with no port included."""
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/radarr/api/{RADARR_API}/system/status",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/diskspace.json"),
-        ),
-        match_querystring=True,
+    client = RadarrClient(
+        api_token=API_TOKEN,
+        url="http://127.0.0.1/radarr",
+        verify_ssl=True,
     )
-    async with ClientSession():
-        client = RadarrClient(
-            api_token=API_TOKEN,
-            url="http://127.0.0.1/radarr",
-            verify_ssl=True,
-        )
-        await client.async_get_system_status()
     assert client._host.api_token == API_TOKEN
     assert client._host.hostname is None
     assert client._host.ipaddress is None
@@ -205,65 +195,34 @@ async def test_host_configuration_url_no_port(aresponses) -> None:
     assert client._host.base_url == "http://127.0.0.1:7878/radarr"
     assert client._host.api_ver == RADARR_API
 
-    aresponses.add(
-        "localhost:7878",
-        f"/radarr/api/{RADARR_API}/system/status",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/diskspace.json"),
-        ),
-        match_querystring=True,
+    client = SonarrClient(
+        api_token=API_TOKEN,
+        url="http://localhost/radarr",
+        verify_ssl=True,
     )
-    async with ClientSession():
-        client = RadarrClient(
-            api_token=API_TOKEN,
-            url="http://localhost/radarr",
-            verify_ssl=True,
-        )
-        await client.async_get_system_status()
-    assert client._host.url == "http://localhost:7878/radarr"
-    assert client._host.base_url == "http://localhost:7878/radarr"
+    assert client._host.url == "http://localhost:8989/radarr"
+    assert client._host.base_url == "http://localhost:8989/radarr"
 
-    aresponses.add(
-        "127.0.0.1:7878",
-        f"/radarr/api/{RADARR_API}/system/status",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/diskspace.json"),
-        ),
-        match_querystring=True,
+    client = ReadarrClient(
+        api_token=API_TOKEN,
+        url="http://127.0.0.1/radarr/",
+        verify_ssl=True,
     )
-    async with ClientSession():
-        client = RadarrClient(
-            api_token=API_TOKEN,
-            url="http://127.0.0.1/radarr/",
-            verify_ssl=True,
-        )
-        await client.async_get_system_status()
+    assert client._host.url == "http://127.0.0.1:8787/radarr"
+    assert client._host.base_url == "http://127.0.0.1:8787/radarr"
+
+    client = LidarrClient(
+        api_token=API_TOKEN,
+        url="http://localhost/radarr/",
+        verify_ssl=True,
+    )
+    assert client._host.url == "http://localhost:8686/radarr"
+    assert client._host.base_url == "http://localhost:8686/radarr"
+
+    client = RadarrClient(
+        host_configuration=PyArrHostConfiguration(
+            api_token=API_TOKEN, url="http://127.0.0.1/radarr"
+        ),
+    )
     assert client._host.url == "http://127.0.0.1:7878/radarr"
     assert client._host.base_url == "http://127.0.0.1:7878/radarr"
-
-    aresponses.add(
-        "localhost:7878",
-        f"/radarr/api/{RADARR_API}/system/status",
-        "GET",
-        aresponses.Response(
-            status=200,
-            headers={"Content-Type": "application/json"},
-            text=load_fixture("common/diskspace.json"),
-        ),
-        match_querystring=True,
-    )
-    async with ClientSession():
-        client = RadarrClient(
-            api_token=API_TOKEN,
-            url="http://localhost/radarr/",
-            verify_ssl=True,
-        )
-        await client.async_get_system_status()
-    assert client._host.url == "http://localhost:7878/radarr"
-    assert client._host.base_url == "http://localhost:7878/radarr"
