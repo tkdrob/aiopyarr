@@ -77,7 +77,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
     __name__ = ""
     _close_session = False
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=too-many-arguments, too-many-locals
         self,
         port: int,
         request_timeout: float,
@@ -119,6 +119,11 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             self._close_session = True
 
         self._host = host_configuration
+        if self._host.url:
+            regex = r"(https?:\/\/[a-z|\d|\.]*[^:])([\/^:\d]*)(.*)"
+            if (res := search(regex, self._host.url)) and not res.group(2):
+                self._host.url = f"{res.group(1).rstrip('/')}:{port}/{res.group(3)}"
+            self._host.url = self._host.url.rstrip("/")
         self._headers = HEADERS | {"X-Api-Key": self._host.api_token or api_token}
         self._session = session
         self._request_timeout = request_timeout
