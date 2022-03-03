@@ -6,9 +6,6 @@ from typing import Any
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.exceptions import ArrException
-from aiopyarr.models.request import Command, SortDirection
-
 from .const import (
     ALL,
     DATE,
@@ -25,6 +22,7 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
+from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
 from .models.radarr import (
     RadarrAltTitle,
@@ -56,6 +54,7 @@ from .models.radarr import (
     RadarrSortKeys,
     RadarrTagDetails,
 )
+from .models.request import Command, SortDirection
 from .request_client import RequestClient
 
 

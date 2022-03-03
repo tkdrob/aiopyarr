@@ -5,9 +5,6 @@ from datetime import datetime
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.exceptions import ArrException
-from aiopyarr.models.request import Command, Indexer, RootFolder, SortDirection
-
 from .const import (
     ALL,
     AUTHOR_ID,
@@ -24,6 +21,7 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
+from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
 from .models.readarr import (
     ReadarrAuthor,
@@ -62,6 +60,7 @@ from .models.readarr import (
     ReadarrWantedCutoff,
     ReadarrWantedMissing,
 )
+from .models.request import Command, Indexer, RootFolder, SortDirection
 from .request_client import RequestClient
 
 

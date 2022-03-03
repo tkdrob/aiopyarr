@@ -6,8 +6,6 @@ from typing import Any
 
 from aiohttp.client import ClientSession
 
-from aiopyarr.exceptions import ArrException
-
 from .const import (
     ALBUM_ID,
     ALL,
@@ -23,6 +21,7 @@ from .const import (
     TITLE,
     HTTPMethod,
 )
+from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
 from .models.lidarr import (
     LidarrAlbum,
