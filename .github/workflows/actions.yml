@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🛠 Set up Python 3
         uses: actions/setup-python@v2.3.2
@@ -48,7 +48,7 @@ jobs:
         python-version: [3.9, "3.10"]
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🛠️ Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2.3.2
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🛠️ Set up Python
         uses: actions/setup-python@v2.3.2
