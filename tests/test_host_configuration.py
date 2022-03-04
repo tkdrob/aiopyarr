@@ -229,7 +229,7 @@ async def test_host_configuration_url_no_port() -> None:
 
     client = RadarrClient(
         host_configuration=PyArrHostConfiguration(
-            api_token=API_TOKEN, url="http://abc-123.xyz/radarr"
+            api_token=API_TOKEN, url="http://abc-123.xyz:7878/radarr"
         ),
     )
     assert client._host.url == "http://abc-123.xyz:7878/radarr"
