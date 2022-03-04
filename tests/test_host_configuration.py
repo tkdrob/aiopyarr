@@ -234,4 +234,3 @@ async def test_host_configuration_url_no_port() -> None:
     )
     assert client._host.url == "http://abc-123.xyz:7878/radarr"
     assert client._host.base_url == "http://abc-123.xyz:7878/radarr"
-
