@@ -5,9 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import date, datetime
 
-from aiopyarr.models.const import CONVERT_TO_DATE
-
 from .base import BaseModel
+from .const import CONVERT_TO_DATE
 from .request_common import (
     _Common3,
     _Common5,
