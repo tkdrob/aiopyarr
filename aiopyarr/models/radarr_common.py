@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
+
+from aiopyarr.models.const import CONVERT_TO_DATE
 
 from .base import BaseModel
 from .request_common import (
@@ -121,10 +123,10 @@ class _RadarrCommon3(_Common9):
     """Radarr common attributes."""
 
     collection: type[_RadarrMovieCollection] = field(default=_RadarrMovieCollection)
-    digitalRelease: datetime
+    digitalRelease: date
     images: list[_RadarrMovieImages] | None = None
-    inCinemas: datetime
-    physicalRelease: datetime
+    inCinemas: date
+    physicalRelease: date
     ratings: type[_RadarrMovieRatings] = field(default=_RadarrMovieRatings)
     sortTitle: str
     status: str
@@ -140,13 +142,13 @@ class _RadarrCommon3(_Common9):
         self.ratings = _RadarrMovieRatings(self.ratings)
 
     @property
-    def releaseDate(self) -> datetime:
+    def releaseDate(self) -> date:
         """Return latest known release date for all formats."""
-        result = datetime(1, 1, 1)
-        for date in ("digitalRelease", "physicalRelease", "inCinemas"):
+        result = datetime(1, 1, 1).date()
+        for _date in CONVERT_TO_DATE:
             try:
-                if result < self.__getattribute__(date):
-                    result = self.__getattribute__(date)
+                if result < self.__getattribute__(_date):
+                    result = self.__getattribute__(_date)
             except AttributeError:
                 continue
         return result
@@ -171,7 +173,7 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Radarr movie history/blocklist attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
-    date: datetime
+    date: date
     movieId: int
     sourceTitle: str
 

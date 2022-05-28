@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 from enum import Enum
 from re import search
 from typing import Any
@@ -10,6 +10,7 @@ from typing import Any
 from ..const import ATTR_DATA
 from .const import (
     CONVERT_TO_BOOL,
+    CONVERT_TO_DATE,
     CONVERT_TO_DATETIME,
     CONVERT_TO_ENUM,
     CONVERT_TO_FLOAT,
@@ -33,6 +34,13 @@ def get_datetime(
                 return datetime.strptime(_input, "%Y-%m-%d%H:%M:%S%f")
             return datetime.strptime(_input, "%Y-%m-%d")
     return _input
+
+
+def get_date(_input: datetime | str | None) -> date | str | int | None:
+    """Convert input to date object."""
+    if (result := get_datetime(_input)) and isinstance(result, datetime):
+        return result.date()
+    return result
 
 
 def get_enum_value(val: str) -> str | Enum:
@@ -93,6 +101,8 @@ class BaseModel:
                         value = get_datetime(value, utc=True)
                     else:
                         value = get_datetime(value)
+                elif key in CONVERT_TO_DATE:
+                    value = get_date(value)
                 elif key in CONVERT_TO_ENUM:
                     value = get_enum_value(value)
                 elif key in CONVERT_TO_FLOAT and value is not None:

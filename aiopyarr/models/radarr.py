@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date
 from enum import Enum
 
 from ..const import DATE, MOVIE_ID, PATH, TITLE
@@ -100,7 +100,7 @@ class RadarrSortKeys(str, Enum):
 class RadarrMovieFile(_RadarrMovieCommon):
     """Radarr movie file attributes."""
 
-    dateAdded: datetime
+    dateAdded: date
     edition: str
     indexerFlags: int
     mediaInfo: type[_RadarrMovieFileMediaInfo] = field(
@@ -249,7 +249,7 @@ class RadarrNamingConfig(BaseModel):
 class RadarrMovie(_RadarrCommon2, _RadarrCommon3, _Common6):
     """Radarr movie attributes."""
 
-    added: datetime
+    added: date
     alternateTitles: list[_RadarrMovieAlternateTitle] | None = None
     cleanTitle: str
     folderName: str
@@ -291,7 +291,7 @@ class RadarrImportListMovie(_RadarrCommon3):
 class RadarrCalendar(RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
-    digitalRelease: datetime
+    digitalRelease: date
     minimumAvailability: str
     qualityProfileId: int
     secondaryYearSourceId: int
