@@ -16,7 +16,7 @@ lint: ## Lint all files
 	@python3 -m mypy aiopyarr
 
 coverage: ## Check the coverage of the package
-	@python3 -m pytest tests --cov=aiopyarr --cov-report term-missing -vv
+	@python3 -m pytest tests --asyncio-mode=strict --cov=aiopyarr --cov-report term-missing -vv
 
 setup: ## Setup the package
 	@python3 setup.py develop
