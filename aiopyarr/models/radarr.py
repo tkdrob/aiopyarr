@@ -288,13 +288,8 @@ class RadarrImportListMovie(_RadarrCommon3):
 
 
 @dataclass(init=False)
-class RadarrCalendar(RadarrMovie, _RadarrCommon2):
+class RadarrCalendar(RadarrMovie):
     """Radarr calendar attributes."""
-
-    digitalRelease: datetime
-    minimumAvailability: str
-    qualityProfileId: int
-    secondaryYearSourceId: int
 
 
 @dataclass(init=False)
