@@ -166,7 +166,10 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     assert data[0].overview == "string"
     assert data[0].physicalRelease == date(2021, 12, 3)
     assert data[0].digitalRelease == date(2020, 8, 11)
-    assert data[0].releaseDate == date(2021, 12, 3)
+    assert data[0].releaseDateType(date(2021, 1, 12)) == (
+        date(2020, 8, 11),
+        "digitalRelease",
+    )
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -432,7 +435,10 @@ async def test_async_get_import_list_movies(
     assert data[0].inCinemas == date(2018, 3, 9)
     assert data[0].physicalRelease == date(2018, 6, 10)
     assert data[0].digitalRelease == date(2018, 5, 25)
-    assert data[0].releaseDate == date(2018, 6, 10)
+    assert data[0].releaseDateType(date(2018, 6, 10)) == (
+        date(2018, 6, 10),
+        "physicalRelease",
+    )
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -655,7 +661,10 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert data.overview == "string"
     assert data.inCinemas == date(2020, 11, 6)
     assert data.physicalRelease == date(2019, 3, 19)
-    assert data.releaseDate == date(2020, 11, 6)
+    assert data.releaseDateType(date(2019, 1, 1)) == (
+        date(2019, 3, 19),
+        "physicalRelease",
+    )
     assert data.images[0].coverType == ImageType.POSTER.value
     assert data.images[0].url == "string"
     assert data.images[0].remoteUrl == "string"
@@ -1103,7 +1112,7 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert data.movie.inCinemas == date(2000, 4, 25)
     assert data.movie.physicalRelease == date(2000, 7, 8)
     assert data.movie.digitalRelease == date(2000, 2, 1)
-    assert data.movie.releaseDate == date(2000, 7, 8)
+    assert data.movie.releaseDateType() == (date(2000, 7, 8), "physicalRelease")
     assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
@@ -1889,6 +1898,6 @@ async def test_not_implemented(radarr_client: RadarrClient) -> None:
         await radarr_client.async_delete_metadata_profile(0)
 
 
-def test_get_date_returns():
+def test_get_date_returns() -> None:
     """Test get date function returns with no date."""
     assert get_date("") == ""

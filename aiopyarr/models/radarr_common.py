@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, timedelta
 
 from .base import BaseModel
 from .const import CONVERT_TO_DATE
@@ -140,17 +140,23 @@ class _RadarrCommon3(_Common9):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings)
 
-    @property
-    def releaseDate(self) -> date:
-        """Return latest known release date for all formats."""
-        result = datetime(1, 1, 1).date()
-        for _date in CONVERT_TO_DATE:
+    def releaseDateType(
+        self, release: date = date.today()
+    ) -> tuple[date, str] | tuple[None, None]:
+        """Return release date and type matching/closest to supplied date."""
+        delta = timedelta(days=999999999)
+        _tuple: tuple[date, str] | tuple[None, None] = None, None
+        for _type in CONVERT_TO_DATE:
             try:
-                if result < self.__getattribute__(_date):
-                    result = self.__getattribute__(_date)
+                if _date := getattr(self, _type):
+                    if _date == release:
+                        return _date, _type
+                    if abs(release - _date) < delta:
+                        delta = release - _date
+                        _tuple = _date, _type
             except AttributeError:
                 continue
-        return result
+        return _tuple
 
 
 @dataclass(init=False)
