@@ -1,7 +1,7 @@
 """Radarr API."""
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date as dt, datetime
 from typing import Any
 
 from aiohttp.client import ClientSession
@@ -589,16 +589,16 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
 
     async def async_get_calendar(
         self,
-        start_date: datetime | None = None,
-        end_date: datetime | None = None,
+        start_date: dt | None = None,
+        end_date: dt | None = None,
         unmonitored: bool = True,
     ) -> list[RadarrCalendarItem]:
         """Get a list of movies based on calendar parameters."""
         params = {"unmonitored": str(unmonitored)}
         if start_date:
-            params["start"] = start_date.strftime("%Y-%m-%d")
+            params["start"] = str(start_date)
         if end_date:
-            params["end"] = end_date.strftime("%Y-%m-%d")
+            params["end"] = str(end_date)
         return await self._async_request(
             "calendar",
             params=params,
