@@ -145,8 +145,8 @@ class _RadarrCommon3(_Common9):
         result = datetime(1, 1, 1)
         for date in ("digitalRelease", "physicalRelease", "inCinemas"):
             try:
-                if result < self.__getattribute__(date):
-                    result = self.__getattribute__(date)
+                if result < getattr(self, date):
+                    result = getattr(self, date)
             except AttributeError:
                 continue
         return result

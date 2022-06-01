@@ -28,7 +28,7 @@ from .models.radarr import (
     RadarrAltTitle,
     RadarrBlocklist,
     RadarrBlocklistMovie,
-    RadarrCalendar,
+    RadarrCalendarItem,
     RadarrCommands,
     RadarrCredit,
     RadarrEventType,
@@ -592,7 +592,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         start_date: datetime | None = None,
         end_date: datetime | None = None,
         unmonitored: bool = True,
-    ) -> list[RadarrCalendar]:
+    ) -> list[RadarrCalendarItem]:
         """Get a list of movies based on calendar parameters."""
         params = {"unmonitored": str(unmonitored)}
         if start_date:
@@ -602,7 +602,7 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             "calendar",
             params=params,
-            datatype=RadarrCalendar,
+            datatype=RadarrCalendarItem,
         )
 
     async def async_get_release(
