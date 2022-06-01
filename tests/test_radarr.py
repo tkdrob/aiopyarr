@@ -152,8 +152,8 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
         ),
         match_querystring=True,
     )
-    start = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
-    end = datetime.strptime("Dec 1 2020  1:33PM", "%b %d %Y %I:%M%p")
+    start = date(2020, 11, 30)
+    end = date(2020, 12, 1)
     data = await radarr_client.async_get_calendar(start, end)
 
     assert data[0].title == "string"
