@@ -140,12 +140,9 @@ class _RadarrCommon3(_Common9):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings)
 
-    def releaseDateType(
-        self, release: date = date.today()
-    ) -> tuple[date, str] | tuple[None, None]:
+    def releaseDateType(self, release: date = date.today()) -> tuple[date, str]:
         """Return release date and type matching/closest to supplied date."""
         delta = timedelta(days=999999999)
-        _tuple: tuple[date, str] | tuple[None, None] = None, None
         for _type in CONVERT_TO_DATE:
             try:
                 if _date := getattr(self, _type):
