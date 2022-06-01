@@ -288,7 +288,7 @@ class RadarrImportListMovie(_RadarrCommon3):
 
 
 @dataclass(init=False)
-class RadarrCalendar(RadarrMovie, _RadarrCommon2):
+class RadarrCalendarItem(RadarrMovie, _RadarrCommon2):
     """Radarr calendar attributes."""
 
     digitalRelease: datetime
