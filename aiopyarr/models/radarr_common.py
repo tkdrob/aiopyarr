@@ -146,8 +146,6 @@ class _RadarrCommon3(_Common9):
         for _type in CONVERT_TO_DATE:
             try:
                 if _date := getattr(self, _type):
-                    if _date == release:
-                        return _date, _type
                     if abs(release - _date) < delta:
                         delta = release - _date
                         _tuple = _date, _type
