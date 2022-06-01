@@ -145,10 +145,9 @@ class _RadarrCommon3(_Common9):
         delta = timedelta(days=999999999)
         for _type in CONVERT_TO_DATE:
             try:
-                if _date := getattr(self, _type):
-                    if abs(release - _date) < delta:
-                        delta = release - _date
-                        _tuple = _date, _type
+                if (_date := getattr(self, _type)) and abs(release - _date) < delta:
+                    delta = release - _date
+                    _tuple = _date, _type
             except AttributeError:
                 continue
         return _tuple
