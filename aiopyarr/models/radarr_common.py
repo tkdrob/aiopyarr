@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, timedelta
 
 from .base import BaseModel
+from .const import CONVERT_TO_DATE
 from .request_common import (
     _Common3,
     _Common5,
@@ -121,10 +122,10 @@ class _RadarrCommon3(_Common9):
     """Radarr common attributes."""
 
     collection: type[_RadarrMovieCollection] = field(default=_RadarrMovieCollection)
-    digitalRelease: datetime
+    digitalRelease: date
     images: list[_RadarrMovieImages] | None = None
-    inCinemas: datetime
-    physicalRelease: datetime
+    inCinemas: date
+    physicalRelease: date
     ratings: type[_RadarrMovieRatings] = field(default=_RadarrMovieRatings)
     sortTitle: str
     status: str
@@ -139,17 +140,17 @@ class _RadarrCommon3(_Common9):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings)
 
-    @property
-    def releaseDate(self) -> datetime:
-        """Return latest known release date for all formats."""
-        result = datetime(1, 1, 1)
-        for date in ("digitalRelease", "physicalRelease", "inCinemas"):
+    def releaseDateType(self, release: date = date.today()) -> tuple[date, str]:
+        """Return release date and type matching/closest to supplied date."""
+        delta = timedelta(days=999999999)
+        for _type in CONVERT_TO_DATE:
             try:
-                if result < getattr(self, date):
-                    result = getattr(self, date)
+                if (_date := getattr(self, _type)) and abs(release - _date) < delta:
+                    delta = release - _date
+                    _tuple = _date, _type
             except AttributeError:
                 continue
-        return result
+        return _tuple
 
 
 @dataclass(init=False)
@@ -171,7 +172,7 @@ class _RadarrMovieHistoryBlocklistBase(_RadarrMovieCommon):
     """Radarr movie history/blocklist attributes."""
 
     customFormats: list[_RadarrMovieCustomFormats] | None = None
-    date: datetime
+    date: date
     movieId: int
     sourceTitle: str
 

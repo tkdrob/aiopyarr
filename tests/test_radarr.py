@@ -1,10 +1,11 @@
 """Tests for Radarr object models."""
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime
+from datetime import date, datetime
 
 import pytest
 
 from aiopyarr.exceptions import ArrException
+from aiopyarr.models.base import get_date
 from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.radarr import (
     RadarrCommands,
@@ -163,9 +164,12 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
     assert isinstance(data[0].sizeOnDisk, int)
     assert data[0].status == "string"
     assert data[0].overview == "string"
-    assert data[0].physicalRelease == datetime(2021, 12, 3, 0, 0)
-    assert data[0].digitalRelease == datetime(2020, 8, 11, 0, 0)
-    assert data[0].releaseDate == datetime(2021, 12, 3, 0, 0)
+    assert data[0].physicalRelease == date(2021, 12, 3)
+    assert data[0].digitalRelease == date(2020, 8, 11)
+    assert data[0].releaseDateType(date(2021, 1, 12)) == (
+        date(2020, 8, 11),
+        "digitalRelease",
+    )
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -339,9 +343,9 @@ async def test_async_get_history_since(aresponses, radarr_client: RadarrClient) 
         ),
         match_querystring=True,
     )
-    date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
+    _date = datetime.strptime("Nov 30 2020  1:33PM", "%b %d %Y %I:%M%p")
     data = await radarr_client.async_get_history_since(
-        date, event_type=RadarrEventType.GRABBED
+        _date, event_type=RadarrEventType.GRABBED
     )
     assert isinstance(data, RadarrMovieHistory)
 
@@ -428,10 +432,13 @@ async def test_async_get_import_list_movies(
     assert data[0].sortTitle == "string"
     assert data[0].status == "released"
     assert data[0].overview == "string"
-    assert data[0].inCinemas == datetime(2018, 3, 9, 0, 0)
-    assert data[0].physicalRelease == datetime(2018, 6, 10, 0, 0)
-    assert data[0].digitalRelease == datetime(2018, 5, 25, 0, 0)
-    assert data[0].releaseDate == datetime(2018, 6, 10, 0, 0)
+    assert data[0].inCinemas == date(2018, 3, 9)
+    assert data[0].physicalRelease == date(2018, 6, 10)
+    assert data[0].digitalRelease == date(2018, 5, 25)
+    assert data[0].releaseDateType(date(2018, 6, 10)) == (
+        date(2018, 6, 10),
+        "physicalRelease",
+    )
     assert data[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].images[0].url == "string"
     assert data[0].website == "string"
@@ -652,9 +659,12 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
     assert data.sortTitle == "string"
     assert isinstance(data.sizeOnDisk, int)
     assert data.overview == "string"
-    assert data.inCinemas == datetime(2020, 11, 6, 0, 0)
-    assert data.physicalRelease == datetime(2019, 3, 19, 0, 0)
-    assert data.releaseDate == datetime(2020, 11, 6, 0, 0)
+    assert data.inCinemas == date(2020, 11, 6)
+    assert data.physicalRelease == date(2019, 3, 19)
+    assert data.releaseDateType(date(2019, 1, 1)) == (
+        date(2019, 3, 19),
+        "physicalRelease",
+    )
     assert data.images[0].coverType == ImageType.POSTER.value
     assert data.images[0].url == "string"
     assert data.images[0].remoteUrl == "string"
@@ -1099,10 +1109,10 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
     assert isinstance(data.movie.sizeOnDisk, int)
     assert data.movie.status == "string"
     assert data.movie.overview == "string"
-    assert data.movie.inCinemas == datetime(2000, 4, 25, 0, 0)
-    assert data.movie.physicalRelease == datetime(2000, 7, 8, 0, 0)
-    assert data.movie.digitalRelease == datetime(2000, 2, 1, 0, 0)
-    assert data.movie.releaseDate == datetime(2000, 7, 8, 0, 0)
+    assert data.movie.inCinemas == date(2000, 4, 25)
+    assert data.movie.physicalRelease == date(2000, 7, 8)
+    assert data.movie.digitalRelease == date(2000, 2, 1)
+    assert data.movie.releaseDateType() == (date(2000, 7, 8), "physicalRelease")
     assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
@@ -1323,7 +1333,7 @@ async def test_async_get_manual_import(aresponses, radarr_client: RadarrClient) 
     assert isinstance(data[0].movie.sizeOnDisk, int)
     assert data[0].movie.status == "released"
     assert data[0].movie.overview == "string"
-    assert data[0].movie.inCinemas == datetime(2010, 5, 20, 0, 0)
+    assert data[0].movie.inCinemas == date(2010, 5, 20)
     assert data[0].movie.images[0].coverType == "string"
     assert data[0].movie.images[0].url == "string"
     assert data[0].movie.website == "string"
@@ -1886,3 +1896,8 @@ async def test_not_implemented(radarr_client: RadarrClient) -> None:
 
     with pytest.raises(NotImplementedError):
         await radarr_client.async_delete_metadata_profile(0)
+
+
+def test_get_date_returns() -> None:
+    """Test get date function returns with no date."""
+    assert get_date("") == ""

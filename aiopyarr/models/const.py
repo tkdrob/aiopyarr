@@ -25,6 +25,12 @@ CONVERT_TO_INTEGER = (
     "tvRageId",
 )
 
+CONVERT_TO_DATE = (
+    "digitalRelease",
+    "physicalRelease",
+    "inCinemas",
+)
+
 CONVERT_TO_DATETIME = (
     "added",
     "airDate",
@@ -34,11 +40,9 @@ CONVERT_TO_DATETIME = (
     "date",
     "dateAdded",
     "died",
-    "digitalRelease",
     "ended",
     "estimatedCompletionTime",
     "firstAired",
-    "inCinemas",
     "installedOn",
     "lastExecution",
     "lastExecutionTime",
@@ -48,7 +52,6 @@ CONVERT_TO_DATETIME = (
     "lastWriteTime",
     "modified",
     "nextExecution",
-    "physicalRelease",
     "publishDate",
     "publishedDate",
     "queued",
