@@ -46,6 +46,7 @@ from .request_common import (
     _ReleaseCommon,
     _Rename,
     _RetagChange,
+    _RootFolderExended,
     _StatusMessage,
     _TagDetails,
 )
@@ -582,3 +583,13 @@ class ReadarrImportListOptions(BaseModel):
     def __post_init__(self):
         """Post init."""
         self.options = [_ReadarrCategory(option) for option in self.options or []]
+
+
+@dataclass(init=False)
+class ReadarrRootFolder(_RootFolderExended):
+    """Readarr root folder attributes."""
+
+    isCalibreLibrary: bool
+    outputProfile: str
+    port: int
+    useSsl: bool

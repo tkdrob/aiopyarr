@@ -1,6 +1,7 @@
 [
   {
     "path": "C:\\Downloads\\Movies",
+    "accessible": true,
     "freeSpace": 282500063232,
     "unmappedFolders": [
       {

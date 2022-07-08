@@ -247,15 +247,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get information about diskspace."""
         return await self._async_request("diskspace", datatype=Diskspace)
 
-    async def async_get_root_folders(
-        self, folderid: int | None = None
-    ) -> RootFolder | list[RootFolder]:
-        """Get information about root folders."""
-        return await self._async_request(
-            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
-            datatype=RootFolder,
-        )
-
     async def async_delete_root_folder(self, folderid: int) -> None:
         """Delete information about root folders."""
         return await self._async_request(

@@ -1257,14 +1257,12 @@ async def test_async_get_release(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_pushed_release(
-    aresponses, radarr_client: RadarrClient
-) -> None:
-    """Test getting rename details."""
+async def test_async_push_release(aresponses, radarr_client: RadarrClient) -> None:
+    """Test pushing release."""
     aresponses.add(
         "127.0.0.1:7878",
-        f"/api/{RADARR_API}/release/push?id=test",
-        "GET",
+        f"/api/{RADARR_API}/release/push",
+        "POST",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
@@ -1272,7 +1270,7 @@ async def test_async_get_pushed_release(
         ),
         match_querystring=True,
     )
-    data = await radarr_client.async_get_pushed_release("test")
+    data = await radarr_client.async_push_release("test")
     assert isinstance(data, RadarrRelease)
 
 

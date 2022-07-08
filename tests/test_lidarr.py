@@ -1678,7 +1678,7 @@ async def test_async_get_release(aresponses, lidarr_client: LidarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_downlaod_release(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_download_release(aresponses, lidarr_client: LidarrClient) -> None:
     """Test downloading release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1695,21 +1695,48 @@ async def test_async_downlaod_release(aresponses, lidarr_client: LidarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_get_pushed_release(
-    aresponses, lidarr_client: LidarrClient
-) -> None:
-    """Test getting pushed release."""
+async def test_async_get_root_folders(aresponses, lidarr_client: LidarrClient) -> None:
+    """Test getting root folders."""
     aresponses.add(
         "127.0.0.1:8686",
-        f"/api/{LIDARR_API}/release/push?id=test",
+        f"/api/{LIDARR_API}/rootfolder",
         "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/rootfolder.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await lidarr_client.async_get_root_folders()
+
+    assert data[0].name == "music"
+    assert data[0].path == "/music/"
+    assert isinstance(data[0].defaultMetadataProfileId, int)
+    assert isinstance(data[0].defaultQualityProfileId, int)
+    assert data[0].defaultMonitorOption == "all"
+    assert data[0].defaultNewItemMonitorOption == "all"
+    assert data[0].defaultTags == []
+    assert data[0].accessible is True
+    assert isinstance(data[0].freeSpace, int)
+    assert isinstance(data[0].totalSpace, int)
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
+async def test_async_push_release(aresponses, lidarr_client: LidarrClient) -> None:
+    """Test pushing release."""
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/release/push",
+        "POST",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
-    data = await lidarr_client.async_get_pushed_release("test")
+    data = await lidarr_client.async_push_release("test")
     assert isinstance(data, LidarrRelease)
 
 
@@ -2342,7 +2369,7 @@ async def test_async_delete_track_files(
 
 
 @pytest.mark.asyncio
-async def test_not_implemented(lidarr_client: LidarrClient):
+async def test_not_implemented(lidarr_client: LidarrClient) -> None:
     """Test methods not implemented by the API."""
     with pytest.raises(NotImplementedError):
         await lidarr_client.async_get_languages()

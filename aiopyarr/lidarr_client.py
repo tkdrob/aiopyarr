@@ -47,6 +47,7 @@ from .models.lidarr import (
     LidarrRelease,
     LidarrRename,
     LidarrRetag,
+    LidarrRootFolder,
     LidarrSearch,
     LidarrSortKeys,
     LidarrTagDetails,
@@ -531,13 +532,13 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    # Only works if an id is associated with the release
-    async def async_get_pushed_release(self, releaseid: str) -> LidarrRelease:
-        """Get release previously pushed by below method."""
+    async def async_push_release(self, data: LidarrRelease) -> LidarrRelease:
+        """Push release."""
         return await self._async_request(
             "release/push",
-            params={"id": releaseid},
+            data=data,
             datatype=LidarrRelease,
+            method=HTTPMethod.POST,
         )
 
     async def async_get_rename(
@@ -697,6 +698,15 @@ class LidarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             f"trackfile/{'bulk' if isinstance(ids, list) else f'{ids}'}",
             data={"trackFileIds": ids} if isinstance(ids, list) else None,
             method=HTTPMethod.DELETE,
+        )
+
+    async def async_get_root_folders(
+        self, folderid: int | None = None
+    ) -> LidarrRootFolder | list[LidarrRootFolder]:
+        """Get information about root folders."""
+        return await self._async_request(
+            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
+            datatype=LidarrRootFolder,
         )
 
     async def async_get_languages(self, langid: int | None = None) -> Any:

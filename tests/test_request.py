@@ -309,7 +309,9 @@ async def test_async_get_diskspace(aresponses, radarr_client: RadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_root_folders(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_root_folders(
+    aresponses, radarr_client: RadarrClient, sonarr_client: SonarrClient
+) -> None:
     """Test getting root folders."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -325,6 +327,27 @@ async def test_async_get_root_folders(aresponses, radarr_client: RadarrClient) -
     data = await radarr_client.async_get_root_folders()
 
     assert data[0].path == "C:\\Downloads\\Movies"
+    assert data[0].accessible is True
+    assert isinstance(data[0].freeSpace, int)
+    assert data[0].unmappedFolders[0].name == "string"
+    assert data[0].unmappedFolders[0].path == "path"
+    assert isinstance(data[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/rootfolder",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("common/rootfolder.json"),
+        ),
+        match_querystring=True,
+    )
+    await sonarr_client.async_get_root_folders()
+
+    assert data[0].path == "C:\\Downloads\\Movies"
+    assert data[0].accessible is True
     assert isinstance(data[0].freeSpace, int)
     assert data[0].unmappedFolders[0].name == "string"
     assert data[0].unmappedFolders[0].path == "path"
@@ -427,6 +450,8 @@ async def test_async_get_system_status(aresponses, radarr_client: RadarrClient) 
     )
     data = await radarr_client.async_get_system_status()
 
+    assert data.appName == "test"
+    assert data.instanceName == "test"
     assert data.appData == "C:\\ProgramData\\Radarr"
     assert data.authentication == AuthenticationType.NONE.value
     assert data.branch == "nightly"
@@ -2681,6 +2706,7 @@ async def test_async_get_media_management_configs(
     assert data.autoUnmonitorPreviouslyDownloadedBooks is False
     assert data.autoUnmonitorPreviouslyDownloadedEpisodes is False
     assert data.autoUnmonitorPreviouslyDownloadedMovies is False
+    assert data.autoUnmonitorPreviouslyDownloadedTracks is False
     assert data.chmodFolder == "002"
     assert data.chownGroup == ""
     assert data.copyUsingHardlinks is False

@@ -27,6 +27,7 @@ from aiopyarr.models.readarr import (
     ReadarrNamingConfig,
     ReadarrNotification,
     ReadarrRelease,
+    ReadarrRootFolder,
     ReadarrSortKeys,
     ReadarrWantedCutoff,
 )
@@ -42,7 +43,6 @@ from aiopyarr.models.request import (
     Command,
     ImageType,
     MonitoringOptionsType,
-    RootFolder,
     SortDirection,
     StatusType,
 )
@@ -5875,21 +5875,19 @@ async def test_async_get_release(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_pushed_release(
-    aresponses, readarr_client: ReadarrClient
-) -> None:
-    """Test getting pushed release."""
+async def test_async_push_release(aresponses, readarr_client: ReadarrClient) -> None:
+    """Test pushing release."""
     aresponses.add(
         "127.0.0.1:8787",
-        f"/api/{READARR_API}/release/push?id=test",
-        "GET",
+        f"/api/{READARR_API}/release/push",
+        "POST",
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/json"},
         ),
         match_querystring=True,
     )
-    data = await readarr_client.async_get_pushed_release("test")
+    data = await readarr_client.async_push_release("test")
     assert isinstance(data, ReadarrRelease)
 
 
@@ -7189,6 +7187,41 @@ async def test_async_download_release(
 
 
 @pytest.mark.asyncio
+async def test_async_get_root_folders(
+    aresponses, readarr_client: ReadarrClient
+) -> None:
+    """Test getting root folders."""
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/rootfolder",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/rootfolder.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await readarr_client.async_get_root_folders()
+
+    assert data[0].name == "books"
+    assert data[0].path == "/books/"
+    assert isinstance(data[0].defaultMetadataProfileId, int)
+    assert isinstance(data[0].defaultQualityProfileId, int)
+    assert data[0].defaultMonitorOption == "all"
+    assert data[0].defaultNewItemMonitorOption == "all"
+    assert data[0].defaultTags == []
+    assert data[0].isCalibreLibrary is False
+    assert isinstance(data[0].port, int)
+    assert data[0].outputProfile == "default"
+    assert data[0].useSsl is False
+    assert data[0].accessible is True
+    assert isinstance(data[0].freeSpace, int)
+    assert isinstance(data[0].totalSpace, int)
+    assert isinstance(data[0].id, int)
+
+
+@pytest.mark.asyncio
 async def test_async_edit_root_folder(
     aresponses, readarr_client: ReadarrClient
 ) -> None:
@@ -7203,5 +7236,5 @@ async def test_async_edit_root_folder(
         ),
         match_querystring=True,
     )
-    data = await readarr_client.async_edit_root_folder(RootFolder("test"))
-    assert isinstance(data, RootFolder)
+    data = await readarr_client.async_edit_root_folder(ReadarrRootFolder("test"))
+    assert isinstance(data, ReadarrRootFolder)

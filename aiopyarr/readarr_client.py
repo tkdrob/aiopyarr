@@ -53,6 +53,7 @@ from .models.readarr import (
     ReadarrRelease,
     ReadarrRename,
     ReadarrRetag,
+    ReadarrRootFolder,
     ReadarrSearch,
     ReadarrSeries,
     ReadarrSortKeys,
@@ -60,7 +61,7 @@ from .models.readarr import (
     ReadarrWantedCutoff,
     ReadarrWantedMissing,
 )
-from .models.request import Command, Indexer, RootFolder, SortDirection
+from .models.request import Command, Indexer, SortDirection
 from .request_client import RequestClient
 
 
@@ -696,13 +697,13 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    # Only works if an id is associated with the release
-    async def async_get_pushed_release(self, releaseid: str) -> ReadarrRelease:
-        """Get release previously pushed by below method."""
+    async def async_push_release(self, data: ReadarrRelease) -> ReadarrRelease:
+        """Push release."""
         return await self._async_request(
             "release/push",
-            params={"id": releaseid},
+            data=data,
             datatype=ReadarrRelease,
+            method=HTTPMethod.POST,
         )
 
     async def async_get_rename(
@@ -784,11 +785,22 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=ReadarrTagDetails,
         )
 
-    async def async_edit_root_folder(self, data: RootFolder) -> RootFolder:
+    async def async_get_root_folders(
+        self, folderid: int | None = None
+    ) -> ReadarrRootFolder | list[ReadarrRootFolder]:
+        """Get information about root folders."""
+        return await self._async_request(
+            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
+            datatype=ReadarrRootFolder,
+        )
+
+    async def async_edit_root_folder(
+        self, data: ReadarrRootFolder
+    ) -> ReadarrRootFolder:
         """Edit information about root folders."""
         return await self._async_request(
             "rootfolder",
             data=data,
-            datatype=RootFolder,
+            datatype=ReadarrRootFolder,
             method=HTTPMethod.PUT,
         )

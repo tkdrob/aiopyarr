@@ -38,6 +38,7 @@ from .request_common import (
     _ReleaseCommon,
     _Rename,
     _RetagChange,
+    _RootFolderExended,
     _StatusMessage,
     _TagDetails,
 )
@@ -534,3 +535,8 @@ class LidarrAlbumStudio(BaseModel):
         super().__post_init__()
         self.artist = [_Monitor(x) for x in self.artist or []]
         self.monitoringOptions = _MonitorOption(self.monitoringOptions)
+
+
+@dataclass(init=False)
+class LidarrRootFolder(_RootFolderExended):
+    """Lidarr root folder attributes."""
