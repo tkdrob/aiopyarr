@@ -24,6 +24,7 @@ from .request_common import (
     _QualityProfileItems,
     _RecordCommon,
     _ReleaseProfilePreferred,
+    _RootFolder,
     _Tag,
     _UpdateChanges,
 )
@@ -263,19 +264,8 @@ class CustomFilter(BaseModel):
 
 
 @dataclass(init=False)
-class RootFolder(BaseModel):
+class RootFolder(_RootFolder):
     """Root folder attributes."""
-
-    freeSpace: int
-    id: int
-    path: str
-    unmappedFolders: list[FilesystemFolder] | None = None
-
-    def __post_init__(self):
-        """Post init."""
-        self.unmappedFolders = [
-            FilesystemFolder(unmap) for unmap in self.unmappedFolders or []
-        ]
 
 
 @dataclass(init=False)
@@ -339,9 +329,11 @@ class SystemStatus(BaseModel):
     """System status attributes."""
 
     appData: str
+    appName: str
     authentication: str
     branch: str
     buildTime: datetime
+    instanceName: str
     isAdmin: bool
     isDebug: bool
     isDocker: bool
@@ -520,6 +512,7 @@ class MediaManagementConfig(BaseModel):
     autoUnmonitorPreviouslyDownloadedBooks: bool
     autoUnmonitorPreviouslyDownloadedEpisodes: bool
     autoUnmonitorPreviouslyDownloadedMovies: bool
+    autoUnmonitorPreviouslyDownloadedTracks: bool
     chmodFolder: str
     chownGroup: str
     copyUsingHardlinks: bool
@@ -689,5 +682,3 @@ class DelayProfile(BaseModel):
 @dataclass(init=False)
 class FilesystemFolder(_FilesystemFolder):
     """Filesystem folder attributes."""
-
-    relativePath: str

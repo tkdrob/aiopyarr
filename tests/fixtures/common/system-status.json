@@ -1,4 +1,6 @@
 {
+  "appName": "test",
+  "instanceName": "test",
   "version": "10.0.0.34882",
   "buildTime": "2020-09-01T23:23:23.9621974Z",
   "isDebug": true,

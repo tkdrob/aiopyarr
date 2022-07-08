@@ -2003,3 +2003,34 @@ class _MonitorOption(BaseModel):
     """Sonarr series monitor option attributes."""
 
     monitor: str | None = None
+    monitorNewItems: str | None = None
+
+
+@dataclass(init=False)
+class _RootFolder(BaseModel):
+    """Root folder attributes."""
+
+    accessible: bool
+    freeSpace: int
+    id: int
+    path: str
+    unmappedFolders: list[_FilesystemFolder] | None = None
+
+    def __post_init__(self):
+        """Post init."""
+        self.unmappedFolders = [
+            _FilesystemFolder(unmap) for unmap in self.unmappedFolders or []
+        ]
+
+
+@dataclass(init=False)
+class _RootFolderExended(_RootFolder):
+    """Extended root folder attributes."""
+
+    defaultMetadataProfileId: int
+    defaultMonitorOption: str
+    defaultNewItemMonitorOption: str
+    defaultQualityProfileId: int
+    defaultTags: list[int]
+    name: str
+    totalSpace: int

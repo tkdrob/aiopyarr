@@ -4,6 +4,7 @@
   "autoUnmonitorPreviouslyDownloadedBooks": false,
   "autoUnmonitorPreviouslyDownloadedEpisodes": false,
   "autoUnmonitorPreviouslyDownloadedMovies": false,
+  "autoUnmonitorPreviouslyDownloadedTracks": false,
   "chmodFolder": "002",
   "chownGroup": "",
   "copyUsingHardlinks": false,

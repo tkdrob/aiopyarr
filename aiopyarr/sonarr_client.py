@@ -25,7 +25,7 @@ from .const import (
 )
 from .exceptions import ArrException
 from .models.host_configuration import PyArrHostConfiguration
-from .models.request import Command, SortDirection
+from .models.request import Command, RootFolder, SortDirection
 from .models.sonarr import (
     SonarrBlocklist,
     SonarrCalendar,
@@ -720,6 +720,15 @@ class SonarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         return await self._async_request(
             f"tag/detail{'' if tagid is None else f'/{tagid}'}",
             datatype=SonarrTagDetails,
+        )
+
+    async def async_get_root_folders(
+        self, folderid: int | None = None
+    ) -> RootFolder | list[RootFolder]:
+        """Get information about root folders."""
+        return await self._async_request(
+            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
+            datatype=RootFolder,
         )
 
     async def async_get_localization(self) -> Any:

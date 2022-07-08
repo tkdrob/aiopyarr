@@ -54,7 +54,7 @@ from .models.radarr import (
     RadarrSortKeys,
     RadarrTagDetails,
 )
-from .models.request import Command, SortDirection
+from .models.request import Command, RootFolder, SortDirection
 from .request_client import RequestClient
 
 
@@ -367,8 +367,6 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             datatype=RadarrAltTitle,
         )
 
-    # GET altyear
-
     async def async_get_indexer_flags(self) -> list[RadarrIndexerFlag]:
         """Get indexer flags."""
         return await self._async_request(
@@ -633,13 +631,13 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             method=HTTPMethod.POST,
         )
 
-    # Only works if an id is associated with the release
-    async def async_get_pushed_release(self, releaseid: str) -> RadarrRelease:
-        """Get release previously pushed by below method."""
+    async def async_push_release(self, data: RadarrRelease) -> list[RadarrRelease]:
+        """Push release."""
         return await self._async_request(
             "release/push",
-            params={"id": releaseid},
+            data=data,
             datatype=RadarrRelease,
+            method=HTTPMethod.POST,
         )
 
     async def async_get_rename(self, movieid: int) -> list[RadarrRename]:
@@ -675,6 +673,15 @@ class RadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
             data=data,
             datatype=RadarrManualImport,
             method=HTTPMethod.PUT,
+        )
+
+    async def async_get_root_folders(
+        self, folderid: int | None = None
+    ) -> RootFolder | list[RootFolder]:
+        """Get information about root folders."""
+        return await self._async_request(
+            f"rootfolder{'' if folderid is None else f'/{folderid}'}",
+            datatype=RootFolder,
         )
 
     async def async_get_release_profiles(self, profileid: int | None = None) -> Any:
