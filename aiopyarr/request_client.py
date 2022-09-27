@@ -228,7 +228,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             api_token = search(r"apiKey: '(.*)'", data).group(1)  # type: ignore
             base_api_path = search(r"urlBase: '(.*)'", data).group(1)  # type: ignore
         except (AttributeError, asyncio.exceptions.TimeoutError) as ex:
-            if "login-failed" in data:
+            if "login-failed" in data or not data:
                 raise ArrZeroConfException(
                     message="Failed to get api info automatically"
                 ) from ex
