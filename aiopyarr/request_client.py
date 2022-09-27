@@ -28,6 +28,8 @@ from .exceptions import (
     ArrConnectionException,
     ArrException,
     ArrResourceNotFound,
+    ArrWrongAppException,
+    ArrZeroConfException,
 )
 from .models.base import BaseModel, toraw
 from .models.host_configuration import PyArrHostConfiguration
@@ -205,9 +207,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
         return response.basedata
 
-    async def async_try_zeroconf(
-        self, throw: bool = False
-    ) -> tuple[str, str, str] | str:
+    async def async_try_zeroconf(self) -> tuple[str, str, str]:
         """Get api information if login not required."""
         data = ""
         try:
@@ -229,18 +229,12 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             base_api_path = search(r"urlBase: '(.*)'", data).group(1)  # type: ignore
         except (AttributeError, asyncio.exceptions.TimeoutError) as ex:
             if "login-failed" in data:
-                if throw:
-                    raise ArrException(
-                        message="Failed to get api info automatically"
-                    ) from ex
-                return "zeroconf_failed"
-            if throw:
-                raise ArrException(message="Failed to connect") from ex
-            return "cannot_connect"
+                raise ArrZeroConfException(
+                    message="Failed to get api info automatically"
+                ) from ex
+            raise ArrException(message="Failed to connect") from ex
         if self.__name__ not in data:
-            if throw:
-                raise ArrException(message="Incorrect application")
-            return "wrong_app"
+            raise ArrWrongAppException(message="Incorrect application")
         return api_ver, api_token, base_api_path
 
     async def async_get_diskspace(self) -> list[Diskspace]:
