@@ -183,6 +183,33 @@ async def test_async_try_zeroconf_failed(
         aresponses.Response(
             status=200,
             headers={"Content-Type": "application/javascript"},
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrZeroConfException):
+        await radarr_client.async_try_zeroconf()
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
+            text="something went wrong",
+        ),
+        match_querystring=True,
+    )
+    with pytest.raises(ArrException):
+        await radarr_client.async_try_zeroconf()
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        "/initialize.js",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/javascript"},
             text="Lidarr apiRoot: '/api/v3' apiKey: '123' urlBase: ''",
         ),
         match_querystring=True,
