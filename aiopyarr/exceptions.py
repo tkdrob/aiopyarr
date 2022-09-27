@@ -21,13 +21,21 @@ class ArrException(Exception):
         super().__init__(str(message) if client is not None else message)
 
 
-class ArrConnectionException(ArrException):
-    """Arr connection exception."""
-
-
 class ArrAuthenticationException(ArrException):
     """Arr authentication exception."""
 
 
+class ArrConnectionException(ArrException):
+    """Arr connection exception."""
+
+
 class ArrResourceNotFound(ArrException):
     """Arr resource not found exception."""
+
+
+class ArrWrongAppException(ArrException):
+    """Arr wrong application exception."""
+
+
+class ArrZeroConfException(ArrException):
+    """Arr Zero Configuration failed exception."""
