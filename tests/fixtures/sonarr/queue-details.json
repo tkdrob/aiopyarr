@@ -34,14 +34,14 @@
         "isRepack": false
       }
     },
-    "size": 0.0,
+    "size": 200000.0,
     "title": "string",
-    "sizeleft": 0.0,
+    "sizeleft": 100000.0,
     "timeleft": "00:00:00",
     "estimatedCompletionTime": "2022-01-07T10:40:32.56084Z",
     "status": "string",
     "trackedDownloadStatus": "string",
-    "trackedDownloadState": "string",
+    "trackedDownloadState": "downloading",
     "statusMessages": [
       {
         "title": "string",

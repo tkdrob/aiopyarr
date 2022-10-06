@@ -55,14 +55,14 @@
           ]
         }
       ],
-      "size": 0,
+      "size": 200000,
       "title": "string",
-      "sizeleft": 0,
-      "timeleft": "string",
+      "sizeleft": 100000,
+      "timeleft": "00:00:20",
       "estimatedCompletionTime": "2020-01-21T00:01:59Z",
       "status": "string",
       "trackedDownloadStatus": "string",
-      "trackedDownloadState": "string",
+      "trackedDownloadState": "downloading",
       "statusMessages": [
         {
           "title": "string",

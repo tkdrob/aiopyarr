@@ -25,14 +25,13 @@
           "isRepack": false
         }
       },
-      "size": 0.0,
+      "size": 200000.0,
       "title": "string",
-      "sizeleft": 0.0,
+      "sizeleft": 100000.0,
       "timeleft": "00:00:00",
       "estimatedCompletionTime": "2020-02-09T13:14:14.379532Z",
       "status": "string",
       "trackedDownloadStatus": "string",
-      "trackedDownloadState": "string",
       "statusMessages": [
         {
           "title": "string",

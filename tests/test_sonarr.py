@@ -627,7 +627,7 @@ async def test_async_get_queue(aresponses, sonarr_client: SonarrClient) -> None:
     assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532)
     assert _value.status == "string"
     assert _value.trackedDownloadStatus == "string"
-    assert _value.trackedDownloadState == "string"
+    assert _value.trackedDownloadState == "stopped"
     assert _value.statusMessages[0].title == "string"
     assert _value.statusMessages[0].messages == ["string"]
     assert _value.downloadId == "string"
@@ -1200,7 +1200,7 @@ async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient) 
     assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840)
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
-    assert data[0].trackedDownloadState == "string"
+    assert data[0].trackedDownloadState == "stopped"
     assert data[0].statusMessages[0].title == "string"
     assert data[0].statusMessages[0].messages == ["string"]
     assert data[0].downloadId == "string"
