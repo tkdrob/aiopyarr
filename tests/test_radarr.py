@@ -951,11 +951,11 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
     assert isinstance(data.records[0].size, int)
     assert data.records[0].title == "string"
     assert isinstance(data.records[0].sizeleft, int)
-    assert data.records[0].timeleft == "string"
+    assert data.records[0].timeleft == "00:00:20"
     assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
-    assert data.records[0].trackedDownloadState == "string"
+    assert data.records[0].trackedDownloadState == "downloading"
     assert data.records[0].statusMessages[0].title == "string"
     assert data.records[0].statusMessages[0].messages == ["string"]
     assert data.records[0].errorMessage == "string"

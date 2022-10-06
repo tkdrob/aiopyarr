@@ -158,6 +158,15 @@ class _Common8(BaseModel):
     trackedDownloadState: str
     trackedDownloadStatus: str
 
+    def __post_init__(self):
+        """Post init."""
+        if (
+            self.sizeleft > 0
+            and self.timeleft == "00:00:00"
+            or not hasattr(self, "trackedDownloadState")
+        ):
+            self.trackedDownloadState = "stopped"
+
 
 @dataclass(init=False)
 class _Common9(BaseModel):

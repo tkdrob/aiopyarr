@@ -65,9 +65,9 @@
           "isRepack": false
         }
       },
-      "size": 0.0,
+      "size": 20000.0,
       "title": "string",
-      "sizeleft": 0.0,
+      "sizeleft": 10000.0,
       "timeleft": "00:00:00",
       "estimatedCompletionTime": "2020-02-16T23:34:44.8856492Z",
       "status": "string",
