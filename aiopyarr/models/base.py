@@ -4,8 +4,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime
 from enum import Enum
-from re import search
 from typing import Any
+
+import ciso8601
 
 from ..const import ATTR_DATA
 from .const import (
@@ -26,21 +27,17 @@ def get_datetime(
     if isinstance(_input, str):
         if _input.isnumeric():
             return int(_input)
-        if res := search(r"(\d+-\d{2}-\d{2})T?(\d{2}:\d{2}:\d{2})?\.*((.*)Z)?", _input):
-            if res.group(2):
-                _input = f"{res.group(1)}{res.group(2)}{f'{res.group(4)}000000'[:6]}"
-                if utc:
-                    return datetime.strptime(f"{_input}+00:00", "%Y-%m-%d%H:%M:%S%f%z")
-                return datetime.strptime(_input, "%Y-%m-%d%H:%M:%S%f")
-            return datetime.strptime(_input, "%Y-%m-%d")
+        if utc:
+            return ciso8601.parse_datetime(_input)
+        return ciso8601.parse_datetime_as_naive(_input)
     return _input
 
 
-def get_date(_input: datetime | str | None) -> date | str | int | None:
+def get_date(_input: datetime | str | None) -> date | None:
     """Convert input to date object."""
     if (result := get_datetime(_input)) and isinstance(result, datetime):
         return result.date()
-    return result
+    return None
 
 
 def get_enum_value(val: str) -> str | Enum:

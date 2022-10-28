@@ -1013,7 +1013,7 @@ async def test_async_get_queue_details(aresponses, radarr_client: RadarrClient) 
     assert data[0].title == "string"
     assert isinstance(data[0].sizeleft, int)
     assert data[0].timeleft == "string"
-    assert data[0].estimatedCompletionTime == "string"
+    assert data[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "string"
@@ -1898,4 +1898,4 @@ async def test_not_implemented(radarr_client: RadarrClient) -> None:
 
 def test_get_date_returns() -> None:
     """Test get date function returns with no date."""
-    assert get_date("") == ""
+    assert get_date(True) is None

@@ -8,6 +8,7 @@ from re import search
 from typing import Any, Text
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
+import orjson
 
 from .const import (
     ALL,
@@ -155,7 +156,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
                 method=method.value,
                 url=url,
                 params=params,
-                json=toraw(data),
+                data=orjson.dumps(toraw(data)),
                 headers=self._headers,
                 timeout=ClientTimeout(self._request_timeout),
                 ssl=self._host.verify_ssl,

@@ -4,6 +4,10 @@ load-plugins = [
     "pylint.extensions.code_style",
     "pylint.extensions.typing",
 ]
+extension-pkg-allow-list = [
+    "ciso8601",
+    "orjson",
+]
 
 [tool.pylint."MESSAGES CONTROL"]
 # Reasons disabled:
