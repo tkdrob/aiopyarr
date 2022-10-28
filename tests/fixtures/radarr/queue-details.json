@@ -53,7 +53,7 @@
     "title": "string",
     "sizeleft": 0,
     "timeleft": "string",
-    "estimatedCompletionTime": "string",
+    "estimatedCompletionTime": "2020-01-21T00:01:59Z",
     "status": "string",
     "trackedDownloadStatus": "string",
     "trackedDownloadState": "string",
