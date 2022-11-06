@@ -162,7 +162,7 @@ class _Common8(BaseModel):
         """Post init."""
         if (
             self.sizeleft > 0
-            and (hasattr(self, 'timeleft') and self.timeleft == "00:00:00")
+            and (hasattr(self, "timeleft") and self.timeleft == "00:00:00")
             or not hasattr(self, "trackedDownloadState")
         ):
             self.trackedDownloadState = "stopped"
