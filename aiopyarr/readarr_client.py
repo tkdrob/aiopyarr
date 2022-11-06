@@ -384,7 +384,7 @@ class ReadarrClient(RequestClient):  # pylint: disable=too-many-public-methods
         """Search for new books using a term, goodreads ID, isbn or asin."""
         return await self._async_request(
             "book/lookup",
-            params={TERM: f"{booktype}:{term}"},
+            params={TERM: f"{booktype.value}:{term}"},
             datatype=ReadarrBookLookup,
         )
 
