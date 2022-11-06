@@ -636,6 +636,8 @@ async def test_async_get_queue(aresponses, sonarr_client: SonarrClient) -> None:
     assert _value.indexer == "string"
     assert _value.outputPath == "string"
     assert isinstance(_value.id, int)
+    assert data.records[1].timeleft == "00:00:00"
+    assert data.records[1].trackedDownloadState == "stopped"
 
 
 @pytest.mark.asyncio
