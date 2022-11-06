@@ -160,6 +160,8 @@ class _Common8(BaseModel):
 
     def __post_init__(self):
         """Post init."""
+        if not hasattr(self, "timeleft"):
+            self.__setattr__("timeleft", "00:00:00")
         if (
             self.sizeleft > 0
             and self.timeleft == "00:00:00"
