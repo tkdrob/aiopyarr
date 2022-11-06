@@ -742,7 +742,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         _imgsize = "" if hasattr(self, "async_get_albums") else _imgsize
 
         _ext = "png" if imagetype == ImageType.LOGO else "jpg"
-        cmd = f"mediacover/{_val}{imageid}/{imagetype}{_imgsize}.{_ext}"
+        cmd = f"mediacover/{_val}{imageid}/{imagetype.value}{_imgsize}.{_ext}"
         return await self._async_request(cmd)
 
     async def async_mark_failed(self, recordid: int) -> None:
