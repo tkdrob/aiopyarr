@@ -2,6 +2,7 @@
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import date, datetime
 
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import ArrException
@@ -30,7 +31,9 @@ from . import RADARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_blocklist(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting blocklisted movies."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -87,7 +90,7 @@ async def test_async_get_blocklist(aresponses, radarr_client: RadarrClient) -> N
 
 @pytest.mark.asyncio
 async def test_async_get_blocklist_movie(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting blocklisted movie."""
     aresponses.add(
@@ -139,7 +142,9 @@ async def test_async_get_blocklist_movie(
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_calendar(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -242,7 +247,9 @@ async def test_async_get_calendar(aresponses, radarr_client: RadarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_naming_config(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_naming_config(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -268,7 +275,9 @@ async def test_async_get_naming_config(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_history(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -331,7 +340,9 @@ async def test_async_get_history(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_history_since(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_history_since(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting history since specified date."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -366,7 +377,9 @@ async def test_async_get_history_since(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_lists(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_import_lists(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -413,7 +426,7 @@ async def test_async_get_import_lists(aresponses, radarr_client: RadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_get_import_list_movies(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting import list movies."""
     aresponses.add(
@@ -476,7 +489,9 @@ async def test_async_get_import_list_movies(
 
 
 @pytest.mark.asyncio
-async def test_async_get_extra_file(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_extra_file(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting extra files info from specified movie id."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -499,7 +514,9 @@ async def test_async_get_extra_file(aresponses, radarr_client: RadarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_get_restrictions(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_restrictions(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting indexer restrictions."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -532,7 +549,9 @@ async def test_async_get_restrictions(aresponses, radarr_client: RadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_get_credits(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_credits(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting credits."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -571,7 +590,9 @@ async def test_async_get_credits(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_alt_titles(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_alt_titles(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting alternate movie titles."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -609,7 +630,9 @@ async def test_async_get_alt_titles(aresponses, radarr_client: RadarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_get_indexer_flags(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_indexer_flags(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting extra files info from specified movie id."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -629,7 +652,7 @@ async def test_async_get_indexer_flags(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_movie(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test getting movie attributes."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -766,7 +789,9 @@ async def test_async_get_movie(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_lookup_movie(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_lookup_movie(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test movie lookup."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -785,7 +810,7 @@ async def test_async_lookup_movie(aresponses, radarr_client: RadarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_lookup_movie_files(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test movie files lookup."""
     aresponses.add(
@@ -852,7 +877,9 @@ async def test_async_lookup_movie_files(
 
 
 @pytest.mark.asyncio
-async def test_async_get_notification(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_notification(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting movie file attributes."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -900,7 +927,7 @@ async def test_async_get_notification(aresponses, radarr_client: RadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_queue(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -968,7 +995,9 @@ async def test_async_get_queue(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_details(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_queue_details(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1029,7 +1058,9 @@ async def test_async_get_queue_details(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_tag_details(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1055,7 +1086,7 @@ async def test_async_get_tag_details(aresponses, radarr_client: RadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test parsing movie file name."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1189,7 +1220,9 @@ async def test_async_parse(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_release(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test searching indexers for latest releases."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1257,7 +1290,9 @@ async def test_async_get_release(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_push_release(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_push_release(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test pushing release."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1275,7 +1310,9 @@ async def test_async_push_release(aresponses, radarr_client: RadarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_rename(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1296,7 +1333,9 @@ async def test_async_get_rename(aresponses, radarr_client: RadarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_manual_import(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_manual_import(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting manual import."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1378,7 +1417,7 @@ async def test_async_get_manual_import(aresponses, radarr_client: RadarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_edit_manual_import(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing manual import."""
     aresponses.add(
@@ -1396,7 +1435,9 @@ async def test_async_edit_manual_import(
 
 
 @pytest.mark.asyncio
-async def test_async_add_movies(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_movies(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding movies."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1427,7 +1468,9 @@ async def test_async_add_movies(aresponses, radarr_client: RadarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_edit_movies(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_movies(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing movies."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1457,7 +1500,9 @@ async def test_async_edit_movies(aresponses, radarr_client: RadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_delete_movies(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_movies(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test deleting movies."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1485,7 +1530,9 @@ async def test_async_delete_movies(aresponses, radarr_client: RadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_import_movies(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_import_movies(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test importing movies."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1503,7 +1550,9 @@ async def test_async_import_movies(aresponses, radarr_client: RadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_delete_movie_file(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_movie_file(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test deleting movie file."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1519,7 +1568,9 @@ async def test_async_delete_movie_file(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_edit_import_list(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_import_list(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing an import list."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1536,7 +1587,9 @@ async def test_async_edit_import_list(aresponses, radarr_client: RadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_add_import_list(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_import_list(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding an import list."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1553,7 +1606,9 @@ async def test_async_add_import_list(aresponses, radarr_client: RadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_edit_restriction(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_restriction(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing indexer restriction."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1570,7 +1625,9 @@ async def test_async_edit_restriction(aresponses, radarr_client: RadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_add_restriction(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_restriction(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding indexer restriction."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1588,7 +1645,7 @@ async def test_async_add_restriction(aresponses, radarr_client: RadarrClient) ->
 
 @pytest.mark.asyncio
 async def test_async_delete_restriction(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting indexer restriction."""
     aresponses.add(
@@ -1605,7 +1662,9 @@ async def test_async_delete_restriction(
 
 
 @pytest.mark.asyncio
-async def test_async_test_import_lists(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_test_import_lists(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test import list testing."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1649,7 +1708,9 @@ async def test_async_test_import_lists(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_importlist_action(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_importlist_action(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1666,7 +1727,7 @@ async def test_async_importlist_action(aresponses, radarr_client: RadarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_edit_naming_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test adding an import list."""
     aresponses.add(
@@ -1684,7 +1745,9 @@ async def test_async_edit_naming_config(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_notification(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_notification(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing notification."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1701,7 +1764,9 @@ async def test_async_edit_notification(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_add_notification(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_notification(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding notification."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1719,7 +1784,7 @@ async def test_async_add_notification(aresponses, radarr_client: RadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_test_notifications(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test notification testing."""
     aresponses.add(
@@ -1764,7 +1829,9 @@ async def test_async_test_notifications(
 
 
 @pytest.mark.asyncio
-async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_radarr_commands(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test Radarr commands."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -1860,7 +1927,9 @@ async def test_async_radarr_commands(aresponses, radarr_client: RadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_download_release(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_download_release(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test downloading release."""
     aresponses.add(
         "127.0.0.1:7878",

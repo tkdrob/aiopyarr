@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from copy import copy
 from re import search
-from typing import Any, Text
+from typing import Any
 
 from aiohttp.client import ClientError, ClientSession, ClientTimeout
 import orjson
@@ -163,7 +163,6 @@ class RequestClient:  # pylint: disable=too-many-public-methods
             )
 
             if request.status >= 400:
-
                 if request.status == 401:
                     raise ArrAuthenticationException(self, request)
                 if request.status == 404:
@@ -336,7 +335,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get log file."""
         return await self._async_request("log/file", datatype=LogFile)
 
-    async def async_get_log_file_content(self, file: str) -> Text:
+    async def async_get_log_file_content(self, file: str) -> str:
         """Get log file content."""
         return await self._async_request(f"log/file/{file}")
 
@@ -344,7 +343,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
         """Get log file updates."""
         return await self._async_request("log/file/update", datatype=LogFile)
 
-    async def async_get_log_file_update_content(self, file: str) -> Text:
+    async def async_get_log_file_update_content(self, file: str) -> str:
         """Get log file update content."""
         return await self._async_request(f"log/file/update/{file}")
 

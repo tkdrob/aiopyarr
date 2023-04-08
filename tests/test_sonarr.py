@@ -2,6 +2,7 @@
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import datetime, timezone
 
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import ArrException
@@ -31,7 +32,9 @@ from . import SONARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_calendar(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -80,7 +83,7 @@ async def test_async_get_calendar(aresponses, sonarr_client: SonarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_get_calendar_extended(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test getting calendar sith extended parameters."""
     aresponses.add(
@@ -209,7 +212,9 @@ async def test_async_get_calendar_extended(
 
 
 @pytest.mark.asyncio
-async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_episodes(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting episodes."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -319,7 +324,9 @@ async def test_async_get_episodes(aresponses, sonarr_client: SonarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_episode_files(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_episode_files(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting episode files."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -382,7 +389,9 @@ async def test_async_get_episode_files(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_history(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -446,7 +455,9 @@ async def test_async_get_history(aresponses, sonarr_client: SonarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_history_since(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_history_since(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting history since specified date."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -482,7 +493,7 @@ async def test_async_get_history_since(aresponses, sonarr_client: SonarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_parse_title_or_path(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test getting history."""
     aresponses.add(
@@ -586,7 +597,7 @@ async def test_async_parse_title_or_path(
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_queue(aresponses: Server, sonarr_client: SonarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -641,7 +652,9 @@ async def test_async_get_queue(aresponses, sonarr_client: SonarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_release(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting release."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -715,7 +728,9 @@ async def test_async_get_release(aresponses, sonarr_client: SonarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_lookup_series(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_lookup_series(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting series lookup data."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -779,7 +794,9 @@ async def test_async_lookup_series(aresponses, sonarr_client: SonarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_import_lists(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_import_lists(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting importlist."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -825,7 +842,9 @@ async def test_async_get_import_lists(aresponses, sonarr_client: SonarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_get_series(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_series(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting series lookup data."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -894,7 +913,9 @@ async def test_async_get_series(aresponses, sonarr_client: SonarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_wanted(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -931,7 +952,7 @@ async def test_async_get_wanted(aresponses, sonarr_client: SonarrClient) -> None
 
 @pytest.mark.asyncio
 async def test_async_get_wanted_extended(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test getting wanted."""
     aresponses.add(
@@ -1004,7 +1025,9 @@ async def test_async_get_wanted_extended(
 
 
 @pytest.mark.asyncio
-async def test_async_get_languages(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_languages(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting language profiles."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1029,7 +1052,9 @@ async def test_async_get_languages(aresponses, sonarr_client: SonarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_blocklist(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting blocklist."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1069,7 +1094,9 @@ async def test_async_get_blocklist(aresponses, sonarr_client: SonarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_naming_config(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_naming_config(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting naming configuration."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1103,7 +1130,9 @@ async def test_async_get_naming_config(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_notifications(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_notifications(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting notifications."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1155,7 +1184,9 @@ async def test_async_get_notifications(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_queue_details(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1214,7 +1245,9 @@ async def test_async_get_queue_details(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_rename(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1236,7 +1269,9 @@ async def test_async_get_rename(aresponses, sonarr_client: SonarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_manual_import(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_manual_import(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting manual import."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1323,7 +1358,7 @@ async def test_async_get_manual_import(aresponses, sonarr_client: SonarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_edit_manual_import(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test editing manual import."""
     aresponses.add(
@@ -1341,7 +1376,9 @@ async def test_async_edit_manual_import(
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_tag_details(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1367,7 +1404,9 @@ async def test_async_get_tag_details(aresponses, sonarr_client: SonarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_season_pass(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_season_pass(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test setting monitor options in season pass."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1387,7 +1426,9 @@ async def test_async_season_pass(aresponses, sonarr_client: SonarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_episode_monitor(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_episode_monitor(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test changing monitoring status via season pass."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1416,7 +1457,9 @@ async def test_async_episode_monitor(aresponses, sonarr_client: SonarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_sonarr_commands(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test Sonarr commands."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1511,7 +1554,9 @@ async def test_async_sonarr_commands(aresponses, sonarr_client: SonarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_edit_episode(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_edit_episode(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test editing episode."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1529,7 +1574,7 @@ async def test_async_edit_episode(aresponses, sonarr_client: SonarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_edit_episode_file_quality(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test editing episode file."""
     aresponses.add(
@@ -1549,7 +1594,7 @@ async def test_async_edit_episode_file_quality(
 
 @pytest.mark.asyncio
 async def test_async_delete_episode_file(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test deleting episode file."""
     aresponses.add(
@@ -1566,7 +1611,9 @@ async def test_async_delete_episode_file(
 
 
 @pytest.mark.asyncio
-async def test_async_download_release(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_download_release(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test downloading release."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1583,7 +1630,9 @@ async def test_async_download_release(aresponses, sonarr_client: SonarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_push_release(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_push_release(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test pushing release."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1600,7 +1649,9 @@ async def test_async_push_release(aresponses, sonarr_client: SonarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_add_series(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_add_series(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test adding series."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1621,7 +1672,9 @@ async def test_async_add_series(aresponses, sonarr_client: SonarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_edit_series(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_edit_series(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test editing series."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1638,7 +1691,9 @@ async def test_async_edit_series(aresponses, sonarr_client: SonarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_delete_series(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_delete_series(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test deleting series."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1654,7 +1709,9 @@ async def test_async_delete_series(aresponses, sonarr_client: SonarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_edit_import_list(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_edit_import_list(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test editing import list."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1671,7 +1728,9 @@ async def test_async_edit_import_list(aresponses, sonarr_client: SonarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_add_import_list(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_add_import_list(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test adding import list."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1688,7 +1747,9 @@ async def test_async_add_import_list(aresponses, sonarr_client: SonarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_test_import_lists(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test import list testing."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1732,7 +1793,9 @@ async def test_async_test_import_lists(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_edit_language(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_edit_language(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test editing language profiles."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1750,7 +1813,9 @@ async def test_async_edit_language(aresponses, sonarr_client: SonarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_delete_language(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_delete_language(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test deleting language profiles."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1766,7 +1831,9 @@ async def test_async_delete_language(aresponses, sonarr_client: SonarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_add_language(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_add_language(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test adding language profiles."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1785,7 +1852,7 @@ async def test_async_add_language(aresponses, sonarr_client: SonarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_edit_naming_config(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test editing naming config."""
     aresponses.add(
@@ -1803,7 +1870,9 @@ async def test_async_edit_naming_config(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_notification(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_edit_notification(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test editing notification."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1820,7 +1889,9 @@ async def test_async_edit_notification(aresponses, sonarr_client: SonarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_add_notification(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_add_notification(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test adding notification."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -1838,7 +1909,7 @@ async def test_async_add_notification(aresponses, sonarr_client: SonarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_test_notifications(
-    aresponses, sonarr_client: SonarrClient
+    aresponses: Server, sonarr_client: SonarrClient
 ) -> None:
     """Test notification testing."""
     aresponses.add(

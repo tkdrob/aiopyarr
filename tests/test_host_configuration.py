@@ -1,6 +1,7 @@
 """Tests for host configuration."""
 # pylint:disable=protected-access
 from aiohttp.client import ClientSession
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import ArrException
@@ -14,7 +15,7 @@ from . import API_TOKEN, RADARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_host_configuration(aresponses) -> None:
+async def test_host_configuration(aresponses: Server) -> None:
     """Test host configuration."""
     aresponses.add(
         "127.0.0.1:7000",
@@ -58,7 +59,7 @@ async def test_host_configuration(aresponses) -> None:
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_with_hostname(aresponses) -> None:
+async def test_host_configuration_with_hostname(aresponses: Server) -> None:
     """Test host configuration with hostname."""
     aresponses.add(
         "localhost:7000",
@@ -92,7 +93,7 @@ async def test_host_configuration_with_hostname(aresponses) -> None:
 
 
 @pytest.mark.asyncio
-async def test_host_configuration_with_url(aresponses) -> None:
+async def test_host_configuration_with_url(aresponses: Server) -> None:
     """Test host configuration with url."""
     aresponses.add(
         "localhost:7878",
@@ -131,7 +132,7 @@ async def test_host_configuration_with_url(aresponses) -> None:
 
 
 @pytest.mark.asyncio
-async def test_no_host_configuration_given(aresponses) -> None:
+async def test_no_host_configuration_given(aresponses: Server) -> None:
     """Test host configuration not given."""
     aresponses.add(
         "127.0.0.1:7878",
