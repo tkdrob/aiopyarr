@@ -3,6 +3,7 @@
 from datetime import datetime
 import json
 
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import ArrException
@@ -41,7 +42,9 @@ from tests import LIDARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_albums(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_albums(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -161,7 +164,7 @@ async def test_async_get_albums(aresponses, lidarr_client: LidarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_add_album(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_add_album(aresponses: Server, lidarr_client: LidarrClient) -> None:
     """Test adding album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -178,7 +181,9 @@ async def test_async_add_album(aresponses, lidarr_client: LidarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_edit_albums(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_edit_albums(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test editing album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -210,7 +215,9 @@ async def test_async_edit_albums(aresponses, lidarr_client: LidarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_delete_album(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_delete_album(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test deleting album info."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -226,7 +233,9 @@ async def test_async_delete_album(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_album_studio(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_album_studio(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test setting monitor options in albumstudio."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -246,7 +255,9 @@ async def test_async_album_studio(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_artists(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_artists(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting artists."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -378,7 +389,9 @@ async def test_async_get_artists(aresponses, lidarr_client: LidarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_add_artist(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_add_artist(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test adding artist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -395,7 +408,9 @@ async def test_async_add_artist(aresponses, lidarr_client: LidarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_edit_artists(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_edit_artists(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test editing artist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -424,7 +439,9 @@ async def test_async_edit_artists(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_delete_artists(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_delete_artists(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test deleting artists."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -452,7 +469,9 @@ async def test_async_delete_artists(aresponses, lidarr_client: LidarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_album_lookup(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_album_lookup(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test album lookup."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -543,7 +562,9 @@ async def test_async_album_lookup(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_blocklist(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting blocklist."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -610,7 +631,9 @@ async def test_async_get_blocklist(aresponses, lidarr_client: LidarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_calendar(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -708,7 +731,9 @@ async def test_async_get_calendar(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_lidarr_commands(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test sending lidarr commands."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -797,7 +822,9 @@ async def test_async_lidarr_commands(aresponses, lidarr_client: LidarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_get_wanted(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_wanted(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting wanted."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -909,7 +936,7 @@ async def test_async_get_wanted(aresponses, lidarr_client: LidarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_parse(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_parse(aresponses: Server, lidarr_client: LidarrClient) -> None:
     """Test parsing track file name."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -945,7 +972,9 @@ async def test_async_parse(aresponses, lidarr_client: LidarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_importlist(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_importlist(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1015,7 +1044,9 @@ async def test_async_get_importlist(aresponses, lidarr_client: LidarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_edit_importlist(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_edit_importlist(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test editing import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1032,7 +1063,9 @@ async def test_async_edit_importlist(aresponses, lidarr_client: LidarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_add_importlist(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_add_importlist(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test adding import list."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1049,7 +1082,9 @@ async def test_async_add_importlist(aresponses, lidarr_client: LidarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_test_import_lists(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test import list testing."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1093,7 +1128,9 @@ async def test_async_test_import_lists(aresponses, lidarr_client: LidarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_importlist_action(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_importlist_action(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test performing import list action."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1114,7 +1151,9 @@ async def test_async_importlist_action(aresponses, lidarr_client: LidarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_history(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting_history."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1273,7 +1312,9 @@ async def test_async_get_history(aresponses, lidarr_client: LidarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_get_history_since(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_history_since(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting history since specified date."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1320,7 +1361,7 @@ async def test_async_get_history_since(aresponses, lidarr_client: LidarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_get_metadata_profiles(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
@@ -1350,7 +1391,7 @@ async def test_async_get_metadata_profiles(
 
 @pytest.mark.asyncio
 async def test_async_edit_metadata_profile(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test editing metadata profile."""
     aresponses.add(
@@ -1370,7 +1411,7 @@ async def test_async_edit_metadata_profile(
 
 @pytest.mark.asyncio
 async def test_async_add_metadata_profile(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test adding metadata profile."""
     aresponses.add(
@@ -1389,7 +1430,7 @@ async def test_async_add_metadata_profile(
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_queue(aresponses: Server, lidarr_client: LidarrClient) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1467,7 +1508,9 @@ async def test_async_get_queue(aresponses, lidarr_client: LidarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_details(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_queue_details(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting queue details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1625,7 +1668,9 @@ async def test_async_get_queue_details(aresponses, lidarr_client: LidarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_release(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1678,7 +1723,9 @@ async def test_async_get_release(aresponses, lidarr_client: LidarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_download_release(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_download_release(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test downloading release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1695,7 +1742,9 @@ async def test_async_download_release(aresponses, lidarr_client: LidarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_get_root_folders(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_root_folders(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting root folders."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1724,7 +1773,9 @@ async def test_async_get_root_folders(aresponses, lidarr_client: LidarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_push_release(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_push_release(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test pushing release."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1741,7 +1792,9 @@ async def test_async_push_release(aresponses, lidarr_client: LidarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_rename(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1764,7 +1817,9 @@ async def test_async_get_rename(aresponses, lidarr_client: LidarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_manual_import(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_manual_import(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting manual import."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1938,7 +1993,7 @@ async def test_async_get_manual_import(aresponses, lidarr_client: LidarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_edit_manual_import(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test editing manual import."""
     aresponses.add(
@@ -1956,7 +2011,7 @@ async def test_async_edit_manual_import(
 
 
 @pytest.mark.asyncio
-async def test_async_get_retag(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_retag(aresponses: Server, lidarr_client: LidarrClient) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -1981,7 +2036,7 @@ async def test_async_get_retag(aresponses, lidarr_client: LidarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_search(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_search(aresponses: Server, lidarr_client: LidarrClient) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2033,7 +2088,9 @@ async def test_async_search(aresponses, lidarr_client: LidarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_tag_details(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2058,7 +2115,9 @@ async def test_async_get_tag_details(aresponses, lidarr_client: LidarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_get_tracks(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_tracks(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting tracks."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2161,7 +2220,9 @@ async def test_async_get_tracks(aresponses, lidarr_client: LidarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_track_files(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_get_track_files(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test getting track files."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2265,7 +2326,7 @@ async def test_async_get_track_files(aresponses, lidarr_client: LidarrClient) ->
 
 @pytest.mark.asyncio
 async def test_async_get_metadata_provider(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test getting metadata provider."""
     aresponses.add(
@@ -2288,7 +2349,7 @@ async def test_async_get_metadata_provider(
 
 @pytest.mark.asyncio
 async def test_async_edit_metadata_provider(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test editing metadata provider."""
     aresponses.add(
@@ -2307,7 +2368,9 @@ async def test_async_edit_metadata_provider(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_track_files(aresponses, lidarr_client: LidarrClient) -> None:
+async def test_async_edit_track_files(
+    aresponses: Server, lidarr_client: LidarrClient
+) -> None:
     """Test editing track files."""
     aresponses.add(
         "127.0.0.1:8686",
@@ -2340,7 +2403,7 @@ async def test_async_edit_track_files(aresponses, lidarr_client: LidarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_delete_track_files(
-    aresponses, lidarr_client: LidarrClient
+    aresponses: Server, lidarr_client: LidarrClient
 ) -> None:
     """Test deleting track files."""
     aresponses.add(

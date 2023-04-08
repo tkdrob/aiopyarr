@@ -3,6 +3,7 @@
 from datetime import datetime
 import json
 
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.const import ATTR_DATA
@@ -52,7 +53,9 @@ from . import READARR_API, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_async_get_authors(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_authors(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting author info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -936,7 +939,9 @@ async def test_async_get_authors(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_author_lookup(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_author_lookup(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting author lookup info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -989,7 +994,9 @@ async def test_async_author_lookup(aresponses, readarr_client: ReadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_get_blocklist(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_blocklist(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting blocklist info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -1878,7 +1885,9 @@ async def test_async_get_blocklist(aresponses, readarr_client: ReadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_get_book(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_book(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2544,7 +2553,9 @@ async def test_async_get_book(aresponses, readarr_client: ReadarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_get_book_file(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_book_file(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting book file info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2634,7 +2645,9 @@ async def test_async_get_book_file(aresponses, readarr_client: ReadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_book_lookup(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_book_lookup(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting book info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2729,7 +2742,9 @@ async def test_async_book_lookup(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_calendar(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_calendar(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting calendar."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3588,7 +3603,7 @@ async def test_async_get_calendar(aresponses, readarr_client: ReadarrClient) -> 
 
 @pytest.mark.asyncio
 async def test_async_get_wanted_missing(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting wanted and missing books."""
     aresponses.add(
@@ -3700,7 +3715,7 @@ async def test_async_get_wanted_missing(
 
 @pytest.mark.asyncio
 async def test_async_get_wanted_cutoff(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
@@ -3732,7 +3747,9 @@ async def test_async_get_wanted_cutoff(
 
 
 @pytest.mark.asyncio
-async def test_async_get_history(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_history(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3787,7 +3804,7 @@ async def test_async_get_history(aresponses, readarr_client: ReadarrClient) -> N
 
 @pytest.mark.asyncio
 async def test_async_get_history_since(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting history."""
     aresponses.add(
@@ -3824,7 +3841,7 @@ async def test_async_get_history_since(
 
 @pytest.mark.asyncio
 async def test_async_get_import_lists(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting import lists."""
     aresponses.add(
@@ -3866,7 +3883,7 @@ async def test_async_get_import_lists(
 
 @pytest.mark.asyncio
 async def test_async_get_metadata_profiles(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting wanted cutoff books."""
     aresponses.add(
@@ -3895,7 +3912,7 @@ async def test_async_get_metadata_profiles(
 
 @pytest.mark.asyncio
 async def test_async_get_metadata_provider(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting metadata provider."""
     aresponses.add(
@@ -3919,7 +3936,7 @@ async def test_async_get_metadata_provider(
 
 @pytest.mark.asyncio
 async def test_async_get_naming_config(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting naming configuration."""
     aresponses.add(
@@ -3948,7 +3965,7 @@ async def test_async_get_naming_config(
 
 @pytest.mark.asyncio
 async def test_async_get_notifications(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting notifications."""
     aresponses.add(
@@ -3998,7 +4015,7 @@ async def test_async_get_notifications(
 
 
 @pytest.mark.asyncio
-async def test_async_parse(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) -> None:
     """Test parsing book file name."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5647,7 +5664,9 @@ async def test_async_parse(aresponses, readarr_client: ReadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_queue(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting queue."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5696,7 +5715,7 @@ async def test_async_get_queue(aresponses, readarr_client: ReadarrClient) -> Non
 
 @pytest.mark.asyncio
 async def test_async_get_queue_details(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting queue details."""
     aresponses.add(
@@ -5823,7 +5842,9 @@ async def test_async_get_queue_details(
 
 
 @pytest.mark.asyncio
-async def test_async_get_release(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_release(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test searching indexers for specified fields."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5875,7 +5896,9 @@ async def test_async_get_release(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_push_release(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_push_release(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test pushing release."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5892,7 +5915,9 @@ async def test_async_push_release(aresponses, readarr_client: ReadarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_get_rename(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_rename(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting rename details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -5915,7 +5940,7 @@ async def test_async_get_rename(aresponses, readarr_client: ReadarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_get_manual_import(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting manual import."""
     aresponses.add(
@@ -6083,7 +6108,7 @@ async def test_async_get_manual_import(
 
 @pytest.mark.asyncio
 async def test_async_edit_manual_import(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing manual import."""
     aresponses.add(
@@ -6101,7 +6126,9 @@ async def test_async_edit_manual_import(
 
 
 @pytest.mark.asyncio
-async def test_async_get_retag(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_retag(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting retag details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6126,7 +6153,7 @@ async def test_async_get_retag(aresponses, readarr_client: ReadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_search(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_search(aresponses: Server, readarr_client: ReadarrClient) -> None:
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6180,7 +6207,9 @@ async def test_async_search(aresponses, readarr_client: ReadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_series(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_series(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test search."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6205,7 +6234,9 @@ async def test_async_get_series(aresponses, readarr_client: ReadarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_get_tag_details(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_tag_details(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting tag details."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6544,7 +6575,9 @@ async def test_readarr_bookshelf() -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_add_author(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_add_author(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test adding author."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6561,7 +6594,9 @@ async def test_async_add_author(aresponses, readarr_client: ReadarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_edit_authors(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_edit_authors(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test editing authors."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6592,7 +6627,9 @@ async def test_async_edit_authors(aresponses, readarr_client: ReadarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_delete_authors(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_delete_authors(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test editing authors."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6621,7 +6658,7 @@ async def test_async_delete_authors(aresponses, readarr_client: ReadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_readarr_commands(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test Readarr commands."""
     aresponses.add(
@@ -6724,7 +6761,9 @@ async def test_async_readarr_commands(
 
 
 @pytest.mark.asyncio
-async def test_async_add_book(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_add_book(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test adding book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6741,7 +6780,9 @@ async def test_async_add_book(aresponses, readarr_client: ReadarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_edit_book(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_edit_book(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test editing book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6758,7 +6799,9 @@ async def test_async_edit_book(aresponses, readarr_client: ReadarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_delete_book(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_delete_book(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test deleting book."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6774,7 +6817,9 @@ async def test_async_delete_book(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_edit_book_files(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_edit_book_files(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test editing book files."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6807,7 +6852,7 @@ async def test_async_edit_book_files(aresponses, readarr_client: ReadarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_delete_book_files(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting book files."""
     aresponses.add(
@@ -6836,7 +6881,9 @@ async def test_async_delete_book_files(
 
 
 @pytest.mark.asyncio
-async def test_async_add_bookshelf(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_add_bookshelf(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test adding bookshelf."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6853,7 +6900,7 @@ async def test_async_add_bookshelf(aresponses, readarr_client: ReadarrClient) ->
 
 @pytest.mark.asyncio
 async def test_async_get_development_config(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting development config."""
     aresponses.add(
@@ -6878,7 +6925,7 @@ async def test_async_get_development_config(
 
 @pytest.mark.asyncio
 async def test_async_edit_development_config(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing development config."""
     aresponses.add(
@@ -6899,7 +6946,7 @@ async def test_async_edit_development_config(
 
 @pytest.mark.asyncio
 async def test_async_edit_import_list(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing import list."""
     aresponses.add(
@@ -6917,7 +6964,9 @@ async def test_async_edit_import_list(
 
 
 @pytest.mark.asyncio
-async def test_async_add_import_list(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_add_import_list(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test adding import list."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -6935,7 +6984,7 @@ async def test_async_add_import_list(aresponses, readarr_client: ReadarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_test_import_lists(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test import list testing."""
     aresponses.add(
@@ -6981,7 +7030,7 @@ async def test_async_test_import_lists(
 
 @pytest.mark.asyncio
 async def test_async_importlist_action(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test performing import list action."""
     aresponses.add(
@@ -7006,7 +7055,7 @@ async def test_async_importlist_action(
 
 @pytest.mark.asyncio
 async def test_async_edit_metadata_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing metadata profile."""
     aresponses.add(
@@ -7026,7 +7075,7 @@ async def test_async_edit_metadata_profile(
 
 @pytest.mark.asyncio
 async def test_async_add_metadata_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test adding metadata profile."""
     aresponses.add(
@@ -7046,7 +7095,7 @@ async def test_async_add_metadata_profile(
 
 @pytest.mark.asyncio
 async def test_async_edit_metadata_provider(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing metadata profile."""
     aresponses.add(
@@ -7066,7 +7115,7 @@ async def test_async_edit_metadata_provider(
 
 @pytest.mark.asyncio
 async def test_async_edit_naming_config(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing naming config."""
     aresponses.add(
@@ -7085,7 +7134,7 @@ async def test_async_edit_naming_config(
 
 @pytest.mark.asyncio
 async def test_async_edit_notification(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing notification."""
     aresponses.add(
@@ -7104,7 +7153,7 @@ async def test_async_edit_notification(
 
 @pytest.mark.asyncio
 async def test_async_add_notification(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test adding notification."""
     aresponses.add(
@@ -7123,7 +7172,7 @@ async def test_async_add_notification(
 
 @pytest.mark.asyncio
 async def test_async_test_notifications(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test notification testing."""
     aresponses.add(
@@ -7169,7 +7218,7 @@ async def test_async_test_notifications(
 
 @pytest.mark.asyncio
 async def test_async_download_release(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test download release."""
     aresponses.add(
@@ -7188,7 +7237,7 @@ async def test_async_download_release(
 
 @pytest.mark.asyncio
 async def test_async_get_root_folders(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting root folders."""
     aresponses.add(
@@ -7223,7 +7272,7 @@ async def test_async_get_root_folders(
 
 @pytest.mark.asyncio
 async def test_async_edit_root_folder(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing root folder."""
     aresponses.add(

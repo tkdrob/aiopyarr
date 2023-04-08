@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 
 from aiohttp.client import ClientSession
+from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import (
@@ -76,7 +77,7 @@ async def test_loop() -> None:
 
 
 @pytest.mark.asyncio
-async def test_attributes(aresponses, radarr_client: RadarrClient) -> None:
+async def test_attributes(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test object conversion."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -127,7 +128,9 @@ def test_get_no_enum_value() -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_try_zeroconf(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_try_zeroconf(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting api information if login not required."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -146,7 +149,7 @@ async def test_async_try_zeroconf(aresponses, radarr_client: RadarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_try_zeroconf_failed(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting api information if login not required."""
     aresponses.add(
@@ -219,7 +222,7 @@ async def test_async_try_zeroconf_failed(
 
 
 @pytest.mark.asyncio
-async def test_exceptions(aresponses, radarr_client: RadarrClient) -> None:
+async def test_exceptions(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test exceptions."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -278,7 +281,9 @@ async def test_exceptions(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_diskspace(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_diskspace(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting diskspace."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -301,7 +306,7 @@ async def test_async_get_diskspace(aresponses, radarr_client: RadarrClient) -> N
 
 @pytest.mark.asyncio
 async def test_async_get_root_folders(
-    aresponses, radarr_client: RadarrClient, sonarr_client: SonarrClient
+    aresponses: Server, radarr_client: RadarrClient, sonarr_client: SonarrClient
 ) -> None:
     """Test getting root folders."""
     aresponses.add(
@@ -346,7 +351,9 @@ async def test_async_get_root_folders(
 
 
 @pytest.mark.asyncio
-async def test_async_get_host_config(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_host_config(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting host configuration."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -397,7 +404,9 @@ async def test_async_get_host_config(aresponses, radarr_client: RadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_get_ui_config(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_ui_config(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting ui configuration."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -426,7 +435,9 @@ async def test_async_get_ui_config(aresponses, radarr_client: RadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_get_system_status(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_system_status(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting system status."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -473,7 +484,9 @@ async def test_async_get_system_status(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_system_backup(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_system_backup(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting author info."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -496,7 +509,7 @@ async def test_async_get_system_backup(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_get_tags(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_tags(aresponses: Server, sonarr_client: SonarrClient) -> None:
     """Test getting tags."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -516,7 +529,7 @@ async def test_async_get_tags(aresponses, sonarr_client: SonarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_get_logs(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_get_logs(aresponses: Server, sonarr_client: SonarrClient) -> None:
     """Test getting history."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -560,7 +573,7 @@ async def test_async_get_logs(aresponses, sonarr_client: SonarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_log_file(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_get_log_file(aresponses: Server, readarr_client: ReadarrClient) -> None:
     """Test getting log file info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -582,7 +595,9 @@ async def test_get_log_file(aresponses, readarr_client: ReadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_log_file_content(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_get_log_file_content(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting log file content."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -599,7 +614,9 @@ async def test_get_log_file_content(aresponses, readarr_client: ReadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_get_log_file_update(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_get_log_file_update(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting log file update info."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -622,7 +639,7 @@ async def test_get_log_file_update(aresponses, readarr_client: ReadarrClient) ->
 
 @pytest.mark.asyncio
 async def test_get_log_file_update_content(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting log file update content."""
     aresponses.add(
@@ -641,7 +658,7 @@ async def test_get_log_file_update_content(
 
 @pytest.mark.asyncio
 async def test_async_get_custom_filters(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting blocklisted movie."""
     aresponses.add(
@@ -665,7 +682,9 @@ async def test_async_get_custom_filters(
 
 
 @pytest.mark.asyncio
-async def test_async_get_command(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_command(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting commands."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -711,7 +730,7 @@ async def test_async_get_command(aresponses, radarr_client: RadarrClient) -> Non
 
 @pytest.mark.asyncio
 async def test_async_get_download_client(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting download client."""
     aresponses.add(
@@ -751,7 +770,7 @@ async def test_async_get_download_client(
 
 @pytest.mark.asyncio
 async def test_async_get_download_client_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting download client config."""
     aresponses.add(
@@ -776,7 +795,9 @@ async def test_async_get_download_client_config(
 
 
 @pytest.mark.asyncio
-async def test_async_get_filesystem(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_filesystem(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting filesystem attributes."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -801,7 +822,7 @@ async def test_async_get_filesystem(aresponses, radarr_client: RadarrClient) -> 
 
 @pytest.mark.asyncio
 async def test_async_get_filesystem_media_type(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting filesystem media type."""
     aresponses.add(
@@ -820,7 +841,7 @@ async def test_async_get_filesystem_media_type(
 
 @pytest.mark.asyncio
 async def test_async_get_filesystem_media(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting filesystem media files."""
     aresponses.add(
@@ -842,7 +863,7 @@ async def test_async_get_filesystem_media(
 
 @pytest.mark.asyncio
 async def test_async_get_failed_health_checks(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting failed health checks."""
     aresponses.add(
@@ -869,7 +890,7 @@ async def test_async_get_failed_health_checks(
 
 @pytest.mark.asyncio
 async def test_async_get_exclusions(
-    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
+    aresponses: Server, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test getting import list exclusions."""
     aresponses.add(
@@ -908,7 +929,9 @@ async def test_async_get_exclusions(
 
 
 @pytest.mark.asyncio
-async def test_async_get_indexer(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_indexer(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting import lists."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -948,7 +971,7 @@ async def test_async_get_indexer(aresponses, radarr_client: RadarrClient) -> Non
 
 @pytest.mark.asyncio
 async def test_async_get_indexer_configs(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting indexer configs."""
     aresponses.add(
@@ -976,7 +999,9 @@ async def test_async_get_indexer_configs(
 
 
 @pytest.mark.asyncio
-async def test_async_get_languages(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_languages(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting languages."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -997,7 +1022,7 @@ async def test_async_get_languages(aresponses, readarr_client: ReadarrClient) ->
 
 @pytest.mark.asyncio
 async def test_async_get_localization(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting localization."""
     aresponses.add(
@@ -2516,7 +2541,7 @@ async def test_async_get_localization(
 
 @pytest.mark.asyncio
 async def test_async_get_image(
-    aresponses, lidarr_client: LidarrClient, sonarr_client: SonarrClient
+    aresponses: Server, lidarr_client: LidarrClient, sonarr_client: SonarrClient
 ) -> None:
     """Test getting image."""
     aresponses.add(
@@ -2594,7 +2619,7 @@ async def test_async_get_image(
 
 @pytest.mark.asyncio
 async def test_async_get_authors_image(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting author image."""
     aresponses.add(
@@ -2635,7 +2660,9 @@ async def test_async_get_authors_image(
 
 
 @pytest.mark.asyncio
-async def test_async_get_book_image(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_get_book_image(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test getting book image."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -2676,7 +2703,7 @@ async def test_async_get_book_image(aresponses, readarr_client: ReadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_get_media_management_configs(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting media management configs."""
     aresponses.add(
@@ -2724,7 +2751,7 @@ async def test_async_get_media_management_configs(
 
 @pytest.mark.asyncio
 async def test_async_get_metadata_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting metadata config."""
     aresponses.add(
@@ -2760,7 +2787,7 @@ async def test_async_get_metadata_config(
 
 @pytest.mark.asyncio
 async def test_async_get_quality_definitions(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting quality definitions."""
     aresponses.add(
@@ -2790,7 +2817,7 @@ async def test_async_get_quality_definitions(
 
 @pytest.mark.asyncio
 async def test_async_get_quality_profiles(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting quality profiles."""
     aresponses.add(
@@ -2835,7 +2862,9 @@ async def test_async_get_quality_profiles(
 
 
 @pytest.mark.asyncio
-async def test_async_get_queue_status(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_queue_status(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting queue status."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -2860,7 +2889,7 @@ async def test_async_get_queue_status(aresponses, radarr_client: RadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_get_release_profiles(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting release profiles."""
     aresponses.add(
@@ -2899,7 +2928,7 @@ async def test_async_get_release_profiles(
 
 @pytest.mark.asyncio
 async def test_async_get_remote_path_mappings(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting remote path mappings."""
     aresponses.add(
@@ -2922,7 +2951,9 @@ async def test_async_get_remote_path_mappings(
 
 
 @pytest.mark.asyncio
-async def test_async_get_system_tasks(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_system_tasks(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting system tasks."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -2949,7 +2980,7 @@ async def test_async_get_system_tasks(aresponses, radarr_client: RadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_get_software_update_info(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test getting software update info."""
     aresponses.add(
@@ -2981,7 +3012,7 @@ async def test_async_get_software_update_info(
 
 @pytest.mark.asyncio
 async def test_async_delete_root_folder(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting root folder."""
     aresponses.add(
@@ -2998,7 +3029,9 @@ async def test_async_delete_root_folder(
 
 
 @pytest.mark.asyncio
-async def test_async_add_root_folder(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_root_folder(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding root folder."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3015,7 +3048,9 @@ async def test_async_add_root_folder(aresponses, radarr_client: RadarrClient) ->
 
 
 @pytest.mark.asyncio
-async def test_async_edit_host_config(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_host_config(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing host config."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3032,7 +3067,9 @@ async def test_async_edit_host_config(aresponses, radarr_client: RadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_edit_ui_config(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_ui_config(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test editing ui config."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3050,7 +3087,7 @@ async def test_async_edit_ui_config(aresponses, radarr_client: RadarrClient) -> 
 
 @pytest.mark.asyncio
 async def test_async_command(
-    aresponses, lidarr_client: LidarrClient, radarr_client: RadarrClient
+    aresponses: Server, lidarr_client: LidarrClient, radarr_client: RadarrClient
 ) -> None:
     """Test editing ui config."""
     aresponses.add(
@@ -3081,7 +3118,9 @@ async def test_async_command(
 
 
 @pytest.mark.asyncio
-async def test_async_delete_command(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_command(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test canceling command."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3111,7 +3150,7 @@ async def test_async_delete_command(aresponses, radarr_client: RadarrClient) -> 
 
 @pytest.mark.asyncio
 async def test_async_restore_system_backup(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test restoring system backup."""
     aresponses.add(
@@ -3129,7 +3168,7 @@ async def test_async_restore_system_backup(
 
 @pytest.mark.asyncio
 async def test_async_upload_system_backup(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test uploading system backup."""
     aresponses.add(
@@ -3147,7 +3186,7 @@ async def test_async_upload_system_backup(
 
 @pytest.mark.asyncio
 async def test_async_delete_system_backup(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test restoring system backup."""
     aresponses.add(
@@ -3164,7 +3203,7 @@ async def test_async_delete_system_backup(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_tag(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_edit_tag(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test editing tag."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3181,7 +3220,9 @@ async def test_async_edit_tag(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_delete_tag(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_tag(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test deleting tag."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3197,7 +3238,7 @@ async def test_async_delete_tag(aresponses, radarr_client: RadarrClient) -> None
 
 
 @pytest.mark.asyncio
-async def test_async_add_tag(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_tag(aresponses: Server, radarr_client: RadarrClient) -> None:
     """Test adding tag."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3214,7 +3255,9 @@ async def test_async_add_tag(aresponses, radarr_client: RadarrClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_async_add_custom_filter(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_add_custom_filter(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test adding tag."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3232,7 +3275,7 @@ async def test_async_add_custom_filter(aresponses, radarr_client: RadarrClient) 
 
 @pytest.mark.asyncio
 async def test_async_edit_custom_filter(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing tag."""
     aresponses.add(
@@ -3251,7 +3294,7 @@ async def test_async_edit_custom_filter(
 
 @pytest.mark.asyncio
 async def test_async_delete_custom_filter(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting tag."""
     aresponses.add(
@@ -3269,7 +3312,7 @@ async def test_async_delete_custom_filter(
 
 @pytest.mark.asyncio
 async def test_async_add_download_client(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test adding download client."""
     aresponses.add(
@@ -3288,7 +3331,7 @@ async def test_async_add_download_client(
 
 @pytest.mark.asyncio
 async def test_async_edit_download_client(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing download client."""
     aresponses.add(
@@ -3307,7 +3350,7 @@ async def test_async_edit_download_client(
 
 @pytest.mark.asyncio
 async def test_async_delete_download_client(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting download client."""
     aresponses.add(
@@ -3325,7 +3368,7 @@ async def test_async_delete_download_client(
 
 @pytest.mark.asyncio
 async def test_async_test_download_clients(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test download client testing."""
     aresponses.add(
@@ -3370,7 +3413,7 @@ async def test_async_test_download_clients(
 
 @pytest.mark.asyncio
 async def test_async_edit_download_client_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing download client config."""
     aresponses.add(
@@ -3390,7 +3433,7 @@ async def test_async_edit_download_client_config(
 
 @pytest.mark.asyncio
 async def test_async_delete_import_list(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting import list."""
     aresponses.add(
@@ -3408,7 +3451,7 @@ async def test_async_delete_import_list(
 
 @pytest.mark.asyncio
 async def test_async_edit_exclusion(
-    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
+    aresponses: Server, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test editing import list exclusion."""
     aresponses.add(
@@ -3440,7 +3483,7 @@ async def test_async_edit_exclusion(
 
 @pytest.mark.asyncio
 async def test_async_delete_exclusion(
-    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
+    aresponses: Server, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting import list exclusion."""
     aresponses.add(
@@ -3470,7 +3513,7 @@ async def test_async_delete_exclusion(
 
 @pytest.mark.asyncio
 async def test_async_add_exclusion(
-    aresponses, radarr_client: RadarrClient, readarr_client: ReadarrClient
+    aresponses: Server, radarr_client: RadarrClient, readarr_client: ReadarrClient
 ) -> None:
     """Test adding import list exclusion."""
     aresponses.add(
@@ -3501,7 +3544,9 @@ async def test_async_add_exclusion(
 
 
 @pytest.mark.asyncio
-async def test_async_edit_indexer(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_edit_indexer(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test editing indexer."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3518,7 +3563,9 @@ async def test_async_edit_indexer(aresponses, readarr_client: ReadarrClient) -> 
 
 
 @pytest.mark.asyncio
-async def test_async_delete_indexer(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_delete_indexer(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test deleting indexer."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3534,7 +3581,9 @@ async def test_async_delete_indexer(aresponses, readarr_client: ReadarrClient) -
 
 
 @pytest.mark.asyncio
-async def test_async_add_indexer(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_add_indexer(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test adding indexer."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3551,7 +3600,9 @@ async def test_async_add_indexer(aresponses, readarr_client: ReadarrClient) -> N
 
 
 @pytest.mark.asyncio
-async def test_async_test_indexers(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_test_indexers(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test indexer testing."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3594,7 +3645,7 @@ async def test_async_test_indexers(aresponses, radarr_client: RadarrClient) -> N
 
 @pytest.mark.asyncio
 async def test_async_edit_indexer_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing indexer config."""
     aresponses.add(
@@ -3613,7 +3664,7 @@ async def test_async_edit_indexer_config(
 
 @pytest.mark.asyncio
 async def test_async_edit_media_management_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing media management config."""
     aresponses.add(
@@ -3633,7 +3684,7 @@ async def test_async_edit_media_management_config(
 
 @pytest.mark.asyncio
 async def test_async_edit_metadata_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing metadata config."""
     aresponses.add(
@@ -3652,7 +3703,7 @@ async def test_async_edit_metadata_config(
 
 @pytest.mark.asyncio
 async def test_async_delete_metadata_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting metadata config."""
     aresponses.add(
@@ -3670,7 +3721,7 @@ async def test_async_delete_metadata_config(
 
 @pytest.mark.asyncio
 async def test_async_add_metadata_config(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting metadata config."""
     aresponses.add(
@@ -3688,7 +3739,9 @@ async def test_async_add_metadata_config(
 
 
 @pytest.mark.asyncio
-async def test_async_test_metadata(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_test_metadata(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test metadata testing."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3731,7 +3784,7 @@ async def test_async_test_metadata(aresponses, radarr_client: RadarrClient) -> N
 
 @pytest.mark.asyncio
 async def test_async_delete_notification(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting notification."""
     aresponses.add(
@@ -3749,7 +3802,7 @@ async def test_async_delete_notification(
 
 @pytest.mark.asyncio
 async def test_async_test_all_notifications(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test notification testing."""
     aresponses.add(
@@ -3781,7 +3834,7 @@ async def test_async_test_all_notifications(
 
 @pytest.mark.asyncio
 async def test_async_edit_quality_definition(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing quality definition."""
     aresponses.add(
@@ -3800,7 +3853,7 @@ async def test_async_edit_quality_definition(
 
 @pytest.mark.asyncio
 async def test_async_delete_quality_profile(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test deleting quality profile."""
     aresponses.add(
@@ -3818,7 +3871,7 @@ async def test_async_delete_quality_profile(
 
 @pytest.mark.asyncio
 async def test_async_edit_quality_profile(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test editing quality profile."""
     aresponses.add(
@@ -3837,7 +3890,7 @@ async def test_async_edit_quality_profile(
 
 @pytest.mark.asyncio
 async def test_async_add_quality_profile(
-    aresponses, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient
 ) -> None:
     """Test adding quality profile."""
     aresponses.add(
@@ -3855,7 +3908,9 @@ async def test_async_add_quality_profile(
 
 
 @pytest.mark.asyncio
-async def test_async_delete_queue(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_queue(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test deleting from queue."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3883,7 +3938,9 @@ async def test_async_delete_queue(aresponses, radarr_client: RadarrClient) -> No
 
 
 @pytest.mark.asyncio
-async def test_async_delete_blocklists(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_delete_blocklists(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test deleting blocklists."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -3911,7 +3968,9 @@ async def test_async_delete_blocklists(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_queue_grab(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_queue_grab(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test grabbing queue."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -3940,7 +3999,7 @@ async def test_async_queue_grab(aresponses, readarr_client: ReadarrClient) -> No
 
 @pytest.mark.asyncio
 async def test_async_edit_release_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing release profile."""
     aresponses.add(
@@ -3959,7 +4018,7 @@ async def test_async_edit_release_profile(
 
 @pytest.mark.asyncio
 async def test_async_delete_release_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting release profile."""
     aresponses.add(
@@ -3977,7 +4036,7 @@ async def test_async_delete_release_profile(
 
 @pytest.mark.asyncio
 async def test_async_add_release_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting release profile."""
     aresponses.add(
@@ -3996,7 +4055,7 @@ async def test_async_add_release_profile(
 
 @pytest.mark.asyncio
 async def test_async_delete_remote_path_mapping(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting remote path mapping."""
     aresponses.add(
@@ -4014,7 +4073,7 @@ async def test_async_delete_remote_path_mapping(
 
 @pytest.mark.asyncio
 async def test_async_edit_remote_path_mapping(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing remote path mapping."""
     aresponses.add(
@@ -4034,7 +4093,7 @@ async def test_async_edit_remote_path_mapping(
 
 @pytest.mark.asyncio
 async def test_async_add_remote_path_mapping(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing remote path mapping."""
     aresponses.add(
@@ -4052,7 +4111,9 @@ async def test_async_add_remote_path_mapping(
 
 
 @pytest.mark.asyncio
-async def test_async_get_system_routes(aresponses, radarr_client: RadarrClient) -> None:
+async def test_async_get_system_routes(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
     """Test getting system routes."""
     aresponses.add(
         "127.0.0.1:7878",
@@ -4068,7 +4129,9 @@ async def test_async_get_system_routes(aresponses, radarr_client: RadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_system_shutdown(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_system_shutdown(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test system shutdown."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -4085,7 +4148,9 @@ async def test_async_system_shutdown(aresponses, readarr_client: ReadarrClient) 
 
 
 @pytest.mark.asyncio
-async def test_async_system_restart(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_system_restart(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test system restart."""
     aresponses.add(
         "127.0.0.1:8787",
@@ -4103,7 +4168,7 @@ async def test_async_system_restart(aresponses, readarr_client: ReadarrClient) -
 
 @pytest.mark.asyncio
 async def test_async_get_delay_profiles(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test getting delay profile."""
     aresponses.add(
@@ -4131,7 +4196,7 @@ async def test_async_get_delay_profiles(
 
 @pytest.mark.asyncio
 async def test_async_add_delay_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test adding delay profile."""
     aresponses.add(
@@ -4150,7 +4215,7 @@ async def test_async_add_delay_profile(
 
 @pytest.mark.asyncio
 async def test_async_edit_delay_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test editing delay profile."""
     aresponses.add(
@@ -4169,7 +4234,7 @@ async def test_async_edit_delay_profile(
 
 @pytest.mark.asyncio
 async def test_async_delete_delay_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting delay profile."""
     aresponses.add(
@@ -4187,7 +4252,7 @@ async def test_async_delete_delay_profile(
 
 @pytest.mark.asyncio
 async def test_async_delay_profile_reorder(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test delay profile reorder."""
     aresponses.add(
@@ -4205,7 +4270,7 @@ async def test_async_delay_profile_reorder(
 
 @pytest.mark.asyncio
 async def test_async_delete_metadata_profile(
-    aresponses, readarr_client: ReadarrClient
+    aresponses: Server, readarr_client: ReadarrClient
 ) -> None:
     """Test deleting metadata profile."""
     aresponses.add(
@@ -4222,7 +4287,9 @@ async def test_async_delete_metadata_profile(
 
 
 @pytest.mark.asyncio
-async def test_async_mark_failed(aresponses, sonarr_client: SonarrClient) -> None:
+async def test_async_mark_failed(
+    aresponses: Server, sonarr_client: SonarrClient
+) -> None:
     """Test mark history item as failed."""
     aresponses.add(
         "127.0.0.1:8989",
@@ -4238,7 +4305,9 @@ async def test_async_mark_failed(aresponses, sonarr_client: SonarrClient) -> Non
 
 
 @pytest.mark.asyncio
-async def test_async_command_other(aresponses, readarr_client: ReadarrClient) -> None:
+async def test_async_command_other(
+    aresponses: Server, readarr_client: ReadarrClient
+) -> None:
     """Test running nonstandard command."""
     aresponses.add(
         "127.0.0.1:8787",
