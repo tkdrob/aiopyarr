@@ -128,5 +128,5 @@ class BaseModel:
             if k in CONVERT_TO_INTEGER
             else toraw(v)
             for k, v in self.__dict__.items()
-            if k != "basedata"
+            if k != ATTR_DATA
         }

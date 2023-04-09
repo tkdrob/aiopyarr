@@ -5696,9 +5696,53 @@ async def test_async_get_queue(
     assert data.records[0].quality.revision.isRepack is False
     assert isinstance(data.records[0].size, int)
     assert data.records[0].title == "string"
-    assert isinstance(data.records[0].sizeleft, int)
+    assert data.records[0].sizeleft > 0
     assert data.records[0].timeleft == "00:00:10"
     assert data.records[0].estimatedCompletionTime == datetime(2020, 2, 9, 23, 22, 30)
+    assert data.records[0].status == "string"
+    assert data.records[0].trackedDownloadStatus == "string"
+    assert data.records[0].trackedDownloadState == "downloading"
+    assert data.records[0].statusMessages[0].title == "string"
+    assert data.records[0].statusMessages[0].messages == ["string"]
+    assert data.records[0].downloadId == "string"
+    assert data.records[0].protocol is ProtocolType.UNKNOWN
+    assert data.records[0].downloadClient == "string"
+    assert data.records[0].indexer == "string"
+    assert data.records[0].outputPath == "string"
+    assert data.records[0].downloadForced is False
+    assert isinstance(data.records[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:8787",
+        f"/api/{READARR_API}/queue?page=1&pageSize=10&sortKey=timeleft&includeUnknownAuthorItems=False&includeAuthor=False&includeBook=False",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("readarr/queue-2.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await readarr_client.async_get_queue()
+    assert data.page == 1
+    assert data.pageSize == 10
+    assert data.sortKey == ReadarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
+    assert data.totalRecords == 1
+    assert isinstance(data.records[0].authorId, int)
+    assert isinstance(data.records[0].bookId, int)
+    assert data.records[0].author
+    assert data.records[0].book
+    assert isinstance(data.records[0].quality.quality.id, int)
+    assert data.records[0].quality.quality.name == "string"
+    assert isinstance(data.records[0].quality.revision.version, int)
+    assert isinstance(data.records[0].quality.revision.real, int)
+    assert data.records[0].quality.revision.isRepack is False
+    assert isinstance(data.records[0].size, int)
+    assert data.records[0].title == "string"
+    assert data.records[0].sizeleft > 0
+    assert data.records[0].timeleft is None
+    assert data.records[0].estimatedCompletionTime is None
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "downloading"
@@ -5824,7 +5868,7 @@ async def test_async_get_queue_details(
     assert data[0].quality.revision.isRepack is False
     assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert isinstance(data[0].sizeleft, int)
+    assert data[0].sizeleft == 0
     assert data[0].timeleft == "00:00:00"
     assert data[0].estimatedCompletionTime == datetime(2020, 2, 7, 11, 27, 27)
     assert data[0].status == "string"

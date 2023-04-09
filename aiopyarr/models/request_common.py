@@ -81,7 +81,7 @@ class _Common4(BaseModel):
 
     downloadClient: str
     downloadId: str
-    estimatedCompletionTime: datetime
+    estimatedCompletionTime: datetime | None = None
     indexer: str
     outputPath: str
 
@@ -153,19 +153,17 @@ class _Common8(BaseModel):
     sizeleft: int
     status: str
     statusMessages: list[_StatusMessage] | None = None
-    timeleft: str
+    timeleft: str | None = None
     title: str
-    trackedDownloadState: str
+    trackedDownloadState: str = "downloading"
     trackedDownloadStatus: str
 
     def __post_init__(self):
         """Post init."""
-        if not hasattr(self, "timeleft"):
-            self.__setattr__("timeleft", "00:00:00")
         if (
-            self.sizeleft > 0
+            hasattr(self, "sizeleft")
+            and self.sizeleft > 0
             and self.timeleft == "00:00:00"
-            or not hasattr(self, "trackedDownloadState")
         ):
             self.trackedDownloadState = "stopped"
 

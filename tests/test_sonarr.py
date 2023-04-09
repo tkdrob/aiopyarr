@@ -633,7 +633,7 @@ async def test_async_get_queue(aresponses: Server, sonarr_client: SonarrClient) 
     assert _value.quality.revision.isRepack is False
     assert isinstance(_value.size, int)
     assert _value.title == "string"
-    assert isinstance(_value.sizeleft, int)
+    assert _value.sizeleft > 0
     assert _value.timeleft == "00:00:00"
     assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532)
     assert _value.status == "string"
@@ -647,8 +647,58 @@ async def test_async_get_queue(aresponses: Server, sonarr_client: SonarrClient) 
     assert _value.indexer == "string"
     assert _value.outputPath == "string"
     assert isinstance(_value.id, int)
-    assert data.records[1].timeleft == "00:00:00"
-    assert data.records[1].trackedDownloadState == "stopped"
+    assert data.records[1].sizeleft > 0
+    assert data.records[1].timeleft is None
+    assert data.records[1].trackedDownloadState == "downloading"
+
+    aresponses.add(
+        "127.0.0.1:8989",
+        f"/api/{SONARR_API}/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownSeriesItems=False&includeSeries=False&includeEpisode=False",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("sonarr/queue-2.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await sonarr_client.async_get_queue()
+
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
+    assert data.sortKey == SonarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
+    assert isinstance(data.totalRecords, int)
+    _value = data.records[0]
+    assert isinstance(_value.seriesId, int)
+    assert isinstance(_value.episodeId, int)
+    assert _value.series
+    assert _value.episode
+    assert isinstance(_value.language.id, int)
+    assert _value.language.name == "string"
+    assert isinstance(_value.quality.quality.id, int)
+    assert _value.quality.quality.name == "string"
+    assert _value.quality.quality.source == "string"
+    assert isinstance(_value.quality.quality.resolution, int)
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
+    assert _value.quality.revision.isRepack is False
+    assert isinstance(_value.size, int)
+    assert _value.title == "string"
+    assert _value.sizeleft > 0
+    assert _value.timeleft is None
+    assert _value.estimatedCompletionTime is None
+    assert _value.status == "string"
+    assert _value.trackedDownloadStatus == "string"
+    assert _value.trackedDownloadState == "downloading"
+    assert _value.statusMessages[0].title == "string"
+    assert _value.statusMessages[0].messages == ["string"]
+    assert _value.downloadId == "string"
+    assert _value.protocol is ProtocolType.UNKNOWN
+    assert _value.downloadClient == "string"
+    assert _value.indexer == "string"
+    assert _value.outputPath == "string"
+    assert isinstance(_value.id, int)
 
 
 @pytest.mark.asyncio
@@ -1228,7 +1278,7 @@ async def test_async_get_queue_details(
     assert data[0].quality.revision.isRepack is False
     assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert isinstance(data[0].sizeleft, int)
+    assert data[0].sizeleft > 0
     assert data[0].timeleft == "00:00:00"
     assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840)
     assert data[0].status == "string"
