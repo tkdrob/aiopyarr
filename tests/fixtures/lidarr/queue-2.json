@@ -1,0 +1,43 @@
+{
+  "page": 1,
+  "pageSize": 20,
+  "sortKey": "timeleft",
+  "sortDirection": "ascending",
+  "totalRecords": 51,
+  "records": [
+    {
+      "artistId": 0,
+      "albumId": 0,
+      "quality": {
+        "quality": {
+          "id": 6,
+          "name": "FLAC"
+        },
+        "revision": {
+          "version": 1,
+          "real": 0,
+          "isRepack": false
+        }
+      },
+      "size": 20000,
+      "title": "string",
+      "sizeleft": 0,
+      "status": "completed",
+      "trackedDownloadStatus": "string",
+      "trackedDownloadState": "string",
+      "statusMessages": [
+        {
+          "title": "string",
+          "messages": ["string"]
+        }
+      ],
+      "downloadId": "string",
+      "protocol": "torrent",
+      "downloadClient": "Transmission",
+      "indexer": "string",
+      "outputPath": "string",
+      "downloadForced": false,
+      "id": 0
+    }
+  ]
+}

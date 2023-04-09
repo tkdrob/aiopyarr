@@ -1490,17 +1490,60 @@ async def test_async_get_queue(aresponses: Server, lidarr_client: LidarrClient) 
     assert _value.quality.revision.isRepack is False
     assert isinstance(_value.size, int)
     assert _value.title == "string"
-    assert isinstance(_value.sizeleft, int)
+    assert _value.sizeleft > 0
     assert _value.timeleft == "00:00:00"
     assert _value.estimatedCompletionTime == datetime(2020, 2, 16, 23, 34, 44, 885649)
     assert _value.status == "string"
     assert _value.trackedDownloadStatus == "string"
-    assert _value.trackedDownloadState == "string"
+    assert _value.trackedDownloadState == "stopped"
     assert _value.statusMessages[0].title == "string"
     assert _value.statusMessages[0].messages == ["string"]
     assert _value.downloadId == "string"
     assert _value.protocol is ProtocolType.UNKNOWN
     assert _value.downloadClient == "string"
+    assert _value.indexer == "string"
+    assert _value.outputPath == "string"
+    assert _value.downloadForced is False
+    assert isinstance(_value.id, int)
+
+    aresponses.add(
+        "127.0.0.1:8686",
+        f"/api/{LIDARR_API}/queue?page=1&pageSize=10&sortKey=timeleft&includeUnknownArtistItems=False&includeArtist=False&includeAlbum=False",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("lidarr/queue-2.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await lidarr_client.async_get_queue()
+    assert isinstance(data.page, int)
+    assert isinstance(data.page, int)
+    assert data.sortKey == LidarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
+    assert isinstance(data.totalRecords, int)
+    _value = data.records[0]
+    assert isinstance(_value.artistId, int)
+    assert isinstance(_value.albumId, int)
+    assert isinstance(_value.quality.quality.id, int)
+    assert _value.quality.quality.name == "FLAC"
+    assert isinstance(_value.quality.revision.version, int)
+    assert isinstance(_value.quality.revision.real, int)
+    assert _value.quality.revision.isRepack is False
+    assert isinstance(_value.size, int)
+    assert _value.title == "string"
+    assert _value.sizeleft == 0
+    assert _value.timeleft is None
+    assert _value.estimatedCompletionTime is None
+    assert _value.status == "completed"
+    assert _value.trackedDownloadStatus == "string"
+    assert _value.trackedDownloadState == "string"
+    assert _value.statusMessages[0].title == "string"
+    assert _value.statusMessages[0].messages == ["string"]
+    assert _value.downloadId == "string"
+    assert _value.protocol is ProtocolType.TORRENT
+    assert _value.downloadClient == "Transmission"
     assert _value.indexer == "string"
     assert _value.outputPath == "string"
     assert _value.downloadForced is False
@@ -1638,7 +1681,7 @@ async def test_async_get_queue_details(
     assert data[0].quality.revision.isRepack is False
     assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert isinstance(data[0].sizeleft, int)
+    assert data[0].sizeleft == 0
     assert data[0].timeleft == "00:00:00"
     assert data[0].estimatedCompletionTime == datetime(2020, 2, 16, 23, 49, 45, 143727)
     assert data[0].status == "string"

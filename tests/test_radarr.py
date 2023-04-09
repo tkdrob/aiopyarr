@@ -977,9 +977,73 @@ async def test_async_get_queue(aresponses: Server, radarr_client: RadarrClient) 
     assert _value.specifications[0].fields[0].advanced is True
     assert isinstance(data.records[0].size, int)
     assert data.records[0].title == "string"
-    assert isinstance(data.records[0].sizeleft, int)
+    assert data.records[0].sizeleft > 0
     assert data.records[0].timeleft == "00:00:20"
     assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
+    assert data.records[0].status == "string"
+    assert data.records[0].trackedDownloadStatus == "string"
+    assert data.records[0].trackedDownloadState == "downloading"
+    assert data.records[0].statusMessages[0].title == "string"
+    assert data.records[0].statusMessages[0].messages == ["string"]
+    assert data.records[0].errorMessage == "string"
+    assert data.records[0].downloadId == "string"
+    assert data.records[0].protocol is ProtocolType.UNKNOWN
+    assert data.records[0].downloadClient == "string"
+    assert data.records[0].indexer == "string"
+    assert data.records[0].outputPath == "string"
+    assert isinstance(data.records[0].id, int)
+
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/queue?page=1&pageSize=20&sortDirection=default&sortKey=timeleft&includeUnknownMovieItems=False&includeMovie=False",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/queue-2.json"),
+        ),
+        match_querystring=True,
+    )
+    data = await radarr_client.async_get_queue()
+
+    assert isinstance(data.page, int)
+    assert isinstance(data.pageSize, int)
+    assert data.sortKey == RadarrSortKeys.TIMELEFT.value
+    assert data.sortDirection == SortDirection.ASCENDING.value
+    assert isinstance(data.totalRecords, int)
+    assert isinstance(data.records[0].movieId, int)
+    assert isinstance(data.records[0].languages[0].id, int)
+    assert data.records[0].languages[0].name == "string"
+    assert isinstance(data.records[0].quality.quality.id, int)
+    assert data.records[0].quality.quality.name == "string"
+    assert data.records[0].quality.quality.source == "string"
+    assert isinstance(data.records[0].quality.quality.resolution, int)
+    assert data.records[0].quality.quality.modifier == "string"
+    assert isinstance(data.records[0].quality.revision.version, int)
+    assert isinstance(data.records[0].quality.revision.real, int)
+    assert data.records[0].quality.revision.isRepack is True
+    _value = data.records[0].customFormats[0]
+    assert isinstance(_value.id, int)
+    assert _value.name == "string"
+    assert _value.includeCustomFormatWhenRenaming is True
+    assert _value.specifications[0].name == "string"
+    assert _value.specifications[0].implementation == "string"
+    assert _value.specifications[0].implementationName == "string"
+    assert _value.specifications[0].infoLink == "string"
+    assert _value.specifications[0].negate is True
+    assert _value.specifications[0].required is True
+    assert isinstance(_value.specifications[0].fields[0].order, int)
+    assert _value.specifications[0].fields[0].name == "string"
+    assert _value.specifications[0].fields[0].label == "string"
+    assert _value.specifications[0].fields[0].helpText == "string"
+    assert _value.specifications[0].fields[0].value == "string"
+    assert _value.specifications[0].fields[0].type == "string"
+    assert _value.specifications[0].fields[0].advanced is True
+    assert isinstance(data.records[0].size, int)
+    assert data.records[0].title == "string"
+    assert data.records[0].sizeleft > 0
+    assert data.records[0].timeleft is None
+    assert data.records[0].estimatedCompletionTime is None
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "downloading"
@@ -1040,7 +1104,7 @@ async def test_async_get_queue_details(
     assert data[0].customFormats[0].specifications[0].fields[0].advanced is True
     assert isinstance(data[0].size, int)
     assert data[0].title == "string"
-    assert isinstance(data[0].sizeleft, int)
+    assert data[0].sizeleft == 0
     assert data[0].timeleft == "string"
     assert data[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
     assert data[0].status == "string"

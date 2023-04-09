@@ -314,6 +314,7 @@ class LidarrQueueItem(_Common4, _Common7, _Common8):
 
     def __post_init__(self):
         """Post init."""
+        super().__post_init__()
         self.album = _LidarrQueueItemAlbum(self.album)
         self.artist = _LidarrArtist(self.artist)
         self.quality = _Quality(self.quality)
