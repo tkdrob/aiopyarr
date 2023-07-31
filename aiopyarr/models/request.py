@@ -188,6 +188,14 @@ class RescanAfterRefreshType(str, Enum):
     NEVER = "never"
 
 
+class RuntimeModeType(str, Enum):
+    """Runtime mode type."""
+
+    CONSOLE = "console"
+    SERVICE = "service"
+    TRAY = "tray"
+
+
 class SortDirection(str, Enum):
     """Sort direction type."""
 
@@ -328,35 +336,37 @@ class UIConfig(BaseModel):
 class SystemStatus(BaseModel):
     """System status attributes."""
 
-    appData: str
-    appName: str
-    authentication: str
-    branch: str
+    appName: str | None = None
+    instanceName: str | None = None
+    version: str | None = None
     buildTime: datetime
-    instanceName: str
-    isAdmin: bool
     isDebug: bool
-    isDocker: bool
-    isLinux: bool
-    isMono: bool
-    isMonoRuntime: bool
-    isNetCore: bool
-    isOsx: bool
     isProduction: bool
+    isAdmin: bool
     isUserInteractive: bool
+    startupPath: str | None = None
+    appData: str | None = None
+    osName: str | None = None
+    osVersion: str | None = None
+    isNetCore: bool
+    isLinux: bool
+    isOsx: bool
     isWindows: bool
+    isDocker: bool
+    mode: RuntimeModeType
+    branch: str | None = None
+    databaseType: str
+    databaseVersion: str | None = None
+    authentication: AuthenticationType
     migrationVersion: int
-    mode: str
-    osName: str
-    osVersion: str
-    packageUpdateMechanism: str
-    runtimeName: str
+    urlBase: str | None = None
     runtimeVersion: str
-    sqliteVersion: str
+    runtimeName: str | None = None
     startTime: datetime
-    startupPath: str
-    urlBase: str
-    version: str
+    packageVersion: str | None = None
+    packageAuthor: str | None = None
+    packageUpdateMechanism: HostUpdateType
+    packageUpdateMechanismMessage: str | None = None
 
 
 @dataclass(init=False)
