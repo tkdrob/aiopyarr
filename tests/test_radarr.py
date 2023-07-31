@@ -4,7 +4,7 @@ from datetime import date, datetime
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
-
+from syrupy import SnapshotAssertion
 from aiopyarr.exceptions import ArrException
 from aiopyarr.models.base import get_date
 from aiopyarr.models.const import ProtocolType
@@ -32,7 +32,7 @@ from . import RADARR_API, load_fixture
 
 @pytest.mark.asyncio
 async def test_async_get_blocklist(
-    aresponses: Server, radarr_client: RadarrClient
+    aresponses: Server, radarr_client: RadarrClient, snapshot: SnapshotAssertion
 ) -> None:
     """Test getting blocklisted movies."""
     aresponses.add(
@@ -47,45 +47,7 @@ async def test_async_get_blocklist(
         match_querystring=True,
     )
     data = await radarr_client.async_get_blocklist()
-
-    assert isinstance(data.page, int)
-    assert isinstance(data.pageSize, int)
-    assert data.sortDirection == SortDirection.ASCENDING.value
-    assert data.sortKey == RadarrSortKeys.DATE.value
-    assert isinstance(data.totalRecords, int)
-    assert isinstance(data.records[0].movieId, int)
-    assert data.records[0].sourceTitle == "string"
-    assert data.records[0].date == datetime(2021, 9, 19, 14, 24, 13)
-    assert isinstance(data.records[0].id, int)
-    assert data.records[0].indexer == "string"
-    assert data.records[0].protocol is ProtocolType.UNKNOWN
-    assert isinstance(data.records[0].quality.quality.id, int)
-    assert data.records[0].quality.quality.name == "string"
-    assert data.records[0].quality.quality.source == "string"
-    assert isinstance(data.records[0].quality.quality.resolution, int)
-    assert data.records[0].quality.quality.modifier == "string"
-    assert isinstance(data.records[0].quality.revision.version, int)
-    assert isinstance(data.records[0].quality.revision.real, int)
-    assert data.records[0].quality.revision.isRepack is True
-    assert isinstance(data.records[0].languages[0].id, int)
-    assert data.records[0].languages[0].name == "string"
-    assert isinstance(data.records[0].customFormats[0].id, int)
-    assert data.records[0].customFormats[0].name == "string"
-    assert data.records[0].customFormats[0].includeCustomFormatWhenRenaming is True
-    spec = data.records[0].customFormats[0].specifications[0]
-    assert spec.name == "string"
-    assert spec.implementation == "string"
-    assert spec.implementationName == "string"
-    assert spec.infoLink == "string"
-    assert spec.negate is True
-    assert spec.required is True
-    assert isinstance(spec.fields[0].order, int)
-    assert spec.fields[0].name == "string"
-    assert spec.fields[0].label == "string"
-    assert spec.fields[0].helpText == "string"
-    assert spec.fields[0].value == "string"
-    assert spec.fields[0].type == "string"
-    assert spec.fields[0].advanced is True
+    assert data == snapshot
 
 
 @pytest.mark.asyncio
