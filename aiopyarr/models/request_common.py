@@ -30,14 +30,11 @@ class _Fields(_SelectOption):
     """Fields attributes."""
 
     advanced: bool
-    errors: list
     helpText: str
-    hidden: str
+    hidden: str | None = None
     label: str
-    pending: bool
     selectOptions: list[_SelectOptionExtended] | None = None
     type: str
-    warnings: list
 
     def __post_init__(self):
         self.selectOptions = [
@@ -231,7 +228,7 @@ class _CustomFilterAttr(BaseModel):
 class _MetadataFields(_Fields):
     """Metadata fields attributes."""
 
-    section: str
+    section: str | None = None
 
 
 @dataclass(init=False)
