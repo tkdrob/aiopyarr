@@ -1478,6 +1478,24 @@ async def test_async_get_manual_import(
     assert data[0].rejections[0].type == "permanent"
     assert isinstance(data[0].id, int)
 
+@pytest.mark.asyncio
+async def test_async_get_system_status(
+    aresponses: Server, radarr_client: RadarrClient
+) -> None:
+    """Test getting systems status."""
+    aresponses.add(
+        "127.0.0.1:7878",
+        f"/api/{RADARR_API}/system/status",
+        "GET",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/json"},
+            text=load_fixture("radarr/system-status.json"),
+        ),
+    )
+    data = await radarr_client.async_get_system_status()
+    assert data
+
 
 @pytest.mark.asyncio
 async def test_async_edit_manual_import(
