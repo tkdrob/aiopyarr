@@ -1,4 +1,5 @@
 """Radarr Models."""
+
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 

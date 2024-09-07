@@ -1,4 +1,5 @@
 """Readarr Common Models. These are only for internal module use."""
+
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 

@@ -1,4 +1,5 @@
 """Radarr Common Models. These are only for internal module use."""
+
 # pylint: disable=invalid-name, too-many-instance-attributes
 from __future__ import annotations
 
@@ -150,7 +151,7 @@ class _RadarrCommon3(_Common9):
                     _tuple = _date, _type
             except AttributeError:
                 continue
-        return _tuple
+        return _tuple  # pylint:disable=possibly-used-before-assignment
 
 
 @dataclass(init=False)

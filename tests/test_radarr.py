@@ -1,4 +1,5 @@
 """Tests for Radarr object models."""
+
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 from datetime import date, datetime
 

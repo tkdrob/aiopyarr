@@ -1,4 +1,5 @@
 """Tests for common methods."""
+
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 import asyncio
 from datetime import datetime
