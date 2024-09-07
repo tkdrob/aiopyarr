@@ -2,7 +2,14 @@
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 import asyncio
-from datetime import UTC, datetime
+from datetime import datetime
+
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+
+    UTC = timezone.utc
 import json
 
 from aiohttp.client import ClientSession

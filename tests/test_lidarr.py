@@ -1,8 +1,15 @@
 """Tests for Lidarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import UTC, datetime
+from datetime import datetime
 import json
+
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+
+    UTC = timezone.utc
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest

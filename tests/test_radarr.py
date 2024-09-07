@@ -1,7 +1,14 @@
 """Tests for Radarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import UTC, date, datetime
+from datetime import date, datetime
+
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+
+    UTC = timezone.utc
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
