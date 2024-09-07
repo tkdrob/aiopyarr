@@ -1,7 +1,7 @@
 """Tests for Radarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import date, datetime, UTC
+from datetime import UTC, date, datetime
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
@@ -979,7 +979,9 @@ async def test_async_get_queue(aresponses: Server, radarr_client: RadarrClient) 
     assert data.records[0].title == "string"
     assert data.records[0].sizeleft > 0
     assert data.records[0].timeleft == "00:00:20"
-    assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59, tzinfo=UTC)
+    assert data.records[0].estimatedCompletionTime == datetime(
+        2020, 1, 21, 0, 1, 59, tzinfo=UTC
+    )
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "downloading"
@@ -1106,7 +1108,9 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft == 0
     assert data[0].timeleft == "string"
-    assert data[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59, tzinfo=UTC)
+    assert data[0].estimatedCompletionTime == datetime(
+        2020, 1, 21, 0, 1, 59, tzinfo=UTC
+    )
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "string"
@@ -1207,7 +1211,10 @@ async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> N
     assert data.movie.inCinemas == datetime(2000, 4, 25, tzinfo=UTC)
     assert data.movie.physicalRelease == datetime(2000, 7, 8, tzinfo=UTC)
     assert data.movie.digitalRelease == datetime(2000, 2, 1, tzinfo=UTC)
-    assert data.movie.releaseDateType() == (datetime(2000, 7, 8, tzinfo=UTC), "physicalRelease")
+    assert data.movie.releaseDateType() == (
+        datetime(2000, 7, 8, tzinfo=UTC),
+        "physicalRelease",
+    )
     assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
@@ -1246,7 +1253,9 @@ async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> N
     assert data.movie.movieFile.relativePath == "string"
     assert data.movie.movieFile.path == "string"
     assert isinstance(data.movie.movieFile.size, int)
-    assert data.movie.movieFile.dateAdded == datetime(2020, 2, 23, 12, 0, 46, tzinfo=UTC)
+    assert data.movie.movieFile.dateAdded == datetime(
+        2020, 2, 23, 12, 0, 46, tzinfo=UTC
+    )
     assert isinstance(data.movie.movieFile.indexerFlags, int)
     assert isinstance(data.movie.movieFile.quality.quality.id, int)
     assert data.movie.movieFile.quality.quality.name == "string"

@@ -1,7 +1,7 @@
 """Tests for Sonarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
@@ -130,7 +130,9 @@ async def test_async_get_calendar_extended(
     assert data[0].episodeFile.relativePath == "string"
     assert data[0].episodeFile.path == "string"
     assert isinstance(data[0].episodeFile.size, int)
-    assert data[0].episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC)
+    assert data[0].episodeFile.dateAdded == datetime(
+        2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC
+    )
     assert data[0].episodeFile.releaseGroup == "string"
     assert isinstance(data[0].episodeFile.language.id, int)
     assert data[0].episodeFile.language.name == "string"
@@ -243,7 +245,9 @@ async def test_async_get_episodes(
     assert data.episodeFile.relativePath == "string"
     assert data.episodeFile.path == "string"
     assert isinstance(data.episodeFile.size, int)
-    assert data.episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC)
+    assert data.episodeFile.dateAdded == datetime(
+        2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC
+    )
     assert data.episodeFile.releaseGroup == "string"
     assert isinstance(data.episodeFile.language.id, int)
     assert data.episodeFile.language.name == "string"
@@ -438,7 +442,9 @@ async def test_async_get_history(
     assert isinstance(data.records[0].data.age, int)
     assert isinstance(data.records[0].data.ageHours, float)
     assert isinstance(data.records[0].data.ageMinutes, float)
-    assert data.records[0].data.publishedDate == datetime(2020, 2, 8, 13, 30, 37, tzinfo=UTC)
+    assert data.records[0].data.publishedDate == datetime(
+        2020, 2, 8, 13, 30, 37, tzinfo=UTC
+    )
     assert isinstance(data.records[0].data.fileId, int)
     assert data.records[0].data.droppedPath == "string"
     assert data.records[0].data.importedPath == "string"
@@ -583,9 +589,7 @@ async def test_async_parse_title_or_path(
     assert isinstance(data.episodes[0].episodeNumber, int)
     assert data.episodes[0].title == "string"
     assert data.episodes[0].airDate == datetime(2010, 8, 26, 0, 0)
-    assert data.episodes[0].airDateUtc == datetime(
-        2006, 9, 27, 0, 0, tzinfo=UTC
-    )
+    assert data.episodes[0].airDateUtc == datetime(2006, 9, 27, 0, 0, tzinfo=UTC)
     assert data.episodes[0].overview == "string"
     assert data.episodes[0].hasFile is True
     assert data.episodes[0].monitored is False
@@ -636,7 +640,9 @@ async def test_async_get_queue(aresponses: Server, sonarr_client: SonarrClient) 
     assert _value.title == "string"
     assert _value.sizeleft > 0
     assert _value.timeleft == "00:00:00"
-    assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532, tzinfo=UTC)
+    assert _value.estimatedCompletionTime == datetime(
+        2020, 2, 9, 13, 14, 14, 379532, tzinfo=UTC
+    )
     assert _value.status == "string"
     assert _value.trackedDownloadStatus == "string"
     assert _value.trackedDownloadState == "stopped"
@@ -925,7 +931,9 @@ async def test_async_get_series(
     assert data.images[0].remoteUrl == "string"
     assert isinstance(data.seasons[0].seasonNumber, int)
     assert data.seasons[0].monitored is True
-    assert data.seasons[0].statistics.previousAiring == datetime(2019, 7, 5, 7, 0, tzinfo=UTC)
+    assert data.seasons[0].statistics.previousAiring == datetime(
+        2019, 7, 5, 7, 0, tzinfo=UTC
+    )
     assert isinstance(data.seasons[0].statistics.episodeFileCount, int)
     assert isinstance(data.seasons[0].statistics.episodeCount, int)
     assert isinstance(data.seasons[0].statistics.totalEpisodeCount, int)
@@ -1069,7 +1077,9 @@ async def test_async_get_wanted_extended(
     assert data.records[0].series.certification == "string"
     assert data.records[0].series.genres == ["string"]
     assert data.records[0].series.tags == [0]
-    assert data.records[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920, tzinfo=UTC)
+    assert data.records[0].series.added == datetime(
+        2019, 5, 19, 5, 33, 42, 243920, tzinfo=UTC
+    )
     assert isinstance(data.records[0].series.ratings.votes, int)
     assert isinstance(data.records[0].series.ratings.value, float)
     assert isinstance(data.records[0].series.id, int)
@@ -1279,7 +1289,9 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft > 0
     assert data[0].timeleft == "00:00:00"
-    assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840, tzinfo=UTC)
+    assert data[0].estimatedCompletionTime == datetime(
+        2022, 1, 7, 10, 40, 32, 560840, tzinfo=UTC
+    )
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "stopped"

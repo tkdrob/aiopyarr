@@ -2,7 +2,7 @@
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 import asyncio
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 import json
 
 from aiohttp.client import ClientSession
@@ -711,7 +711,9 @@ async def test_async_get_command(
     assert data[0].body.isNewMovie is False
     assert data[0].body.isTypeExclusive is False
     assert data[0].body.name == "MessagingCleanup"
-    assert data[0].body.lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46, tzinfo=UTC)
+    assert data[0].body.lastExecutionTime == datetime(
+        2021, 11, 29, 19, 57, 46, tzinfo=UTC
+    )
     assert data[0].body.lastStartTime == datetime(2021, 11, 29, 19, 57, 46, tzinfo=UTC)
     assert data[0].body.trigger == CommandTriggerType.SCHEDULED.value
     assert data[0].body.suppressMessages is False
@@ -817,7 +819,9 @@ async def test_async_get_filesystem(
     assert data.directories[0].name == "app"
     assert data.directories[0].path == "/app/"
     assert isinstance(data.directories[0].size, int)
-    assert data.directories[0].lastModified == datetime(2020, 1, 4, 3, 2, 20, tzinfo=UTC)
+    assert data.directories[0].lastModified == datetime(
+        2020, 1, 4, 3, 2, 20, tzinfo=UTC
+    )
     assert data.files == []
 
 
