@@ -4,6 +4,13 @@
 from datetime import datetime
 import json
 
+try:
+    from datetime import UTC  # pylint:disable=ungrouped-imports
+except ImportError:
+    from datetime import timezone
+
+    UTC = timezone.utc
+
 from aresponses.main import ResponsesMockServer as Server
 import pytest
 
@@ -74,7 +81,7 @@ async def test_async_get_albums(
     assert isinstance(data.mediumCount, int)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
-    assert data.releaseDate == datetime(2010, 8, 23, 0, 0)
+    assert data.releaseDate == datetime(2010, 8, 23, 0, 0, tzinfo=UTC)
     assert isinstance(data.releases[0].id, int)
     assert isinstance(data.releases[0].albumId, int)
     assert data.releases[0].foreignReleaseId == "string"
@@ -117,7 +124,7 @@ async def test_async_get_albums(
     assert data.artist.cleanName == "string"
     assert data.artist.sortName == "string"
     assert isinstance(data.artist.tags[0], int)
-    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC)
     assert isinstance(data.artist.ratings.votes, int)
     assert isinstance(data.artist.ratings.value, float)
     assert isinstance(data.artist.statistics.albumCount, int)
@@ -289,7 +296,7 @@ async def test_async_get_artists(
     assert data.nextAlbum.title == "string"
     assert data.nextAlbum.overview == "string"
     assert data.nextAlbum.disambiguation == "string"
-    assert data.nextAlbum.releaseDate == datetime(2011, 8, 23, 0, 0)
+    assert data.nextAlbum.releaseDate == datetime(2011, 8, 23, 0, 0, tzinfo=UTC)
     assert data.nextAlbum.images[0].url == "string"
     assert data.nextAlbum.images[0].coverType == ImageType.POSTER.value
     assert data.nextAlbum.images[0].extension == "string"
@@ -305,8 +312,10 @@ async def test_async_get_artists(
     assert isinstance(data.nextAlbum.profileId, int)
     assert data.nextAlbum.monitored is True
     assert data.nextAlbum.anyReleaseOk is True
-    assert data.nextAlbum.lastInfoSync == datetime(2020, 12, 27, 10, 52, 27, 220039)
-    assert data.nextAlbum.added == datetime(1, 1, 1, 0, 0)
+    assert data.nextAlbum.lastInfoSync == datetime(
+        2020, 12, 27, 10, 52, 27, 220039, tzinfo=UTC
+    )
+    assert data.nextAlbum.added == datetime(1, 1, 1, 0, 0, tzinfo=UTC)
     assert data.nextAlbum.addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.nextAlbum.artistMetadata.isLoaded is False
     assert data.nextAlbum.albumReleases.isLoaded is False
@@ -318,7 +327,7 @@ async def test_async_get_artists(
     assert data.lastAlbum.title == "string"
     assert data.lastAlbum.overview == "string"
     assert data.lastAlbum.disambiguation == "string"
-    assert data.lastAlbum.releaseDate == datetime(2010, 8, 23, 0, 0)
+    assert data.lastAlbum.releaseDate == datetime(2010, 8, 23, 0, 0, tzinfo=UTC)
     assert data.lastAlbum.images[0].url == "string"
     assert data.lastAlbum.images[0].coverType == ImageType.POSTER.value
     assert data.lastAlbum.images[0].extension == "string"
@@ -334,8 +343,10 @@ async def test_async_get_artists(
     assert isinstance(data.lastAlbum.profileId, int)
     assert data.lastAlbum.monitored is True
     assert data.lastAlbum.anyReleaseOk is True
-    assert data.lastAlbum.lastInfoSync == datetime(2021, 12, 27, 10, 52, 27, 220039)
-    assert data.lastAlbum.added == datetime(1, 1, 1, 0, 0)
+    assert data.lastAlbum.lastInfoSync == datetime(
+        2021, 12, 27, 10, 52, 27, 220039, tzinfo=UTC
+    )
+    assert data.lastAlbum.added == datetime(1, 1, 1, 0, 0, tzinfo=UTC)
     assert data.lastAlbum.addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.lastAlbum.artistMetadata.isLoaded is False
     assert data.lastAlbum.albumReleases.isLoaded is False
@@ -353,7 +364,7 @@ async def test_async_get_artists(
     assert data.cleanName == "string"
     assert data.sortName == "string"
     assert isinstance(data.tags[0], int)
-    assert data.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data.added == datetime(2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
     assert isinstance(data.statistics.albumCount, int)
@@ -501,7 +512,7 @@ async def test_async_album_lookup(
     assert isinstance(data[0].mediumCount, int)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
-    assert data[0].releaseDate == datetime(2018, 3, 9, 0, 0)
+    assert data[0].releaseDate == datetime(2018, 3, 9, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].releases[0].id, int)
     assert isinstance(data[0].releases[0].albumId, int)
     assert data[0].releases[0].foreignReleaseId == "string"
@@ -544,7 +555,7 @@ async def test_async_album_lookup(
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
-    assert data[0].artist.added == datetime(2021, 8, 21, 15, 36, 8, 777408)
+    assert data[0].artist.added == datetime(2021, 8, 21, 15, 36, 8, 777408, tzinfo=UTC)
     assert isinstance(data[0].artist.ratings.votes, int)
     assert isinstance(data[0].artist.ratings.value, float)
     assert isinstance(data[0].artist.statistics.albumCount, int)
@@ -592,7 +603,7 @@ async def test_async_get_blocklist(
     assert isinstance(data.records[0].quality.revision.version, int)
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
-    assert data.records[0].date == datetime(2020, 2, 15, 19, 24, 28, 476060)
+    assert data.records[0].date == datetime(2020, 2, 15, 19, 24, 28, 476060, tzinfo=UTC)
     assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
@@ -618,7 +629,9 @@ async def test_async_get_blocklist(
     assert data.records[0].artist.cleanName == "string"
     assert data.records[0].artist.sortName == "string"
     assert isinstance(data.records[0].artist.tags[0], int)
-    assert data.records[0].artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data.records[0].artist.added == datetime(
+        2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC
+    )
     assert isinstance(data.records[0].artist.ratings.votes, int)
     assert isinstance(data.records[0].artist.ratings.value, float)
     assert isinstance(data.records[0].artist.statistics.albumCount, int)
@@ -665,7 +678,7 @@ async def test_async_get_calendar(
     assert isinstance(data[0].mediumCount, int)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
-    assert data[0].releaseDate == datetime(2020, 2, 14, 0, 0)
+    assert data[0].releaseDate == datetime(2020, 2, 14, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].releases[0].id, int)
     assert isinstance(data[0].releases[0].albumId, int)
     assert data[0].releases[0].foreignReleaseId == "string"
@@ -708,7 +721,7 @@ async def test_async_get_calendar(
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
-    assert data[0].artist.added == datetime(2021, 8, 21, 15, 37, 39, 225947)
+    assert data[0].artist.added == datetime(2021, 8, 21, 15, 37, 39, 225947, tzinfo=UTC)
     assert isinstance(data[0].artist.ratings.votes, int)
     assert isinstance(data[0].artist.ratings.value, float)
     assert isinstance(data[0].artist.statistics.albumCount, int)
@@ -854,7 +867,7 @@ async def test_async_get_wanted(
     assert isinstance(data.mediumCount, int)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
-    assert data.releaseDate == datetime(2010, 8, 23, 0, 0)
+    assert data.releaseDate == datetime(2010, 8, 23, 0, 0, tzinfo=UTC)
     assert isinstance(data.releases[0].id, int)
     assert isinstance(data.releases[0].albumId, int)
     assert data.releases[0].foreignReleaseId == "string"
@@ -897,7 +910,7 @@ async def test_async_get_wanted(
     assert data.artist.cleanName == "string"
     assert data.artist.sortName == "string"
     assert isinstance(data.artist.tags[0], int)
-    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC)
     assert isinstance(data.artist.ratings.votes, int)
     assert isinstance(data.artist.ratings.value, float)
     assert isinstance(data.artist.statistics.albumCount, int)
@@ -1185,7 +1198,7 @@ async def test_async_get_history(
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
     assert data.records[0].qualityCutoffNotMet is False
-    assert data.records[0].date == datetime(2020, 2, 16, 14, 3, 43, 622491)
+    assert data.records[0].date == datetime(2020, 2, 16, 14, 3, 43, 622491, tzinfo=UTC)
     assert data.records[0].downloadId == "string"
     assert data.records[0].eventType == LidarrEventType.GRABBED.name.lower()
     assert data.records[0].data.indexer == "string"
@@ -1194,7 +1207,9 @@ async def test_async_get_history(
     assert isinstance(data.records[0].data.age, int)
     assert isinstance(data.records[0].data.ageHours, float)
     assert isinstance(data.records[0].data.ageMinutes, float)
-    assert data.records[0].data.publishedDate == datetime(2020, 2, 16, 6, 11)
+    assert data.records[0].data.publishedDate == datetime(
+        2020, 2, 16, 6, 11, tzinfo=UTC
+    )
     assert data.records[0].data.downloadClient == "string"
     assert isinstance(data.records[0].data.size, int)
     assert data.records[0].data.downloadUrl == "string"
@@ -1218,7 +1233,7 @@ async def test_async_get_history(
     assert isinstance(_value.mediumCount, int)
     assert isinstance(_value.ratings.votes, int)
     assert isinstance(_value.ratings.value, float)
-    assert _value.releaseDate == datetime(2015, 11, 13, 0, 0)
+    assert _value.releaseDate == datetime(2015, 11, 13, 0, 0, tzinfo=UTC)
     assert isinstance(_value.releases[0].id, int)
     assert isinstance(_value.releases[0].albumId, int)
     assert _value.releases[0].foreignReleaseId == "string"
@@ -1262,7 +1277,7 @@ async def test_async_get_history(
     assert _valu.cleanName == "string"
     assert _valu.sortName == "string"
     assert isinstance(_valu.tags[0], int)
-    assert _valu.added == datetime(2021, 8, 21, 15, 56, 31, 922597)
+    assert _valu.added == datetime(2021, 8, 21, 15, 56, 31, 922597, tzinfo=UTC)
     assert isinstance(_valu.ratings.votes, int)
     assert isinstance(_valu.ratings.value, float)
     assert isinstance(_valu.statistics.albumCount, int)
@@ -1299,7 +1314,9 @@ async def test_async_get_history(
     assert data.records[0].artist.cleanName == "string"
     assert data.records[0].artist.sortName == "string"
     assert isinstance(data.records[0].artist.tags[0], int)
-    assert data.records[0].artist.added == datetime(2021, 8, 21, 15, 56, 31, 922597)
+    assert data.records[0].artist.added == datetime(
+        2021, 8, 21, 15, 56, 31, 922597, tzinfo=UTC
+    )
     assert isinstance(data.records[0].artist.ratings.votes, int)
     assert isinstance(data.records[0].artist.ratings.value, float)
     assert isinstance(data.records[0].artist.statistics.albumCount, int)
@@ -1475,7 +1492,7 @@ async def test_async_get_queue(aresponses: Server, lidarr_client: LidarrClient) 
     assert _value.artist.cleanName == "string"
     assert _value.artist.sortName == "string"
     assert isinstance(_value.artist.tags[0], int)
-    assert _value.artist.added == datetime(2021, 8, 21, 15, 38, 22, 723851)
+    assert _value.artist.added == datetime(2021, 8, 21, 15, 38, 22, 723851, tzinfo=UTC)
     assert isinstance(_value.artist.ratings.votes, int)
     assert isinstance(_value.artist.ratings.value, float)
     assert isinstance(_value.artist.statistics.albumCount, int)
@@ -1493,7 +1510,9 @@ async def test_async_get_queue(aresponses: Server, lidarr_client: LidarrClient) 
     assert _value.title == "string"
     assert _value.sizeleft > 0
     assert _value.timeleft == "00:00:00"
-    assert _value.estimatedCompletionTime == datetime(2020, 2, 16, 23, 34, 44, 885649)
+    assert _value.estimatedCompletionTime == datetime(
+        2020, 2, 16, 23, 34, 44, 885649, tzinfo=UTC
+    )
     assert _value.status == "string"
     assert _value.trackedDownloadStatus == "string"
     assert _value.trackedDownloadState == "stopped"
@@ -1592,7 +1611,7 @@ async def test_async_get_queue_details(
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
-    assert data[0].artist.added == datetime(2021, 8, 21, 15, 56, 31, 922597)
+    assert data[0].artist.added == datetime(2021, 8, 21, 15, 56, 31, 922597, tzinfo=UTC)
     assert isinstance(data[0].artist.ratings.votes, int)
     assert isinstance(data[0].artist.ratings.value, float)
     assert isinstance(data[0].artist.statistics.albumCount, int)
@@ -1617,7 +1636,7 @@ async def test_async_get_queue_details(
     assert isinstance(data[0].album.mediumCount, int)
     assert isinstance(data[0].album.ratings.votes, int)
     assert isinstance(data[0].album.ratings.value, float)
-    assert data[0].album.releaseDate == datetime(2010, 11, 12, 0, 0)
+    assert data[0].album.releaseDate == datetime(2010, 11, 12, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].album.releases[0].id, int)
     assert isinstance(data[0].album.releases[0].albumId, int)
     assert data[0].album.releases[0].foreignReleaseId == "string"
@@ -1660,7 +1679,9 @@ async def test_async_get_queue_details(
     assert data[0].album.artist.cleanName == "string"
     assert data[0].album.artist.sortName == "string"
     assert isinstance(data[0].album.artist.tags[0], int)
-    assert data[0].album.artist.added == datetime(2021, 8, 21, 15, 56, 31, 922597)
+    assert data[0].album.artist.added == datetime(
+        2021, 8, 21, 15, 56, 31, 922597, tzinfo=UTC
+    )
     assert isinstance(data[0].album.artist.ratings.votes, int)
     assert isinstance(data[0].album.artist.ratings.value, float)
     assert isinstance(data[0].album.artist.statistics.albumCount, int)
@@ -1684,7 +1705,9 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft == 0
     assert data[0].timeleft == "00:00:00"
-    assert data[0].estimatedCompletionTime == datetime(2020, 2, 16, 23, 49, 45, 143727)
+    assert data[0].estimatedCompletionTime == datetime(
+        2020, 2, 16, 23, 49, 45, 143727, tzinfo=UTC
+    )
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "string"
@@ -1752,7 +1775,7 @@ async def test_async_get_release(
     assert data[0].rejected is True
     assert data[0].rejections[0].reason == "string"
     assert data[0].rejections[0].type == "permanent"
-    assert data[0].publishDate == datetime(2020, 2, 16, 20, 8, 16)
+    assert data[0].publishDate == datetime(2020, 2, 16, 20, 8, 16, tzinfo=UTC)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
     assert data[0].infoHash == "string"
@@ -1902,7 +1925,7 @@ async def test_async_get_manual_import(
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
-    assert data[0].artist.added == datetime(2020, 2, 20, 14, 6, 21, 541356)
+    assert data[0].artist.added == datetime(2020, 2, 20, 14, 6, 21, 541356, tzinfo=UTC)
     assert isinstance(data[0].artist.ratings.votes, int)
     assert isinstance(data[0].artist.ratings.value, float)
     assert isinstance(data[0].artist.statistics.albumCount, int)
@@ -1927,7 +1950,7 @@ async def test_async_get_manual_import(
     assert isinstance(data[0].album.mediumCount, int)
     assert isinstance(data[0].album.ratings.votes, int)
     assert isinstance(data[0].album.ratings.value, float)
-    assert data[0].album.releaseDate == datetime(2019, 7, 25, 0, 0)
+    assert data[0].album.releaseDate == datetime(2019, 7, 25, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].album.releases[0].id, int)
     assert isinstance(data[0].album.releases[0].albumId, int)
     assert data[0].album.releases[0].foreignReleaseId == "string"
@@ -1970,7 +1993,9 @@ async def test_async_get_manual_import(
     assert data[0].album.artist.cleanName == "string"
     assert data[0].album.artist.sortName == "string"
     assert isinstance(data[0].album.artist.tags[0], int)
-    assert data[0].album.artist.added == datetime(2020, 2, 20, 14, 6, 21, 541356)
+    assert data[0].album.artist.added == datetime(
+        2020, 2, 20, 14, 6, 21, 541356, tzinfo=UTC
+    )
     assert isinstance(data[0].album.artist.ratings.votes, int)
     assert isinstance(data[0].album.artist.ratings.value, float)
     assert isinstance(data[0].album.artist.statistics.albumCount, int)
@@ -2118,7 +2143,7 @@ async def test_async_search(aresponses: Server, lidarr_client: LidarrClient) -> 
     assert data[0].artist.cleanName == "string"
     assert data[0].artist.sortName == "string"
     assert isinstance(data[0].artist.tags[0], int)
-    assert data[0].artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data[0].artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC)
     assert isinstance(data[0].artist.ratings.votes, int)
     assert isinstance(data[0].artist.ratings.value, float)
     assert isinstance(data[0].artist.statistics.albumCount, int)
@@ -2248,7 +2273,7 @@ async def test_async_get_tracks(
     assert data.artist.cleanName == "string"
     assert data.artist.sortName == "string"
     assert isinstance(data.artist.tags[0], int)
-    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878)
+    assert data.artist.added == datetime(2021, 8, 21, 15, 35, 54, 398878, tzinfo=UTC)
     assert isinstance(data.artist.ratings.votes, int)
     assert isinstance(data.artist.ratings.value, float)
     assert isinstance(data.artist.statistics.albumCount, int)
@@ -2286,7 +2311,7 @@ async def test_async_get_track_files(
     assert isinstance(data[0].albumId, int)
     assert data[0].path == "string"
     assert isinstance(data[0].size, int)
-    assert data[0].dateAdded == datetime(2021, 8, 21, 16, 0, 22, 10803)
+    assert data[0].dateAdded == datetime(2021, 8, 21, 16, 0, 22, 10803, tzinfo=UTC)
     assert isinstance(data[0].quality.quality.id, int)
     assert data[0].quality.quality.name == "string"
     assert isinstance(data[0].quality.revision.version, int)
@@ -2317,7 +2342,7 @@ async def test_async_get_track_files(
     assert isinstance(data.albumId, int)
     assert data.path == "string"
     assert isinstance(data.size, int)
-    assert data.dateAdded == datetime(2021, 8, 21, 16, 0, 17, 930148)
+    assert data.dateAdded == datetime(2021, 8, 21, 16, 0, 17, 930148, tzinfo=UTC)
     assert isinstance(data.quality.quality.id, int)
     assert data.quality.quality.name == "string"
     assert isinstance(data.quality.revision.version, int)

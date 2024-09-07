@@ -3,6 +3,13 @@
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
 import asyncio
 from datetime import datetime
+
+try:
+    from datetime import UTC
+except ImportError:
+    from datetime import timezone
+
+    UTC = timezone.utc
 import json
 
 from aiohttp.client import ClientSession
@@ -93,7 +100,7 @@ async def test_attributes(aresponses: Server, radarr_client: RadarrClient) -> No
     )
     data = await radarr_client.async_get_movies(movieid=1)
     data = data.attributes
-    assert data["added"] == "2018-12-28T05:56:49Z"
+    assert data["added"] == "2018-12-28T05:56:49+00:00Z"
     assert data["alternateTitles"][0]["movieId"] == 1
     assert data["monitored"] is True
     assert data["sizeOnDisk"] == 0
@@ -116,10 +123,10 @@ async def test_attributes(aresponses: Server, radarr_client: RadarrClient) -> No
     assert data["name"] == "MessagingCleanup"
     assert data["body"]["sendUpdatesToClient"] is False
     assert data["body"]["completionMessage"] == "Completed"
-    assert data["body"]["lastExecutionTime"] == "2021-11-29T19:57:46Z"
+    assert data["body"]["lastExecutionTime"] == "2021-11-29T19:57:46+00:00Z"
     assert data["body"]["trigger"] == CommandTriggerType.SCHEDULED.value
     assert data["priority"] == CommandPriorityType.LOW.value
-    assert data["queued"] == "2021-11-29T20:03:16Z"
+    assert data["queued"] == "2021-11-29T20:03:16+00:00Z"
 
 
 def test_get_no_enum_value() -> None:
@@ -458,7 +465,7 @@ async def test_async_get_system_status(
     assert data.appData == "C:\\ProgramData\\Radarr"
     assert data.authentication == AuthenticationType.NONE.value
     assert data.branch == "nightly"
-    assert data.buildTime == datetime(2020, 9, 1, 23, 23, 23, 962197)
+    assert data.buildTime == datetime(2020, 9, 1, 23, 23, 23, 962197, tzinfo=UTC)
     assert data.isAdmin is False
     assert data.isDebug is True
     assert data.isDocker is False
@@ -478,7 +485,7 @@ async def test_async_get_system_status(
     assert data.runtimeName == "netCore"
     assert data.runtimeVersion == "3.1.10"
     assert data.sqliteVersion == "3.32.1"
-    assert data.startTime == datetime(2020, 9, 1, 23, 50, 20, 241596)
+    assert data.startTime == datetime(2020, 9, 1, 23, 50, 20, 241596, tzinfo=UTC)
     assert data.startupPath == "C:\\ProgramData\\Radarr"
     assert data.urlBase == ""
     assert data.version == "10.0.0.34882"
@@ -506,7 +513,7 @@ async def test_async_get_system_backup(
     assert data[0].name == "string"
     assert data[0].path == "string"
     assert data[0].type == "scheduled"
-    assert data[0].time == datetime(2021, 12, 9, 13, 22, 49, 441000)
+    assert data[0].time == datetime(2021, 12, 9, 13, 22, 49, 441000, tzinfo=UTC)
 
 
 @pytest.mark.asyncio
@@ -550,7 +557,7 @@ async def test_async_get_logs(aresponses: Server, sonarr_client: SonarrClient) -
     assert data.sortKey == LogSortKeys.LOGGER.value
     assert data.sortDirection == SortDirection.DEFAULT.value
     assert isinstance(data.totalRecords, int)
-    assert data.records[0].time == datetime(2021, 11, 19, 9, 28, 26, 549994)
+    assert data.records[0].time == datetime(2021, 11, 19, 9, 28, 26, 549994, tzinfo=UTC)
     assert data.records[0].level == "info"
     assert data.records[0].logger == "BackupService"
     assert data.records[0].message == "Starting Backup"
@@ -589,7 +596,7 @@ async def test_get_log_file(aresponses: Server, readarr_client: ReadarrClient) -
     )
     data = await readarr_client.async_get_log_file()
     assert data[0].filename == "string"
-    assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
+    assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21, tzinfo=UTC)
     assert data[0].contentsUrl == "string"
     assert data[0].downloadUrl == "string"
     assert isinstance(data[0].id, int)
@@ -632,7 +639,7 @@ async def test_get_log_file_update(
     )
     data = await readarr_client.async_get_log_file_updates()
     assert data[0].filename == "string"
-    assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21)
+    assert data[0].lastWriteTime == datetime(2021, 12, 9, 23, 19, 21, tzinfo=UTC)
     assert data[0].contentsUrl == "string"
     assert data[0].downloadUrl == "string"
     assert isinstance(data[0].id, int)
@@ -711,21 +718,23 @@ async def test_async_get_command(
     assert data[0].body.isNewMovie is False
     assert data[0].body.isTypeExclusive is False
     assert data[0].body.name == "MessagingCleanup"
-    assert data[0].body.lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46)
-    assert data[0].body.lastStartTime == datetime(2021, 11, 29, 19, 57, 46)
+    assert data[0].body.lastExecutionTime == datetime(
+        2021, 11, 29, 19, 57, 46, tzinfo=UTC
+    )
+    assert data[0].body.lastStartTime == datetime(2021, 11, 29, 19, 57, 46, tzinfo=UTC)
     assert data[0].body.trigger == CommandTriggerType.SCHEDULED.value
     assert data[0].body.suppressMessages is False
     assert data[0].priority == CommandPriorityType.LOW.value
     assert data[0].status == CommandStatusType.COMPLETED.value
-    assert data[0].queued == datetime(2021, 11, 29, 20, 3, 16)
-    assert data[0].started == datetime(2021, 11, 29, 20, 3, 16)
-    assert data[0].ended == datetime(2021, 11, 29, 20, 3, 16)
+    assert data[0].queued == datetime(2021, 11, 29, 20, 3, 16, tzinfo=UTC)
+    assert data[0].started == datetime(2021, 11, 29, 20, 3, 16, tzinfo=UTC)
+    assert data[0].ended == datetime(2021, 11, 29, 20, 3, 16, tzinfo=UTC)
     assert data[0].duration == "00:00:00.0102456"
     assert data[0].trigger == CommandTriggerType.SCHEDULED.value
-    assert data[0].stateChangeTime == datetime(2021, 11, 29, 20, 3, 16)
+    assert data[0].stateChangeTime == datetime(2021, 11, 29, 20, 3, 16, tzinfo=UTC)
     assert data[0].sendUpdatesToClient is False
     assert data[0].updateScheduledTask is True
-    assert data[0].lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46)
+    assert data[0].lastExecutionTime == datetime(2021, 11, 29, 19, 57, 46, tzinfo=UTC)
     assert isinstance(data[0].id, int)
 
 
@@ -817,7 +826,9 @@ async def test_async_get_filesystem(
     assert data.directories[0].name == "app"
     assert data.directories[0].path == "/app/"
     assert isinstance(data.directories[0].size, int)
-    assert data.directories[0].lastModified == datetime(2020, 1, 4, 3, 2, 20)
+    assert data.directories[0].lastModified == datetime(
+        2020, 1, 4, 3, 2, 20, tzinfo=UTC
+    )
     assert data.files == []
 
 
@@ -2972,9 +2983,9 @@ async def test_async_get_system_tasks(
     assert data[0].name == "string"
     assert data[0].taskName == "string"
     assert isinstance(data[0].interval, int)
-    assert data[0].lastExecution == datetime(2020, 2, 8, 14, 24, 40, 993044)
-    assert data[0].lastStartTime == datetime(2020, 2, 8, 14, 24, 40, 993044)
-    assert data[0].nextExecution == datetime(2020, 2, 8, 20, 24, 40, 993044)
+    assert data[0].lastExecution == datetime(2020, 2, 8, 14, 24, 40, 993044, tzinfo=UTC)
+    assert data[0].lastStartTime == datetime(2020, 2, 8, 14, 24, 40, 993044, tzinfo=UTC)
+    assert data[0].nextExecution == datetime(2020, 2, 8, 20, 24, 40, 993044, tzinfo=UTC)
     assert data[0].lastDuration == "00:00:00.1976902"
     assert isinstance(data[0].id, int)
 
@@ -2999,11 +3010,11 @@ async def test_async_get_software_update_info(
 
     assert data[0].version == "string"
     assert data[0].branch == "string"
-    assert data[0].releaseDate == datetime(2020, 9, 2, 5, 36, 13, 47313)
+    assert data[0].releaseDate == datetime(2020, 9, 2, 5, 36, 13, 47313, tzinfo=UTC)
     assert data[0].fileName == "string"
     assert data[0].url == "string"
     assert data[0].installed is False
-    assert data[0].installedOn == datetime(2020, 10, 1, 5, 1, 4, 521117)
+    assert data[0].installedOn == datetime(2020, 10, 1, 5, 1, 4, 521117, tzinfo=UTC)
     assert data[0].installable is False
     assert data[0].latest is False
     assert data[0].changes.new == ["string"]

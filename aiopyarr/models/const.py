@@ -25,13 +25,14 @@ CONVERT_TO_INTEGER = (
     "tvRageId",
 )
 
-CONVERT_TO_DATE = (
+RELEASE_TYPES = (
     "digitalRelease",
     "physicalRelease",
     "inCinemas",
 )
 
 CONVERT_TO_DATETIME = (
+    *RELEASE_TYPES,
     "added",
     "airDate",
     "airDateUtc",
