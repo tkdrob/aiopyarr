@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 
 try:
-    from datetime import UTC
+    from datetime import UTC  # pylint:disable=ungrouped-imports
 except ImportError:
     from datetime import timezone
 
