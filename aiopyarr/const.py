@@ -1,6 +1,8 @@
 """PyArr constants."""
+
 from enum import Enum
 from logging import Logger, getLogger
+from typing import Any
 
 LOGGER: Logger = getLogger(__package__)
 
@@ -13,7 +15,7 @@ BOOK_ID = "bookId"
 DATE = "date"
 EPISODE_ID = "episodeId"
 EVENT_TYPE = "eventType"
-HEADERS = {
+HEADERS: dict[str, Any] = {
     "Accept-Encoding": "gzip, deflate",
     "Accept": "application/json",
     "Connection": "keep-alive",

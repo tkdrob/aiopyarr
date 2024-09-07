@@ -1,4 +1,5 @@
 """PyArr base model."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -122,11 +123,11 @@ class BaseModel:
     def attributes(self):
         """Return attributes of the object."""
         return {
-            k: v
-            if isinstance(v, bool)
-            else str(v)
-            if k in CONVERT_TO_INTEGER
-            else toraw(v)
+            k: (
+                v
+                if isinstance(v, bool)
+                else str(v) if k in CONVERT_TO_INTEGER else toraw(v)
+            )
             for k, v in self.__dict__.items()
             if k != ATTR_DATA
         }

@@ -1,4 +1,5 @@
 """Request Common Models. These are only for internal module use."""
+
 # pylint: disable=invalid-name, too-many-instance-attributes, line-too-long, too-many-lines
 from __future__ import annotations
 
@@ -781,7 +782,9 @@ class _LocalizationStrings(BaseModel):
     ICalLink: str
     IconForCutoffUnmet: str
     IconTooltip: str
-    IfYouDontAddAnImportListExclusionAndTheAuthorHasAMetadataProfileOtherThanNoneThenThisBookMayBeReaddedDuringTheNextAuthorRefresh: str
+    IfYouDontAddAnImportListExclusionAndTheAuthorHasAMetadataProfileOtherThanNoneThenThisBookMayBeReaddedDuringTheNextAuthorRefresh: (
+        str
+    )
     Ignored: str
     IgnoredAddresses: str
     IgnoreDeletedBooks: str
@@ -1233,8 +1236,12 @@ class _LocalizationStrings(BaseModel):
     RadarrTags: str
     RadarrUpdated: str
     Ratings: str
-    ReadarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow: str
-    ReadarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow: str
+    ReadarrSupportsAnyDownloadClientThatUsesTheNewznabStandardAsWellAsOtherDownloadClientsListedBelow: (
+        str
+    )
+    ReadarrSupportsAnyIndexerThatUsesTheNewznabStandardAsWellAsOtherIndexersListedBelow: (
+        str
+    )
     ReadarrSupportsMultipleListsForImportingBooksAndAuthorsIntoTheDatabase: str
     ReadarrTags: str
     ReadTheWikiForMoreInformation: str
@@ -1533,7 +1540,9 @@ class _LocalizationStrings(BaseModel):
     Sunday: str
     SupportsRssvalueRSSIsNotSupportedWithThisIndexer: str
     SupportsSearchvalueSearchIsNotSupportedWithThisIndexer: str
-    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: str
+    SupportsSearchvalueWillBeUsedWhenAutomaticSearchesArePerformedViaTheUIOrByReadarr: (
+        str
+    )
     SupportsSearchvalueWillBeUsedWhenInteractiveSearchIsUsed: str
     System: str
     SystemTimeCheckMessage: str

@@ -1,4 +1,5 @@
 """Tests for host configuration."""
+
 # pylint:disable=protected-access
 from aiohttp.client import ClientSession
 from aresponses.main import ResponsesMockServer as Server

@@ -1,4 +1,5 @@
 """Tests for PyArr."""
+
 import pathlib
 
 from aiopyarr.models.host_configuration import PyArrHostConfiguration

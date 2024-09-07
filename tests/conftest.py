@@ -1,4 +1,5 @@
 """Tests configuration."""
+
 # pylint:disable=redefined-outer-name
 import asyncio
 
