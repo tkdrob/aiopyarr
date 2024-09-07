@@ -1,4 +1,5 @@
 """Example usage of aiopyarr."""
+
 import asyncio
 
 from aiopyarr.models.host_configuration import PyArrHostConfiguration
