@@ -1,7 +1,7 @@
 """Tests for Readarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime
+from datetime import datetime, UTC
 import json
 
 from aresponses.main import ResponsesMockServer as Server
@@ -86,7 +86,7 @@ async def test_async_get_authors(
     assert data.nextBook.foreignBookId == "string"
     assert isinstance(data.nextBook.titleSlug, int)
     assert data.nextBook.title == "string"
-    assert data.nextBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert data.nextBook.links[0].url == "string"
     assert data.nextBook.links[0].name == "string"
     assert data.nextBook.genres[0] == "string"
@@ -96,8 +96,8 @@ async def test_async_get_authors(
     assert data.nextBook.cleanTitle == "string"
     assert data.nextBook.monitored is True
     assert data.nextBook.anyEditionOk is True
-    assert data.nextBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert data.nextBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.nextBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert data.nextBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert data.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.nextBook.addOptions.searchForNewBook is True
     _value = data.nextBook.authorMetadata.value
@@ -113,8 +113,8 @@ async def test_async_get_authors(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -131,10 +131,10 @@ async def test_async_get_authors(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -154,8 +154,8 @@ async def test_async_get_authors(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -186,8 +186,8 @@ async def test_async_get_authors(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -252,7 +252,7 @@ async def test_async_get_authors(
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -268,8 +268,8 @@ async def test_async_get_authors(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -289,10 +289,10 @@ async def test_async_get_authors(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -313,8 +313,8 @@ async def test_async_get_authors(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -379,8 +379,8 @@ async def test_async_get_authors(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -400,10 +400,10 @@ async def test_async_get_authors(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -422,8 +422,8 @@ async def test_async_get_authors(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -500,7 +500,7 @@ async def test_async_get_authors(
     assert data.lastBook.foreignBookId == "string"
     assert isinstance(data.lastBook.titleSlug, int)
     assert data.lastBook.title == "string"
-    assert data.lastBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert data.lastBook.links[0].url == "string"
     assert data.lastBook.links[0].name == "string"
     assert data.lastBook.genres[0] == "string"
@@ -510,8 +510,8 @@ async def test_async_get_authors(
     assert data.lastBook.cleanTitle == "string"
     assert data.lastBook.monitored is True
     assert data.lastBook.anyEditionOk is True
-    assert data.lastBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert data.lastBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert data.lastBook.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert data.lastBook.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert data.lastBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.lastBook.addOptions.searchForNewBook is True
     _value = data.lastBook.authorMetadata.value
@@ -527,8 +527,8 @@ async def test_async_get_authors(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -545,10 +545,10 @@ async def test_async_get_authors(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -568,8 +568,8 @@ async def test_async_get_authors(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -600,8 +600,8 @@ async def test_async_get_authors(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.metadata.value.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -668,7 +668,7 @@ async def test_async_get_authors(
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.releaseDate == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -684,8 +684,8 @@ async def test_async_get_authors(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -705,10 +705,10 @@ async def test_async_get_authors(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -729,8 +729,8 @@ async def test_async_get_authors(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -794,8 +794,8 @@ async def test_async_get_authors(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.modified == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -814,10 +814,10 @@ async def test_async_get_authors(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _value.author.value.added == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -837,8 +837,8 @@ async def test_async_get_authors(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000)
-    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000)
+    assert _valu.born == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 6, 22, 12, 47, 67000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -923,7 +923,7 @@ async def test_async_get_authors(
     assert data.sortName == "string"
     assert data.sortNameLastFirst == "string"
     assert isinstance(data.tags[0], int)
-    assert data.added == datetime(2021, 12, 6, 22, 12, 47, 68000)
+    assert data.added == datetime(2021, 12, 6, 22, 12, 47, 68000, tzinfo=UTC)
     assert data.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data.addOptions.booksToMonitor[0] == "string"
     assert data.addOptions.monitored is True
@@ -981,7 +981,7 @@ async def test_async_author_lookup(
     assert data[0].sortName == "string"
     assert data[0].sortNameLastFirst == "string"
     assert isinstance(data[0].tags[0], int)
-    assert data[0].added == datetime(2021, 12, 6, 22, 23, 55)
+    assert data[0].added == datetime(2021, 12, 6, 22, 23, 55, tzinfo=UTC)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
     assert isinstance(data[0].ratings.popularity, float)
@@ -1027,7 +1027,7 @@ async def test_async_get_blocklist(
     assert isinstance(data.records[0].quality.revision.version, int)
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is True
-    assert data.records[0].date == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert data.records[0].date == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
@@ -1048,7 +1048,7 @@ async def test_async_get_blocklist(
     assert _author.nextBook.foreignBookId == "string"
     assert isinstance(_author.nextBook.titleSlug, int)
     assert _author.nextBook.title == "string"
-    assert _author.nextBook.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _author.nextBook.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _author.nextBook.links[0].url == "string"
     assert _author.nextBook.links[0].name == "string"
     assert _author.nextBook.genres[0] == "string"
@@ -1058,8 +1058,8 @@ async def test_async_get_blocklist(
     assert _author.nextBook.cleanTitle == "string"
     assert _author.nextBook.monitored is True
     assert _author.nextBook.anyEditionOk is True
-    assert _author.nextBook.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _author.nextBook.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _author.nextBook.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _author.nextBook.added == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _author.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _author.nextBook.addOptions.searchForNewBook is True
     _value = _author.nextBook.authorMetadata.value
@@ -1074,8 +1074,8 @@ async def test_async_get_blocklist(
     assert _value.overview == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -1092,10 +1092,10 @@ async def test_async_get_blocklist(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -1114,8 +1114,8 @@ async def test_async_get_blocklist(
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -1145,8 +1145,8 @@ async def test_async_get_blocklist(
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -1209,7 +1209,7 @@ async def test_async_get_blocklist(
     assert _value.isEbook is True
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -1225,8 +1225,8 @@ async def test_async_get_blocklist(
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -1246,10 +1246,10 @@ async def test_async_get_blocklist(
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -1270,8 +1270,8 @@ async def test_async_get_blocklist(
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 226000)
-    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -1335,8 +1335,8 @@ async def test_async_get_blocklist(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -1355,10 +1355,10 @@ async def test_async_get_blocklist(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -1377,8 +1377,8 @@ async def test_async_get_blocklist(
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -1455,7 +1455,7 @@ async def test_async_get_blocklist(
     assert _value.foreignBookId == "string"
     assert isinstance(_value.titleSlug, int)
     assert _value.title == "string"
-    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
@@ -1465,8 +1465,8 @@ async def test_async_get_blocklist(
     assert _value.cleanTitle == "string"
     assert _value.monitored is True
     assert _value.anyEditionOk is True
-    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.addOptions.searchForNewBook is True
     _value = _value.authorMetadata.value
@@ -1481,8 +1481,8 @@ async def test_async_get_blocklist(
     assert _value.overview == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -1499,10 +1499,10 @@ async def test_async_get_blocklist(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -1521,8 +1521,8 @@ async def test_async_get_blocklist(
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -1552,8 +1552,8 @@ async def test_async_get_blocklist(
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -1616,7 +1616,7 @@ async def test_async_get_blocklist(
     assert _value.isEbook is True
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -1632,8 +1632,8 @@ async def test_async_get_blocklist(
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _val.modified == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -1653,10 +1653,10 @@ async def test_async_get_blocklist(
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _val.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -1676,8 +1676,8 @@ async def test_async_get_blocklist(
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -1741,8 +1741,8 @@ async def test_async_get_blocklist(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.modified == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -1761,10 +1761,10 @@ async def test_async_get_blocklist(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _value.author.value.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -1783,8 +1783,8 @@ async def test_async_get_blocklist(
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000)
-    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert _valu.born == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -1869,7 +1869,7 @@ async def test_async_get_blocklist(
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
     assert isinstance(data.records[0].author.tags[0], int)
-    assert data.records[0].author.added == datetime(2021, 12, 7, 8, 55, 41, 227000)
+    assert data.records[0].author.added == datetime(2021, 12, 7, 8, 55, 41, 227000, tzinfo=UTC)
     assert data.records[0].author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data.records[0].author.addOptions.booksToMonitor[0] == "string"
     assert data.records[0].author.addOptions.monitored is True
@@ -1916,7 +1916,7 @@ async def test_async_get_book(
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
     assert isinstance(data[0].ratings.popularity, int)
-    assert data[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000)
+    assert data[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000, tzinfo=UTC)
     assert isinstance(data[0].pageCount, int)
     assert data[0].genres[0] == "string"
     assert isinstance(data[0].author.id, int)
@@ -1937,7 +1937,7 @@ async def test_async_get_book(
     assert _book.foreignBookId == "string"
     assert isinstance(_book.titleSlug, int)
     assert _book.title == "string"
-    assert _book.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000)
+    assert _book.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 508000, tzinfo=UTC)
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
@@ -1947,8 +1947,8 @@ async def test_async_get_book(
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
-    assert _book.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 508000)
-    assert _book.added == datetime(2021, 12, 7, 9, 7, 35, 508000)
+    assert _book.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 508000, tzinfo=UTC)
+    assert _book.added == datetime(2021, 12, 7, 9, 7, 35, 508000, tzinfo=UTC)
     assert _book.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _book.addOptions.searchForNewBook is True
     _value = _book.authorMetadata.value
@@ -1964,8 +1964,8 @@ async def test_async_get_book(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 508000)
-    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 508000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -1982,10 +1982,10 @@ async def test_async_get_book(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -2005,8 +2005,8 @@ async def test_async_get_book(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -2071,7 +2071,7 @@ async def test_async_get_book(
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -2087,8 +2087,8 @@ async def test_async_get_book(
     assert isinstance(_valu.id, int)
     assert _valu.path == "string"
     assert isinstance(_valu.size, int)
-    assert _valu.modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _valu.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _valu.modified == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _valu.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
     assert isinstance(_valu.quality.quality.id, int)
@@ -2109,10 +2109,10 @@ async def test_async_get_book(
     assert isinstance(_val.authorMetadataId, int)
     assert _val.cleanName == "string"
     assert _val.monitored is True
-    assert _val.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _val.path == "string"
     assert _val.rootFolderPath == "string"
-    assert _val.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.added == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert isinstance(_val.qualityProfileId, int)
     assert isinstance(_val.metadataProfileId, int)
     assert isinstance(_val.tags[0], int)
@@ -2132,8 +2132,8 @@ async def test_async_get_book(
     assert _val.metadata.value.disambiguation == "string"
     assert _val.metadata.value.gender == "string"
     assert _val.metadata.value.hometown == "string"
-    assert _val.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _val.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _val.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _val.metadata.value.status == "string"
     assert _val.metadata.value.images[0].url == "string"
     assert _val.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -2212,7 +2212,7 @@ async def test_async_get_book(
     assert _book.foreignBookId == "string"
     assert isinstance(_book.titleSlug, int)
     assert _book.title == "string"
-    assert _book.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _book.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
@@ -2222,8 +2222,8 @@ async def test_async_get_book(
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
-    assert _book.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _book.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _book.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _book.added == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _book.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _book.addOptions.searchForNewBook is True
     _value = _book.authorMetadata.value
@@ -2239,8 +2239,8 @@ async def test_async_get_book(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.born == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -2257,10 +2257,10 @@ async def test_async_get_book(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.added == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -2280,8 +2280,8 @@ async def test_async_get_book(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.metadata.value.born == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -2346,7 +2346,7 @@ async def test_async_get_book(
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _value.releaseDate == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -2362,8 +2362,8 @@ async def test_async_get_book(
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2021, 12, 7, 9, 7, 35, 509000)
-    assert _val.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.modified == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -2383,10 +2383,10 @@ async def test_async_get_book(
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000)
+    assert _val.author.value.lastInfoSync == datetime(2021, 12, 7, 9, 7, 35, 509000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert _val.author.value.added == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -2407,8 +2407,8 @@ async def test_async_get_book(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 7, 9, 7, 35, 510000)
-    assert _valu.died == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert _valu.born == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -2495,7 +2495,7 @@ async def test_async_get_book(
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert isinstance(data[0].author.tags[0], int)
-    assert data[0].author.added == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert data[0].author.added == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
     assert data[0].author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
@@ -2519,7 +2519,7 @@ async def test_async_get_book(
     assert isinstance(data[0].statistics.totalBookCount, int)
     assert isinstance(data[0].statistics.sizeOnDisk, int)
     assert isinstance(data[0].statistics.percentOfBooks, float)
-    assert data[0].added == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert data[0].added == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
     assert data[0].addOptions.addType == AddTypes.AUTOMATIC.value
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
@@ -2537,7 +2537,7 @@ async def test_async_get_book(
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert isinstance(data[0].editions[0].pageCount, int)
-    assert data[0].editions[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 510000)
+    assert data[0].editions[0].releaseDate == datetime(2021, 12, 7, 9, 7, 35, 510000, tzinfo=UTC)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].editions[0].images[0].extension == "string"
@@ -2575,7 +2575,7 @@ async def test_async_get_book_file(
     assert isinstance(data.bookId, int)
     assert data.path == "string"
     assert isinstance(data.size, int)
-    assert data.dateAdded == datetime(2021, 12, 9, 20, 39, 8, 79000)
+    assert data.dateAdded == datetime(2021, 12, 9, 20, 39, 8, 79000, tzinfo=UTC)
     assert isinstance(data.quality.quality.id, int)
     assert data.quality.quality.name == "string"
     assert isinstance(data.quality.revision.version, int)
@@ -2675,7 +2675,7 @@ async def test_async_book_lookup(
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
     assert isinstance(data[0].ratings.popularity, float)
-    assert data[0].releaseDate == datetime(1869, 1, 1, 0, 0)
+    assert data[0].releaseDate == datetime(1869, 1, 1, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].pageCount, int)
     assert data[0].genres == ["string"]
     assert isinstance(data[0].author.authorMetadataId, int)
@@ -2699,7 +2699,7 @@ async def test_async_book_lookup(
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert isinstance(data[0].author.tags[0], int)
-    assert data[0].author.added == datetime(1, 1, 1, 4, 57)
+    assert data[0].author.added == datetime(1, 1, 1, 4, 57, tzinfo=UTC)
     assert isinstance(data[0].author.ratings.votes, int)
     assert isinstance(data[0].author.ratings.value, float)
     assert isinstance(data[0].author.ratings.popularity, float)
@@ -2714,7 +2714,7 @@ async def test_async_book_lookup(
     assert data[0].images[0].extension == ".jpg"
     assert data[0].links[0].url == "string"
     assert data[0].links[0].name == "string"
-    assert data[0].added == datetime(1, 1, 1, 4, 57)
+    assert data[0].added == datetime(1, 1, 1, 4, 57, tzinfo=UTC)
     assert data[0].remoteCover == "string"
     assert isinstance(data[0].editions[0].bookId, int)
     assert data[0].editions[0].foreignEditionId == "string"
@@ -2726,7 +2726,7 @@ async def test_async_book_lookup(
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert isinstance(data[0].editions[0].pageCount, int)
-    assert data[0].editions[0].releaseDate == datetime(1998, 6, 25, 0, 0)
+    assert data[0].editions[0].releaseDate == datetime(1998, 6, 25, 0, 0, tzinfo=UTC)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == "cover"
     assert data[0].editions[0].images[0].extension == ".jpg"
@@ -2774,7 +2774,7 @@ async def test_async_get_calendar(
     assert data[0].anyEditionOk is True
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
-    assert data[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert data[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert isinstance(data[0].pageCount, int)
     assert data[0].genres[0] == "string"
     _value = data[0].author
@@ -2794,7 +2794,7 @@ async def test_async_get_calendar(
     assert _value.nextBook.foreignBookId == "string"
     assert isinstance(_value.nextBook.titleSlug, int)
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -2803,8 +2803,8 @@ async def test_async_get_calendar(
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
@@ -2819,8 +2819,8 @@ async def test_async_get_calendar(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -2835,10 +2835,10 @@ async def test_async_get_calendar(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -2858,8 +2858,8 @@ async def test_async_get_calendar(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -2922,7 +2922,7 @@ async def test_async_get_calendar(
     assert _valu.disambiguation == "string"
     assert _valu.publisher == "string"
     assert isinstance(_valu.pageCount, int)
-    assert _valu.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _valu.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
     assert _valu.images[0].extension == "string"
@@ -2938,8 +2938,8 @@ async def test_async_get_calendar(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -2959,10 +2959,10 @@ async def test_async_get_calendar(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -2983,8 +2983,8 @@ async def test_async_get_calendar(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _valu.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _valu.born == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -3041,8 +3041,8 @@ async def test_async_get_calendar(
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -3063,10 +3063,10 @@ async def test_async_get_calendar(
     assert isinstance(_author.value.authorMetadataId, int)
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
-    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
-    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert isinstance(_author.value.qualityProfileId, int)
     assert isinstance(_author.value.metadataProfileId, int)
     assert isinstance(_author.value.tags[0], int)
@@ -3087,8 +3087,8 @@ async def test_async_get_calendar(
     assert _val.disambiguation == "string"
     assert _val.gender == "string"
     assert _val.hometown == "string"
-    assert _val.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _val.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _val.born == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _val.died == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _val.status == "string"
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == ImageType.POSTER.value
@@ -3165,7 +3165,7 @@ async def test_async_get_calendar(
     assert _value.nextBook.foreignBookId == "string"
     assert isinstance(_value.nextBook.titleSlug, int)
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -3174,8 +3174,8 @@ async def test_async_get_calendar(
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.nextBook.added == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = data[0].author.nextBook.authorMetadata.value
@@ -3190,8 +3190,8 @@ async def test_async_get_calendar(
     assert _value.disambiguation == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.born == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -3206,10 +3206,10 @@ async def test_async_get_calendar(
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.added == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -3229,8 +3229,8 @@ async def test_async_get_calendar(
     assert _value.metadata.value.disambiguation == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000)
-    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000)
+    assert _value.metadata.value.born == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 11, 9, 30, 28, 338000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -3293,7 +3293,7 @@ async def test_async_get_calendar(
     assert _value.disambiguation == "string"
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -3309,8 +3309,8 @@ async def test_async_get_calendar(
     assert isinstance(_value.id, int)
     assert _value.path == "string"
     assert isinstance(_value.size, int)
-    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.modified == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _value.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _value.sceneName == "string"
     assert _value.releaseGroup == "string"
     assert isinstance(_value.quality.quality.id, int)
@@ -3330,10 +3330,10 @@ async def test_async_get_calendar(
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _value.author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -3354,8 +3354,8 @@ async def test_async_get_calendar(
     assert _valu.disambiguation == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _valu.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _valu.born == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _valu.died == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -3412,8 +3412,8 @@ async def test_async_get_calendar(
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _val.modified == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -3434,10 +3434,10 @@ async def test_async_get_calendar(
     assert isinstance(_author.value.authorMetadataId, int)
     assert _author.value.cleanName == "string"
     assert _author.value.monitored is True
-    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.lastInfoSync == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _author.value.path == "string"
     assert _author.value.rootFolderPath == "string"
-    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _author.value.added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert isinstance(_author.value.qualityProfileId, int)
     assert isinstance(_author.value.metadataProfileId, int)
     assert isinstance(_author.value.tags[0], int)
@@ -3458,8 +3458,8 @@ async def test_async_get_calendar(
     assert _val.disambiguation == "string"
     assert _val.gender == "string"
     assert _val.hometown == "string"
-    assert _val.born == datetime(2021, 12, 11, 9, 30, 28, 339000)
-    assert _val.died == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert _val.born == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
+    assert _val.died == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert _val.status == "string"
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == ImageType.POSTER.value
@@ -3544,7 +3544,7 @@ async def test_async_get_calendar(
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert isinstance(data[0].author.tags[0], int)
-    assert data[0].author.added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert data[0].author.added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert data[0].author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data[0].author.addOptions.booksToMonitor[0] == "string"
     assert data[0].author.addOptions.monitored is True
@@ -3568,7 +3568,7 @@ async def test_async_get_calendar(
     assert isinstance(data[0].statistics.totalBookCount, int)
     assert isinstance(data[0].statistics.sizeOnDisk, int)
     assert isinstance(data[0].statistics.percentOfBooks, float)
-    assert data[0].added == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert data[0].added == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert data[0].addOptions.addType == AddTypes.AUTOMATIC.value
     assert data[0].addOptions.searchForNewBook is True
     assert data[0].remoteCover == "string"
@@ -3586,7 +3586,7 @@ async def test_async_get_calendar(
     assert data[0].editions[0].disambiguation == "string"
     assert data[0].editions[0].publisher == "string"
     assert isinstance(data[0].editions[0].pageCount, int)
-    assert data[0].editions[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert data[0].editions[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert data[0].editions[0].images[0].url == "string"
     assert data[0].editions[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].editions[0].images[0].extension == "string"
@@ -3637,7 +3637,7 @@ async def test_async_get_wanted_missing(
     assert isinstance(data.records[0].ratings.votes, int)
     assert isinstance(data.records[0].ratings.value, float)
     assert isinstance(data.records[0].ratings.popularity, float)
-    assert data.records[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000)
+    assert data.records[0].releaseDate == datetime(2021, 12, 11, 9, 30, 28, 339000, tzinfo=UTC)
     assert isinstance(data.records[0].pageCount, int)
     assert data.records[0].genres[0] == "string"
     assert isinstance(data.records[0].author.authorMetadataId, int)
@@ -3663,7 +3663,7 @@ async def test_async_get_wanted_missing(
     assert data.records[0].author.sortName == "string"
     assert data.records[0].author.sortNameLastFirst == "string"
     assert isinstance(data.records[0].author.tags[0], int)
-    assert data.records[0].author.added == datetime(2021, 12, 6, 22, 23, 55)
+    assert data.records[0].author.added == datetime(2021, 12, 6, 22, 23, 55, tzinfo=UTC)
     assert isinstance(data.records[0].author.ratings.votes, int)
     assert isinstance(data.records[0].author.ratings.value, float)
     assert isinstance(data.records[0].author.ratings.popularity, float)
@@ -3684,7 +3684,7 @@ async def test_async_get_wanted_missing(
     assert isinstance(data.records[0].statistics.totalBookCount, int)
     assert isinstance(data.records[0].statistics.sizeOnDisk, int)
     assert isinstance(data.records[0].statistics.percentOfBooks, float)
-    assert data.records[0].added == datetime(2021, 12, 6, 22, 23, 58)
+    assert data.records[0].added == datetime(2021, 12, 6, 22, 23, 58, tzinfo=UTC)
     assert isinstance(data.records[0].editions[0].bookId, int)
     assert data.records[0].editions[0].foreignEditionId == "string"
     assert isinstance(data.records[0].editions[0].titleSlug, int)
@@ -3697,7 +3697,7 @@ async def test_async_get_wanted_missing(
     assert data.records[0].editions[0].disambiguation == "string"
     assert data.records[0].editions[0].publisher == "string"
     assert isinstance(data.records[0].editions[0].pageCount, int)
-    assert data.records[0].editions[0].releaseDate == datetime(2017, 3, 15, 0, 0)
+    assert data.records[0].editions[0].releaseDate == datetime(2017, 3, 15, 0, 0, tzinfo=UTC)
     assert data.records[0].editions[0].images[0].url == "string"
     assert data.records[0].editions[0].images[0].coverType == ImageType.POSTER.value
     assert data.records[0].editions[0].images[0].extension == "string"
@@ -3778,7 +3778,7 @@ async def test_async_get_history(
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
     assert data.records[0].qualityCutoffNotMet is False
-    assert data.records[0].date == datetime(2021, 12, 31, 1, 13, 38)
+    assert data.records[0].date == datetime(2021, 12, 31, 1, 13, 38, tzinfo=UTC)
     assert data.records[0].downloadId == "string"
     assert data.records[0].eventType == ReadarrEventType.GRABBED.name.lower()
     assert data.records[0].data.indexer == "string"
@@ -3787,7 +3787,7 @@ async def test_async_get_history(
     assert isinstance(data.records[0].data.age, int)
     assert isinstance(data.records[0].data.ageHours, float)
     assert isinstance(data.records[0].data.ageMinutes, float)
-    assert data.records[0].data.publishedDate == datetime(2020, 6, 6, 4, 0)
+    assert data.records[0].data.publishedDate == datetime(2020, 6, 6, 4, 0, tzinfo=UTC)
     assert data.records[0].data.downloadClient == "string"
     assert isinstance(data.records[0].data.size, int)
     assert data.records[0].data.downloadUrl == "string"
@@ -4043,7 +4043,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(data.parsedBookInfo.quality.revision.version, int)
     assert isinstance(data.parsedBookInfo.quality.revision.real, int)
     assert data.parsedBookInfo.quality.revision.isRepack is True
-    assert data.parsedBookInfo.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000)
+    assert data.parsedBookInfo.releaseDate == datetime(2021, 12, 7, 8, 55, 41, 226000, tzinfo=UTC)
     assert data.parsedBookInfo.discography is True
     assert isinstance(data.parsedBookInfo.discographyStart, int)
     assert isinstance(data.parsedBookInfo.discographyEnd, int)
@@ -4067,7 +4067,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _value.foreignBookId == "string"
     assert isinstance(_value.titleSlug, int)
     assert _value.title == "string"
-    assert _value.releaseDate == datetime(2020, 2, 6, 12, 49, 48, 602000)
+    assert _value.releaseDate == datetime(2020, 2, 6, 12, 49, 48, 602000, tzinfo=UTC)
     assert _value.links[0].url == "string"
     assert _value.links[0].name == "string"
     assert _value.genres[0] == "string"
@@ -4077,8 +4077,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _value.cleanTitle == "string"
     assert _value.monitored is True
     assert _value.anyEditionOk is True
-    assert _value.lastInfoSync == datetime(2020, 2, 6, 12, 49, 48, 602000)
-    assert _value.added == datetime(2020, 2, 6, 12, 49, 48, 602000)
+    assert _value.lastInfoSync == datetime(2020, 2, 6, 12, 49, 48, 602000, tzinfo=UTC)
+    assert _value.added == datetime(2020, 2, 6, 12, 49, 48, 602000, tzinfo=UTC)
     assert _value.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.addOptions.searchForNewBook is True
     assert isinstance(_value.authorMetadata.value.id, int)
@@ -4092,8 +4092,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _value.authorMetadata.value.overview == "string"
     assert _value.authorMetadata.value.gender == "string"
     assert _value.authorMetadata.value.hometown == "string"
-    assert _value.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 602000)
-    assert _value.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 602000)
+    assert _value.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 602000, tzinfo=UTC)
+    assert _value.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 602000, tzinfo=UTC)
     assert _value.authorMetadata.value.status == "string"
     assert _value.authorMetadata.value.images[0].url == "string"
     assert _value.authorMetadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4109,10 +4109,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 602000)
+    assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 602000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 602000)
+    assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 602000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -4131,8 +4131,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _val.value.overview == "string"
     assert _val.value.gender == "string"
     assert _val.value.hometown == "string"
-    assert _val.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _val.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.value.status == "string"
     assert _val.value.images[0].url == "string"
     assert _val.value.images[0].coverType == ImageType.POSTER.value
@@ -4196,7 +4196,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _val.isEbook is True
     assert _val.publisher == "string"
     assert isinstance(_val.pageCount, int)
-    assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == ImageType.POSTER.value
     assert _val.images[0].extension == "string"
@@ -4211,8 +4211,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.bookFiles.value[0].id, int)
     assert _val.bookFiles.value[0].path == "string"
     assert isinstance(_val.bookFiles.value[0].size, int)
-    assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.bookFiles.value[0].sceneName == "string"
     assert _val.bookFiles.value[0].releaseGroup == "string"
     assert isinstance(_val.bookFiles.value[0].quality.quality.id, int)
@@ -4233,10 +4233,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_valu.authorMetadataId, int)
     assert _valu.cleanName == "string"
     assert _valu.monitored is True
-    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.path == "string"
     assert _valu.rootFolderPath == "string"
-    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_valu.qualityProfileId, int)
     assert isinstance(_valu.metadataProfileId, int)
     assert isinstance(_valu.tags[0], int)
@@ -4255,8 +4255,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.metadata.value.overview == "string"
     assert _valu.metadata.value.gender == "string"
     assert _valu.metadata.value.hometown == "string"
-    assert _valu.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.metadata.value.status == "string"
     assert _valu.metadata.value.images[0].url == "string"
     assert _valu.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4314,8 +4314,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_valu.id, int)
     assert _valu.path == "string"
     assert isinstance(_valu.size, int)
-    assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
     assert isinstance(_valu.quality.quality.id, int)
@@ -4336,10 +4336,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_valu.authorMetadataId, int)
     assert _valu.cleanName == "string"
     assert _valu.monitored is True
-    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.path == "string"
     assert _valu.rootFolderPath == "string"
-    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_valu.qualityProfileId, int)
     assert isinstance(_valu.metadataProfileId, int)
     assert isinstance(_valu.tags[0], int)
@@ -4358,8 +4358,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.metadata.value.overview == "string"
     assert _valu.metadata.value.gender == "string"
     assert _valu.metadata.value.hometown == "string"
-    assert _valu.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.metadata.value.status == "string"
     assert _valu.metadata.value.images[0].url == "string"
     assert _valu.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4435,7 +4435,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert data.author.lastBook.foreignBookId == "string"
     assert isinstance(data.author.lastBook.titleSlug, int)
     assert data.author.lastBook.title == "string"
-    assert data.author.lastBook.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert data.author.lastBook.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert data.author.lastBook.links[0].url == "string"
     assert data.author.lastBook.links[0].name == "string"
     assert data.author.lastBook.genres[0] == "string"
@@ -4445,8 +4445,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert data.author.lastBook.cleanTitle == "string"
     assert data.author.lastBook.monitored is True
     assert data.author.lastBook.anyEditionOk is True
-    assert data.author.lastBook.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert data.author.lastBook.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert data.author.lastBook.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert data.author.lastBook.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert data.author.lastBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.author.lastBook.addOptions.searchForNewBook is True
     _value = data.author.lastBook
@@ -4461,8 +4461,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _value.authorMetadata.value.overview == "string"
     assert _value.authorMetadata.value.gender == "string"
     assert _value.authorMetadata.value.hometown == "string"
-    assert _value.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _value.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _value.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _value.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _value.authorMetadata.value.status == "string"
     assert _value.authorMetadata.value.images[0].url == "string"
     assert _value.authorMetadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4478,10 +4478,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_value.author.value.authorMetadataId, int)
     assert _value.author.value.cleanName == "string"
     assert _value.author.value.monitored is True
-    assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _value.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _value.author.value.path == "string"
     assert _value.author.value.rootFolderPath == "string"
-    assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _value.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_value.author.value.qualityProfileId, int)
     assert isinstance(_value.author.value.metadataProfileId, int)
     assert isinstance(_value.author.value.tags[0], int)
@@ -4500,8 +4500,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -4565,7 +4565,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.isEbook is True
     assert _valu.publisher == "string"
     assert isinstance(_valu.pageCount, int)
-    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
     assert _valu.images[0].extension == "string"
@@ -4581,8 +4581,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -4602,10 +4602,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -4626,8 +4626,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _va.overview == "string"
     assert _va.gender == "string"
     assert _va.hometown == "string"
-    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _va.status == "string"
     assert _va.images[0].url == "string"
     assert _va.images[0].coverType == ImageType.POSTER.value
@@ -4685,8 +4685,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_valu.id, int)
     assert _valu.path == "string"
     assert isinstance(_valu.size, int)
-    assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.modified == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.sceneName == "string"
     assert _valu.releaseGroup == "string"
     assert isinstance(_valu.quality.quality.id, int)
@@ -4707,10 +4707,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.authorMetadataId, int)
     assert _val.cleanName == "string"
     assert _val.monitored is True
-    assert _val.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.path == "string"
     assert _val.rootFolderPath == "string"
-    assert _val.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_val.qualityProfileId, int)
     assert isinstance(_val.metadataProfileId, int)
     assert isinstance(_val.tags[0], int)
@@ -4729,8 +4729,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _val.metadata.value.overview == "string"
     assert _val.metadata.value.gender == "string"
     assert _val.metadata.value.hometown == "string"
-    assert _val.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _val.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _val.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _val.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _val.metadata.value.status == "string"
     assert _val.metadata.value.images[0].url == "string"
     assert _val.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4815,7 +4815,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert data.author.sortName == "string"
     assert data.author.sortNameLastFirst == "string"
     assert isinstance(data.author.tags[0], int)
-    assert data.author.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert data.author.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert data.author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data.author.addOptions.booksToMonitor == ["string"]
     assert data.author.addOptions.monitored is True
@@ -4842,7 +4842,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(data.books[0].ratings.votes, int)
     assert isinstance(data.books[0].ratings.value, float)
     assert isinstance(data.books[0].ratings.popularity, float)
-    assert data.books[0].releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert data.books[0].releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(data.books[0].pageCount, int)
     assert data.books[0].genres == ["string"]
     assert isinstance(data.books[0].author.id, int)
@@ -4862,7 +4862,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _book.foreignBookId == "string"
     assert isinstance(_book.titleSlug, int)
     assert _book.title == "string"
-    assert _book.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _book.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres == ["string"]
@@ -4872,8 +4872,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
-    assert _book.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _book.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _book.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _book.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _book.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _book.addOptions.searchForNewBook is True
     assert isinstance(_book.authorMetadata.value.id, int)
@@ -4886,8 +4886,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _book.authorMetadata.value.overview == "string"
     assert _book.authorMetadata.value.gender == "string"
     assert _book.authorMetadata.value.hometown == "string"
-    assert _book.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _book.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _book.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _book.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _book.authorMetadata.value.status == "string"
     assert _book.authorMetadata.value.images[0].url == "string"
     assert _book.authorMetadata.value.images[0].coverType == ImageType.POSTER.value
@@ -4903,10 +4903,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_book.author.value.authorMetadataId, int)
     assert _book.author.value.cleanName == "string"
     assert _book.author.value.monitored is True
-    assert _book.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _book.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _book.author.value.path == "string"
     assert _book.author.value.rootFolderPath == "string"
-    assert _book.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _book.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert isinstance(_book.author.value.qualityProfileId, int)
     assert isinstance(_book.author.value.metadataProfileId, int)
     assert isinstance(_book.author.value.tags[0], int)
@@ -4926,8 +4926,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.overview == "string"
     assert _valu.gender == "string"
     assert _valu.hometown == "string"
-    assert _valu.born == datetime(2020, 1, 6, 12, 49, 48, 603000)
-    assert _valu.died == datetime(2020, 1, 6, 12, 49, 48, 603000)
+    assert _valu.born == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
+    assert _valu.died == datetime(2020, 1, 6, 12, 49, 48, 603000, tzinfo=UTC)
     assert _valu.status == "string"
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
@@ -4991,7 +4991,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.isEbook is True
     assert _valu.publisher == "string"
     assert isinstance(_valu.pageCount, int)
-    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _valu.images[0].url == "string"
     assert _valu.images[0].coverType == ImageType.POSTER.value
     assert _valu.images[0].extension == "string"
@@ -5007,8 +5007,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -5028,10 +5028,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -5051,8 +5051,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _va.overview == "string"
     assert _va.gender == "string"
     assert _va.hometown == "string"
-    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _va.status == "string"
     assert _va.images[0].url == "string"
     assert _va.images[0].coverType == ImageType.POSTER.value
@@ -5109,8 +5109,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -5130,10 +5130,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -5153,8 +5153,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _va.overview == "string"
     assert _va.gender == "string"
     assert _va.hometown == "string"
-    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _va.status == "string"
     assert _va.images[0].url == "string"
     assert _va.images[0].coverType == ImageType.POSTER.value
@@ -5230,7 +5230,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.foreignBookId == "string"
     assert isinstance(_valu.titleSlug, int)
     assert _valu.title == "string"
-    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _valu.links[0].url == "string"
     assert _valu.links[0].name == "string"
     assert _valu.genres == ["string"]
@@ -5240,8 +5240,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.cleanTitle == "string"
     assert _valu.monitored is True
     assert _valu.anyEditionOk is True
-    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _valu.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _valu.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _valu.addOptions.searchForNewBook is True
     assert isinstance(_valu.authorMetadata.value.id, int)
@@ -5254,8 +5254,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _valu.authorMetadata.value.overview == "string"
     assert _valu.authorMetadata.value.gender == "string"
     assert _valu.authorMetadata.value.hometown == "string"
-    assert _valu.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _valu.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.authorMetadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _valu.authorMetadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _valu.authorMetadata.value.status == "string"
     assert _valu.authorMetadata.value.images[0].url == "string"
     assert _valu.authorMetadata.value.images[0].coverType == ImageType.POSTER.value
@@ -5271,10 +5271,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_valu.author.value.authorMetadataId, int)
     assert _valu.author.value.cleanName == "string"
     assert _valu.author.value.monitored is True
-    assert _valu.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _valu.author.value.path == "string"
     assert _valu.author.value.rootFolderPath == "string"
-    assert _valu.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _valu.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert isinstance(_valu.author.value.qualityProfileId, int)
     assert isinstance(_valu.author.value.metadataProfileId, int)
     assert isinstance(_valu.author.value.tags[0], int)
@@ -5294,8 +5294,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _val.overview == "string"
     assert _val.gender == "string"
     assert _val.hometown == "string"
-    assert _val.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _val.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.status == "string"
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == ImageType.POSTER.value
@@ -5359,7 +5359,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _val.isEbook is True
     assert _val.publisher == "string"
     assert isinstance(_val.pageCount, int)
-    assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.images[0].url == "string"
     assert _val.images[0].coverType == ImageType.POSTER.value
     assert _val.images[0].extension == "string"
@@ -5374,8 +5374,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.bookFiles.value[0].id, int)
     assert _val.bookFiles.value[0].path == "string"
     assert isinstance(_val.bookFiles.value[0].size, int)
-    assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.bookFiles.value[0].modified == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _val.bookFiles.value[0].dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.bookFiles.value[0].sceneName == "string"
     assert _val.bookFiles.value[0].releaseGroup == "string"
     assert isinstance(_val.bookFiles.value[0].quality.quality.id, int)
@@ -5396,10 +5396,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_va.authorMetadataId, int)
     assert _va.cleanName == "string"
     assert _va.monitored is True
-    assert _va.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _va.path == "string"
     assert _va.rootFolderPath == "string"
-    assert _va.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert isinstance(_va.qualityProfileId, int)
     assert isinstance(_va.metadataProfileId, int)
     assert isinstance(_va.tags[0], int)
@@ -5418,8 +5418,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _va.metadata.value.overview == "string"
     assert _va.metadata.value.gender == "string"
     assert _va.metadata.value.hometown == "string"
-    assert _va.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _va.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.metadata.value.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _va.metadata.value.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _va.metadata.value.status == "string"
     assert _va.metadata.value.images[0].url == "string"
     assert _va.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -5476,8 +5476,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.id, int)
     assert _val.path == "string"
     assert isinstance(_val.size, int)
-    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.modified == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _val.dateAdded == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.sceneName == "string"
     assert _val.releaseGroup == "string"
     assert isinstance(_val.quality.quality.id, int)
@@ -5497,10 +5497,10 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(_val.author.value.authorMetadataId, int)
     assert _val.author.value.cleanName == "string"
     assert _val.author.value.monitored is True
-    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.lastInfoSync == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _val.author.value.path == "string"
     assert _val.author.value.rootFolderPath == "string"
-    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _val.author.value.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert isinstance(_val.author.value.qualityProfileId, int)
     assert isinstance(_val.author.value.metadataProfileId, int)
     assert isinstance(_val.author.value.tags[0], int)
@@ -5520,8 +5520,8 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _va.overview == "string"
     assert _va.gender == "string"
     assert _va.hometown == "string"
-    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000)
-    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _va.born == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
+    assert _va.died == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _va.status == "string"
     assert _va.images[0].url == "string"
     assert _va.images[0].coverType == ImageType.POSTER.value
@@ -5605,7 +5605,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert data.books[0].author.sortName == "string"
     assert data.books[0].author.sortNameLastFirst == "string"
     assert isinstance(data.books[0].author.tags[0], int)
-    assert data.books[0].author.added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert data.books[0].author.added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert data.books[0].author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert data.books[0].author.addOptions.booksToMonitor == ["string"]
     assert data.books[0].author.addOptions.monitored is True
@@ -5629,7 +5629,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert isinstance(data.books[0].statistics.totalBookCount, int)
     assert isinstance(data.books[0].statistics.sizeOnDisk, int)
     assert isinstance(data.books[0].statistics.percentOfBooks, float)
-    assert data.books[0].added == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert data.books[0].added == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert data.books[0].addOptions.addType == AddTypes.AUTOMATIC.value
     assert data.books[0].addOptions.searchForNewBook is True
     assert data.books[0].remoteCover == "string"
@@ -5648,7 +5648,7 @@ async def test_async_parse(aresponses: Server, readarr_client: ReadarrClient) ->
     assert _value.isEbook is True
     assert _value.publisher == "string"
     assert isinstance(_value.pageCount, int)
-    assert _value.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000)
+    assert _value.releaseDate == datetime(2020, 1, 6, 12, 49, 48, 604000, tzinfo=UTC)
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
     assert _value.images[0].extension == "string"
@@ -5699,7 +5699,7 @@ async def test_async_get_queue(
     assert data.records[0].title == "string"
     assert data.records[0].sizeleft > 0
     assert data.records[0].timeleft == "00:00:10"
-    assert data.records[0].estimatedCompletionTime == datetime(2020, 2, 9, 23, 22, 30)
+    assert data.records[0].estimatedCompletionTime == datetime(2020, 2, 9, 23, 22, 30, tzinfo=UTC)
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "downloading"
@@ -5792,7 +5792,7 @@ async def test_async_get_queue_details(
     assert isinstance(data[0].book.ratings.votes, int)
     assert isinstance(data[0].book.ratings.value, float)
     assert isinstance(data[0].book.ratings.popularity, float)
-    assert data[0].book.releaseDate == datetime(2021, 11, 22, 0, 0)
+    assert data[0].book.releaseDate == datetime(2021, 11, 22, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].book.pageCount, int)
     assert data[0].book.genres == ["string"]
     assert isinstance(data[0].book.author.authorMetadataId, int)
@@ -5818,7 +5818,7 @@ async def test_async_get_queue_details(
     assert data[0].book.author.sortName == "string"
     assert data[0].book.author.sortNameLastFirst == "string"
     assert isinstance(data[0].book.author.tags[0], int)
-    assert data[0].book.author.added == datetime(2021, 12, 6, 23, 38, 3)
+    assert data[0].book.author.added == datetime(2021, 12, 6, 23, 38, 3, tzinfo=UTC)
     assert isinstance(data[0].book.author.ratings.votes, int)
     assert isinstance(data[0].book.author.ratings.value, float)
     assert isinstance(data[0].book.author.ratings.popularity, float)
@@ -5834,7 +5834,7 @@ async def test_async_get_queue_details(
     assert data[0].book.images[0].extension == "string"
     assert data[0].book.links[0].url == "string"
     assert data[0].book.links[0].name == "string"
-    assert data[0].book.added == datetime(2021, 12, 6, 23, 53, 58)
+    assert data[0].book.added == datetime(2021, 12, 6, 23, 53, 58, tzinfo=UTC)
     assert isinstance(data[0].book.editions[0].bookId, int)
     assert isinstance(data[0].book.editions[0].foreignEditionId, int)
     assert isinstance(data[0].book.editions[0].titleSlug, int)
@@ -5847,7 +5847,7 @@ async def test_async_get_queue_details(
     assert data[0].book.editions[0].disambiguation == "string"
     assert data[0].book.editions[0].publisher == "string"
     assert isinstance(data[0].book.editions[0].pageCount, int)
-    assert data[0].book.editions[0].releaseDate == datetime(2021, 11, 25, 0, 0)
+    assert data[0].book.editions[0].releaseDate == datetime(2021, 11, 25, 0, 0, tzinfo=UTC)
     assert data[0].book.editions[0].images[0].url == "string"
     assert data[0].book.editions[0].images[0].coverType == ImageType.POSTER.value
     assert data[0].book.editions[0].images[0].extension == "string"
@@ -5871,7 +5871,7 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft == 0
     assert data[0].timeleft == "00:00:00"
-    assert data[0].estimatedCompletionTime == datetime(2020, 2, 7, 11, 27, 27)
+    assert data[0].estimatedCompletionTime == datetime(2020, 2, 7, 11, 27, 27, tzinfo=UTC)
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "string"
@@ -5926,7 +5926,7 @@ async def test_async_get_release(
     assert data[0].rejected is True
     assert data[0].rejections[0].reason == "string"
     assert data[0].rejections[0].type == "permanent"
-    assert data[0].publishDate == datetime(2021, 11, 23, 5, 0)
+    assert data[0].publishDate == datetime(2021, 11, 23, 5, 0, tzinfo=UTC)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
     assert data[0].infoUrl == "string"
@@ -6026,7 +6026,7 @@ async def test_async_get_manual_import(
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert isinstance(data[0].author.tags[0], int)
-    assert data[0].author.added == datetime(2021, 12, 6, 23, 38, 3)
+    assert data[0].author.added == datetime(2021, 12, 6, 23, 38, 3, tzinfo=UTC)
     assert isinstance(data[0].author.ratings.votes, int)
     assert isinstance(data[0].author.ratings.value, float)
     assert isinstance(data[0].author.ratings.popularity, float)
@@ -6050,7 +6050,7 @@ async def test_async_get_manual_import(
     assert isinstance(data[0].book.ratings.votes, int)
     assert isinstance(data[0].book.ratings.value, float)
     assert isinstance(data[0].book.ratings.popularity, float)
-    assert data[0].book.releaseDate == datetime(2020, 9, 21, 0, 0)
+    assert data[0].book.releaseDate == datetime(2020, 9, 21, 0, 0, tzinfo=UTC)
     assert isinstance(data[0].book.pageCount, int)
     assert data[0].book.genres == ["string"]
     assert isinstance(data[0].book.author.authorMetadataId, int)
@@ -6076,7 +6076,7 @@ async def test_async_get_manual_import(
     assert data[0].book.author.sortName == "string"
     assert data[0].book.author.sortNameLastFirst == "string"
     assert isinstance(data[0].book.author.tags[0], int)
-    assert data[0].book.author.added == datetime(2021, 12, 6, 23, 38, 3)
+    assert data[0].book.author.added == datetime(2021, 12, 6, 23, 38, 3, tzinfo=UTC)
     assert isinstance(data[0].book.author.ratings.votes, int)
     assert isinstance(data[0].book.author.ratings.value, float)
     assert isinstance(data[0].book.author.ratings.popularity, float)
@@ -6092,7 +6092,7 @@ async def test_async_get_manual_import(
     assert data[0].book.images[0].extension == "string"
     assert data[0].book.links[0].url == "string"
     assert data[0].book.links[0].name == "string"
-    assert data[0].book.added == datetime(2021, 12, 6, 23, 53, 58)
+    assert data[0].book.added == datetime(2021, 12, 6, 23, 53, 58, tzinfo=UTC)
     assert isinstance(data[0].book.editions[0].bookId, int)
     assert isinstance(data[0].book.editions[0].foreignEditionId, int)
     assert isinstance(data[0].book.editions[0].titleSlug, int)
@@ -6105,7 +6105,7 @@ async def test_async_get_manual_import(
     assert data[0].book.editions[0].disambiguation == "string"
     assert data[0].book.editions[0].publisher == "string"
     assert isinstance(data[0].book.editions[0].pageCount, int)
-    assert data[0].book.editions[0].releaseDate == datetime(2020, 8, 27, 0, 0)
+    assert data[0].book.editions[0].releaseDate == datetime(2020, 8, 27, 0, 0, tzinfo=UTC)
     assert data[0].book.editions[0].images[0].url == "string"
     assert data[0].book.editions[0].images[0].coverType == ImageType.COVER.value
     assert data[0].book.editions[0].images[0].extension == "string"
@@ -6237,7 +6237,7 @@ async def test_async_search(aresponses: Server, readarr_client: ReadarrClient) -
     assert data[0].author.sortName == "string"
     assert data[0].author.sortNameLastFirst == "string"
     assert isinstance(data[0].author.tags[0], int)
-    assert data[0].author.added == datetime(2021, 10, 6, 23, 38, 49)
+    assert data[0].author.added == datetime(2021, 10, 6, 23, 38, 49, tzinfo=UTC)
     assert isinstance(data[0].author.ratings.votes, int)
     assert isinstance(data[0].author.ratings.value, float)
     assert isinstance(data[0].author.ratings.popularity, float)
@@ -6328,7 +6328,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.anyEditionOk is True
     assert isinstance(_value.ratings.votes, int)
     assert isinstance(_value.ratings.value, float)
-    assert _value.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert isinstance(_value.pageCount, int)
     assert _value.genres[0] == "string"
     _value = item.basedata.authors[0].books[0].author
@@ -6347,7 +6347,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.nextBook.foreignBookId == "string"
     assert isinstance(_value.nextBook.titleSlug, int)
     assert _value.nextBook.title == "string"
-    assert _value.nextBook.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.nextBook.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.nextBook.links[0].url == "string"
     assert _value.nextBook.links[0].name == "string"
     assert _value.nextBook.genres[0] == "string"
@@ -6356,8 +6356,8 @@ async def test_readarr_bookshelf() -> None:
     assert _value.nextBook.cleanTitle == "string"
     assert _value.nextBook.monitored is True
     assert _value.nextBook.anyEditionOk is True
-    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.nextBook.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.nextBook.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _value.nextBook.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.nextBook.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.nextBook.addOptions.searchForNewBook is True
     _value = item.basedata.authors[0].books[0].author.nextBook.authorMetadata.value
@@ -6371,8 +6371,8 @@ async def test_readarr_bookshelf() -> None:
     assert _value.overview == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -6386,10 +6386,10 @@ async def test_readarr_bookshelf() -> None:
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -6408,8 +6408,8 @@ async def test_readarr_bookshelf() -> None:
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -6451,7 +6451,7 @@ async def test_readarr_bookshelf() -> None:
     assert _book.foreignBookId == "string"
     assert isinstance(_book.titleSlug, int)
     assert _book.title == "string"
-    assert _book.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _book.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _book.links[0].url == "string"
     assert _book.links[0].name == "string"
     assert _book.genres[0] == "string"
@@ -6460,8 +6460,8 @@ async def test_readarr_bookshelf() -> None:
     assert _book.cleanTitle == "string"
     assert _book.monitored is True
     assert _book.anyEditionOk is True
-    assert _book.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _book.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _book.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _book.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _book.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _book.addOptions.searchForNewBook is True
     _value = item.basedata.authors[0].books[0].author.lastBook.authorMetadata.value
@@ -6475,8 +6475,8 @@ async def test_readarr_bookshelf() -> None:
     assert _value.overview == "string"
     assert _value.gender == "string"
     assert _value.hometown == "string"
-    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.born == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _value.died == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.images[0].url == "string"
     assert _value.images[0].coverType == ImageType.POSTER.value
@@ -6490,10 +6490,10 @@ async def test_readarr_bookshelf() -> None:
     assert isinstance(_value.authorMetadataId, int)
     assert _value.cleanName == "string"
     assert _value.monitored is True
-    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.lastInfoSync == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.path == "string"
     assert _value.rootFolderPath == "string"
-    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert isinstance(_value.qualityProfileId, int)
     assert isinstance(_value.metadataProfileId, int)
     assert isinstance(_value.tags[0], int)
@@ -6512,8 +6512,8 @@ async def test_readarr_bookshelf() -> None:
     assert _value.metadata.value.overview == "string"
     assert _value.metadata.value.gender == "string"
     assert _value.metadata.value.hometown == "string"
-    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000)
-    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.metadata.value.born == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
+    assert _value.metadata.value.died == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.metadata.value.status == "string"
     assert _value.metadata.value.images[0].url == "string"
     assert _value.metadata.value.images[0].coverType == ImageType.POSTER.value
@@ -6564,7 +6564,7 @@ async def test_readarr_bookshelf() -> None:
     assert _value.author.sortName == "string"
     assert _value.author.sortNameLastFirst == "string"
     assert isinstance(_value.author.tags[0], int)
-    assert _value.author.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.author.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.author.addOptions.monitor == MonitoringOptionsType.ALL.value
     assert _value.author.addOptions.booksToMonitor[0] == "string"
     assert _value.author.addOptions.monitored is True
@@ -6584,7 +6584,7 @@ async def test_readarr_bookshelf() -> None:
     assert isinstance(_value.statistics.bookCount, int)
     assert isinstance(_value.statistics.totalBookCount, int)
     assert isinstance(_value.statistics.sizeOnDisk, int)
-    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _value.added == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _value.addOptions.addType == AddTypes.AUTOMATIC.value
     assert _value.addOptions.searchForNewBook is True
     assert _value.remoteCover == "string"
@@ -6602,7 +6602,7 @@ async def test_readarr_bookshelf() -> None:
     assert _editions.isEbook is True
     assert _editions.publisher == "string"
     assert isinstance(_editions.pageCount, int)
-    assert _editions.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000)
+    assert _editions.releaseDate == datetime(2021, 12, 10, 10, 0, 6, 987000, tzinfo=UTC)
     assert _editions.images[0].url == "string"
     assert _editions.images[0].coverType == ImageType.POSTER.value
     assert _editions.links[0].url == "string"

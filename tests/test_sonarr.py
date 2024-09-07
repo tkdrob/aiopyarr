@@ -1,7 +1,7 @@
 """Tests for Sonarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
@@ -58,7 +58,7 @@ async def test_async_get_calendar(
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
-    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=timezone.utc)
+    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=UTC)
     assert data[0].overview == "string"
     assert data[0].hasFile is False
     assert data[0].monitored is True
@@ -114,7 +114,7 @@ async def test_async_get_calendar_extended(
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2017, 1, 26, 0, 0)
-    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=timezone.utc)
+    assert data[0].airDateUtc == datetime(2017, 1, 27, 1, 30, tzinfo=UTC)
     assert data[0].overview == "string"
     assert data[0].hasFile is True
     assert data[0].monitored is True
@@ -130,7 +130,7 @@ async def test_async_get_calendar_extended(
     assert data[0].episodeFile.relativePath == "string"
     assert data[0].episodeFile.path == "string"
     assert isinstance(data[0].episodeFile.size, int)
-    assert data[0].episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081)
+    assert data[0].episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC)
     assert data[0].episodeFile.releaseGroup == "string"
     assert isinstance(data[0].episodeFile.language.id, int)
     assert data[0].episodeFile.language.name == "string"
@@ -180,7 +180,7 @@ async def test_async_get_calendar_extended(
     assert isinstance(data[0].series.tvdbId, int)
     assert isinstance(data[0].series.tvRageId, int)
     assert isinstance(data[0].series.tvMazeId, int)
-    assert data[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data[0].series.firstAired == datetime(2017, 4, 5, 0, 0, tzinfo=UTC)
     assert data[0].series.seriesType == "string"
     assert data[0].series.cleanTitle == "string"
     assert data[0].series.imdbId == "string"
@@ -188,7 +188,7 @@ async def test_async_get_calendar_extended(
     assert data[0].series.certification == "string"
     assert data[0].series.genres == ["string"]
     assert data[0].series.tags == [0]
-    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920, tzinfo=UTC)
     assert isinstance(data[0].series.ratings.votes, int)
     assert isinstance(data[0].series.ratings.value, float)
     assert isinstance(data[0].series.id, int)
@@ -236,14 +236,14 @@ async def test_async_get_episodes(
     assert isinstance(data.episodeNumber, int)
     assert data.title == "string"
     assert data.airDate == datetime(2009, 9, 17, 0, 0)
-    assert data.airDateUtc == datetime(2009, 9, 18, 2, 0, tzinfo=timezone.utc)
+    assert data.airDateUtc == datetime(2009, 9, 18, 2, 0, tzinfo=UTC)
     assert data.overview == "string"
     assert isinstance(data.episodeFile.seriesId, int)
     assert isinstance(data.episodeFile.seasonNumber, int)
     assert data.episodeFile.relativePath == "string"
     assert data.episodeFile.path == "string"
     assert isinstance(data.episodeFile.size, int)
-    assert data.episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081)
+    assert data.episodeFile.dateAdded == datetime(2019, 6, 13, 9, 8, 3, 775081, tzinfo=UTC)
     assert data.episodeFile.releaseGroup == "string"
     assert isinstance(data.episodeFile.language.id, int)
     assert data.episodeFile.language.name == "string"
@@ -296,7 +296,7 @@ async def test_async_get_episodes(
     assert isinstance(data.series.tvdbId, int)
     assert isinstance(data.series.tvRageId, int)
     assert isinstance(data.series.tvMazeId, int)
-    assert data.series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data.series.firstAired == datetime(2017, 4, 5, 0, 0, tzinfo=UTC)
     assert data.series.seriesType == "string"
     assert data.series.cleanTitle == "string"
     assert data.series.imdbId == "string"
@@ -304,7 +304,7 @@ async def test_async_get_episodes(
     assert data.series.certification == "string"
     assert data.series.genres == ["string"]
     assert data.series.tags == [0]
-    assert data.series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert data.series.added == datetime(2019, 5, 19, 5, 33, 42, 243920, tzinfo=UTC)
     assert isinstance(data.series.ratings.votes, int)
     assert isinstance(data.series.ratings.value, float)
     assert isinstance(data.series.id, int)
@@ -347,7 +347,7 @@ async def test_async_get_episode_files(
     assert data.relativePath == "string"
     assert data.path == "string"
     assert isinstance(data.size, int)
-    assert data.dateAdded == datetime(2019, 5, 19, 5, 33, 25, 295709)
+    assert data.dateAdded == datetime(2019, 5, 19, 5, 33, 25, 295709, tzinfo=UTC)
     assert data.releaseGroup == "string"
     assert isinstance(data.language.id, int)
     assert data.language.name == "string"
@@ -429,7 +429,7 @@ async def test_async_get_history(
     assert data.records[0].qualityCutoffNotMet is True
     assert data.records[0].languageCutoffNotMet is False
     assert data.records[0].languageCutoffNotMet is False
-    assert data.records[0].date == datetime(2019, 11, 1, 9, 9, 34, 288036)
+    assert data.records[0].date == datetime(2019, 11, 1, 9, 9, 34, 288036, tzinfo=UTC)
     assert data.records[0].downloadId == "string"
     assert data.records[0].eventType == SonarrEventType.GRABBED.name.lower()
     assert data.records[0].data.indexer == "string"
@@ -438,7 +438,7 @@ async def test_async_get_history(
     assert isinstance(data.records[0].data.age, int)
     assert isinstance(data.records[0].data.ageHours, float)
     assert isinstance(data.records[0].data.ageMinutes, float)
-    assert data.records[0].data.publishedDate == datetime(2020, 2, 8, 13, 30, 37)
+    assert data.records[0].data.publishedDate == datetime(2020, 2, 8, 13, 30, 37, tzinfo=UTC)
     assert isinstance(data.records[0].data.fileId, int)
     assert data.records[0].data.droppedPath == "string"
     assert data.records[0].data.importedPath == "string"
@@ -565,7 +565,7 @@ async def test_async_parse_title_or_path(
     assert isinstance(data.series.tvdbId, int)
     assert isinstance(data.series.tvRageId, int)
     assert isinstance(data.series.tvMazeId, int)
-    assert data.series.firstAired == datetime(2011, 9, 26, 0, 0)
+    assert data.series.firstAired == datetime(2011, 9, 26, 0, 0, tzinfo=UTC)
     assert data.series.seriesType == "string"
     assert data.series.cleanTitle == "string"
     assert data.series.imdbId == "string"
@@ -573,7 +573,7 @@ async def test_async_parse_title_or_path(
     assert data.series.certification == "string"
     assert data.series.genres == ["string"]
     assert isinstance(data.series.tags[0], int)
-    assert data.series.added == datetime(2020, 5, 19, 5, 33, 31, 868402)
+    assert data.series.added == datetime(2020, 5, 19, 5, 33, 31, 868402, tzinfo=UTC)
     assert isinstance(data.series.ratings.votes, int)
     assert isinstance(data.series.ratings.value, float)
     assert isinstance(data.series.id, int)
@@ -584,7 +584,7 @@ async def test_async_parse_title_or_path(
     assert data.episodes[0].title == "string"
     assert data.episodes[0].airDate == datetime(2010, 8, 26, 0, 0)
     assert data.episodes[0].airDateUtc == datetime(
-        2006, 9, 27, 0, 0, tzinfo=timezone.utc
+        2006, 9, 27, 0, 0, tzinfo=UTC
     )
     assert data.episodes[0].overview == "string"
     assert data.episodes[0].hasFile is True
@@ -636,7 +636,7 @@ async def test_async_get_queue(aresponses: Server, sonarr_client: SonarrClient) 
     assert _value.title == "string"
     assert _value.sizeleft > 0
     assert _value.timeleft == "00:00:00"
-    assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532)
+    assert _value.estimatedCompletionTime == datetime(2020, 2, 9, 13, 14, 14, 379532, tzinfo=UTC)
     assert _value.status == "string"
     assert _value.trackedDownloadStatus == "string"
     assert _value.trackedDownloadState == "stopped"
@@ -757,7 +757,7 @@ async def test_async_get_release(
     assert isinstance(data[0].tvRageId, int)
     assert data[0].rejections[0].reason == "string"
     assert data[0].rejections[0].type == "permanent"
-    assert data[0].publishDate == datetime(2020, 1, 8, 15, 31, 3)
+    assert data[0].publishDate == datetime(2020, 1, 8, 15, 31, 3, tzinfo=UTC)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
     assert data[0].infoUrl == "string"
@@ -820,7 +820,7 @@ async def test_async_lookup_series(
     assert isinstance(data[0].tvdbId, int)
     assert isinstance(data[0].tvRageId, int)
     assert isinstance(data[0].tvMazeId, int)
-    assert data[0].firstAired == datetime(2018, 10, 12, 0, 0)
+    assert data[0].firstAired == datetime(2018, 10, 12, 0, 0, tzinfo=UTC)
     assert data[0].seriesType == "string"
     assert data[0].cleanTitle == "string"
     assert data[0].imdbId == "string"
@@ -829,7 +829,7 @@ async def test_async_lookup_series(
     assert data[0].certification == "string"
     assert data[0].genres == ["string"]
     assert isinstance(data[0].tags[0], int)
-    assert data[0].added == datetime(2018, 10, 31, 5, 49, 55, 357150)
+    assert data[0].added == datetime(2018, 10, 31, 5, 49, 55, 357150, tzinfo=UTC)
     assert isinstance(data[0].ratings.votes, int)
     assert isinstance(data[0].ratings.value, float)
     assert isinstance(data[0].statistics.seasonCount, int)
@@ -925,7 +925,7 @@ async def test_async_get_series(
     assert data.images[0].remoteUrl == "string"
     assert isinstance(data.seasons[0].seasonNumber, int)
     assert data.seasons[0].monitored is True
-    assert data.seasons[0].statistics.previousAiring == datetime(2019, 7, 5, 7, 0)
+    assert data.seasons[0].statistics.previousAiring == datetime(2019, 7, 5, 7, 0, tzinfo=UTC)
     assert isinstance(data.seasons[0].statistics.episodeFileCount, int)
     assert isinstance(data.seasons[0].statistics.episodeCount, int)
     assert isinstance(data.seasons[0].statistics.totalEpisodeCount, int)
@@ -942,7 +942,7 @@ async def test_async_get_series(
     assert isinstance(data.tvdbId, int)
     assert isinstance(data.tvRageId, int)
     assert isinstance(data.tvMazeId, int)
-    assert data.firstAired == datetime(2018, 5, 31, 0, 0)
+    assert data.firstAired == datetime(2018, 5, 31, 0, 0, tzinfo=UTC)
     assert data.seriesType == "string"
     assert data.cleanTitle == "string"
     assert data.imdbId == "string"
@@ -951,7 +951,7 @@ async def test_async_get_series(
     assert data.certification == "string"
     assert data.genres == ["string"]
     assert isinstance(data.tags[0], int)
-    assert data.added == datetime(2018, 6, 19, 5, 33, 15, 994870)
+    assert data.added == datetime(2018, 6, 19, 5, 33, 15, 994870, tzinfo=UTC)
     assert isinstance(data.ratings.votes, int)
     assert isinstance(data.ratings.value, float)
     assert isinstance(data.statistics.seasonCount, int)
@@ -992,7 +992,7 @@ async def test_async_get_wanted(
     assert isinstance(data.records[0].episodeNumber, int)
     assert data.records[0].title == "string"
     assert data.records[0].airDate == datetime(2010, 3, 7, 0, 0)
-    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=timezone.utc)
+    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=UTC)
     assert data.records[0].overview == "string"
     assert data.records[0].hasFile is False
     assert data.records[0].monitored is True
@@ -1030,7 +1030,7 @@ async def test_async_get_wanted_extended(
     assert isinstance(data.records[0].episodeNumber, int)
     assert data.records[0].title == "string"
     assert data.records[0].airDate == datetime(2010, 3, 7, 0, 0)
-    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=timezone.utc)
+    assert data.records[0].airDateUtc == datetime(2010, 3, 7, 5, 0, tzinfo=UTC)
     assert data.records[0].overview == "string"
     assert data.records[0].hasFile is False
     assert data.records[0].monitored is True
@@ -1061,7 +1061,7 @@ async def test_async_get_wanted_extended(
     assert isinstance(data.records[0].series.tvdbId, int)
     assert isinstance(data.records[0].series.tvRageId, int)
     assert isinstance(data.records[0].series.tvMazeId, int)
-    assert data.records[0].series.firstAired == datetime(2017, 4, 5, 0, 0)
+    assert data.records[0].series.firstAired == datetime(2017, 4, 5, 0, 0, tzinfo=UTC)
     assert data.records[0].series.seriesType == "string"
     assert data.records[0].series.cleanTitle == "string"
     assert data.records[0].series.imdbId == "string"
@@ -1069,7 +1069,7 @@ async def test_async_get_wanted_extended(
     assert data.records[0].series.certification == "string"
     assert data.records[0].series.genres == ["string"]
     assert data.records[0].series.tags == [0]
-    assert data.records[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920)
+    assert data.records[0].series.added == datetime(2019, 5, 19, 5, 33, 42, 243920, tzinfo=UTC)
     assert isinstance(data.records[0].series.ratings.votes, int)
     assert isinstance(data.records[0].series.ratings.value, float)
     assert isinstance(data.records[0].series.id, int)
@@ -1137,7 +1137,7 @@ async def test_async_get_blocklist(
     assert isinstance(data.records[0].quality.revision.version, int)
     assert isinstance(data.records[0].quality.revision.real, int)
     assert data.records[0].quality.revision.isRepack is False
-    assert data.records[0].date == datetime(2021, 9, 19, 8, 14, 33, 582863)
+    assert data.records[0].date == datetime(2021, 9, 19, 8, 14, 33, 582863, tzinfo=UTC)
     assert data.records[0].protocol is ProtocolType.UNKNOWN
     assert data.records[0].indexer == "string"
     assert data.records[0].message == "string"
@@ -1259,9 +1259,7 @@ async def test_async_get_queue_details(
     assert isinstance(data[0].episode.episodeNumber, int)
     assert data[0].episode.title == "string"
     assert data[0].episode.airDate == datetime(2020, 7, 9, 0, 0)
-    assert data[0].episode.airDateUtc == datetime(
-        2020, 7, 10, 2, 0, tzinfo=timezone.utc
-    )
+    assert data[0].episode.airDateUtc == datetime(2020, 7, 10, 2, 0, tzinfo=UTC)
     assert data[0].episode.overview == "string"
     assert data[0].episode.hasFile is False
     assert data[0].episode.monitored is True
@@ -1281,7 +1279,7 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft > 0
     assert data[0].timeleft == "00:00:00"
-    assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840)
+    assert data[0].estimatedCompletionTime == datetime(2022, 1, 7, 10, 40, 32, 560840, tzinfo=UTC)
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "stopped"
@@ -1363,7 +1361,7 @@ async def test_async_get_manual_import(
     assert isinstance(data[0].series.tvdbId, int)
     assert isinstance(data[0].series.tvRageId, int)
     assert isinstance(data[0].series.tvMazeId, int)
-    assert data[0].series.firstAired == datetime(2020, 8, 29, 0, 0)
+    assert data[0].series.firstAired == datetime(2020, 8, 29, 0, 0, tzinfo=UTC)
     assert data[0].series.seriesType == "standard"
     assert data[0].series.cleanTitle == "string"
     assert data[0].series.imdbId == "string"
@@ -1371,7 +1369,7 @@ async def test_async_get_manual_import(
     assert data[0].series.certification == "string"
     assert data[0].series.genres == ["string"]
     assert isinstance(data[0].series.tags[0], int)
-    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 56, 694250)
+    assert data[0].series.added == datetime(2019, 5, 19, 5, 33, 56, 694250, tzinfo=UTC)
     assert isinstance(data[0].series.ratings.votes, int)
     assert isinstance(data[0].series.ratings.value, float)
     assert isinstance(data[0].series.id, int)
@@ -1382,9 +1380,7 @@ async def test_async_get_manual_import(
     assert isinstance(data[0].episodes[0].episodeNumber, int)
     assert data[0].episodes[0].title == "string"
     assert data[0].episodes[0].airDate == datetime(2020, 10, 5, 0, 0)
-    assert data[0].episodes[0].airDateUtc == datetime(
-        2020, 10, 5, 7, 0, tzinfo=timezone.utc
-    )
+    assert data[0].episodes[0].airDateUtc == datetime(2020, 10, 5, 7, 0, tzinfo=UTC)
     assert data[0].episodes[0].overview == "string"
     assert data[0].episodes[0].hasFile is True
     assert data[0].episodes[0].monitored is True
@@ -1499,7 +1495,7 @@ async def test_async_episode_monitor(
     assert isinstance(data[0].episodeNumber, int)
     assert data[0].title == "string"
     assert data[0].airDate == datetime(2020, 10, 24, 0, 0)
-    assert data[0].airDateUtc == datetime(2020, 10, 24, 5, 0, tzinfo=timezone.utc)
+    assert data[0].airDateUtc == datetime(2020, 10, 24, 5, 0, tzinfo=UTC)
     assert data[0].overview == "string"
     assert data[0].hasFile is True
     assert data[0].monitored is False

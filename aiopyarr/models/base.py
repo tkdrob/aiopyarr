@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import datetime
 from enum import Enum
 from typing import Any
 
@@ -12,7 +12,6 @@ import ciso8601
 from ..const import ATTR_DATA
 from .const import (
     CONVERT_TO_BOOL,
-    CONVERT_TO_DATE,
     CONVERT_TO_DATETIME,
     CONVERT_TO_ENUM,
     CONVERT_TO_FLOAT,
@@ -21,24 +20,13 @@ from .const import (
 )
 
 
-def get_datetime(
-    _input: datetime | str | None, utc: bool = False
-) -> datetime | str | int | None:
+def get_datetime(_input: datetime | str | None) -> datetime | str | int | None:
     """Convert input to datetime object."""
     if isinstance(_input, str):
         if _input.isnumeric():
             return int(_input)
-        if utc:
-            return ciso8601.parse_datetime(_input)
-        return ciso8601.parse_datetime_as_naive(_input)
+        return ciso8601.parse_datetime(_input)
     return _input
-
-
-def get_date(_input: datetime | str | None) -> date | None:
-    """Convert input to date object."""
-    if (result := get_datetime(_input)) and isinstance(result, datetime):
-        return result.date()
-    return None
 
 
 def get_enum_value(val: str) -> str | Enum:
@@ -95,12 +83,7 @@ class BaseModel:
                 if key == ATTR_DATA:
                     value = generate_data(value, datatype)
                 elif key in CONVERT_TO_DATETIME:
-                    if key == "airDateUtc":
-                        value = get_datetime(value, utc=True)
-                    else:
-                        value = get_datetime(value)
-                elif key in CONVERT_TO_DATE:
-                    value = get_date(value)
+                    value = get_datetime(value)
                 elif key in CONVERT_TO_ENUM:
                     value = get_enum_value(value)
                 elif key in CONVERT_TO_FLOAT and value is not None:

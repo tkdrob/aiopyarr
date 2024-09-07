@@ -1,13 +1,12 @@
 """Tests for Radarr object models."""
 
 # pylint:disable=line-too-long, too-many-lines, too-many-statements
-from datetime import date, datetime
+from datetime import date, datetime, UTC
 
 from aresponses.main import ResponsesMockServer as Server
 import pytest
 
 from aiopyarr.exceptions import ArrException
-from aiopyarr.models.base import get_date
 from aiopyarr.models.const import ProtocolType
 from aiopyarr.models.radarr import (
     RadarrCommands,
@@ -56,7 +55,7 @@ async def test_async_get_blocklist(
     assert isinstance(data.totalRecords, int)
     assert isinstance(data.records[0].movieId, int)
     assert data.records[0].sourceTitle == "string"
-    assert data.records[0].date == datetime(2021, 9, 19, 14, 24, 13)
+    assert data.records[0].date == datetime(2021, 9, 19, 14, 24, 13, tzinfo=UTC)
     assert isinstance(data.records[0].id, int)
     assert data.records[0].indexer == "string"
     assert data.records[0].protocol is ProtocolType.UNKNOWN
@@ -136,7 +135,7 @@ async def test_async_get_blocklist_movie(
     assert spec.fields[0].value == "string"
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
-    assert data[0].date == datetime(2019, 4, 10, 15, 9, 11)
+    assert data[0].date == datetime(2019, 4, 10, 15, 9, 11, tzinfo=UTC)
     assert isinstance(data[0].id, int)
     assert data[0].indexer == "string"
     assert data[0].protocol is ProtocolType.UNKNOWN
@@ -170,10 +169,10 @@ async def test_async_get_calendar(
     assert isinstance(data[0].sizeOnDisk, int)
     assert data[0].status == "string"
     assert data[0].overview == "string"
-    assert data[0].physicalRelease == date(2021, 12, 3)
-    assert data[0].digitalRelease == date(2020, 8, 11)
-    assert data[0].releaseDateType(date(2021, 1, 12)) == (
-        date(2020, 8, 11),
+    assert data[0].physicalRelease == datetime(2021, 12, 3, 0, 0, tzinfo=UTC)
+    assert data[0].digitalRelease == datetime(2020, 8, 11, tzinfo=UTC)
+    assert data[0].releaseDateType(datetime(2021, 1, 12, tzinfo=UTC)) == (
+        datetime(2020, 8, 11, tzinfo=UTC),
         "digitalRelease",
     )
     assert data[0].images[0].coverType == ImageType.POSTER.value
@@ -196,7 +195,7 @@ async def test_async_get_calendar(
     assert isinstance(data[0].titleSlug, int)
     assert data[0].genres == ["string"]
     assert data[0].tags == []
-    assert data[0].added == datetime(2020, 7, 16, 13, 25, 37)
+    assert data[0].added == datetime(2020, 7, 16, 13, 25, 37, tzinfo=UTC)
     assert isinstance(data[0].ratings.imdb.votes, int)
     assert isinstance(data[0].ratings.imdb.value, float)
     assert data[0].ratings.imdb.type == "string"
@@ -213,7 +212,7 @@ async def test_async_get_calendar(
     assert data[0].movieFile.relativePath == "string"
     assert data[0].movieFile.path == "string"
     assert isinstance(data[0].movieFile.size, int)
-    assert data[0].movieFile.dateAdded == datetime(2021, 6, 1, 4, 8, 20)
+    assert data[0].movieFile.dateAdded == datetime(2021, 6, 1, 4, 8, 20, tzinfo=UTC)
     assert data[0].movieFile.sceneName == "string"
     assert isinstance(data[0].movieFile.indexerFlags, int)
     assert isinstance(data[0].movieFile.quality.quality.id, int)
@@ -328,7 +327,7 @@ async def test_async_get_history(
     assert spec.fields[0].type == "string"
     assert spec.fields[0].advanced is True
     assert data.records[0].qualityCutoffNotMet is True
-    assert data.records[0].date == datetime(2020, 2, 20, 21, 34, 52)
+    assert data.records[0].date == datetime(2020, 2, 20, 21, 34, 52, tzinfo=UTC)
     assert data.records[0].downloadId == "string"
     assert data.records[0].eventType == RadarrEventType.GRABBED.name.lower()
     assert isinstance(data.records[0].data.fileId, int)
@@ -446,11 +445,11 @@ async def test_async_get_import_list_movies(
     assert data[0].sortTitle == "string"
     assert data[0].status == "released"
     assert data[0].overview == "string"
-    assert data[0].inCinemas == date(2018, 3, 9)
-    assert data[0].physicalRelease == date(2018, 6, 10)
-    assert data[0].digitalRelease == date(2018, 5, 25)
-    assert data[0].releaseDateType(date(2018, 6, 10)) == (
-        date(2018, 6, 10),
+    assert data[0].inCinemas == datetime(2018, 3, 9, tzinfo=UTC)
+    assert data[0].physicalRelease == datetime(2018, 6, 10, tzinfo=UTC)
+    assert data[0].digitalRelease == datetime(2018, 5, 25, tzinfo=UTC)
+    assert data[0].releaseDateType(datetime(2018, 6, 10, tzinfo=UTC)) == (
+        datetime(2018, 6, 10, tzinfo=UTC),
         "physicalRelease",
     )
     assert data[0].images[0].coverType == ImageType.POSTER.value
@@ -683,10 +682,10 @@ async def test_async_get_movie(aresponses: Server, radarr_client: RadarrClient) 
     assert data.sortTitle == "string"
     assert isinstance(data.sizeOnDisk, int)
     assert data.overview == "string"
-    assert data.inCinemas == date(2020, 11, 6)
-    assert data.physicalRelease == date(2019, 3, 19)
-    assert data.releaseDateType(date(2019, 1, 1)) == (
-        date(2019, 3, 19),
+    assert data.inCinemas == datetime(2020, 11, 6, tzinfo=UTC)
+    assert data.physicalRelease == datetime(2019, 3, 19, tzinfo=UTC)
+    assert data.releaseDateType(datetime(2019, 1, 1, tzinfo=UTC)) == (
+        datetime(2019, 3, 19, tzinfo=UTC),
         "physicalRelease",
     )
     assert data.images[0].coverType == ImageType.POSTER.value
@@ -712,7 +711,7 @@ async def test_async_get_movie(aresponses: Server, radarr_client: RadarrClient) 
     assert data.certification == "string"
     assert data.genres == ["string"]
     assert isinstance(data.tags[0], int)
-    assert data.added == datetime(2018, 12, 28, 5, 56, 49)
+    assert data.added == datetime(2018, 12, 28, 5, 56, 49, tzinfo=UTC)
     assert isinstance(data.ratings.imdb.votes, int)
     assert isinstance(data.ratings.imdb.value, float)
     assert data.ratings.imdb.type == "string"
@@ -729,7 +728,7 @@ async def test_async_get_movie(aresponses: Server, radarr_client: RadarrClient) 
     assert data.movieFile.relativePath == "string"
     assert data.movieFile.path == "string"
     assert isinstance(data.movieFile.size, int)
-    assert data.movieFile.dateAdded == datetime(2020, 11, 26, 2, 0, 35)
+    assert data.movieFile.dateAdded == datetime(2020, 11, 26, 2, 0, 35, tzinfo=UTC)
     assert data.movieFile.indexerFlags == 1
     assert isinstance(data.movieFile.quality.quality.id, int)
     assert data.movieFile.quality.quality.name == "string"
@@ -831,7 +830,7 @@ async def test_async_lookup_movie_files(
     assert data.relativePath == "string"
     assert data.path == "string"
     assert isinstance(data.size, int)
-    assert data.dateAdded == datetime(2018, 12, 28, 6, 35, 27)
+    assert data.dateAdded == datetime(2018, 12, 28, 6, 35, 27, tzinfo=UTC)
     assert isinstance(data.indexerFlags, int)
     assert isinstance(data.quality.quality.id, int)
     assert data.quality.quality.name == "string"
@@ -980,7 +979,7 @@ async def test_async_get_queue(aresponses: Server, radarr_client: RadarrClient) 
     assert data.records[0].title == "string"
     assert data.records[0].sizeleft > 0
     assert data.records[0].timeleft == "00:00:20"
-    assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
+    assert data.records[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59, tzinfo=UTC)
     assert data.records[0].status == "string"
     assert data.records[0].trackedDownloadStatus == "string"
     assert data.records[0].trackedDownloadState == "downloading"
@@ -1107,7 +1106,7 @@ async def test_async_get_queue_details(
     assert data[0].title == "string"
     assert data[0].sizeleft == 0
     assert data[0].timeleft == "string"
-    assert data[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59)
+    assert data[0].estimatedCompletionTime == datetime(2020, 1, 21, 0, 1, 59, tzinfo=UTC)
     assert data[0].status == "string"
     assert data[0].trackedDownloadStatus == "string"
     assert data[0].trackedDownloadState == "string"
@@ -1205,10 +1204,10 @@ async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> N
     assert isinstance(data.movie.sizeOnDisk, int)
     assert data.movie.status == "string"
     assert data.movie.overview == "string"
-    assert data.movie.inCinemas == date(2000, 4, 25)
-    assert data.movie.physicalRelease == date(2000, 7, 8)
-    assert data.movie.digitalRelease == date(2000, 2, 1)
-    assert data.movie.releaseDateType() == (date(2000, 7, 8), "physicalRelease")
+    assert data.movie.inCinemas == datetime(2000, 4, 25, tzinfo=UTC)
+    assert data.movie.physicalRelease == datetime(2000, 7, 8, tzinfo=UTC)
+    assert data.movie.digitalRelease == datetime(2000, 2, 1, tzinfo=UTC)
+    assert data.movie.releaseDateType() == (datetime(2000, 7, 8, tzinfo=UTC), "physicalRelease")
     assert data.movie.images[0].coverType == ImageType.POSTER.value
     assert data.movie.images[0].url == "string"
     assert data.movie.website == "string"
@@ -1230,7 +1229,7 @@ async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> N
     assert data.movie.certification == "string"
     assert data.movie.genres == ["string"]
     assert isinstance(data.movie.tags[0], int)
-    assert data.movie.added == datetime(2020, 11, 28, 6, 34, 25)
+    assert data.movie.added == datetime(2020, 11, 28, 6, 34, 25, tzinfo=UTC)
     assert isinstance(data.movie.ratings.imdb.votes, int)
     assert isinstance(data.movie.ratings.imdb.value, float)
     assert data.movie.ratings.imdb.type == "string"
@@ -1247,7 +1246,7 @@ async def test_async_parse(aresponses: Server, radarr_client: RadarrClient) -> N
     assert data.movie.movieFile.relativePath == "string"
     assert data.movie.movieFile.path == "string"
     assert isinstance(data.movie.movieFile.size, int)
-    assert data.movie.movieFile.dateAdded == datetime(2020, 2, 23, 12, 0, 46)
+    assert data.movie.movieFile.dateAdded == datetime(2020, 2, 23, 12, 0, 46, tzinfo=UTC)
     assert isinstance(data.movie.movieFile.indexerFlags, int)
     assert isinstance(data.movie.movieFile.quality.quality.id, int)
     assert data.movie.movieFile.quality.quality.name == "string"
@@ -1339,7 +1338,7 @@ async def test_async_get_release(
     assert isinstance(data[0].imdbId, int)
     assert data[0].rejections[0].reason == "string"
     assert data[0].rejections[0].type == "permanent"
-    assert data[0].publishDate == datetime(2022, 1, 7, 4, 20, 36)
+    assert data[0].publishDate == datetime(2022, 1, 7, 4, 20, 36, tzinfo=UTC)
     assert data[0].commentUrl == "string"
     assert data[0].downloadUrl == "string"
     assert data[0].infoUrl == "string"
@@ -1435,7 +1434,7 @@ async def test_async_get_manual_import(
     assert isinstance(data[0].movie.sizeOnDisk, int)
     assert data[0].movie.status == "released"
     assert data[0].movie.overview == "string"
-    assert data[0].movie.inCinemas == date(2010, 5, 20)
+    assert data[0].movie.inCinemas == datetime(2010, 5, 20, tzinfo=UTC)
     assert data[0].movie.images[0].coverType == "string"
     assert data[0].movie.images[0].url == "string"
     assert data[0].movie.website == "string"
@@ -1457,7 +1456,7 @@ async def test_async_get_manual_import(
     assert data[0].movie.certification == "string"
     assert data[0].movie.genres == ["string"]
     assert isinstance(data[0].movie.tags[0], int)
-    assert data[0].movie.added == datetime(2019, 5, 31, 5, 1, 52)
+    assert data[0].movie.added == datetime(2019, 5, 31, 5, 1, 52, tzinfo=UTC)
     assert isinstance(data[0].movie.ratings.imdb.votes, int)
     assert isinstance(data[0].movie.ratings.imdb.value, int)
     assert data[0].movie.ratings.imdb.type == "user"
@@ -2028,8 +2027,3 @@ async def test_not_implemented(radarr_client: RadarrClient) -> None:
 
     with pytest.raises(NotImplementedError):
         await radarr_client.async_delete_metadata_profile(0)
-
-
-def test_get_date_returns() -> None:
-    """Test get date function returns with no date."""
-    assert get_date(True) is None

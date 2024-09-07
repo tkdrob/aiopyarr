@@ -4,10 +4,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from .base import BaseModel
-from .const import CONVERT_TO_DATE
+from .const import RELEASE_TYPES
 from .request_common import (
     _Common3,
     _Common5,
@@ -141,10 +141,12 @@ class _RadarrCommon3(_Common9):
         self.images = [_RadarrMovieImages(image) for image in self.images or []]
         self.ratings = _RadarrMovieRatings(self.ratings)
 
-    def releaseDateType(self, release: date = date.today()) -> tuple[date, str]:
+    def releaseDateType(
+        self, release: datetime = datetime.now(UTC)
+    ) -> tuple[datetime, str]:
         """Return release date and type matching/closest to supplied date."""
         delta = timedelta(days=999999999)
-        for _type in CONVERT_TO_DATE:
+        for _type in RELEASE_TYPES:
             try:
                 if (_date := getattr(self, _type)) and abs(release - _date) < delta:
                     delta = release - _date
