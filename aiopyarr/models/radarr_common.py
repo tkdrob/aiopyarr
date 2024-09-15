@@ -158,7 +158,6 @@ class _RadarrCommon3(_Common9):
 class _RadarrMovieCommon(BaseModel):
     """Radarr movie common attributes."""
 
-    edition: str
     id: int
     languages: list[_Common3] | None = None
     quality: type[_Quality] = field(default=_Quality)

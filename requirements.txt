@@ -11,3 +11,4 @@ pylint>=2.12.1
 pytest-cov>=3.0.0
 pytest-asyncio>=0.16.0
 pytest>=6.2.4
+syrupy>=4.0.8
