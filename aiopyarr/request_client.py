@@ -124,7 +124,7 @@ class RequestClient:  # pylint: disable=too-many-public-methods
 
         self._host = host_configuration
         if self._host.url:
-            regex = r"(https?:\/\/[a-z|\d|\.]*[^:])([\/^:\d]*)(.*)"
+            regex = r"(https?:\/\/[a-z|A-Z|\d|\.|\-]*[^:])([\/^:\d]*)(.*)"
             if (res := search(regex, self._host.url)) and not res.group(2):
                 self._host.url = f"{res.group(1).rstrip('/')}:{port}/{res.group(3)}"
             self._host.url = self._host.url.rstrip("/")
